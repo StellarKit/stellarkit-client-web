@@ -81,6 +81,7 @@ if (TARGET === 'dist' || TARGET === 'dev') {
       // without this, we'll get two copies of jquery and triggers will fail
       // also package will be huge
       'jquery',
+      'stellar-sdk',
       'stellar-ledger-api'
     ]
   })
