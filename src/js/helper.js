@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Storage from './storage.js'
-// const shell = require('electron').shell
 
 export default class Helper {
   static vue() {
@@ -89,8 +88,8 @@ export default class Helper {
   static openBrowser(url) {
     if (window.electronAccess) {
       window.electronAccess.implementation()
+    } else {
+      window.open(url, '_blank').focus()
     }
-
-    // shell.openExternal(url)
   }
 }

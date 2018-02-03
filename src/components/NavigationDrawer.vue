@@ -20,7 +20,7 @@
       </v-list-tile-content>
     </v-list-tile>
   </v-list>
-  <donate-dialog :ping='showDonatePing' :nodeEnv=true :donationPublicKey='donationPublicKey' />
+  <donate-dialog :ping='showDonatePing' :nodeEnv="nodeEnv" :donationPublicKey='donationPublicKey' />
 </v-navigation-drawer>
 </template>
 
@@ -37,6 +37,14 @@ export default {
   watch: {
     ping: function () {
       this.drawer = true
+    }
+  },
+  computed: {
+    nodeEnv: function () {
+      if (window.electronAccess) {
+        return window.electronAccess.nodeEnv()
+      }
+      return false
     }
   },
   data() {
