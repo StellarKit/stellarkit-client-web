@@ -76,7 +76,13 @@ if (TARGET === 'dist' || TARGET === 'dev') {
     target: 'web',
     output: {
       filename: 'site.js'
-    }
+    },
+    externals: [
+      // without this, we'll get two copies of jquery and triggers will fail
+      // also package will be huge
+      'jquery',
+      'stellar-ledger-api'
+    ]
   })
 
   if (TARGET === 'dist') {
@@ -87,6 +93,7 @@ if (TARGET === 'dist' || TARGET === 'dev') {
       }
     })
   }
+
   module.exports = mergedOptions
 }
 
