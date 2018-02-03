@@ -87,6 +87,10 @@ export default class Helper {
   }
 
   static openBrowser(url) {
+    if (window.electronAccess) {
+      window.electronAccess.implementation()
+    }
+
     // shell.openExternal(url)
   }
 }
