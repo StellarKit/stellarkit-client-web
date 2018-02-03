@@ -1,0 +1,27 @@
+$fontFamily: 'Montserrat', 'sans-serif';
+$bold: 600;
+$extraBold: 800;
+
+$fancyFontFamily: 'Audiowide', 'sans-serif';
+
+$light-back-color: rgb(250,250,250);
+$background-strip-color: #f4f4f4;
+
+$text-color: rgb(255,255,255);
+$text-color-disabled: rgb(166,166,166);
+$active-color: #1976d2;
+$text-color-active: rgb(255,255,255);
+$background-hover: rgba(0,0,0, 0.1);
+$border-radius: 8px;
+
+// standard dialog mixin
+@mixin standard-dialog-contents {
+  width: 100%;
+  flex: 0 1 auto;
+  box-shadow: 0 2px 12px rgba(0,0,0,.3);
+  background: white;
+  display: flex;
+  flex-direction: column;
+  border-radius: 6px;
+  overflow: hidden;
+}
