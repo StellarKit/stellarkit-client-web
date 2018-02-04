@@ -1,6 +1,6 @@
 <template>
 <v-app>
-  <div v-if='!initializing'>
+  <div class='app-wrapper' v-if='!initializing'>
     <navivation-drawer :ping='showNavigation' />
     <div class='main-container'>
       <div class="top-bar">
@@ -196,6 +196,11 @@ html {
 </style>
 
 <style scoped lang='scss'>
+.app-wrapper {
+    display: flex;
+    flex: 1;
+}
+
 .main-container {
     display: flex;
     flex: 1;
