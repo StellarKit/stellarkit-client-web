@@ -4,7 +4,7 @@ const merge = require('webpack-merge')
 
 const common = {
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: path.resolve(__dirname, 'dist'),
     publicPath: '/dist/'
   },
   module: {
@@ -52,18 +52,6 @@ const common = {
       }
     ]
   },
-  resolve: {
-    alias: {
-      vue$: 'vue/dist/vue.common.js'
-    }
-  },
-  devServer: {
-    historyApiFallback: true,
-    noInfo: true
-  },
-  performance: {
-    hints: false
-  },
   devtool: 'eval-source-map'
 }
 
@@ -91,8 +79,29 @@ if (TARGET === 'dist' || TARGET === 'dev') {
   module.exports = mergedOptions
 }
 
+if (TARGET === 'distLib') {
+  let mergedOptions = merge(common, {
+    entry: './src/libEntry.js',
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: 'distLib.js',
+      library: 'stellar-js-utils',
+      libraryTarget: 'umd'
+    },
+    externals: [
+      // without this, we'll get two copies of jquery and triggers will fail
+      // also package will be huge
+      'jquery',
+      'stellar-sdk',
+      'stellar-ledger-api'
+    ]
+  })
+  module.exports = mergedOptions
+}
+
 if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = 'none'
+
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
@@ -101,17 +110,12 @@ if (process.env.NODE_ENV === 'production') {
       }
     }),
     new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
       compress: {
-        warnings: false,
-        passes: 2
+        warnings: false
       },
       output: {
         comments: false
       }
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
     })
   ])
 } else {
