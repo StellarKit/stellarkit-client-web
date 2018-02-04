@@ -87,7 +87,7 @@ export default class Helper {
 
   static openBrowser(url) {
     if (window.electronAccess) {
-      window.electronAccess.implementation()
+      window.electronAccess.openBrowser(url)
     } else {
       window.open(url, '_blank').focus()
     }
