@@ -92,7 +92,7 @@ export default {
 
         this.setDomainPing = !this.setDomainPing
       } else {
-        Helper.debugLog('Error: no source account selected')
+        Helper.debugLog('please select a source account', 'Error')
       }
     },
     setAuthRequiredFlag() {
@@ -107,7 +107,7 @@ export default {
             Helper.debugLog(error, 'Error')
           })
       } else {
-        Helper.debugLog('Error: no source account selected')
+        Helper.debugLog('please select a source account', 'Error')
       }
     },
     setAuthRevocableFlag() {
@@ -122,7 +122,7 @@ export default {
             Helper.debugLog(error, 'Error')
           })
       } else {
-        Helper.debugLog('Error: no source account selected')
+        Helper.debugLog('please select a source account', 'Error')
       }
     },
     clearFlags() {
@@ -137,7 +137,7 @@ export default {
             Helper.debugLog(error, 'Error')
           })
       } else {
-        Helper.debugLog('Error: no source account selected')
+        Helper.debugLog('please select a source account', 'Error')
       }
     },
     horizonMetrics() {
@@ -170,11 +170,11 @@ export default {
             Helper.debugLog(error, 'Error')
           })
       } else {
-        Helper.debugLog('Error: no source account selected')
+        Helper.debugLog('please select a source account', 'Error')
       }
     },
     payWithSigners() {
-      Helper.debugLog('path with signers')
+      Helper.debugLog('path with signers...')
 
       if (this.sourceValid() && this.signerValid()) {
         this.su.sendAsset(this.selectedSource.secret, this.selectedDest.publicKey, '122', null, null, [this.selectedSigner.secret])
@@ -195,21 +195,21 @@ export default {
       }
     },
     setSignerForSelected() {
-      Helper.debugLog('set signer')
+      Helper.debugLog('set signer...')
 
       if (this.sourceValid() && this.signerValid()) {
         this.su.makeMultiSig(this.selectedSource.secret, this.selectedSigner.publicKey)
           .then((result) => {
-            Helper.debugLog('signed!')
+            Helper.debugLog(result, 'Success')
           })
           .catch((error) => {
-            Helper.debugLog(error)
+            Helper.debugLog(error, 'Error')
           })
       } else {
         if (!this.sourceValid()) {
-          Helper.debugLog('Error: please select a source account')
+          Helper.debugLog('please select a source account', 'Error')
         } else {
-          Helper.debugLog('Error: please select a signer account')
+          Helper.debugLog('please select a signer account', 'Error')
         }
       }
     },
@@ -222,7 +222,7 @@ export default {
             Helper.debugLog(response)
           })
       } else {
-        Helper.debugLog('Error: no source account selected')
+        Helper.debugLog('please select a source account', 'Error')
       }
     },
     paymentsForSelectedSource() {
@@ -234,7 +234,7 @@ export default {
             Helper.debugLog(response)
           })
       } else {
-        Helper.debugLog('Error: no source account selected')
+        Helper.debugLog('please select a source account', 'Error')
       }
     },
     transactionsForSelectedSource() {
@@ -250,14 +250,14 @@ export default {
             }
           })
       } else {
-        Helper.debugLog('Error: no source account selected')
+        Helper.debugLog('please select a source account', 'Error')
       }
     },
     infoForSelectedSource() {
       if (this.sourceValid()) {
         this.infoForPublicKey(this.selectedSource.publicKey)
       } else {
-        Helper.debugLog('Error: no source account selected')
+        Helper.debugLog('please select a source account', 'Error')
       }
     },
     makeSelectedPayment() {
@@ -274,7 +274,7 @@ export default {
             Helper.debugLog(error, 'Error')
           })
       } else {
-        Helper.debugLog('Error: no source account selected')
+        Helper.debugLog('please select a source account', 'Error')
       }
     },
     refresh() {
