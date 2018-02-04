@@ -63,12 +63,12 @@ export default {
 
         this.su.setDomain(this.secretKey, this.domain)
           .then((result) => {
-            this.debugLog(result)
+            Helper.debugLog(result)
             this.loadingLostLicense = false
             this.statusMessage = 'Success!'
           })
           .catch((error) => {
-            this.debugLog(error)
+            Helper.debugLog(error)
             this.loadingLostLicense = false
             this.statusMessage = 'Error!'
           })

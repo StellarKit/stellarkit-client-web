@@ -18,45 +18,34 @@
      Helper.vue().$on('stellar-accounts-updated', this.updateAccountsUI)
    },
    methods: {
-     debugLog(result, tag = null) {
-       let newText = ''
-
-       if (tag) {
-         newText += tag + ': '
-       }
-
-       newText += '<pre>' + this.su.toStr(result) + '</pre>'
-
-       Helper.emit('console', newText)
-     },
      infoForPublicKey(publicKey) {
        this.su.accountInfo(publicKey)
          .then((response) => {
-           this.debugLog(response)
+           Helper.debugLog(response)
          })
          .catch((error) => {
-           this.debugLog(error)
+           Helper.debugLog(error)
          })
      },
      deleteAccount(item) {
        StellarAccounts.deleteAccount(item.publicKey)
      },
      clickAccount(item) {
-       this.debugLog('account info...')
+       Helper.debugLog('account info...')
 
        this.infoForPublicKey(item.publicKey)
-       this.debugLog(item.secret)
-       this.debugLog(item.name)
+       Helper.debugLog(item.secret)
+       Helper.debugLog(item.name)
      },
      createAccount() {
-       this.debugLog('create account:')
+       Helper.debugLog('create account:')
 
        this.su.createTestAccount()
          .then((result) => {
-           this.debugLog(result)
+           Helper.debugLog(result)
          })
          .catch((error) => {
-           this.debugLog(error)
+           Helper.debugLog(error)
          })
      },
      // private

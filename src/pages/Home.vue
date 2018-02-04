@@ -84,63 +84,63 @@ export default {
 
         this.setDomainPing = !this.setDomainPing
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     setAuthRequiredFlag() {
-      this.debugLog('setAuthRequiredFlag...')
+      Helper.debugLog('setAuthRequiredFlag...')
 
       if (this.sourceValid()) {
         this.su.setFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag)
           .then((response) => {
-            this.debugLog(response, 'Success')
+            Helper.debugLog(response, 'Success')
           })
           .catch((error) => {
-            this.debugLog(error, 'Error')
+            Helper.debugLog(error, 'Error')
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     setAuthRevocableFlag() {
-      this.debugLog('setAuthRevocableFlag...')
+      Helper.debugLog('setAuthRevocableFlag...')
 
       if (this.sourceValid()) {
         this.su.setFlags(this.selectedSource.secret, StellarSdk.AuthRevocableFlag)
           .then((response) => {
-            this.debugLog(response, 'Success')
+            Helper.debugLog(response, 'Success')
           })
           .catch((error) => {
-            this.debugLog(error, 'Error')
+            Helper.debugLog(error, 'Error')
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     clearFlags() {
-      this.debugLog('clearing flags...')
+      Helper.debugLog('clearing flags...')
 
       if (this.sourceValid()) {
         this.su.clearFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag | StellarSdk.AuthRevocableFlag)
           .then((response) => {
-            this.debugLog(response, 'Success')
+            Helper.debugLog(response, 'Success')
           })
           .catch((error) => {
-            this.debugLog(error, 'Error')
+            Helper.debugLog(error, 'Error')
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     horizonMetrics() {
-      this.debugLog('horizon metrics...')
+      Helper.debugLog('horizon metrics...')
 
       this.su.horizonMetrics()
         .then((response) => {
-          this.debugLog(response, 'Success')
+          Helper.debugLog(response, 'Success')
         })
         .catch((error) => {
-          this.debugLog(error, 'Error')
+          Helper.debugLog(error, 'Error')
         })
     },
     swapSourceDest() {
@@ -149,52 +149,52 @@ export default {
       this.selectedDest = tmp
     },
     mergeSelected() {
-      this.debugLog('merging')
+      Helper.debugLog('merging')
 
       if (this.sourceValid()) {
         this.su.mergeAccount(this.selectedSource.secret, this.selectedDest.publicKey)
           .then((response) => {
             this.su.updateBalances()
 
-            this.debugLog(response, 'Success')
+            Helper.debugLog(response, 'Success')
           })
           .catch((error) => {
-            this.debugLog(error, 'Error')
+            Helper.debugLog(error, 'Error')
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     payWithSigners() {
-      this.debugLog('path with signers')
+      Helper.debugLog('path with signers')
 
       if (this.sourceValid()) {
         this.su.sendAsset(this.selectedSource.secret, this.selectedDest.publicKey, '122', null, null, [this.selectedSigner.secret])
           .then((response) => {
             this.su.updateBalances()
 
-            this.debugLog(response, 'Success')
+            Helper.debugLog(response, 'Success')
           })
           .catch((error) => {
-            this.debugLog(error, 'Error')
+            Helper.debugLog(error, 'Error')
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     setSignerForSelected() {
-      this.debugLog('set signer')
+      Helper.debugLog('set signer')
 
       if (this.sourceValid()) {
         this.su.makeMultiSig(this.selectedSource.secret, this.selectedSigner.publicKey)
           .then((result) => {
-            this.debugLog('signed!')
+            Helper.debugLog('signed!')
           })
           .catch((error) => {
-            this.debugLog(error)
+            Helper.debugLog(error)
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     operationsForSelectedSource() {
@@ -203,10 +203,10 @@ export default {
           .forAccount(this.selectedSource.publicKey)
           .call()
           .then((response) => {
-            this.debugLog(response)
+            Helper.debugLog(response)
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     paymentsForSelectedSource() {
@@ -215,10 +215,10 @@ export default {
           .forAccount(this.selectedSource.publicKey)
           .call()
           .then((response) => {
-            this.debugLog(response)
+            Helper.debugLog(response)
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     transactionsForSelectedSource() {
@@ -227,42 +227,42 @@ export default {
           .forAccount(this.selectedSource.publicKey)
           .stream({
             onmessage: (txResponse) => {
-              this.debugLog(txResponse)
+              Helper.debugLog(txResponse)
             },
             onerror: (error) => {
-              this.debugLog(error)
+              Helper.debugLog(error)
             }
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     infoForSelectedSource() {
       if (this.sourceValid()) {
         this.infoForPublicKey(this.selectedSource.publicKey)
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     makeSelectedPayment() {
-      this.debugLog('paying')
+      Helper.debugLog('paying')
 
       if (this.sourceValid()) {
         this.su.sendAsset(this.selectedSource.secret, this.selectedDest.publicKey, '122')
           .then((response) => {
             this.su.updateBalances()
 
-            this.debugLog(response, 'Success')
+            Helper.debugLog(response, 'Success')
           })
           .catch((error) => {
-            this.debugLog(error, 'Error')
+            Helper.debugLog(error, 'Error')
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     refresh() {
-      this.debugLog('refresh')
+      Helper.debugLog('refresh')
       this.su.updateBalances(this.debugLog)
     }
   }

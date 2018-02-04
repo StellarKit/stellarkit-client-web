@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import Helper from '../js/helper.js'
+
 import {
   BuyTokenDialog
 } from 'stellar-js-utils'
@@ -40,7 +42,7 @@ export default {
 
         this.showDialogPing = !this.showDialogPing
       } else {
-        this.debugLog('Create a token first')
+        Helper.debugLog('Create a token first')
       }
     }
   }

@@ -128,10 +128,8 @@ export default {
     }
   },
   created() {
-    console.log('initializing')
     Storage.init()
       .then(() => {
-        console.log('ready')
         this.initializing = false
       })
       .catch((error) => {

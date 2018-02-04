@@ -88,91 +88,91 @@ export default {
         if (issuerAcct) {
           this.su.allowTrust(issuerAcct.secret, this.selectedSource.publicKey, StellarAccounts.lamboTokenAsset(), authorize)
             .then((response) => {
-              this.debugLog(response, 'Success')
+              Helper.debugLog(response, 'Success')
             })
             .catch((error) => {
-              this.debugLog(error, 'Error')
+              Helper.debugLog(error, 'Error')
             })
         } else {
-          this.debugLog('Error: no issuer account')
+          Helper.debugLog('Error: no issuer account')
         }
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     changeTrust() {
       if (this.sourceValid()) {
         this.su.changeTrust(this.selectedSource.secret, StellarAccounts.lamboTokenAsset(), '10000')
           .then((response) => {
-            this.debugLog(response, 'Success')
+            Helper.debugLog(response, 'Success')
           })
           .catch((error) => {
-            this.debugLog(error, 'Error')
+            Helper.debugLog(error, 'Error')
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     setAuthRequiredFlag() {
-      this.debugLog('setAuthRequiredFlag...')
+      Helper.debugLog('setAuthRequiredFlag...')
 
       if (this.sourceValid()) {
         this.su.setFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag)
           .then((response) => {
-            this.debugLog(response, 'Success')
+            Helper.debugLog(response, 'Success')
           })
           .catch((error) => {
-            this.debugLog(error, 'Error')
+            Helper.debugLog(error, 'Error')
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     setAuthRevocableFlag() {
-      this.debugLog('setAuthRevocableFlag...')
+      Helper.debugLog('setAuthRevocableFlag...')
 
       if (this.sourceValid()) {
         this.su.setFlags(this.selectedSource.secret, StellarSdk.AuthRevocableFlag)
           .then((response) => {
-            this.debugLog(response, 'Success')
+            Helper.debugLog(response, 'Success')
           })
           .catch((error) => {
-            this.debugLog(error, 'Error')
+            Helper.debugLog(error, 'Error')
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     clearFlags() {
-      this.debugLog('clearing flags...')
+      Helper.debugLog('clearing flags...')
 
       if (this.sourceValid()) {
         this.su.clearFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag | StellarSdk.AuthRevocableFlag)
           .then((response) => {
-            this.debugLog(response, 'Success')
+            Helper.debugLog(response, 'Success')
           })
           .catch((error) => {
-            this.debugLog(error, 'Error')
+            Helper.debugLog(error, 'Error')
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     },
     buyToken() {
-      this.debugLog('Buying tokens...')
+      Helper.debugLog('Buying tokens...')
 
       if (this.sourceValid()) {
         this.su.buyTokens(this.selectedSource.secret, this.su.lumins(), StellarAccounts.lamboTokenAsset(), '1000', '2.22')
           .then((response) => {
-            this.debugLog(response)
+            Helper.debugLog(response)
 
             this.su.updateBalances()
           })
           .catch((error) => {
-            this.debugLog(error)
+            Helper.debugLog(error)
           })
       } else {
-        this.debugLog('Error: no source account selected')
+        Helper.debugLog('Error: no source account selected')
       }
     }
   }

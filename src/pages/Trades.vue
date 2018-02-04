@@ -27,6 +27,7 @@
 <script>
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import StellarAccounts from '../js/StellarAccounts.js'
+import Helper from '../js/helper.js'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -48,7 +49,7 @@ export default {
     //       this.lowballerAcct = result
     //     })
     //     .catch((error) => {
-    //       this.debugLog(error)
+    //       Helper.debugLog(error)
     //     })
     // }
 
@@ -141,19 +142,19 @@ export default {
           value: 'name = ' + txResponse.name + ' value = ' + txResponse.value
         })
       } else {
-        this.debugLog(txResponse)
+        Helper.debugLog(txResponse)
       }
     },
     stopPaymentStream() {
       if (this.paymentStopper !== null) {
-        this.debugLog('stopping payment stream')
+        Helper.debugLog('stopping payment stream')
 
         this.paymentStopper()
         this.paymentStopper = null
       }
     },
     streamPayments() {
-      this.debugLog('listening for payments')
+      Helper.debugLog('listening for payments')
 
       const builder = this.su.server().payments()
         .cursor('now')
@@ -163,20 +164,20 @@ export default {
           this.displayTransaction(txResponse)
         },
         onerror: (error) => {
-          this.debugLog(error)
+          Helper.debugLog(error)
         }
       })
     },
     stopOperationStream() {
       if (this.operationStopper !== null) {
-        this.debugLog('stopping operation stream')
+        Helper.debugLog('stopping operation stream')
 
         this.operationStopper()
         this.operationStopper = null
       }
     },
     streamOperations() {
-      this.debugLog('listening for operations')
+      Helper.debugLog('listening for operations')
 
       const builder = this.su.server().operations()
         .cursor('now')
@@ -186,21 +187,21 @@ export default {
           this.displayTransaction(txResponse)
         },
         onerror: (error) => {
-          this.debugLog('Error: ')
-          this.debugLog(error)
+          Helper.debugLog('Error: ')
+          Helper.debugLog(error)
         }
       })
     },
     stopTradeStream() {
       if (this.tradeStopper !== null) {
-        this.debugLog('stopping trade stream')
+        Helper.debugLog('stopping trade stream')
 
         this.tradeStopper()
         this.tradeStopper = null
       }
     },
     streamTrades() {
-      this.debugLog('listening for trades')
+      Helper.debugLog('listening for trades')
 
       const builder = this.su.server().trades()
         .cursor('now')
@@ -210,7 +211,7 @@ export default {
           this.displayTransaction(txResponse)
         },
         onerror: (error) => {
-          this.debugLog(error)
+          Helper.debugLog(error)
         }
       })
     },
@@ -218,10 +219,10 @@ export default {
       // buyer must trust the distributor
       this.su.changeTrust(this.lowballerAcct.secret, StellarAccounts.lamboTokenAsset(), '10000')
         .then((result) => {
-          this.debugLog(result)
+          Helper.debugLog(result)
         })
         .catch((error) => {
-          this.debugLog(error)
+          Helper.debugLog(error)
         })
     },
     makeLowballOffer() {
@@ -230,14 +231,14 @@ export default {
           d: 3
         })
         .then((response) => {
-          this.debugLog(response, 'SUCCESS')
+          Helper.debugLog(response, 'SUCCESS')
         })
         .catch((error) => {
-          this.debugLog(error, 'ERROR')
+          Helper.debugLog(error, 'ERROR')
         })
     },
     orderbook() {
-      this.debugLog('Orderbook')
+      Helper.debugLog('Orderbook')
 
       const selling = this.su.lumins()
       const buying = StellarAccounts.lamboTokenAsset()
@@ -248,7 +249,7 @@ export default {
       this.su.server().orderbook(selling, buying)
         .call()
         .then((response) => {
-          this.debugLog(response)
+          Helper.debugLog(response)
         })
       // let max = 12
       // const closeStream = this.su.server().orderbook(selling, buying)
@@ -260,11 +261,11 @@ export default {
       //       this.orderBids = response.bids
       //       this.orderAsks = response.asks
       //
-      //       // this.debugLog(response)
+      //       // Helper.debugLog(response)
       //     }
       //   },
       //   onerror: (error) => {
-      //     this.debugLog('listen err: ' + JSON.stringify(error))
+      //     Helper.debugLog('listen err: ' + JSON.stringify(error))
       //   }
       // })
     }
