@@ -370,7 +370,6 @@ export default {
 <style scoped lang='scss'>
 .info-area {
     width: 100%;
-    height: 100%;
     padding: 20px;
     background: steelblue;
     color: white;
