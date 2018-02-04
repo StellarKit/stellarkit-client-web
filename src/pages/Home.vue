@@ -77,6 +77,14 @@ export default {
       }
       return false
     },
+    signerValid() {
+      const result = this.selectedSigner ? this.selectedSigner.publicKey : null
+
+      if (Helper.strlen(result) > 0) {
+        return true
+      }
+      return false
+    },
     setDomain() {
       // set variable to bind to dialogs props
       if (this.sourceValid()) {
@@ -168,7 +176,7 @@ export default {
     payWithSigners() {
       Helper.debugLog('path with signers')
 
-      if (this.sourceValid()) {
+      if (this.sourceValid() && this.signerValid()) {
         this.su.sendAsset(this.selectedSource.secret, this.selectedDest.publicKey, '122', null, null, [this.selectedSigner.secret])
           .then((response) => {
             this.su.updateBalances()
@@ -179,13 +187,17 @@ export default {
             Helper.debugLog(error, 'Error')
           })
       } else {
-        Helper.debugLog('Error: no source account selected')
+        if (!this.sourceValid()) {
+          Helper.debugLog('Error: please select a source account')
+        } else {
+          Helper.debugLog('Error: please select a signer account')
+        }
       }
     },
     setSignerForSelected() {
       Helper.debugLog('set signer')
 
-      if (this.sourceValid()) {
+      if (this.sourceValid() && this.signerValid()) {
         this.su.makeMultiSig(this.selectedSource.secret, this.selectedSigner.publicKey)
           .then((result) => {
             Helper.debugLog('signed!')
@@ -194,7 +206,11 @@ export default {
             Helper.debugLog(error)
           })
       } else {
-        Helper.debugLog('Error: no source account selected')
+        if (!this.sourceValid()) {
+          Helper.debugLog('Error: please select a source account')
+        } else {
+          Helper.debugLog('Error: please select a signer account')
+        }
       }
     },
     operationsForSelectedSource() {
