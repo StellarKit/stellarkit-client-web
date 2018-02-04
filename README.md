@@ -1,6 +1,8 @@
 # Stellar Client Web
 
-Provides the contents of the stellar-client electron app, and a web site
+Code for [`this website`](https://stellar.army).  
+
+Also provides the contents of the [`stellar-client electron`](https://github.com/StellarKit/stellar-client) app
 
 To build and run:
 ```
