@@ -119,7 +119,7 @@ export default class Helper {
       newText += tag + ': '
     }
 
-    newText += '<pre>' + this.toStr(result) + '</pre>'
+    newText += this.toStr(result)
 
     this.emit('console', newText)
   }

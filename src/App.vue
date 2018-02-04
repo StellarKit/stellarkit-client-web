@@ -147,7 +147,7 @@ export default {
       this.showNavigation = !this.showNavigation
     },
     log(output) {
-      this.consoleOutput += output + '<br>'
+      this.consoleOutput += output + '\n'
 
       this.scrollToEnd()
     },
