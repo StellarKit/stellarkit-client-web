@@ -37,7 +37,7 @@ export default {
             this.valid = true
           })
           .catch((error) => {
-            this.su.log(error)
+            console.log(error)
           })
       }
     }

@@ -48,21 +48,65 @@ export default class Helper {
     Storage.set(this.keyForKey(key), value)
   }
 
+  static stripBrackets(rawString) {
+    const lineArray = []
+
+    // remove excessive brackets
+    const lines = rawString.split('\n')
+    let openIndex = -1
+    let closeIndex = -1
+
+    for (const [index, line] of lines.entries()) {
+      const trimmed = line.trim()
+
+      if (trimmed.length > 0) {
+        const trimmedRight = line.trimRight()
+
+        if (trimmed === '}' || trimmed === '},' || trimmed === ']' || trimmed === '],') {
+          closeIndex = index
+        } else {
+          if (trimmedRight.endsWith('{') || trimmedRight.endsWith('[') || trimmedRight.endsWith(',')) {
+            if (trimmed.length > 1) {
+              lineArray.push(trimmedRight.substr(0, trimmedRight.length - 1))
+            } else {
+              openIndex = index
+            }
+          } else {
+            lineArray.push(trimmedRight)
+          }
+        }
+      }
+      if ((openIndex - 1) === closeIndex) {
+        lineArray.push(' ')
+        openIndex = -1
+      }
+    }
+
+    if (lineArray.length > 0) {
+      const arrayStr = lineArray.join('\n')
+
+      // remove quotes
+      return arrayStr.replace(/"/g, '')
+    }
+
+    return rawString
+  }
+
   static toStr(object) {
     if (object instanceof Error) {
-      const json = JSON.stringify(object, null, '  ')
+      const json = JSON.stringify(object, null, '   ')
 
-      // seems to return {} when it fails?
+      // returns {} when it fails - check number of keys
       const obj = JSON.parse(json)
       if (Object.keys(obj).length > 0) {
-        return json
+        return this.stripBrackets(json)
       }
 
       return object.toString()
     } else if (typeof object === 'string') {
       return object
     } else if (typeof object === 'object') {
-      return JSON.stringify(object, null, '  ')
+      return this.stripBrackets(JSON.stringify(object, null, '   '))
     }
 
     return typeof object

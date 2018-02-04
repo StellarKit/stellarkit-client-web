@@ -86,7 +86,7 @@
           <div class='console-bar'>
             <v-btn small @click='clearLog()'>Clear</v-btn>
           </div>
-          <div class='output-container' v-html='consoleOutput'></div>
+          <textarea readonly="readonly" wrap="off" class='output-container' v-model='consoleOutput'></textarea>
         </div>
       </div>
 
@@ -154,7 +154,8 @@ export default {
     scrollToEnd(delay = 250) {
       this.$nextTick(() => {
         $('.output-container').animate({
-          scrollTop: $('.output-container')[0].scrollHeight
+          scrollTop: $('.output-container')[0].scrollHeight,
+          scrollLeft: 0
         }, delay)
       })
     },
@@ -266,9 +267,11 @@ html {
 
             .output-container {
                 width: 100%;
+                resize: none;
+                outline: none;
                 font-size: 0.8em;
                 background: rgb(0,20,0);
-                overflow-y: auto;
+                overflow: auto;
                 color: rgb(0,256,150);
                 padding: 10px;
             }

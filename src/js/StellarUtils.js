@@ -28,30 +28,6 @@ export default class StellarUtils {
     return new StellarSdk.Asset(object.asset_code, object.asset_issuer)
   }
 
-  toStr(object) {
-    if (object instanceof Error) {
-      const json = JSON.stringify(object, null, '  ')
-
-      // seems to return {} when it fails?
-      const obj = JSON.parse(json)
-      if (Object.keys(obj).length > 0) {
-        return json
-      }
-
-      return object.toString()
-    } else if (typeof object === 'string') {
-      return object
-    } else if (typeof object === 'object') {
-      return JSON.stringify(object, null, '  ')
-    }
-
-    return typeof object
-  }
-
-  log(object) {
-    console.log(this.toStr(object))
-  }
-
   api() {
     return this.s.serverAPI()
   }
@@ -147,7 +123,7 @@ export default class StellarUtils {
             resolve(StellarAccounts.addAccount(keyPair, balances, name, page))
           })
           .catch((error) => {
-            this.log(data)
+            console.log(JSON.stringify(data))
             reject(error)
           })
       }, 'json').fail((err) => {
