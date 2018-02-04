@@ -51,7 +51,7 @@ const router = new VueRouter({
   ]
 })
 
-const test = () => {
+const start = () => {
   if ($('#app').length > 0) {
     new Vue(Vue.util.extend({
       el: '#app',
@@ -61,5 +61,5 @@ const test = () => {
 }
 
 export {
-  test
+  start
 }

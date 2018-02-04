@@ -83,9 +83,8 @@ if (TARGET === 'distLib') {
   let mergedOptions = merge(common, {
     entry: './src/libEntry.js',
     output: {
-      path: path.resolve(__dirname, 'dist'),
       filename: 'distLib.js',
-      library: 'stellar-js-utils',
+      library: 'stellar-client-web',
       libraryTarget: 'umd'
     },
     externals: [
