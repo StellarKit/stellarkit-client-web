@@ -98,7 +98,6 @@
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import AccountList from '../components/AccountList.vue'
 import StellarAccounts from '../js/StellarAccounts.js'
-const StellarSdk = require('stellar-sdk')
 import Helper from '../js/helper.js'
 
 export default {
@@ -118,37 +117,21 @@ export default {
   },
   methods: {
     newAccountWithTokens() {
-      const keypair = StellarSdk.Keypair.random()
+      const distributorAccount = this.distributorAccount()
 
-      Helper.debugLog('New Account:')
-      Helper.debugLog(keypair.publicKey())
-      Helper.debugLog(keypair.secret())
+      if (distributorAccount) {
+        this.su.newAccountWithTokens(distributorAccount.secret, '3', StellarAccounts.lamboTokenAsset(), '12')
+          .then((result) => {
+            Helper.debugLog(result.account)
 
-      this.su.createAccount(this.distributorAcct.secret, keypair.publicKey(), '3')
-        .then((newAccount) => {
-          Helper.debugLog(newAccount)
-          this.su.changeTrust(keypair.secret(), StellarAccounts.lamboTokenAsset(), '10000')
-            .then((result) => {
-              Helper.debugLog(result)
+            return result
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
 
-              this.su.sendAsset(this.distributorAcct.secret, keypair.publicKey(), '12', StellarAccounts.lamboTokenAsset())
-                .then((response) => {
-                  StellarAccounts.addAccount(keypair, {}, null, 'token')
-
-                  Helper.debugLog(response, 'Success')
-                  this.su.updateBalances()
-                })
-                .catch((error) => {
-                  Helper.debugLog(error, 'Error')
-                })
-            })
-            .catch((error) => {
-              Helper.debugLog(error)
-            })
-        })
-        .catch((error) => {
-          Helper.debugLog(error)
-        })
+            throw error
+          })
+      }
     },
     buyLamboTokens() {
       Helper.debugLog('Buying tokens..')

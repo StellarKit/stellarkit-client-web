@@ -2,6 +2,7 @@ const StellarSdk = require('stellar-sdk')
 const $ = require('jquery')
 import StellarAccounts from './StellarAccounts.js'
 import StellarServer from './StellarServer.js'
+import Helper from '../js/helper.js'
 
 export default class StellarUtils {
   constructor() {
@@ -98,6 +99,43 @@ export default class StellarUtils {
 
   setInflationDestination(sourceSecret, inflationDest) {
     return this.api().setInflationDestination(sourceSecret, inflationDest)
+  }
+
+  // returns {account: newAccount, keypair: keypair}
+  newAccountWithTokens(sourceSecret, amountXLM, asset, amount) {
+    let newAccount = null
+    const keypair = StellarSdk.Keypair.random()
+
+    Helper.debugLog('creating account...')
+    Helper.debugLog(keypair.publicKey())
+    Helper.debugLog(keypair.secret())
+
+    return this.createAccount(sourceSecret, keypair.publicKey(), amountXLM)
+      .then((result) => {
+        newAccount = result
+
+        Helper.debugLog('setting trust...')
+        return this.changeTrust(keypair.secret(), asset, '10000')
+      })
+      .then((result) => {
+        Helper.debugLog('sending tokens...')
+        return this.sendAsset(sourceSecret, keypair.publicKey(), amount, asset)
+      })
+      .then((result) => {
+        StellarAccounts.addAccount(keypair, {}, null, 'token')
+
+        Helper.debugLog(result, 'Success')
+        this.updateBalances()
+
+        return {
+          account: newAccount,
+          keypair: keypair
+        }
+      })
+      .catch((error) => {
+        Helper.debugLog(error, 'Error')
+        throw error
+      })
   }
 
   createTestAccount(name = null, page = null) {

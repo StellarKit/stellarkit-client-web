@@ -26,24 +26,12 @@
     </div>
 
     <v-btn small @click="createAccount()">Create Account</v-btn>
+    <v-btn small @click="viewTransaction()">View Transaction</v-btn>
+    <v-btn small @click="submitTransaction()">Submit Transaction</v-btn>
 
     <div class='address-box'>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" label="Source accout" autocomplete return-object max-height="600"></v-select>
     </div>
-
-    <!-- <div>1. First setup a Token on the previous tab</div>
-    <div>2. Set Source account to Issuer, then set or clear flags to test AuthRequiredFlag</div>
-    <v-btn small @click="setAuthRequiredFlag()">Set AuthRequiredFlag</v-btn>
-    <v-btn small @click="setAuthRevocableFlag()">Set AuthRevocableFlag</v-btn>
-    <v-btn small @click="clearFlags()">Clear Flags</v-btn>
-
-    <div>Set Source account to a new account, Click Set Trust, and try to buy Token. It will fail if AuthRequiredFlag set unless you allow trust.</div>
-    <v-btn small @click="allowTrust(true)">Enable Trust</v-btn>
-    <v-btn small @click="allowTrust(false)">Disable Trust</v-btn>
-
-    <div>Set Source account, trust asset, try to buy.</div>
-    <v-btn small @click="changeTrust()">Trust Asset</v-btn>
-    <v-btn small @click="buyToken()">Buy Token</v-btn> -->
   </div>
 
   <div class='balances'>
@@ -56,7 +44,6 @@
 <script>
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import AccountList from '../components/AccountList.vue'
-const StellarSdk = require('stellar-sdk')
 import Helper from '../js/helper.js'
 import StellarAccounts from '../js/StellarAccounts.js'
 
@@ -67,7 +54,8 @@ export default {
   },
   data() {
     return {
-      selectedSource: null
+      selectedSource: null,
+      signedTransaction: null
     }
   },
   mounted() {
@@ -82,98 +70,56 @@ export default {
       }
       return false
     },
-    allowTrust(authorize) {
-      if (this.sourceValid()) {
-        const issuerAcct = StellarAccounts.accountWithName('Issuer')
-        if (issuerAcct) {
-          this.su.allowTrust(issuerAcct.secret, this.selectedSource.publicKey, StellarAccounts.lamboTokenAsset(), authorize)
-            .then((response) => {
-              Helper.debugLog(response, 'Success')
-            })
-            .catch((error) => {
-              Helper.debugLog(error, 'Error')
-            })
-        } else {
-          Helper.debugLog('Error: no issuer account')
-        }
+    submitTransaction() {
+      if (this.signedTransaction) {
+        Helper.debugLog(this.signedTransaction)
       } else {
-        Helper.debugLog('Error: no source account selected')
+        Helper.debugLog('No transactions available')
       }
     },
-    changeTrust() {
-      if (this.sourceValid()) {
-        this.su.changeTrust(this.selectedSource.secret, StellarAccounts.lamboTokenAsset(), '10000')
-          .then((response) => {
-            Helper.debugLog(response, 'Success')
+    viewTransaction() {
+      if (this.signedTransaction) {
+        Helper.debugLog(this.signedTransaction)
+      } else {
+        Helper.debugLog('No transactions available')
+      }
+    },
+    createAccount() {
+      const distributorAccount = this.distributorAccount()
+
+      if (distributorAccount) {
+        this.su.newAccountWithTokens(distributorAccount.secret, '3', StellarAccounts.lamboTokenAsset(), '12')
+          .then((result) => {
+            // result is {account: newAccount, keypair: keypair}
+            Helper.debugLog(result.account)
+
+            Helper.debugLog('adding distributor as signer...')
+
+            return this.su.makeMultiSig(result.keypair.secret(), distributorAccount.publicKey)
+          })
+          .then((result) => {
+            Helper.debugLog('Account is ready', 'Success')
+
+            return result
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
+
+            throw error
           })
-      } else {
-        Helper.debugLog('Error: no source account selected')
       }
     },
-    setAuthRequiredFlag() {
-      Helper.debugLog('setAuthRequiredFlag...')
-
-      if (this.sourceValid()) {
-        this.su.setFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag)
-          .then((response) => {
-            Helper.debugLog(response, 'Success')
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
-      } else {
-        Helper.debugLog('Error: no source account selected')
-      }
-    },
-    setAuthRevocableFlag() {
-      Helper.debugLog('setAuthRevocableFlag...')
-
-      if (this.sourceValid()) {
-        this.su.setFlags(this.selectedSource.secret, StellarSdk.AuthRevocableFlag)
-          .then((response) => {
-            Helper.debugLog(response, 'Success')
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
-      } else {
-        Helper.debugLog('Error: no source account selected')
-      }
-    },
-    clearFlags() {
-      Helper.debugLog('clearing flags...')
-
-      if (this.sourceValid()) {
-        this.su.clearFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag | StellarSdk.AuthRevocableFlag)
-          .then((response) => {
-            Helper.debugLog(response, 'Success')
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
-      } else {
-        Helper.debugLog('Error: no source account selected')
-      }
-    },
-    buyToken() {
-      Helper.debugLog('Buying tokens...')
-
-      if (this.sourceValid()) {
-        this.su.buyTokens(this.selectedSource.secret, this.su.lumins(), StellarAccounts.lamboTokenAsset(), '1000', '2.22')
-          .then((response) => {
-            Helper.debugLog(response)
-
-            this.su.updateBalances()
-          })
-          .catch((error) => {
-            Helper.debugLog(error)
-          })
-      } else {
-        Helper.debugLog('Error: no source account selected')
-      }
+    removeSigner() {
+      // let timebounds = {
+      //   minTime: "1455287522",
+      //   maxTime: "1455297545"
+      // }
+      //
+      // const transaction = new StellarSdk.TransactionBuilder(account)
+      //   .addOperation(StellarSdk.Operation.createAccount(options))
+      //   .build()
+      //
+      // transaction.sign(sourceKeys)
     }
   }
 }

@@ -48,6 +48,15 @@
            Helper.debugLog(error)
          })
      },
+     distributorAccount() {
+       const result = StellarAccounts.accountWithName('Distributor')
+       if (result) {
+         return result
+       }
+
+       Helper.debugLog('Go to the Tokens tab and create a token first.', 'Error')
+       return null
+     },
      // private
      updateAccountsUI() {
        this.accountsUI = StellarAccounts.accounts()
