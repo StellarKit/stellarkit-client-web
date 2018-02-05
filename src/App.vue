@@ -270,6 +270,7 @@ html {
                 resize: none;
                 outline: none;
                 font-size: 0.8em;
+                font-family: monospace;
                 background: rgb(0,20,0);
                 overflow: auto;
                 color: rgb(0,256,150);

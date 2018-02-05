@@ -93,8 +93,9 @@ export default class Helper {
   }
 
   static toStr(object) {
+    const spaces = '  '
     if (object instanceof Error) {
-      const json = JSON.stringify(object, null, '   ')
+      const json = JSON.stringify(object, null, spaces)
 
       // returns {} when it fails - check number of keys
       const obj = JSON.parse(json)
@@ -106,7 +107,7 @@ export default class Helper {
     } else if (typeof object === 'string') {
       return object
     } else if (typeof object === 'object') {
-      return this.stripBrackets(JSON.stringify(object, null, '   '))
+      return this.stripBrackets(JSON.stringify(object, null, spaces))
     }
 
     return typeof object
