@@ -269,9 +269,13 @@ export default {
             this.su.updateBalances()
 
             Helper.debugLog(response, 'Success')
+
+            return null
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
+
+            throw error
           })
       } else {
         Helper.debugLog('please select a source account', 'Error')
