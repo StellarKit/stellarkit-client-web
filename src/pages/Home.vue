@@ -2,19 +2,20 @@
 <div>
   <div class='top-controls'>
     <div class='address-box'>
-      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" label="Source accout" autocomplete return-object max-height="600"></v-select>
-      <v-select :items="accountsUI" item-text='name' v-model="selectedDest" label="Destination accout" autocomplete return-object max-height="600"></v-select>
+      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
+      <v-select :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination accout" autocomplete return-object max-height="600"></v-select>
       <v-btn small @click='swapSourceDest()'>Swap</v-btn>
     </div>
 
-    <v-select :items="accountsUI" item-text='name' v-model="selectedSigner" label="Add signer to source" autocomplete return-object max-height="600"></v-select>
+    <v-select :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Add signer to source" autocomplete return-object max-height="600"></v-select>
     <v-btn small @click="makeSelectedPayment()">Pay</v-btn>
+    <v-btn small @click="payWithSigners()">Pay with Signers</v-btn>
     <v-btn small @click="infoForSelectedSource()">Info</v-btn>
     <v-btn small @click="transactionsForSelectedSource()">Transactions</v-btn>
     <v-btn small @click="paymentsForSelectedSource()">Payments</v-btn>
     <v-btn small @click="operationsForSelectedSource()">Operations</v-btn>
-    <v-btn small @click="setSignerForSelected()">Set Signer</v-btn>
-    <v-btn small @click="payWithSigners()">Pay with Signers</v-btn>
+    <v-btn small @click="addSignerForSelected()">Add Signer</v-btn>
+    <v-btn small @click="removeSignerForSelected()">Remove Signer</v-btn>
     <v-btn small @click="mergeSelected()">Merge Selected</v-btn>
     <v-btn small @click="testFederation()">Federation Lookup</v-btn>
     <v-btn small @click="setDomain()">Set Domain</v-btn>
@@ -69,6 +70,18 @@ export default {
       if (Helper.strlen(result) > 0) {
         return true
       }
+      Helper.debugLog('please select a source account', 'Error')
+
+      return false
+    },
+    destValid() {
+      const result = this.selectedDest ? this.selectedDest.publicKey : null
+
+      if (Helper.strlen(result) > 0) {
+        return true
+      }
+      Helper.debugLog('please select a dest account', 'Error')
+
       return false
     },
     signerValid() {
@@ -77,6 +90,8 @@ export default {
       if (Helper.strlen(result) > 0) {
         return true
       }
+      Helper.debugLog('please select a signer account', 'Error')
+
       return false
     },
     setDomain() {
@@ -85,8 +100,6 @@ export default {
         this.sourceSecretKey = this.selectedSource.secret
 
         this.setDomainPing = !this.setDomainPing
-      } else {
-        Helper.debugLog('please select a source account', 'Error')
       }
     },
     setAuthRequiredFlag() {
@@ -96,12 +109,11 @@ export default {
         StellarUtils.setFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag)
           .then((response) => {
             Helper.debugLog(response, 'Success')
+            return null
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
           })
-      } else {
-        Helper.debugLog('please select a source account', 'Error')
       }
     },
     setAuthRevocableFlag() {
@@ -111,12 +123,11 @@ export default {
         StellarUtils.setFlags(this.selectedSource.secret, StellarSdk.AuthRevocableFlag)
           .then((response) => {
             Helper.debugLog(response, 'Success')
+            return null
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
           })
-      } else {
-        Helper.debugLog('please select a source account', 'Error')
       }
     },
     clearFlags() {
@@ -126,12 +137,11 @@ export default {
         StellarUtils.clearFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag | StellarSdk.AuthRevocableFlag)
           .then((response) => {
             Helper.debugLog(response, 'Success')
+            return null
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
           })
-      } else {
-        Helper.debugLog('please select a source account', 'Error')
       }
     },
     swapSourceDest() {
@@ -148,12 +158,11 @@ export default {
             StellarUtils.updateBalances()
 
             Helper.debugLog(response, 'Success')
+            return null
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
           })
-      } else {
-        Helper.debugLog('please select a source account', 'Error')
       }
     },
     payWithSigners() {
@@ -165,35 +174,39 @@ export default {
             StellarUtils.updateBalances()
 
             Helper.debugLog(response, 'Success')
+            return null
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
           })
-      } else {
-        if (!this.sourceValid()) {
-          Helper.debugLog('Error: please select a source account')
-        } else {
-          Helper.debugLog('Error: please select a signer account')
-        }
       }
     },
-    setSignerForSelected() {
-      Helper.debugLog('set signer...')
+    addSignerForSelected() {
+      Helper.debugLog('add signer...')
 
       if (this.sourceValid() && this.signerValid()) {
         StellarUtils.makeMultiSig(this.selectedSource.secret, this.selectedSigner.publicKey)
           .then((result) => {
             Helper.debugLog(result, 'Success')
+            return null
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
           })
-      } else {
-        if (!this.sourceValid()) {
-          Helper.debugLog('please select a source account', 'Error')
-        } else {
-          Helper.debugLog('please select a signer account', 'Error')
-        }
+      }
+    },
+    removeSignerForSelected() {
+      Helper.debugLog('remove signer...')
+
+      if (this.sourceValid() && this.signerValid()) {
+        StellarUtils.removeMultiSig(this.selectedSource.secret, this.selectedSigner.secret, this.selectedSigner.publicKey)
+          .then((result) => {
+            Helper.debugLog(result, 'Success')
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
+          })
       }
     },
     operationsForSelectedSource() {
@@ -204,8 +217,6 @@ export default {
           .then((response) => {
             Helper.debugLog(response)
           })
-      } else {
-        Helper.debugLog('please select a source account', 'Error')
       }
     },
     paymentsForSelectedSource() {
@@ -215,9 +226,8 @@ export default {
           .call()
           .then((response) => {
             Helper.debugLog(response)
+            return null
           })
-      } else {
-        Helper.debugLog('please select a source account', 'Error')
       }
     },
     transactionsForSelectedSource() {
@@ -232,36 +242,27 @@ export default {
               Helper.debugLog(error)
             }
           })
-      } else {
-        Helper.debugLog('please select a source account', 'Error')
       }
     },
     infoForSelectedSource() {
       if (this.sourceValid()) {
         this.infoForPublicKey(this.selectedSource.publicKey)
-      } else {
-        Helper.debugLog('please select a source account', 'Error')
       }
     },
     makeSelectedPayment() {
       Helper.debugLog('paying')
 
-      if (this.sourceValid()) {
+      if (this.sourceValid() && this.destValid()) {
         StellarUtils.sendAsset(this.selectedSource.secret, this.selectedDest.publicKey, '122')
           .then((response) => {
             StellarUtils.updateBalances()
 
             Helper.debugLog(response, 'Success')
-
             return null
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
-
-            throw error
           })
-      } else {
-        Helper.debugLog('please select a source account', 'Error')
       }
     }
   }

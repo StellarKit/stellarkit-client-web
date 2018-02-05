@@ -73,6 +73,10 @@ class StellarUtils {
     return this.api().makeMultiSig(sourceSecret, publicKey)
   }
 
+  removeMultiSig(sourceSecret, secondSecret, secondPublicKey) {
+    return this.api().removeMultiSig(sourceSecret, secondSecret, secondPublicKey)
+  }
+
   sendAsset(sourceSecret, destKey, amount, asset = null, memo = null, additionalSigners = null) {
     return this.api().sendAsset(sourceSecret, destKey, amount, asset, memo, additionalSigners)
   }

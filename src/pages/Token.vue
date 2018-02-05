@@ -127,8 +127,6 @@ export default {
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
-
-            throw error
           })
       }
     },

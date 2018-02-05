@@ -30,7 +30,7 @@
     <v-btn small @click="submitTransaction()">Submit Transaction</v-btn>
 
     <div class='address-box'>
-      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" label="Source accout" autocomplete return-object max-height="600"></v-select>
+      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
 
@@ -102,8 +102,6 @@ export default {
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
-
-            throw error
           })
       }
     },
