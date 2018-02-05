@@ -270,7 +270,7 @@ export default {
 
 <style scoped lang='scss'>
 .top-controls {
-    padding: 20px;
+    padding: 8px 20px;
 }
 
 .address-box {

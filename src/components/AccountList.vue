@@ -2,18 +2,18 @@
 <div class='main-container'>
   <v-btn class='add-button' icon dark @click="createAccount()">
     <v-tooltip open-delay='800' bottom>
-      <v-icon large slot='activator'>&#xE147;</v-icon>
+      <v-icon slot='activator'>&#xE147;</v-icon>
       <span>Create new account</span>
     </v-tooltip>
   </v-btn>
   <v-btn class='refresh-button' icon dark @click="refresh()">
     <v-tooltip open-delay='800' bottom>
-      <v-icon large slot='activator'>&#xE5D5;</v-icon>
+      <v-icon slot='activator'>&#xE5D5;</v-icon>
       <span>Refresh account balances</span>
     </v-tooltip>
   </v-btn>
 
-  <div>Accounts - Click for Info</div>
+  <div class='accounts-title'>Accounts - Click for Info</div>
 
   <div class='accounts'>
     <div class='account-item' v-for="item in items" @click.stop='clickItem(item)' :key='item.name'>
@@ -70,7 +70,7 @@ export default {
 
 <style lang='scss' scoped>
 .main-container {
-    padding-top: 4px;
+    padding: 10px 0;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -78,16 +78,23 @@ export default {
     color: white;
     text-align: center;
 
+    .accounts-title {
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+
     .add-button {
         position: absolute;
-        top: 2px;
-        left: 2px;
+        top: 0;
+        left: 0;
+        margin: 0;
     }
 
     .refresh-button {
         position: absolute;
-        top: 2px;
-        right: 2px;
+        top: 0;
+        right: 0;
+        margin: 0;
     }
 
     .accounts {
@@ -95,13 +102,12 @@ export default {
         justify-content: center;
         flex-wrap: wrap;
         text-align: center;
-        padding: 10px;
 
         .account-item {
             position: relative;
             color: black;
             font-size: 0.85em;
-            margin: 4px;
+            margin: 8px 4px 0;
             padding: 10px 12px 20px;
             border: solid 1px rgba(0,0,0,.4);
             border-radius: 8px;

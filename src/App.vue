@@ -26,6 +26,15 @@
                 <span>Make Payments</span>
               </v-tooltip>
               <v-tooltip open-delay='800' bottom>
+                <v-tabs-item slot='activator' to='/token' exact class="custom-tab-item">
+                  <div class='custom-tab-content'>
+                    <v-icon>&#xE263;</v-icon>
+                    <div class='bottom-bar' />
+                  </div>
+                </v-tabs-item>
+                <span>Create Token</span>
+              </v-tooltip>
+              <v-tooltip open-delay='800' bottom>
                 <v-tabs-item slot='activator' to='/buytoken' exact class="custom-tab-item">
                   <div class='custom-tab-content'>
                     <v-icon>&#xE851;</v-icon>
@@ -42,15 +51,6 @@
                   </div>
                 </v-tabs-item>
                 <span>Live Trades</span>
-              </v-tooltip>
-              <v-tooltip open-delay='800' bottom>
-                <v-tabs-item slot='activator' to='/token' exact class="custom-tab-item">
-                  <div class='custom-tab-content'>
-                    <v-icon>&#xE263;</v-icon>
-                    <div class='bottom-bar' />
-                  </div>
-                </v-tabs-item>
-                <span>Create Token</span>
               </v-tooltip>
               <v-tooltip open-delay='800' bottom>
                 <v-tabs-item slot='activator' to='/trust' exact class="custom-tab-item">
@@ -83,9 +83,13 @@
           </keep-alive>
         </div>
         <div class='app-console'>
-          <div class='console-bar'>
-            <v-btn small @click='clearLog()'>Clear</v-btn>
-          </div>
+          <v-btn class='console-bar' icon dark small @click.stop='clearLog(item)'>
+            <v-tooltip open-delay='800' bottom>
+              <v-icon slot='activator'>&#xE15C;</v-icon>
+              <span>Clear console</span>
+            </v-tooltip>
+          </v-btn>
+
           <textarea readonly="readonly" wrap="off" class='output-container' v-model='consoleOutput'></textarea>
         </div>
       </div>
@@ -261,8 +265,8 @@ html {
                 justify-content: flex-end;
                 position: absolute;
                 top: 0;
-                left: 0;
-                right: 20px;
+                right: 0;
+                right: 10px;
             }
 
             .output-container {
