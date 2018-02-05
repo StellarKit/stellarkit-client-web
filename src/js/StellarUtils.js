@@ -174,7 +174,7 @@ export default class StellarUtils {
     })
   }
 
-  updateBalances() {
+  updateBalances(logSuccess = false) {
     for (let i = 0; i < StellarAccounts.accounts().length; i++) {
       const publicKey = StellarAccounts.publicKey(i)
 
@@ -183,7 +183,11 @@ export default class StellarUtils {
           for (const key in balanceObject) {
             StellarAccounts.updateBalance(i, key, balanceObject[key])
           }
-          Helper.debugLog(publicKey, 'Success')
+
+          if (logSuccess) {
+            Helper.debugLog(publicKey, 'Success')
+          }
+
           return null
         })
         .catch((error) => {

@@ -63,7 +63,7 @@ export default {
     },
     refresh() {
       Helper.debugLog('refreshing...')
-      this.su.updateBalances()
+      this.su.updateBalances(true)
     }
   }
 }
