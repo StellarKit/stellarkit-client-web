@@ -4,7 +4,7 @@ import StellarAccounts from './StellarAccounts.js'
 import StellarServer from './StellarServer.js'
 import Helper from '../js/helper.js'
 
-export default class StellarUtils {
+class StellarUtils {
   constructor() {
     this.s = new StellarServer()
   }
@@ -198,3 +198,8 @@ export default class StellarUtils {
     }
   }
 }
+
+const instance = new StellarUtils()
+Object.freeze(instance)
+
+export default instance

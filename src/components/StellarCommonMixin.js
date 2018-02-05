@@ -5,13 +5,9 @@
  export default {
    data() {
      return {
-       su: null,
        accountsUI: [],
        tokensUI: []
      }
-   },
-   created() {
-     this.su = new StellarUtils()
    },
    mounted() {
      this.updateAccountsUI()
@@ -19,7 +15,7 @@
    },
    methods: {
      infoForPublicKey(publicKey) {
-       this.su.accountInfo(publicKey)
+       StellarUtils.accountInfo(publicKey)
          .then((response) => {
            Helper.debugLog(response)
          })
@@ -40,7 +36,7 @@
      createAccount() {
        Helper.debugLog('create account:')
 
-       this.su.createTestAccount()
+       StellarUtils.createTestAccount()
          .then((result) => {
            Helper.debugLog(result)
          })

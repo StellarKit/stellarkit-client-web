@@ -28,6 +28,7 @@
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import StellarAccounts from '../js/StellarAccounts.js'
 import Helper from '../js/helper.js'
+import StellarUtils from '../js/StellarUtils.js'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -44,7 +45,7 @@ export default {
   mounted() {
     // this.lowballerAcct = StellarAccounts.accountWithName('Low Baller')
     // if (!this.lowballerAcct) {
-    //   this.su.createTestAccount('Low Baller')
+    //   StellarUtils.createTestAccount('Low Baller')
     //     .then((result) => {
     //       this.lowballerAcct = result
     //     })
@@ -156,7 +157,7 @@ export default {
     streamPayments() {
       Helper.debugLog('listening for payments')
 
-      const builder = this.su.server().payments()
+      const builder = StellarUtils.server().payments()
         .cursor('now')
 
       this.paymentStopper = builder.stream({
@@ -179,7 +180,7 @@ export default {
     streamOperations() {
       Helper.debugLog('listening for operations')
 
-      const builder = this.su.server().operations()
+      const builder = StellarUtils.server().operations()
         .cursor('now')
 
       this.operationStopper = builder.stream({
@@ -203,7 +204,7 @@ export default {
     streamTrades() {
       Helper.debugLog('listening for trades')
 
-      const builder = this.su.server().trades()
+      const builder = StellarUtils.server().trades()
         .cursor('now')
 
       this.tradeStopper = builder.stream({
@@ -217,7 +218,7 @@ export default {
     },
     setLowballerTrust() {
       // buyer must trust the distributor
-      this.su.changeTrust(this.lowballerAcct.secret, StellarAccounts.lamboTokenAsset(), '10000')
+      StellarUtils.changeTrust(this.lowballerAcct.secret, StellarAccounts.lamboTokenAsset(), '10000')
         .then((result) => {
           Helper.debugLog(result)
         })
@@ -226,7 +227,7 @@ export default {
         })
     },
     makeLowballOffer() {
-      this.su.manageOffer(this.lowballerAcct.secret, StellarAccounts.lamboTokenAsset(), this.su.lumins(), '2', {
+      StellarUtils.manageOffer(this.lowballerAcct.secret, StellarAccounts.lamboTokenAsset(), StellarUtils.lumins(), '2', {
           n: 44,
           d: 3
         })
@@ -240,19 +241,19 @@ export default {
     orderbook() {
       Helper.debugLog('Orderbook')
 
-      const selling = this.su.lumins()
+      const selling = StellarUtils.lumins()
       const buying = StellarAccounts.lamboTokenAsset()
 
       // const selling = StellarAccounts.lamboTokenAsset()
-      // const buying = this.su.lumins()
+      // const buying = StellarUtils.lumins()
 
-      this.su.server().orderbook(selling, buying)
+      StellarUtils.server().orderbook(selling, buying)
         .call()
         .then((response) => {
           Helper.debugLog(response)
         })
       // let max = 12
-      // const closeStream = this.su.server().orderbook(selling, buying)
+      // const closeStream = StellarUtils.server().orderbook(selling, buying)
       // .stream({
       //   onmessage: (response) => {
       //     if (max-- <= 0) {

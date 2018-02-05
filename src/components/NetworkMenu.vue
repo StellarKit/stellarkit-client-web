@@ -17,12 +17,14 @@
     </v-list>
   </v-menu>
   <span class='network-string'>{{serverURL()}}</span>
+  <v-btn class='horizon-button' color='secondary' @click="horizonMetrics()">Horizon Metrics</v-btn>
 </div>
 </template>
 
 <script>
 import StellarServer from '../js/StellarServer.js'
 import Helper from '../js/helper.js'
+import StellarUtils from '../js/StellarUtils.js'
 
 export default {
   data() {
@@ -55,6 +57,17 @@ export default {
     this.server = new StellarServer()
   },
   methods: {
+    horizonMetrics() {
+      Helper.debugLog('horizon metrics...')
+
+      StellarUtils.horizonMetrics()
+        .then((response) => {
+          Helper.debugLog(response, 'Success')
+        })
+        .catch((error) => {
+          Helper.debugLog(error, 'Error')
+        })
+    },
     serverURL() {
       return this.server.serverURL()
     },
@@ -88,6 +101,9 @@ export default {
     span.network-string {
         margin-left: 10px;
         font-size: 1.2em;
+        flex: 1;
     }
+
+    .horizon-button {}
 }
 </style>

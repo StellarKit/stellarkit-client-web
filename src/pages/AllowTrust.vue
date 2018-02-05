@@ -30,6 +30,7 @@ import AccountList from '../components/AccountList.vue'
 const StellarSdk = require('stellar-sdk')
 import Helper from '../js/helper.js'
 import StellarAccounts from '../js/StellarAccounts.js'
+import StellarUtils from '../js/StellarUtils.js'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -42,7 +43,7 @@ export default {
     }
   },
   mounted() {
-    this.su.updateBalances()
+    StellarUtils.updateBalances()
   },
   methods: {
     sourceValid() {
@@ -57,7 +58,7 @@ export default {
       if (this.sourceValid()) {
         const issuerAcct = StellarAccounts.accountWithName('Issuer')
         if (issuerAcct) {
-          this.su.allowTrust(issuerAcct.secret, this.selectedSource.publicKey, StellarAccounts.lamboTokenAsset(), authorize)
+          StellarUtils.allowTrust(issuerAcct.secret, this.selectedSource.publicKey, StellarAccounts.lamboTokenAsset(), authorize)
             .then((response) => {
               Helper.debugLog(response, 'Success')
             })
@@ -73,7 +74,7 @@ export default {
     },
     changeTrust() {
       if (this.sourceValid()) {
-        this.su.changeTrust(this.selectedSource.secret, StellarAccounts.lamboTokenAsset(), '10000')
+        StellarUtils.changeTrust(this.selectedSource.secret, StellarAccounts.lamboTokenAsset(), '10000')
           .then((response) => {
             Helper.debugLog(response, 'Success')
           })
@@ -88,7 +89,7 @@ export default {
       Helper.debugLog('setAuthRequiredFlag...')
 
       if (this.sourceValid()) {
-        this.su.setFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag)
+        StellarUtils.setFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag)
           .then((response) => {
             Helper.debugLog(response, 'Success')
           })
@@ -103,7 +104,7 @@ export default {
       Helper.debugLog('setAuthRevocableFlag...')
 
       if (this.sourceValid()) {
-        this.su.setFlags(this.selectedSource.secret, StellarSdk.AuthRevocableFlag)
+        StellarUtils.setFlags(this.selectedSource.secret, StellarSdk.AuthRevocableFlag)
           .then((response) => {
             Helper.debugLog(response, 'Success')
           })
@@ -118,7 +119,7 @@ export default {
       Helper.debugLog('clearing flags...')
 
       if (this.sourceValid()) {
-        this.su.clearFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag | StellarSdk.AuthRevocableFlag)
+        StellarUtils.clearFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag | StellarSdk.AuthRevocableFlag)
           .then((response) => {
             Helper.debugLog(response, 'Success')
           })
@@ -133,11 +134,11 @@ export default {
       Helper.debugLog('Buying tokens...')
 
       if (this.sourceValid()) {
-        this.su.buyTokens(this.selectedSource.secret, this.su.lumins(), StellarAccounts.lamboTokenAsset(), '1000', '2.22')
+        StellarUtils.buyTokens(this.selectedSource.secret, StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), '1000', '2.22')
           .then((response) => {
             Helper.debugLog(response)
 
-            this.su.updateBalances()
+            StellarUtils.updateBalances()
           })
           .catch((error) => {
             Helper.debugLog(error)

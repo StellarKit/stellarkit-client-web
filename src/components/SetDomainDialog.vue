@@ -30,6 +30,7 @@ import {
   DialogTitleBar
 } from 'stellar-js-utils'
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
+import StellarUtils from '../js/StellarUtils.js'
 
 export default {
   props: ['ping', 'secretKey'],
@@ -61,7 +62,7 @@ export default {
 
         this.statusMessage = 'Setting home domain...'
 
-        this.su.setDomain(this.secretKey, this.domain)
+        StellarUtils.setDomain(this.secretKey, this.domain)
           .then((result) => {
             Helper.debugLog(result)
             this.loadingLostLicense = false

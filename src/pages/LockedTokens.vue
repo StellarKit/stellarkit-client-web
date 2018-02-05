@@ -43,6 +43,7 @@ import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import AccountList from '../components/AccountList.vue'
 import Helper from '../js/helper.js'
 import StellarAccounts from '../js/StellarAccounts.js'
+import StellarUtils from '../js/StellarUtils.js'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -56,7 +57,7 @@ export default {
     }
   },
   mounted() {
-    this.su.updateBalances()
+    StellarUtils.updateBalances()
   },
   methods: {
     sourceValid() {
@@ -85,14 +86,14 @@ export default {
       const distributorAccount = this.distributorAccount()
 
       if (distributorAccount) {
-        this.su.newAccountWithTokens(distributorAccount.secret, '3', StellarAccounts.lamboTokenAsset(), '12')
+        StellarUtils.newAccountWithTokens(distributorAccount.secret, '3', StellarAccounts.lamboTokenAsset(), '12')
           .then((result) => {
             // result is {account: newAccount, keypair: keypair}
             Helper.debugLog(result.account)
 
             Helper.debugLog('adding distributor as signer...')
 
-            return this.su.makeMultiSig(result.keypair.secret(), distributorAccount.publicKey)
+            return StellarUtils.makeMultiSig(result.keypair.secret(), distributorAccount.publicKey)
           })
           .then((result) => {
             Helper.debugLog('Account is ready', 'Success')

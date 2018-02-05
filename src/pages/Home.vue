@@ -1,8 +1,6 @@
 <template>
 <div>
   <div class='top-controls'>
-    <v-btn small @click="horizonMetrics()">Horizon Metrics</v-btn>
-
     <div class='address-box'>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" label="Source accout" autocomplete return-object max-height="600"></v-select>
       <v-select :items="accountsUI" item-text='name' v-model="selectedDest" label="Destination accout" autocomplete return-object max-height="600"></v-select>
@@ -39,6 +37,7 @@ import EnterStringDialog from '../components/EnterStringDialog.vue'
 import SetDomainDialog from '../components/SetDomainDialog.vue'
 import Helper from '../js/helper.js'
 const StellarSdk = require('stellar-sdk')
+import StellarUtils from '../js/StellarUtils.js'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -58,7 +57,7 @@ export default {
     }
   },
   mounted() {
-    this.su.updateBalances()
+    StellarUtils.updateBalances()
   },
   methods: {
     testFederation() {
@@ -94,7 +93,7 @@ export default {
       Helper.debugLog('setAuthRequiredFlag...')
 
       if (this.sourceValid()) {
-        this.su.setFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag)
+        StellarUtils.setFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag)
           .then((response) => {
             Helper.debugLog(response, 'Success')
           })
@@ -109,7 +108,7 @@ export default {
       Helper.debugLog('setAuthRevocableFlag...')
 
       if (this.sourceValid()) {
-        this.su.setFlags(this.selectedSource.secret, StellarSdk.AuthRevocableFlag)
+        StellarUtils.setFlags(this.selectedSource.secret, StellarSdk.AuthRevocableFlag)
           .then((response) => {
             Helper.debugLog(response, 'Success')
           })
@@ -124,7 +123,7 @@ export default {
       Helper.debugLog('clearing flags...')
 
       if (this.sourceValid()) {
-        this.su.clearFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag | StellarSdk.AuthRevocableFlag)
+        StellarUtils.clearFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag | StellarSdk.AuthRevocableFlag)
           .then((response) => {
             Helper.debugLog(response, 'Success')
           })
@@ -135,17 +134,6 @@ export default {
         Helper.debugLog('please select a source account', 'Error')
       }
     },
-    horizonMetrics() {
-      Helper.debugLog('horizon metrics...')
-
-      this.su.horizonMetrics()
-        .then((response) => {
-          Helper.debugLog(response, 'Success')
-        })
-        .catch((error) => {
-          Helper.debugLog(error, 'Error')
-        })
-    },
     swapSourceDest() {
       const tmp = this.selectedSource
       this.selectedSource = this.selectedDest
@@ -155,9 +143,9 @@ export default {
       Helper.debugLog('merging')
 
       if (this.sourceValid()) {
-        this.su.mergeAccount(this.selectedSource.secret, this.selectedDest.publicKey)
+        StellarUtils.mergeAccount(this.selectedSource.secret, this.selectedDest.publicKey)
           .then((response) => {
-            this.su.updateBalances()
+            StellarUtils.updateBalances()
 
             Helper.debugLog(response, 'Success')
           })
@@ -172,9 +160,9 @@ export default {
       Helper.debugLog('path with signers...')
 
       if (this.sourceValid() && this.signerValid()) {
-        this.su.sendAsset(this.selectedSource.secret, this.selectedDest.publicKey, '122', null, null, [this.selectedSigner.secret])
+        StellarUtils.sendAsset(this.selectedSource.secret, this.selectedDest.publicKey, '122', null, null, [this.selectedSigner.secret])
           .then((response) => {
-            this.su.updateBalances()
+            StellarUtils.updateBalances()
 
             Helper.debugLog(response, 'Success')
           })
@@ -193,7 +181,7 @@ export default {
       Helper.debugLog('set signer...')
 
       if (this.sourceValid() && this.signerValid()) {
-        this.su.makeMultiSig(this.selectedSource.secret, this.selectedSigner.publicKey)
+        StellarUtils.makeMultiSig(this.selectedSource.secret, this.selectedSigner.publicKey)
           .then((result) => {
             Helper.debugLog(result, 'Success')
           })
@@ -210,7 +198,7 @@ export default {
     },
     operationsForSelectedSource() {
       if (this.sourceValid()) {
-        this.su.server().operations()
+        StellarUtils.server().operations()
           .forAccount(this.selectedSource.publicKey)
           .call()
           .then((response) => {
@@ -222,7 +210,7 @@ export default {
     },
     paymentsForSelectedSource() {
       if (this.sourceValid()) {
-        this.su.server().payments()
+        StellarUtils.server().payments()
           .forAccount(this.selectedSource.publicKey)
           .call()
           .then((response) => {
@@ -234,7 +222,7 @@ export default {
     },
     transactionsForSelectedSource() {
       if (this.sourceValid()) {
-        this.su.server().transactions()
+        StellarUtils.server().transactions()
           .forAccount(this.selectedSource.publicKey)
           .stream({
             onmessage: (txResponse) => {
@@ -259,9 +247,9 @@ export default {
       Helper.debugLog('paying')
 
       if (this.sourceValid()) {
-        this.su.sendAsset(this.selectedSource.secret, this.selectedDest.publicKey, '122')
+        StellarUtils.sendAsset(this.selectedSource.secret, this.selectedDest.publicKey, '122')
           .then((response) => {
-            this.su.updateBalances()
+            StellarUtils.updateBalances()
 
             Helper.debugLog(response, 'Success')
 

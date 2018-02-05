@@ -15,13 +15,10 @@ export default {
     return {
       valid: false,
       xlm: 0,
-      lmb: 0,
-      su: null
+      lmb: 0
     }
   },
   mounted() {
-    this.su = new StellarUtils()
-
     // this.fetch()
     // setInterval(() => {
     //   this.fetch()
@@ -30,7 +27,7 @@ export default {
   methods: {
     fetch() {
       if (Helper.strlen(this.publicKey) > 0) {
-        this.su.balances(this.publicKey)
+        StellarUtils.balances(this.publicKey)
           .then((response) => {
             this.xlm = response['XLM']
             this.lmb = response['LMB']
