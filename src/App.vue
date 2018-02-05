@@ -274,8 +274,13 @@ html {
                 display: flex;
                 position: absolute;
                 top: 0;
-                right: 0;
+                left: 0;
                 margin: 0;
+
+                color: rgba(255,255,255,.3);
+                &:hover {
+                    color: rgba(255,255,255,1);
+                }
             }
 
             .output-container {
