@@ -56,7 +56,7 @@ export default {
 .ticker-box {
     position: absolute;
     z-index: 1;
-    top: 10px;
+    top: 20px;
     left: 0;
     right: 0;
     justify-content: center;

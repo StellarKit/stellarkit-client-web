@@ -83,7 +83,7 @@
           </keep-alive>
         </div>
         <div class='app-console'>
-          <v-btn class='console-bar' icon dark small @click.stop='clearLog(item)'>
+          <v-btn class='console-bar' icon dark @click.stop='clearLog(item)'>
             <v-tooltip open-delay='800' bottom>
               <v-icon slot='activator'>&#xE15C;</v-icon>
               <span>Clear console</span>
@@ -222,7 +222,7 @@ html {
 
     .top-bar {
         width: 100%;
-        box-shadow: 0 1px 12px rgba(0,0,0,.5);
+        box-shadow: 0 1px 4px rgba(0,0,0,.5);
 
         .top-toolbar {
             background: linear-gradient(to bottom, rgb(55,55,55) , rgb(22,22,22));
@@ -272,11 +272,10 @@ html {
 
             .console-bar {
                 display: flex;
-                justify-content: flex-end;
                 position: absolute;
                 top: 0;
                 right: 0;
-                right: 10px;
+                margin: 0;
             }
 
             .output-container {
