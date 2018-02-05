@@ -174,7 +174,7 @@ export default class StellarUtils {
     })
   }
 
-  updateBalances(callback = null) {
+  updateBalances() {
     for (let i = 0; i < StellarAccounts.accounts().length; i++) {
       const publicKey = StellarAccounts.publicKey(i)
 
@@ -183,18 +183,13 @@ export default class StellarUtils {
           for (const key in balanceObject) {
             StellarAccounts.updateBalance(i, key, balanceObject[key])
           }
-
-          if (callback) {
-            callback('Success: ' + publicKey)
-          }
+          Helper.debugLog(publicKey, 'Success')
+          return null
         })
-        .catch((err) => {
+        .catch((error) => {
           StellarAccounts.updateBalance(i, 'XLM', 'ERROR')
 
-          if (callback) {
-            callback('Error: ' + publicKey)
-            callback(err)
-          }
+          Helper.debugLog(error, 'Error')
         })
     }
   }

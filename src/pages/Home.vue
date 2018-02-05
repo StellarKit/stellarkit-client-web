@@ -1,9 +1,7 @@
 <template>
 <div>
   <div class='top-controls'>
-    <v-btn small @click="createAccount()">Create Account</v-btn>
-    <v-btn small @click="refresh()">Refresh</v-btn>
-    <v-btn small @click="horizonMetrics()">Horizon</v-btn>
+    <v-btn small @click="horizonMetrics()">Horizon Metrics</v-btn>
 
     <div class='address-box'>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" label="Source accout" autocomplete return-object max-height="600"></v-select>
@@ -27,10 +25,7 @@
     <v-btn small @click="clearFlags()">Clear Flags</v-btn>
   </div>
 
-  <div class='balances'>
-    <h3>Accounts - Click for info</h3>
-    <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
-  </div>
+  <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
 
   <enter-string-dialog :ping='enterStringPing' />
   <set-domain-dialog :ping='setDomainPing' :secretKey='sourceSecretKey' />
@@ -280,10 +275,6 @@ export default {
       } else {
         Helper.debugLog('please select a source account', 'Error')
       }
-    },
-    refresh() {
-      Helper.debugLog('refresh')
-      this.su.updateBalances(this.debugLog)
     }
   }
 }
@@ -300,13 +291,5 @@ export default {
     div.input-group {
         margin-right: 16px;
     }
-}
-
-.balances {
-    padding: 10px;
-    background: steelblue;
-    box-shadow: 0 7px 12px -7px rgba(0,0,0,.7);
-    color: white;
-    text-align: center;
 }
 </style>

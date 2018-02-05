@@ -2,9 +2,8 @@
 <div>
   <div class="info-area">
     Start with three accounts: Issuer, Distributor and Buyer<br>
-    <v-btn small @click="createAccounts()">Create Accounts</v-btn>
+    <v-btn small @click="createStandardAccounts()">Create Accounts</v-btn>
     <br>
-    <h3>Accounts - Click for info</h3>
     <account-list :items="tokensUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
   </div>
 
@@ -112,7 +111,7 @@ export default {
     'account-list': AccountList
   },
   mounted() {
-    this.createAccounts()
+    this.createStandardAccounts()
   },
   methods: {
     newAccountWithTokens() {
@@ -306,7 +305,7 @@ export default {
           return false
         })
     },
-    createAccounts() {
+    createStandardAccounts() {
       Helper.debugLog('Creating Accounts...')
 
       this.issuerAcct = StellarAccounts.accountWithName('Issuer')
@@ -349,13 +348,8 @@ export default {
 <style scoped lang='scss'>
 .info-area {
     width: 100%;
-    padding: 20px;
     background: steelblue;
     color: white;
-
-    h3 {
-        text-align: center;
-    }
 }
 
 .token-steps {

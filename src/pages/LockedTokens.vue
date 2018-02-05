@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <v-btn small @click="createAccount()">Create Account</v-btn>
+    <v-btn small @click="createAccountWithLockedTokens()">Create Account with Locked Tokens</v-btn>
     <v-btn small @click="viewTransaction()">View Transaction</v-btn>
     <v-btn small @click="submitTransaction()">Submit Transaction</v-btn>
 
@@ -34,10 +34,7 @@
     </div>
   </div>
 
-  <div class='balances'>
-    <h3>Accounts - Click for info</h3>
-    <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
-  </div>
+  <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
 </div>
 </template>
 
@@ -84,7 +81,7 @@ export default {
         Helper.debugLog('No transactions available')
       }
     },
-    createAccount() {
+    createAccountWithLockedTokens() {
       const distributorAccount = this.distributorAccount()
 
       if (distributorAccount) {
@@ -136,14 +133,6 @@ export default {
     div.input-group {
         margin-right: 16px;
     }
-}
-
-.balances {
-    padding: 10px;
-    background: steelblue;
-    box-shadow: 0 7px 12px -7px rgba(0,0,0,.7);
-    color: white;
-    text-align: center;
 }
 
 .instructions {
