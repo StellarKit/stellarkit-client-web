@@ -83,7 +83,7 @@
           </keep-alive>
         </div>
         <div class='app-console'>
-          <v-btn class='console-bar' icon dark @click.stop='clearLog(item)'>
+          <v-btn class='console-bar' icon dark @click.stop='clearLog()'>
             <v-tooltip open-delay='800' bottom>
               <v-icon slot='activator'>&#xE15C;</v-icon>
               <span>Clear console</span>
