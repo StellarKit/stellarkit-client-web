@@ -26,7 +26,7 @@ const router = new VueRouter({
     }, {
       path: '/buytoken',
       component: BuyToken,
-      name: 'BuyToken'
+      name: 'Buy Token'
     }, {
       path: '/trades',
       component: Trades,
@@ -34,7 +34,7 @@ const router = new VueRouter({
     }, {
       path: '/token',
       component: Token,
-      name: 'Token'
+      name: 'Create Token'
     }, {
       path: '/trust',
       component: AllowTrust,

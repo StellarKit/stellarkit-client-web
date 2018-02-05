@@ -196,9 +196,20 @@ html {
 #app {
     height: 100%;
 }
+
+// hack for toolbar being too tall
+#app > div.application--wrap > div > div.main-container > div.top-bar > div > nav > div.toolbar__content {
+    height: auto !important;
+}
+
+// hack for toolbar title left margin
+#app > div.application--wrap > div > div.main-container > div.top-bar > div > nav > div.toolbar__content > div.toolbar__title {
+    margin: 0;
+    font-size: 1.3em;
+}
 </style>
 
-<style scoped lang='scss'>
+<style  lang='scss' scoped>
 .app-wrapper {
     display: flex;
     flex: 1;

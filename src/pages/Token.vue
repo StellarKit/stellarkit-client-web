@@ -1,14 +1,13 @@
 <template>
 <div>
-  <div class="info-area">
-    Start with three accounts: Issuer, Distributor and Buyer<br>
-    <v-btn small @click="createStandardAccounts()">Create Accounts</v-btn>
-    <br>
-    <account-list :items="tokensUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
-  </div>
+  <div class='info-area'>
+    <div>1. Start with three accounts: Issuer, Distributor and Buyer
+    </div>
+    <v-btn class='create-accounts' small @click="createStandardAccounts()">Create Accounts</v-btn>
 
-  <div>Click each button in order, but wait for each to complete
+    <div>2. Click each button in order, but wait for each to complete</div>
   </div>
+  <account-list :items="tokensUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
   <div class='expansion-contents'>
     <v-expansion-panel class='custom-expansion-panel'>
       <v-expansion-panel-content v-bind:value="true">
@@ -85,10 +84,11 @@
     </v-expansion-panel>
   </div>
 
-  <v-btn small @click="showOffers()">Show Token Offers</v-btn>
-  <v-btn small @click="deleteOffers()">Delete Token Offers</v-btn>
-  <v-btn small @click="paymentPaths()">Payment Paths</v-btn>
-
+  <div class='bottom-buttons'>
+    <v-btn small @click="showOffers()">Show Token Offers</v-btn>
+    <v-btn small @click="deleteOffers()">Delete Token Offers</v-btn>
+    <v-btn small @click="paymentPaths()">Payment Paths</v-btn>
+  </div>
 </div>
 </template>
 
@@ -348,9 +348,24 @@ export default {
 
 <style scoped lang='scss'>
 .info-area {
+    position: relative;
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    background: steelblue;
-    color: white;
+    padding: 10px;
+    align-items: center;
+    font-weight: bold;
+
+    .create-accounts {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+}
+
+.bottom-buttons {
+    display: flex;
+    justify-content: center;
 }
 
 .token-steps {
