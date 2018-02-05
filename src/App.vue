@@ -257,8 +257,7 @@ html {
             position: relative;
             display: flex;
             flex: 1 1 300px;
-            background: red;
-            border-top: solid 2px black;
+            border-top: solid 1px transparent;
 
             .console-bar {
                 display: flex;

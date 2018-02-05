@@ -17,7 +17,7 @@
     </v-list>
   </v-menu>
   <span class='network-string'>{{serverURL()}}</span>
-  <v-btn class='horizon-button' color='secondary' @click="horizonMetrics()">Horizon Metrics</v-btn>
+  <v-btn class='horizon-button' small color='secondary' @click="horizonMetrics()">Horizon Metrics</v-btn>
 </div>
 </template>
 
