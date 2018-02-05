@@ -89,7 +89,6 @@
   <v-btn small @click="showOffers()">Show Token Offers</v-btn>
   <v-btn small @click="deleteOffers()">Delete Token Offers</v-btn>
   <v-btn small @click="paymentPaths()">Payment Paths</v-btn>
-  <v-btn small @click="buyerInfo()">Buyer Info</v-btn>
 
 </div>
 </template>
@@ -146,21 +145,15 @@ export default {
           Helper.debugLog(error)
         })
     },
-    buyerInfo() {
-      this.su.accountInfo(this.tokenBuyerAcct.publicKey)
-        .then((result) => {
-          Helper.debugLog(result)
-        })
-        .catch((err) => {
-          Helper.debugLog(err, 'ERROR')
-        })
-    },
     paymentPaths() {
-      Helper.debugLog('Source: ' + this.tokenBuyerAcct.publicKey + '<br>Destination: ' + this.tokenBuyerAcct.publicKey + '<br>Issuer: ' + this.issuerAcct.publicKey + '<br>Distributor: ' + this.distributorAcct.publicKey)
-      this.su.server().paths(this.tokenBuyerAcct.publicKey, this.tokenBuyerAcct.publicKey, StellarAccounts.lamboTokenAsset(), '3')
-        .call()
+      Helper.debugLog('payment paths..')
+
+      this.su.paths(this.distributorAccount.publicKey, this.tokenBuyerAcct.publicKey, StellarAccounts.lamboTokenAsset(), '1')
         .then((response) => {
-          Helper.debugLog(response)
+          Helper.debugLog(response, 'Success')
+        })
+        .catch((error) => {
+          Helper.debugLog(error, 'Error')
         })
     },
     manageOffer() {

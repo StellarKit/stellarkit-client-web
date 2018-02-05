@@ -41,6 +41,10 @@ export default class StellarUtils {
     return this.api().accountInfo(publicKey)
   }
 
+  paths(sourcePublic, destinationPublic, destinationAsset, destinationAmount) {
+    return this.api().paths(sourcePublic, destinationPublic, destinationAsset, destinationAmount).call()
+  }
+
   balances(publicKey) {
     return this.api().balances(publicKey)
   }
