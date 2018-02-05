@@ -151,6 +151,8 @@ export default {
       StellarUtils.paths(this.distributorAccount.publicKey, this.tokenBuyerAcct.publicKey, StellarAccounts.lamboTokenAsset(), '1')
         .then((response) => {
           Helper.debugLog(response, 'Success')
+
+          return null
         })
         .catch((error) => {
           Helper.debugLog(error, 'Error')
@@ -167,6 +169,8 @@ export default {
       StellarUtils.manageOffer(this.distributorAcct.secret, StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), '5000', price)
         .then((result) => {
           Helper.debugLog(result, 'Success')
+
+          return null
         })
         .catch((error) => {
           Helper.debugLog(error, 'Error')
@@ -183,6 +187,8 @@ export default {
       StellarUtils.manageOffer(this.distributorAcct.secret, StellarAccounts.ethereumAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
         .then((result) => {
           Helper.debugLog(result, 'Success')
+
+          return null
         })
         .catch((error) => {
           Helper.debugLog(error, 'Error')
@@ -199,6 +205,8 @@ export default {
       StellarUtils.manageOffer(this.distributorAcct.secret, StellarAccounts.bitcoinAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
         .then((result) => {
           Helper.debugLog(result, 'Success')
+
+          return null
         })
         .catch((error) => {
           Helper.debugLog(error, 'Error')
@@ -211,6 +219,8 @@ export default {
         .then((result) => {
           Helper.debugLog('locked!')
           Helper.debugLog(result)
+
+          return null
         })
         .catch((error) => {
           Helper.debugLog(error)
@@ -224,6 +234,8 @@ export default {
           Helper.debugLog(response, 'Success')
 
           StellarUtils.updateBalances()
+
+          return null
         })
         .catch((error) => {
           Helper.debugLog(error, 'Error')
@@ -235,6 +247,8 @@ export default {
       StellarUtils.changeTrust(this.distributorAcct.secret, asset, '10000')
         .then((result) => {
           Helper.debugLog(result)
+
+          return null
         })
         .catch((error) => {
           Helper.debugLog(error)
@@ -256,6 +270,8 @@ export default {
       StellarUtils.changeTrust(this.tokenBuyerAcct.secret, StellarAccounts.lamboTokenAsset(), '10000')
         .then((result) => {
           Helper.debugLog(result)
+
+          return null
         })
         .catch((error) => {
           Helper.debugLog(error)
@@ -270,6 +286,8 @@ export default {
           response.records.forEach((offer) => {
             Helper.debugLog(offer)
           })
+
+          return null
         })
     },
     deleteOffersFromArray(offers) {
@@ -283,6 +301,8 @@ export default {
             Helper.debugLog(result, 'Success')
 
             this.deleteOffersFromArray(offers)
+
+            return null
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
@@ -312,6 +332,8 @@ export default {
         StellarUtils.createTestAccount('Issuer', 'token')
           .then((result) => {
             this.issuerAcct = result
+
+            return null
           })
           .catch((error) => {
             Helper.debugLog(error)
@@ -323,6 +345,8 @@ export default {
         StellarUtils.createTestAccount('Distributor', 'token')
           .then((result) => {
             this.distributorAcct = result
+
+            return null
           })
           .catch((error) => {
             Helper.debugLog(error)
@@ -334,6 +358,8 @@ export default {
         StellarUtils.createTestAccount('Token buyer', 'token')
           .then((result) => {
             this.tokenBuyerAcct = result
+
+            return null
           })
           .catch((error) => {
             Helper.debugLog(error)

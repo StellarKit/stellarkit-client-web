@@ -3,7 +3,7 @@
   <div class='top-controls'>
     <div class='instructions'>
       <div>
-        Lock-up Period for Tokens
+        <strong>Lock-up Period for Tokens</strong>
       </div>
 
       <div>
@@ -20,14 +20,16 @@
       </div>
 
       <div>
-        Note: Avoid using AUTH REVOCABLE. In the past, some ICOs have used the AUTH REVOCABLE flag in order to impose lock-up periods. This is a problematic mechanism because it does not provide the user any guarantees with regard to when or if the assets will
-        be unlocked.
+        <strong>Note:</strong> Avoid using AUTH REVOCABLE. In the past, some ICOs have used the AUTH REVOCABLE flag in order to impose lock-up periods. This is a problematic mechanism because it does not provide the user any guarantees with regard to
+        when or if the assets will be unlocked.
       </div>
     </div>
 
     <v-btn small @click="createAccountWithLockedTokens()">Create Account with Locked Tokens</v-btn>
+    <v-btn small @click="createUnlockTransaction()">Create Unlock Transaction</v-btn>
     <v-btn small @click="viewTransaction()">View Transaction</v-btn>
     <v-btn small @click="submitTransaction()">Submit Transaction</v-btn>
+    <v-btn small @click="printTimeStamp()">test</v-btn>
 
     <div class='address-box'>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
@@ -66,11 +68,23 @@ export default {
       if (Helper.strlen(result) > 0) {
         return true
       }
+
+      Helper.debugLog('please select a source account', 'Error')
       return false
     },
     submitTransaction() {
       if (this.signedTransaction) {
         Helper.debugLog(this.signedTransaction)
+
+        StellarUtils.submitTransaction(this.signedTransaction)
+          .then((response) => {
+            Helper.debugLog(response)
+
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error)
+          })
       } else {
         Helper.debugLog('No transactions available')
       }
@@ -80,6 +94,41 @@ export default {
         Helper.debugLog(this.signedTransaction)
       } else {
         Helper.debugLog('No transactions available')
+      }
+    },
+    timeFromNow(secondsAhead = 0) {
+      return secondsAhead + Math.round((new Date()).getTime() / 1000)
+    },
+    printTimeStamp() {
+      function convertUNIXTimestampToTime(timestamp) {
+        const time = new Date(timestamp * 1000)
+        return time.toGMTString() + '\n' + time.toLocaleTimeString()
+      }
+
+      Helper.debugLog(convertUNIXTimestampToTime(this.timeFromNow()))
+    },
+    createUnlockTransaction() {
+      const distributorAccount = this.distributorAccount()
+
+      if (distributorAccount && this.sourceValid()) {
+        const transactionOpts = {
+          timebounds: {
+            minTime: this.timeFromNow(20)
+          }
+        }
+
+        // using source account instead of distributor, sequence numbers would be different in the future
+        StellarUtils.removeMultiSigTransaction(this.selectedSource.secret, distributorAccount.secret, this.selectedSource.publicKey, transactionOpts)
+          .then((result) => {
+            Helper.debugLog(result, 'Success')
+
+            this.signedTransaction = result
+
+            return result
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
+          })
       }
     },
     createAccountWithLockedTokens() {
@@ -104,18 +153,6 @@ export default {
             Helper.debugLog(error, 'Error')
           })
       }
-    },
-    removeSigner() {
-      // let timebounds = {
-      //   minTime: "1455287522",
-      //   maxTime: "1455297545"
-      // }
-      //
-      // const transaction = new StellarSdk.TransactionBuilder(account)
-      //   .addOperation(StellarSdk.Operation.createAccount(options))
-      //   .build()
-      //
-      // transaction.sign(sourceKeys)
     }
   }
 }
@@ -137,7 +174,6 @@ export default {
 .instructions {
     div {
         margin-bottom: 12px;
-        max-width: 800px;
     }
 }
 </style>
