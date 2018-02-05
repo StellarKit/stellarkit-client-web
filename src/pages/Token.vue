@@ -140,6 +140,8 @@ export default {
           Helper.debugLog(response)
 
           this.su.updateBalances()
+
+          return null
         })
         .catch((error) => {
           Helper.debugLog(error)
