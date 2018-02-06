@@ -113,9 +113,11 @@ export default {
       const distributorAccount = this.distributorAccount()
 
       if (distributorAccount && this.sourceValid()) {
+        const seconds = 10
+
         const transactionOpts = {
           timebounds: {
-            minTime: this.timeFromNow(5).toString(),
+            minTime: this.timeFromNow(seconds).toString(),
             maxTime: '0' // crashes without this
           }
         }
@@ -125,6 +127,9 @@ export default {
           .then((transaction) => {
             this.signedTransaction = transaction.toEnvelope().toXDR('base64')
             Helper.debugLog(this.signedTransaction, 'Success')
+
+            Helper.debugLog('You can submit the transaction in ' + seconds + ' seconds')
+            Helper.toast('Transaction valid in ' + seconds + ' seconds')
 
             return transaction
           })

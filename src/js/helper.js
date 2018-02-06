@@ -106,6 +106,10 @@ export default class Helper {
     return json
   }
 
+  static toast(message, error = false, location = 'app') {
+    this.emit('toast', message, error, location)
+  }
+
   static toStr(object) {
     if (object instanceof Error) {
       const json = this.stringify(object)

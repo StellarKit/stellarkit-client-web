@@ -98,10 +98,7 @@
       <!-- <footer-component publicKey='GCYQSB3UQDSISB5LKAL2OEVLAYJNIR7LFVYDNKRMLWQKDCBX4PU3Z6JP' /> -->
     </div>
 
-    <v-snackbar :timeout="500" :multi-line=false :vertical=true v-model="snackbarModel">
-      {{snackbarText}}
-      <v-btn small dark flat @click.native="snackbarModel=false">Close</v-btn>
-    </v-snackbar>
+    <toast-component />
   </div>
 </v-app>
 </template>
@@ -114,13 +111,15 @@ import NetworkMenu from './components/NetworkMenu.vue'
 import Helper from './js/helper.js'
 import Storage from './js/storage.js'
 import $ from 'jquery'
+import ToastComponent from './Components/ToastComponent.vue'
 
 export default {
   components: {
     'ticker-component': TickerComponent,
     'footer-component': FooterComponent,
     'navivation-drawer': NavigationDrawer,
-    'network-menu': NetworkMenu
+    'network-menu': NetworkMenu,
+    'toast-component': ToastComponent
   },
   data() {
     return {

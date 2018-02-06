@@ -26,7 +26,7 @@
 
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
 
-  <enter-string-dialog :ping='enterStringPing' />
+  <federation-lookup-dialog :ping='enterStringPing' />
   <set-domain-dialog :ping='setDomainPing' :secretKey='sourceSecretKey' />
 </div>
 </template>
@@ -34,7 +34,7 @@
 <script>
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import AccountList from '../components/AccountList.vue'
-import EnterStringDialog from '../components/EnterStringDialog.vue'
+import FederationLookupDialog from '../components/FederationLookupDialog.vue'
 import SetDomainDialog from '../components/SetDomainDialog.vue'
 import Helper from '../js/helper.js'
 const StellarSdk = require('stellar-sdk')
@@ -44,7 +44,7 @@ export default {
   mixins: [StellarCommonMixin],
   components: {
     'account-list': AccountList,
-    'enter-string-dialog': EnterStringDialog,
+    'federation-lookup-dialog': FederationLookupDialog,
     'set-domain-dialog': SetDomainDialog
   },
   data() {
