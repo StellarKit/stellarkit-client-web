@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class='help-email'>
-        <v-text-field label="Domain" v-model.trim="domain" @keyup.native.enter="setDomain()" autofocus></v-text-field>
+        <v-text-field label="Domain" v-model.trim="domain" @keyup.native.enter="setDomain()" ref='input'></v-text-field>
       </div>
       <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>
@@ -51,6 +51,12 @@ export default {
     ping: function () {
       this.visible = true
       this.domain = ''
+      this.statusMessage = ''
+
+      // autofocus hack
+      this.$nextTick(() => {
+        this.$refs.input.focus()
+      })
     }
   },
   methods: {

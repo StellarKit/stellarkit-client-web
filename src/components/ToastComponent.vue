@@ -1,5 +1,5 @@
 <template>
-<v-snackbar :timeout="4000" :bottom="bottom" :top="top" v-model="visible" :color='color' :absolute='absolute' :multi-line='multiline'>
+<v-snackbar :timeout="3000" :bottom="bottom" :top="top" v-model="visible" :color='color' :absolute='absolute' :multi-line='multiline'>
   <div class='toast-text' v-html='snackbarMessage'></div>
 </v-snackbar>
 </template>

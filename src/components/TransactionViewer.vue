@@ -8,7 +8,7 @@
       <div>{{statusMessage}}</div>
 
       <div class='button-holder'>
-        <v-btn round color='primary' slot="activator" @click.native="submitTransaction()" :loading="loadingLostLicense">Submit</v-btn>
+        <v-btn round color='primary' slot="activator" @click.native="submitTransaction()" :loading="loadingTransaction">Submit</v-btn>
       </div>
       <toast-component :absolute=true location='transaction-dialog' :bottom=false :top=true />
     </div>
@@ -37,7 +37,7 @@ export default {
     return {
       visible: false,
       title: 'Submit Transaction',
-      loadingLostLicense: false,
+      loadingTransaction: false,
       statusMessage: ''
     }
   },
@@ -53,11 +53,14 @@ export default {
         const envelope = StellarSdk.xdr.TransactionEnvelope.fromXDR(this.transaction, 'base64')
         const transaction = new StellarSdk.Transaction(envelope)
 
+        this.loadingTransaction = true
+
         StellarUtils.submitTransaction(transaction)
           .then((response) => {
             Helper.debugLog(response)
 
             Helper.toast('Success', false, 'transaction-dialog')
+            this.loadingTransaction = false
 
             return null
           })
@@ -71,6 +74,7 @@ export default {
             }
 
             Helper.toast('Failed: see console', true, 'transaction-dialog')
+            this.loadingTransaction = false
           })
       }
     },

@@ -10,12 +10,12 @@
         </div>
       </div>
       <div class='help-email'>
-        <v-text-field type='email' label="Federation address" v-model.trim="email" @keyup.native.enter="lookup()" id="autofocusTextField"></v-text-field>
+        <v-text-field label="Federation address" v-model.trim="email" @keyup.native.enter="lookup()" ref='input'></v-text-field>
       </div>
       <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round color='primary' slot="activator" @click.native="lookup()" :loading="loadingLostLicense">Look up</v-btn>
+          <v-btn round color='primary' slot="activator" @click.native="lookup()" :loading="loadingFederation">Look up</v-btn>
           <span>Look up your federation address</span>
         </v-tooltip>
       </div>
@@ -28,7 +28,6 @@
 
 <script>
 import Helper from '../js/helper.js'
-import $ from 'jquery'
 import {
   DialogTitleBar
 } from 'stellar-js-utils'
@@ -45,18 +44,20 @@ export default {
     return {
       visible: false,
       title: 'Federation Lookup',
-      statusMessage: 'Server ready...',
+      statusMessage: '',
       email: '',
-      loadingLostLicense: false
+      loadingFederation: false
     }
   },
   watch: {
     ping: function () {
       this.visible = true
       this.email = ''
+      this.statusMessage = ''
 
+      // autofocus hack
       this.$nextTick(() => {
-        $('#autofocusTextField').focus()
+        this.$refs.input.focus()
       })
     }
   },
@@ -75,20 +76,24 @@ export default {
 
         this.displayErrorMessage(formResponse)
       } else {
-        this.loadingLostLicense = true
+        this.loadingFederation = true
 
         Helper.debugLog('Talking to federation server...')
         this.statusMessage = 'Talking to federation server...'
 
         StellarSdk.FederationServer.resolve(this.email)
           .then(federationRecord => {
-            this.loadingLostLicense = false
+            this.loadingFederation = false
 
             Helper.debugLog(federationRecord.account_id)
             this.statusMessage = federationRecord.account_id
+
+            Helper.toast('Success', false, 'federation-dialog')
           })
           .catch(error => {
-            this.loadingLostLicense = false
+            this.loadingFederation = false
+            this.displayErrorMessage('Failed: see console')
+            this.statusMessage = 'Failed'
 
             Helper.debugLog(error)
           })
