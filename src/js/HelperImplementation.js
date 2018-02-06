@@ -24,7 +24,7 @@ export default class HelperImplementation {
 
   static applicationName() {
     if (this.implemenation) {
-      return this.implemenation.name()
+      return this.implemenation.applicationName()
     }
 
     return null
