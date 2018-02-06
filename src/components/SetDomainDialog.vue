@@ -76,7 +76,7 @@ export default {
       }
     },
     displayErrorMessage(message) {
-      Helper.toast(message, true, 'lost')
+      Helper.toast(message, true)
     }
   }
 }

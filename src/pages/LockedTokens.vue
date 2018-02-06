@@ -37,12 +37,15 @@
   </div>
 
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
+
+  <transaction-viewer :ping='dialogPing' :transaction='signedTransaction' />
 </div>
 </template>
 
 <script>
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import AccountList from '../components/AccountList.vue'
+import TransactionViewer from '../components/TransactionViewer.vue'
 import Helper from '../js/helper.js'
 import StellarAccounts from '../js/StellarAccounts.js'
 import StellarUtils from '../js/StellarUtils.js'
@@ -51,12 +54,14 @@ const StellarSdk = require('stellar-sdk')
 export default {
   mixins: [StellarCommonMixin],
   components: {
-    'account-list': AccountList
+    'account-list': AccountList,
+    'transaction-viewer': TransactionViewer
   },
   data() {
     return {
       selectedSource: null,
-      signedTransaction: null
+      signedTransaction: null,
+      dialogPing: false
     }
   },
   mounted() {
@@ -93,6 +98,7 @@ export default {
     },
     viewTransaction() {
       if (this.signedTransaction) {
+        this.dialogPing = !this.dialogPing
         Helper.debugLog(this.signedTransaction)
       } else {
         Helper.debugLog('No transactions available')
@@ -156,6 +162,7 @@ export default {
           })
           .then((result) => {
             Helper.debugLog('Account is ready', 'Success')
+            Helper.toast('Account is ready')
 
             return result
           })
