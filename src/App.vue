@@ -111,7 +111,7 @@ import NetworkMenu from './components/NetworkMenu.vue'
 import Helper from './js/helper.js'
 import Storage from './js/storage.js'
 import $ from 'jquery'
-import ToastComponent from './Components/ToastComponent.vue'
+import ToastComponent from './components/ToastComponent.vue'
 
 export default {
   components: {
@@ -267,7 +267,6 @@ html {
             position: relative;
             display: flex;
             flex: 1 1 300px;
-            border-top: solid 1px transparent;
 
             .console-bar {
                 display: flex;
