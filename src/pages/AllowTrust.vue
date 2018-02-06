@@ -12,8 +12,8 @@
     <v-btn small @click="clearFlags()">Clear Flags</v-btn>
 
     <div>Set Source account to a new account, Click Set Trust, and try to buy Token. It will fail if AuthRequiredFlag set unless you allow trust.</div>
-    <v-btn small @click="allowTrust(true)">Enable Trust</v-btn>
-    <v-btn small @click="allowTrust(false)">Disable Trust</v-btn>
+    <v-btn small @click="allowTrust(true)">Enable Trust For Account</v-btn>
+    <v-btn small @click="allowTrust(false)">Disable Trust For Account</v-btn>
 
     <div>Set Source account, trust asset, try to buy.</div>
     <v-btn small @click="changeTrust()">Trust Asset</v-btn>

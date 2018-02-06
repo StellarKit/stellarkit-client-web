@@ -1,16 +1,16 @@
 <template>
-<v-navigation-drawer absolute clipped temporary v-model="drawer" light>
-  <v-toolbar flat>
+<v-navigation-drawer absolute clipped dark temporary v-model="drawer">
+  <v-toolbar>
     <v-list>
-      <v-list-tile>
+      <v-list-tile @click="clickItem()">
         <v-list-tile-title class="title">
-          StellarKit
+          {{applicationName}}
         </v-list-tile-title>
       </v-list-tile>
     </v-list>
   </v-toolbar>
   <v-divider></v-divider>
-  <v-list dense class="pt-0">
+  <v-list>
     <v-list-tile v-for="item in items" :key="item.title" @click="clickItem(item)">
       <v-list-tile-action>
         <v-icon>{{ item.icon }}</v-icon>
@@ -21,6 +21,8 @@
     </v-list-tile>
   </v-list>
   <donate-dialog :ping='showDonatePing' :nodeEnv="nodeEnv" :donationPublicKey='donationPublicKey' />
+  <help-dialog :ping='showHelpPing' title='Help' />
+  <about-dialog :ping='showAboutPing' title='About' />
 </v-navigation-drawer>
 </template>
 
@@ -28,11 +30,16 @@
 import {
   DonateDialog
 } from 'stellar-js-utils'
+import Helper from '../js/helper.js'
+import ExpansionDialog from './ExpansionDialog.vue'
+import AboutDialog from './AboutDialog.vue'
 
 export default {
   props: ['ping'],
   components: {
-    'donate-dialog': DonateDialog
+    'donate-dialog': DonateDialog,
+    'help-dialog': ExpansionDialog,
+    'about-dialog': AboutDialog
   },
   watch: {
     ping: function () {
@@ -41,42 +48,60 @@ export default {
   },
   computed: {
     nodeEnv: function () {
-      if (window.electronAccess) {
-        return window.electronAccess.nodeEnv()
-      }
-      return false
+      return Helper.nodeEnv()
+    },
+    applicationName: function () {
+      return Helper.applicationName()
     }
   },
   data() {
     return {
+      showHelpPing: false,
+      showAboutPing: false,
       showDonatePing: false,
       drawer: false,
       donationPublicKey: 'GCYQSB3UQDSISB5LKAL2OEVLAYJNIR7LFVYDNKRMLWQKDCBX4PU3Z6JP',
       items: [{
+          id: 'about',
+          title: 'About',
+          icon: 'person'
+        },
+        {
           id: 'donate',
           title: 'Donate',
-          icon: 'dashboard'
+          icon: 'local_atm'
         },
         {
-          title: 'About',
-          icon: 'question_answer'
+          id: 'help',
+          title: 'Help',
+          icon: 'help'
         },
         {
+          id: 'settings',
           title: 'Settings',
-          icon: 'question_answer'
+          icon: 'settings'
         }
       ]
     }
   },
   methods: {
     clickItem(item) {
-      switch (item.id) {
-        case 'donate':
-          this.showDonatePing = !this.showDonatePing
-          break
-        default:
-          break
+      if (item) {
+        switch (item.id) {
+          case 'donate':
+            this.showDonatePing = !this.showDonatePing
+            break
+          case 'help':
+            this.showHelpPing = !this.showHelpPing
+            break
+          case 'about':
+            this.showAboutPing = !this.showAboutPing
+            break
+          default:
+            break
+        }
       }
+
       this.drawer = false
     }
   }

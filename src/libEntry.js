@@ -7,6 +7,7 @@ import LockedTokens from './pages/LockedTokens.vue'
 import CreateToken from './pages/CreateToken.vue'
 import Trades from './pages/Trades.vue'
 import $ from 'jquery'
+import HelperImplementation from './js/HelperImplementation.js'
 
 import Vuetify from 'vuetify'
 Vue.use(Vuetify)
@@ -61,5 +62,6 @@ const start = () => {
 }
 
 export {
-  start
+  start,
+  HelperImplementation
 }

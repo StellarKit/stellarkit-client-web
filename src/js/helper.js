@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Storage from './storage.js'
+import HelperImplementation from './HelperImplementation.js'
 
 export default class Helper {
   static vue() {
@@ -152,10 +153,29 @@ export default class Helper {
   }
 
   static openBrowser(url) {
-    if (window.electronAccess) {
-      window.electronAccess.openBrowser(url)
-    } else {
+    const handled = HelperImplementation.openBrowser(url)
+
+    if (!handled) {
       window.open(url, '_blank').focus()
     }
+  }
+
+  static nodeEnv() {
+    const isNode = HelperImplementation.nodeEnv()
+
+    if (isNode) {
+      return true
+    }
+    return false
+  }
+
+  static applicationName() {
+    const name = HelperImplementation.applicationName()
+
+    if (name) {
+      return name
+    }
+
+    return 'Stellar Army'
   }
 }
