@@ -143,8 +143,12 @@ export default class Helper {
   }
 
   static isFederation(fedString) {
-    // modify the email regex
-    return true
+    const regEx = /^\w+([.-]?\w+)*\*\w+([.-]?\w+)*(\.\w{2,3})+$/
+
+    if (regEx.test(fedString)) {
+      return true
+    }
+    return false
   }
 
   static openBrowser(url) {

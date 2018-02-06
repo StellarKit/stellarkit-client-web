@@ -2,7 +2,7 @@
 <div>
   <div class='top-controls'>
     <div class='instructions'>
-      <div>
+      <div class='title-instructions'>
         <strong>Lock-up Period for Tokens</strong>
       </div>
 
@@ -11,8 +11,8 @@
       </div>
 
       <div>
-        In this scenario, rather than directly sending sold assets to the buyer, they are placed in an account with two signees: the buyer and the issuer. Together, they sign a time-locked transaction to remove the issuer as a signer at a predetermined time.
-        Both the buyer and the issuer will retain a copy of this transaction, which can be submitted to the network by any party after the lockup period.
+        We recommend using a multisig escrow account. To implement this, rather than directly sending sold assets to the buyer, they are placed in an account with two signees: the buyer and the issuer. Together, they sign a time-locked transaction to remove the
+        issuer as a signer at a predetermined time. Both the buyer and the issuer will retain a copy of this transaction, which can be submitted to the network by any party after the lockup period.
       </div>
 
       <div>
@@ -20,8 +20,7 @@
       </div>
 
       <div>
-        <strong>Note:</strong> Avoid using AUTH REVOCABLE. In the past, some ICOs have used the AUTH REVOCABLE flag in order to impose lock-up periods. This is a problematic mechanism because it does not provide the user any guarantees with regard to
-        when or if the assets will be unlocked.
+        <strong>Note:</strong> The AUTH REVOCABLE flag is a <strong>problematic</strong> mechanism because it does not provide the user any guarantees with regard to when or if the assets will be unlocked.
       </div>
     </div>
 
@@ -189,8 +188,14 @@ export default {
 }
 
 .instructions {
+    .title-instructions {
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
     div {
         margin-bottom: 12px;
+        line-height: 1;
     }
 }
 </style>

@@ -19,6 +19,8 @@
           <span>Look up your federation address</span>
         </v-tooltip>
       </div>
+
+      <toast-component :absolute=true location='federation-dialog' :bottom=false :top=true />
     </div>
   </div>
 </v-dialog>
@@ -31,11 +33,13 @@ import {
   DialogTitleBar
 } from 'stellar-js-utils'
 const StellarSdk = require('stellar-sdk')
+import ToastComponent from './ToastComponent.vue'
 
 export default {
   props: ['ping'],
   components: {
-    'dialog-titlebar': DialogTitleBar
+    'dialog-titlebar': DialogTitleBar,
+    'toast-component': ToastComponent
   },
   data() {
     return {
@@ -91,7 +95,7 @@ export default {
       }
     },
     displayErrorMessage(message) {
-      Helper.toast(message, true)
+      Helper.toast(message, true, 'federation-dialog')
     }
   }
 }
