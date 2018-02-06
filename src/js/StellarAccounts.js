@@ -129,6 +129,17 @@ class StellarAccounts {
     return -1
   }
 
+  accountWithPublicKey(publicKey) {
+    const accounts = this.shared().accounts()
+
+    for (const val of accounts.entries()) {
+      if (publicKey === val.publicKey) {
+        return val
+      }
+    }
+    return null
+  }
+
   updateBalance(index, symbol, balance) {
     const accounts = this.shared().accounts()
     const acct = accounts[index]

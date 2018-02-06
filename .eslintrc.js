@@ -29,7 +29,7 @@ module.exports = {
     'no-shadow': 2,
     'no-shadow-restricted-names': 2,
     'no-use-before-define': 2,
-    'camelcase': 2,
+    // 'camelcase': 2,
     'comma-dangle': 2,
     'no-array-constructor': 2,
     // 'no-bitwise': 2,

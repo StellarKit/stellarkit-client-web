@@ -26,14 +26,14 @@
     </div>
 
     <v-btn small @click="createAccountWithLockedTokens()">Create Account with Locked Tokens</v-btn>
-    <v-btn small @click="createUnlockTransaction()">Create Unlock Transaction</v-btn>
-    <v-btn small @click="viewTransaction()">View Transaction</v-btn>
-    <v-btn small @click="submitTransaction()">Submit Transaction</v-btn>
-    <v-btn small @click="printTimeStamp()">test</v-btn>
 
     <div class='address-box'>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
     </div>
+    <v-btn small @click="createUnlockTransaction()">Create Unlock Transaction</v-btn>
+    <v-btn small @click="viewTransaction()">View Transaction</v-btn>
+    <v-btn small @click="submitTransaction()">Submit Transaction</v-btn>
+
   </div>
 
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
@@ -46,6 +46,7 @@ import AccountList from '../components/AccountList.vue'
 import Helper from '../js/helper.js'
 import StellarAccounts from '../js/StellarAccounts.js'
 import StellarUtils from '../js/StellarUtils.js'
+const StellarSdk = require('stellar-sdk')
 
 export default {
   mixins: [StellarCommonMixin],
@@ -74,9 +75,10 @@ export default {
     },
     submitTransaction() {
       if (this.signedTransaction) {
-        Helper.debugLog(this.signedTransaction)
+        const envelope = StellarSdk.xdr.TransactionEnvelope.fromXDR(this.signedTransaction, 'base64')
+        const transaction = new StellarSdk.Transaction(envelope)
 
-        StellarUtils.submitTransaction(this.signedTransaction)
+        StellarUtils.submitTransaction(transaction)
           .then((response) => {
             Helper.debugLog(response)
 
@@ -113,18 +115,18 @@ export default {
       if (distributorAccount && this.sourceValid()) {
         const transactionOpts = {
           timebounds: {
-            minTime: this.timeFromNow(20)
+            minTime: this.timeFromNow(5).toString(),
+            maxTime: '0' // crashes without this
           }
         }
 
         // using source account instead of distributor, sequence numbers would be different in the future
-        StellarUtils.removeMultiSigTransaction(this.selectedSource.secret, distributorAccount.secret, this.selectedSource.publicKey, transactionOpts)
-          .then((result) => {
-            Helper.debugLog(result, 'Success')
+        StellarUtils.removeMultiSigTransaction(this.selectedSource.secret, distributorAccount.secret, distributorAccount.publicKey, transactionOpts)
+          .then((transaction) => {
+            this.signedTransaction = transaction.toEnvelope().toXDR('base64')
+            Helper.debugLog(this.signedTransaction, 'Success')
 
-            this.signedTransaction = result
-
-            return result
+            return transaction
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
@@ -139,6 +141,9 @@ export default {
           .then((result) => {
             // result is {account: newAccount, keypair: keypair}
             Helper.debugLog(result.account)
+
+            // select account in UI
+            // this.selectedSource = StellarAccounts.accountWithPublicKey(result.keypair.publicKey())
 
             Helper.debugLog('adding distributor as signer...')
 

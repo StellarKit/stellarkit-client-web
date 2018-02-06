@@ -92,10 +92,23 @@ export default class Helper {
     return rawString
   }
 
-  static toStr(object) {
+  static stringify(object) {
+    function replacer(key, value) {
+      if (key === 'data' && Array.isArray(value)) {
+        return 'removed'
+      }
+      return value
+    }
+
     const spaces = '  '
+    const json = JSON.stringify(object, replacer, spaces)
+
+    return json
+  }
+
+  static toStr(object) {
     if (object instanceof Error) {
-      const json = JSON.stringify(object, null, spaces)
+      const json = this.stringify(object)
 
       // returns {} when it fails - check number of keys
       const obj = JSON.parse(json)
@@ -107,7 +120,7 @@ export default class Helper {
     } else if (typeof object === 'string') {
       return object
     } else if (typeof object === 'object') {
-      return this.stripBrackets(JSON.stringify(object, null, spaces))
+      return this.stripBrackets(this.stringify(object))
     }
 
     return typeof object
