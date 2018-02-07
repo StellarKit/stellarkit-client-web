@@ -325,10 +325,10 @@ export default {
         })
     },
     createStandardAccounts() {
-      Helper.debugLog('Creating Accounts...')
-
       this.issuerAcct = StellarAccounts.accountWithName('Issuer')
       if (!this.issuerAcct) {
+        Helper.debugLog('Creating Issuer...')
+
         StellarUtils.createTestAccount('Issuer', 'token')
           .then((result) => {
             this.issuerAcct = result
@@ -342,6 +342,8 @@ export default {
 
       this.distributorAcct = StellarAccounts.accountWithName('Distributor')
       if (!this.distributorAcct) {
+        Helper.debugLog('Creating Distributor...')
+
         StellarUtils.createTestAccount('Distributor', 'token')
           .then((result) => {
             this.distributorAcct = result
@@ -355,6 +357,8 @@ export default {
 
       this.tokenBuyerAcct = StellarAccounts.accountWithName('Token buyer')
       if (!this.tokenBuyerAcct) {
+        Helper.debugLog('Creating Token buyer...')
+
         StellarUtils.createTestAccount('Token buyer', 'token')
           .then((result) => {
             this.tokenBuyerAcct = result
