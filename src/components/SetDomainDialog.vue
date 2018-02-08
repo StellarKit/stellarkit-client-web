@@ -29,7 +29,7 @@ import Helper from '../js/helper.js'
 import {
   DialogTitleBar
 } from 'stellar-js-utils'
-import StellarCommonMixin from '../components/StellarCommonMixin.js'
+import StellarCommonMixin from './StellarCommonMixin.js'
 import StellarUtils from '../js/StellarUtils.js'
 
 export default {
