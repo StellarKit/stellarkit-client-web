@@ -4,7 +4,7 @@
   <div>See <a href="https://github.com/StellarKit" target="_blank">https://github.com/StellarKit</a> for docker images to test on testnet.</div>
   <v-btn small @click="showDialog">Buy Token</v-btn>
 
-  <buy-token-dialog :ping='showDialogPing' :params='params' :allowHTTP=true />
+  <buy-token-dialog :ping='showDialogPing' :params='params' :allowHTTP='allowHTTP' />
 </div>
 </template>
 
@@ -25,17 +25,24 @@ export default {
       params: null
     }
   },
+  computed: {
+    allowHTTP: function () {
+      return window.location.protocol !== 'https:'
+    }
+  },
   components: {
     'buy-token-dialog': BuyTokenDialog
   },
   methods: {
     showDialog() {
+      const protocol = window.location.protocol
+
       const issuerAcct = StellarAccounts.accountWithName('Issuer')
       if (issuerAcct) {
         this.params = {
           network: 'test',
-          horizonURL: 'http://192.168.1.82:8000',
-          bifrostURL: 'http://192.168.1.82:8800',
+          horizonURL: protocol + '//192.168.1.82:8000',
+          bifrostURL: protocol + '//192.168.1.82:8800',
           assetCode: 'LMB',
           price: '1',
           issuingPublicKey: issuerAcct.publicKey,
