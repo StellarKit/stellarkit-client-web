@@ -12,9 +12,11 @@
     <v-expansion-panel class='custom-expansion-panel'>
       <v-expansion-panel-content v-bind:value="true">
         <div slot="header" class='expansion-title'>
-          1. Distributor needs to trust the Issuer
+          1. Distributor needs to trust the Issuer of asset
         </div>
         <div class='expansion-message'>
+          <v-text-field class='number-field' label="Asset trust limit" type='number' v-model.trim="trustLimit"></v-text-field>
+
           <v-btn small @click="setDistributorTrustToken()">Set Distributor Trust Token</v-btn>
           <div>Bifrost Only</div>
           <v-btn small @click="setDistributorTrustETH()">Set Distributor Trust ETC</v-btn>
@@ -26,7 +28,7 @@
           2. Create tokens by sending assets from Issuer to Distributor
         </div>
         <div class='expansion-message'>
-          <v-text-field label="Amount to create" type='number' v-model.trim="createAmount" @keyup.enter="buttonClick('createTokens')" autofocus></v-text-field>
+          <v-text-field class='number-field' label="Amount to create" type='number' v-model.trim="createAmount" @keyup.enter="buttonClick('createTokens')"></v-text-field>
           <v-btn small @click="createTokens()">Create Tokens</v-btn>
         </div>
       </v-expansion-panel-content>
@@ -62,6 +64,8 @@
           6. Buyer needs to trust the Distributor
         </div>
         <div class='expansion-message'>
+          <v-text-field class='number-field' label="Asset trust limit" type='number' v-model.trim="trustLimit"></v-text-field>
+
           <v-btn small @click="setBuyerTrust()">Set Buyer Trust</v-btn>
         </div>
       </v-expansion-panel-content>
@@ -70,6 +74,8 @@
           7. Buy tokens
         </div>
         <div class='expansion-message'>
+          <v-text-field class='number-field' label="Asset trust limit" type='number' v-model.trim="amountToBuy"></v-text-field>
+
           <v-btn small @click="buyLamboTokens()">Buy Tokens</v-btn>
         </div>
       </v-expansion-panel-content>
@@ -110,7 +116,9 @@ export default {
       issuerAcct: null,
       distributorAcct: null,
       tokenBuyerAcct: null,
-      createAmount: 10000
+      createAmount: 10000,
+      trustLimit: 10000,
+      amountToBuy: 14.4
     }
   },
   components: {
@@ -138,7 +146,7 @@ export default {
     buyLamboTokens() {
       Helper.debugLog('Buying tokens..')
 
-      StellarUtils.buyTokens(StellarWallet.secret(this.tokenBuyerAcct.secret), StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), '1000', '2.22')
+      StellarUtils.buyTokens(StellarWallet.secret(this.tokenBuyerAcct.secret), StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), '5000', String(this.amountToBuy))
         .then((response) => {
           Helper.debugLog(response)
 
@@ -234,7 +242,7 @@ export default {
     createTokens() {
       Helper.debugLog('Creating tokens...')
 
-      let amount = this.createAmount
+      const amount = this.createAmount
       if (amount < 1) {
         Helper.debugLog('Create token amount must be greater than 0', 'Error')
         return
@@ -255,7 +263,7 @@ export default {
     setDistributorTrust(asset) {
       Helper.debugLog('Setting distributor trust...')
 
-      StellarUtils.changeTrust(StellarWallet.secret(this.distributorAcct.secret), asset, '100000')
+      StellarUtils.changeTrust(StellarWallet.secret(this.distributorAcct.secret), asset, String(this.trustLimit))
         .then((result) => {
           Helper.debugLog(result)
 
@@ -278,7 +286,7 @@ export default {
       Helper.debugLog('Setting buyer trust...')
 
       // buyer must trust the distributor
-      StellarUtils.changeTrust(StellarWallet.secret(this.tokenBuyerAcct.secret), StellarAccounts.lamboTokenAsset(), '10000')
+      StellarUtils.changeTrust(StellarWallet.secret(this.tokenBuyerAcct.secret), StellarAccounts.lamboTokenAsset(), String(this.trustLimit))
         .then((result) => {
           Helper.debugLog(result)
 
@@ -400,6 +408,10 @@ export default {
         top: 0;
         right: 0;
     }
+}
+
+.number-field {
+    max-width: 200px;
 }
 
 .bottom-buttons {
