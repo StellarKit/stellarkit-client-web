@@ -29,6 +29,9 @@ import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import StellarAccounts from '../js/StellarAccounts.js'
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
+import {
+  StellarWallet
+} from 'stellar-js-utils'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -218,7 +221,7 @@ export default {
     },
     setLowballerTrust() {
       // buyer must trust the distributor
-      StellarUtils.changeTrust(this.lowballerAcct.secret, StellarAccounts.lamboTokenAsset(), '10000')
+      StellarUtils.changeTrust(StellarWallet.secret(this.lowballerAcct.secret), StellarAccounts.lamboTokenAsset(), '10000')
         .then((result) => {
           Helper.debugLog(result)
         })
@@ -227,7 +230,7 @@ export default {
         })
     },
     makeLowballOffer() {
-      StellarUtils.manageOffer(this.lowballerAcct.secret, StellarAccounts.lamboTokenAsset(), StellarUtils.lumins(), '2', {
+      StellarUtils.manageOffer(StellarWallet.secret(this.lowballerAcct.secret), StellarAccounts.lamboTokenAsset(), StellarUtils.lumins(), '2', {
           n: 44,
           d: 3
         })

@@ -3,6 +3,9 @@ const $ = require('jquery')
 import StellarAccounts from './StellarAccounts.js'
 import StellarServer from './StellarServer.js'
 import Helper from '../js/helper.js'
+import {
+  StellarWallet
+} from 'stellar-js-utils'
 
 class StellarUtils {
   constructor() {
@@ -49,77 +52,77 @@ class StellarUtils {
     return this.api().balances(publicKey)
   }
 
-  mergeAccount(sourceSecret, destKey) {
-    return this.api().mergeAccount(sourceSecret, destKey)
+  mergeAccount(sourceWallet, destKey) {
+    return this.api().mergeAccount(sourceWallet, destKey)
   }
 
-  manageOffer(sourceSecret, buying, selling, amount, price, offerID = 0) {
-    return this.api().manageOffer(sourceSecret, buying, selling, amount, price, offerID)
+  manageOffer(sourceWallet, buying, selling, amount, price, offerID = 0) {
+    return this.api().manageOffer(sourceWallet, buying, selling, amount, price, offerID)
   }
 
-  changeTrust(sourceSecret, asset, amount) {
-    return this.api().changeTrust(sourceSecret, asset, amount)
+  changeTrust(sourceWallet, asset, amount) {
+    return this.api().changeTrust(sourceWallet, asset, amount)
   }
 
-  allowTrust(sourceSecret, trustor, asset, authorize) {
-    return this.api().allowTrust(sourceSecret, trustor, asset, authorize)
+  allowTrust(sourceWallet, trustor, asset, authorize) {
+    return this.api().allowTrust(sourceWallet, trustor, asset, authorize)
   }
 
-  setDomain(sourceSecret, domain) {
-    return this.api().setDomain(sourceSecret, domain)
+  setDomain(sourceWallet, domain) {
+    return this.api().setDomain(sourceWallet, domain)
   }
 
-  makeMultiSig(sourceSecret, publicKey) {
-    return this.api().makeMultiSig(sourceSecret, publicKey)
+  makeMultiSig(sourceWallet, publicKey) {
+    return this.api().makeMultiSig(sourceWallet, publicKey)
   }
 
-  removeMultiSig(sourceSecret, secondSecret, secondPublicKey, transactionOpts) {
-    return this.api().removeMultiSig(sourceSecret, secondSecret, secondPublicKey, transactionOpts)
+  removeMultiSig(sourceWallet, secondSecret, secondPublicKey, transactionOpts) {
+    return this.api().removeMultiSig(sourceWallet, secondSecret, secondPublicKey, transactionOpts)
   }
 
   // get the transaction for later submission
-  removeMultiSigTransaction(sourceSecret, secondSecret, secondPublicKey, transactionOpts) {
-    return this.api().removeMultiSigTransaction(sourceSecret, secondSecret, secondPublicKey, transactionOpts)
+  removeMultiSigTransaction(sourceWallet, secondSecret, secondPublicKey, transactionOpts) {
+    return this.api().removeMultiSigTransaction(sourceWallet, secondSecret, secondPublicKey, transactionOpts)
   }
 
   submitTransaction(transaction) {
     return this.api().submitTransaction(transaction)
   }
 
-  sendAsset(sourceSecret, destKey, amount, asset = null, memo = null, additionalSigners = null) {
-    return this.api().sendAsset(sourceSecret, destKey, amount, asset, memo, additionalSigners)
+  sendAsset(sourceWallet, destKey, amount, asset = null, memo = null, additionalSigners = null) {
+    return this.api().sendAsset(sourceWallet, destKey, amount, asset, memo, additionalSigners)
   }
 
-  buyTokens(sourceSecret, sendAsset, destAsset, sendMax, destAmount) {
-    return this.api().buyTokens(sourceSecret, sendAsset, destAsset, sendMax, destAmount)
+  buyTokens(sourceWallet, sendAsset, destAsset, sendMax, destAmount) {
+    return this.api().buyTokens(sourceWallet, sendAsset, destAsset, sendMax, destAmount)
   }
 
-  lockAccount(sourceSecret) {
-    return this.api().lockAccount(sourceSecret)
+  lockAccount(sourceWallet) {
+    return this.api().lockAccount(sourceWallet)
   }
 
-  createAccount(sourceSecret, destinationKey, startingBalance) {
-    return this.api().createAccount(sourceSecret, destinationKey, startingBalance)
+  createAccount(sourceWallet, destinationKey, startingBalance) {
+    return this.api().createAccount(sourceWallet, destinationKey, startingBalance)
   }
 
-  setOptions(sourceSecret, options) {
-    return this.api().setOptions(sourceSecret, options)
+  setOptions(sourceWallet, options) {
+    return this.api().setOptions(sourceWallet, options)
   }
 
-  setFlags(sourceSecret, flags) {
-    return this.api().setFlags(sourceSecret, flags)
+  setFlags(sourceWallet, flags) {
+    return this.api().setFlags(sourceWallet, flags)
   }
 
-  clearFlags(sourceSecret, flags) {
-    return this.api().clearFlags(sourceSecret, flags)
+  clearFlags(sourceWallet, flags) {
+    return this.api().clearFlags(sourceWallet, flags)
   }
 
-  setInflationDestination(sourceSecret, inflationDest) {
-    return this.api().setInflationDestination(sourceSecret, inflationDest)
+  setInflationDestination(sourceWallet, inflationDest) {
+    return this.api().setInflationDestination(sourceWallet, inflationDest)
   }
 
   // returns {account: newAccount, keypair: keypair}
-  newAccountWithTokens(sourceSecret, amountXLM, asset, amount) {
+  newAccountWithTokens(sourceWallet, amountXLM, asset, amount) {
     let newAccount = null
     const keypair = StellarSdk.Keypair.random()
 
@@ -127,16 +130,18 @@ class StellarUtils {
     Helper.debugLog(keypair.publicKey())
     Helper.debugLog(keypair.secret())
 
-    return this.createAccount(sourceSecret, keypair.publicKey(), amountXLM)
+    const destWallet = StellarWallet.secret(keypair.secret())
+
+    return this.createAccount(sourceWallet, keypair.publicKey(), amountXLM)
       .then((result) => {
         newAccount = result
 
         Helper.debugLog('setting trust...')
-        return this.changeTrust(keypair.secret(), asset, '10000')
+        return this.changeTrust(destWallet, asset, '10000')
       })
       .then((result) => {
         Helper.debugLog('sending tokens...')
-        return this.sendAsset(sourceSecret, keypair.publicKey(), amount, asset)
+        return this.sendAsset(sourceWallet, keypair.publicKey(), amount, asset)
       })
       .then((result) => {
         StellarAccounts.addAccount(keypair, {}, null, 'token')

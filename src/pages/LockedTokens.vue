@@ -49,6 +49,9 @@ import Helper from '../js/helper.js'
 import StellarAccounts from '../js/StellarAccounts.js'
 import StellarUtils from '../js/StellarUtils.js'
 const StellarSdk = require('stellar-sdk')
+import {
+  StellarWallet
+} from 'stellar-js-utils'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -128,7 +131,7 @@ export default {
         }
 
         // using source account instead of distributor, sequence numbers would be different in the future
-        StellarUtils.removeMultiSigTransaction(this.selectedSource.secret, distributorAccount.secret, distributorAccount.publicKey, transactionOpts)
+        StellarUtils.removeMultiSigTransaction(StellarWallet.secret(this.selectedSource.secret), distributorAccount.secret, distributorAccount.publicKey, transactionOpts)
           .then((transaction) => {
             this.signedTransaction = transaction.toEnvelope().toXDR('base64')
             Helper.debugLog(this.signedTransaction, 'Success')
@@ -147,7 +150,7 @@ export default {
       const distributorAccount = this.distributorAccount()
 
       if (distributorAccount) {
-        StellarUtils.newAccountWithTokens(distributorAccount.secret, '3', StellarAccounts.lamboTokenAsset(), '12')
+        StellarUtils.newAccountWithTokens(StellarWallet.secret(distributorAccount.secret), '3', StellarAccounts.lamboTokenAsset(), '12')
           .then((result) => {
             // result is {account: newAccount, keypair: keypair}
             Helper.debugLog(result.account)
@@ -157,7 +160,7 @@ export default {
 
             Helper.debugLog('adding distributor as signer...')
 
-            return StellarUtils.makeMultiSig(result.keypair.secret(), distributorAccount.publicKey)
+            return StellarUtils.makeMultiSig(StellarWallet.secret(result.keypair.secret()), distributorAccount.publicKey)
           })
           .then((result) => {
             Helper.debugLog('Account is ready', 'Success')

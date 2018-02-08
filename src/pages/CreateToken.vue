@@ -98,6 +98,9 @@ import AccountList from '../components/AccountList.vue'
 import StellarAccounts from '../js/StellarAccounts.js'
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
+import {
+  StellarWallet
+} from 'stellar-js-utils'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -119,7 +122,7 @@ export default {
       const distributorAccount = this.distributorAccount()
 
       if (distributorAccount) {
-        StellarUtils.newAccountWithTokens(distributorAccount.secret, '3', StellarAccounts.lamboTokenAsset(), '12')
+        StellarUtils.newAccountWithTokens(StellarWallet.secret(distributorAccount.secret), '3', StellarAccounts.lamboTokenAsset(), '12')
           .then((result) => {
             Helper.debugLog(result.account)
 
@@ -133,7 +136,7 @@ export default {
     buyLamboTokens() {
       Helper.debugLog('Buying tokens..')
 
-      StellarUtils.buyTokens(this.tokenBuyerAcct.secret, StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), '1000', '2.22')
+      StellarUtils.buyTokens(StellarWallet.secret(this.tokenBuyerAcct.secret), StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), '1000', '2.22')
         .then((response) => {
           Helper.debugLog(response)
 
@@ -166,7 +169,7 @@ export default {
         d: 1
       }
 
-      StellarUtils.manageOffer(this.distributorAcct.secret, StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), '5000', price)
+      StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), '5000', price)
         .then((result) => {
           Helper.debugLog(result, 'Success')
 
@@ -184,7 +187,7 @@ export default {
         d: 10
       }
 
-      StellarUtils.manageOffer(this.distributorAcct.secret, StellarAccounts.ethereumAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
+      StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), StellarAccounts.ethereumAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
         .then((result) => {
           Helper.debugLog(result, 'Success')
 
@@ -202,7 +205,7 @@ export default {
         d: 10
       }
 
-      StellarUtils.manageOffer(this.distributorAcct.secret, StellarAccounts.bitcoinAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
+      StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), StellarAccounts.bitcoinAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
         .then((result) => {
           Helper.debugLog(result, 'Success')
 
@@ -215,7 +218,7 @@ export default {
     lockIssuer() {
       Helper.debugLog('Locking issuer...')
 
-      StellarUtils.lockAccount(this.issuerAcct.secret)
+      StellarUtils.lockAccount(StellarWallet.secret(this.issuerAcct.secret))
         .then((result) => {
           Helper.debugLog('locked!')
           Helper.debugLog(result)
@@ -229,7 +232,7 @@ export default {
     createTokens() {
       Helper.debugLog('Creating tokens...')
 
-      StellarUtils.sendAsset(this.issuerAcct.secret, this.distributorAcct.publicKey, '10000', StellarAccounts.lamboTokenAsset(), 'Created Tokens')
+      StellarUtils.sendAsset(StellarWallet.secret(this.issuerAcct.secret), this.distributorAcct.publicKey, '10000', StellarAccounts.lamboTokenAsset(), 'Created Tokens')
         .then((response) => {
           Helper.debugLog(response, 'Success')
 
@@ -244,7 +247,7 @@ export default {
     setDistributorTrust(asset) {
       Helper.debugLog('Setting distributor trust...')
 
-      StellarUtils.changeTrust(this.distributorAcct.secret, asset, '10000')
+      StellarUtils.changeTrust(StellarWallet.secret(this.distributorAcct.secret), asset, '10000')
         .then((result) => {
           Helper.debugLog(result)
 
@@ -267,7 +270,7 @@ export default {
       Helper.debugLog('Setting buyer trust...')
 
       // buyer must trust the distributor
-      StellarUtils.changeTrust(this.tokenBuyerAcct.secret, StellarAccounts.lamboTokenAsset(), '10000')
+      StellarUtils.changeTrust(StellarWallet.secret(this.tokenBuyerAcct.secret), StellarAccounts.lamboTokenAsset(), '10000')
         .then((result) => {
           Helper.debugLog(result)
 
@@ -296,7 +299,7 @@ export default {
         const buying = StellarUtils.assetFromObject(offer.buying)
         const selling = StellarUtils.assetFromObject(offer.selling)
 
-        StellarUtils.manageOffer(this.distributorAcct.secret, buying, selling, '0', offer.price_r, offer.id)
+        StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), buying, selling, '0', offer.price_r, offer.id)
           .then((result) => {
             Helper.debugLog(result, 'Success')
 

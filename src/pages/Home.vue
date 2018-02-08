@@ -39,6 +39,9 @@ import SetDomainDialog from '../components/SetDomainDialog.vue'
 import Helper from '../js/helper.js'
 const StellarSdk = require('stellar-sdk')
 import StellarUtils from '../js/StellarUtils.js'
+import {
+  StellarWallet
+} from 'stellar-js-utils'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -61,6 +64,12 @@ export default {
     StellarUtils.updateBalances()
   },
   methods: {
+    sourceWallet() {
+      if (this.sourceValid()) {
+        return StellarWallet.secret(this.selectedSource.secret)
+      }
+      return null
+    },
     testFederation() {
       this.enterStringPing = !this.enterStringPing
     },
@@ -105,8 +114,9 @@ export default {
     setAuthRequiredFlag() {
       Helper.debugLog('setAuthRequiredFlag...')
 
-      if (this.sourceValid()) {
-        StellarUtils.setFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag)
+      const sourceWallet = this.sourceWallet()
+      if (sourceWallet) {
+        StellarUtils.setFlags(sourceWallet, StellarSdk.AuthRequiredFlag)
           .then((response) => {
             Helper.debugLog(response, 'Success')
             return null
@@ -119,8 +129,9 @@ export default {
     setAuthRevocableFlag() {
       Helper.debugLog('setAuthRevocableFlag...')
 
-      if (this.sourceValid()) {
-        StellarUtils.setFlags(this.selectedSource.secret, StellarSdk.AuthRevocableFlag)
+      const sourceWallet = this.sourceWallet()
+      if (sourceWallet) {
+        StellarUtils.setFlags(sourceWallet, StellarSdk.AuthRevocableFlag)
           .then((response) => {
             Helper.debugLog(response, 'Success')
             return null
@@ -133,8 +144,9 @@ export default {
     clearFlags() {
       Helper.debugLog('clearing flags...')
 
-      if (this.sourceValid()) {
-        StellarUtils.clearFlags(this.selectedSource.secret, StellarSdk.AuthRequiredFlag | StellarSdk.AuthRevocableFlag)
+      const sourceWallet = this.sourceWallet()
+      if (sourceWallet) {
+        StellarUtils.clearFlags(sourceWallet, StellarSdk.AuthRequiredFlag | StellarSdk.AuthRevocableFlag)
           .then((response) => {
             Helper.debugLog(response, 'Success')
             return null
@@ -152,8 +164,9 @@ export default {
     mergeSelected() {
       Helper.debugLog('merging')
 
-      if (this.sourceValid()) {
-        StellarUtils.mergeAccount(this.selectedSource.secret, this.selectedDest.publicKey)
+      const sourceWallet = this.sourceWallet()
+      if (sourceWallet) {
+        StellarUtils.mergeAccount(sourceWallet, this.selectedDest.publicKey)
           .then((response) => {
             StellarUtils.updateBalances()
 
@@ -168,8 +181,9 @@ export default {
     payWithSigners() {
       Helper.debugLog('path with signers...')
 
-      if (this.sourceValid() && this.signerValid()) {
-        StellarUtils.sendAsset(this.selectedSource.secret, this.selectedDest.publicKey, '122', null, null, [this.selectedSigner.secret])
+      const sourceWallet = this.sourceWallet()
+      if (sourceWallet && this.signerValid()) {
+        StellarUtils.sendAsset(sourceWallet, this.selectedDest.publicKey, '122', null, null, [this.selectedSigner.secret])
           .then((response) => {
             StellarUtils.updateBalances()
 
@@ -184,8 +198,9 @@ export default {
     addSignerForSelected() {
       Helper.debugLog('add signer...')
 
-      if (this.sourceValid() && this.signerValid()) {
-        StellarUtils.makeMultiSig(this.selectedSource.secret, this.selectedSigner.publicKey)
+      const sourceWallet = this.sourceWallet()
+      if (sourceWallet && this.signerValid()) {
+        StellarUtils.makeMultiSig(sourceWallet, this.selectedSigner.publicKey)
           .then((result) => {
             Helper.debugLog(result, 'Success')
             return null
@@ -198,8 +213,9 @@ export default {
     removeSignerForSelected() {
       Helper.debugLog('remove signer...')
 
-      if (this.sourceValid() && this.signerValid()) {
-        StellarUtils.removeMultiSig(this.selectedSource.secret, this.selectedSigner.secret, this.selectedSigner.publicKey)
+      const sourceWallet = this.sourceWallet()
+      if (sourceWallet && this.signerValid()) {
+        StellarUtils.removeMultiSig(sourceWallet, this.selectedSigner.secret, this.selectedSigner.publicKey)
           .then((result) => {
             Helper.debugLog(result, 'Success')
             return null
@@ -262,8 +278,9 @@ export default {
     makeSelectedPayment() {
       Helper.debugLog('paying')
 
-      if (this.sourceValid() && this.destValid()) {
-        StellarUtils.sendAsset(this.selectedSource.secret, this.selectedDest.publicKey, '122')
+      const sourceWallet = this.sourceWallet()
+      if (sourceWallet && this.destValid()) {
+        StellarUtils.sendAsset(sourceWallet, this.selectedDest.publicKey, '122')
           .then((response) => {
             StellarUtils.updateBalances()
 
