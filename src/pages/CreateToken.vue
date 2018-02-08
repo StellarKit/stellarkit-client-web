@@ -247,7 +247,7 @@ export default {
     setDistributorTrust(asset) {
       Helper.debugLog('Setting distributor trust...')
 
-      StellarUtils.changeTrust(StellarWallet.secret(this.distributorAcct.secret), asset, '10000')
+      StellarUtils.changeTrust(StellarWallet.secret(this.distributorAcct.secret), asset, '100000')
         .then((result) => {
           Helper.debugLog(result)
 
