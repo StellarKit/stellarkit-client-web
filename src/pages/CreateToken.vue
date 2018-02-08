@@ -26,6 +26,7 @@
           2. Create tokens by sending assets from Issuer to Distributor
         </div>
         <div class='expansion-message'>
+          <v-text-field label="Amount to create" type='number' v-model.trim="createAmount" @keyup.enter="buttonClick('createTokens')" autofocus></v-text-field>
           <v-btn small @click="createTokens()">Create Tokens</v-btn>
         </div>
       </v-expansion-panel-content>
@@ -108,7 +109,8 @@ export default {
     return {
       issuerAcct: null,
       distributorAcct: null,
-      tokenBuyerAcct: null
+      tokenBuyerAcct: null,
+      createAmount: 10000
     }
   },
   components: {
@@ -232,7 +234,13 @@ export default {
     createTokens() {
       Helper.debugLog('Creating tokens...')
 
-      StellarUtils.sendAsset(StellarWallet.secret(this.issuerAcct.secret), this.distributorAcct.publicKey, '10000', StellarAccounts.lamboTokenAsset(), 'Created Tokens')
+      let amount = this.createAmount
+      if (amount < 1) {
+        Helper.debugLog('Create token amount must be greater than 0', 'Error')
+        return
+      }
+
+      StellarUtils.sendAsset(StellarWallet.secret(this.issuerAcct.secret), this.distributorAcct.publicKey, String(amount), StellarAccounts.lamboTokenAsset(), 'Created Tokens')
         .then((response) => {
           Helper.debugLog(response, 'Success')
 
