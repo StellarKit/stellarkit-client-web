@@ -261,7 +261,7 @@ export default {
       this.setDistributorTrust(StellarAccounts.ethereumAsset())
     },
     setDistributorTrustBTC() {
-      this.setDistributorTrust(StellarAccounts.btcAsset())
+      this.setDistributorTrust(StellarAccounts.bitcoinAsset())
     },
     setBuyerTrust() {
       Helper.debugLog('Setting buyer trust...')

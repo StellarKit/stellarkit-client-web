@@ -28,7 +28,7 @@
 
 <script>
 import {
-  DonateDialog
+  PaymentDialog
 } from 'stellar-js-utils'
 import Helper from '../js/helper.js'
 import ExpansionDialog from './ExpansionDialog.vue'
@@ -37,7 +37,7 @@ import AboutDialog from './AboutDialog.vue'
 export default {
   props: ['ping'],
   components: {
-    'donate-dialog': DonateDialog,
+    'donate-dialog': PaymentDialog,
     'help-dialog': ExpansionDialog,
     'about-dialog': AboutDialog
   },
