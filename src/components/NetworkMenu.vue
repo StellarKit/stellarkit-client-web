@@ -2,8 +2,8 @@
 <div class='menu-button-container'>
   <v-menu offset-y>
     <v-btn small slot="activator">
-      <v-icon left>fa-server</v-icon>Network
-      <v-icon right>&#xE5C5;</v-icon>
+      Network
+      <v-icon>&#xE5C5;</v-icon>
     </v-btn>
     <v-list>
       <v-list-tile v-for="item in items" :key="item.title" @click="menuSelected(item)">
@@ -100,8 +100,13 @@ export default {
 
     span.network-string {
         margin-left: 10px;
-        font-size: 1.2em;
-        flex: 1;
+        font-weight: bold;
+        color: rgba(50,70,130,.8);
+        font-size: 1.1em;
+        flex: 1 1 auto;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .horizon-button {}

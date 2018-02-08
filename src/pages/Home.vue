@@ -4,10 +4,9 @@
     <div class='address-box'>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
       <v-select :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination accout" autocomplete return-object max-height="600"></v-select>
-      <v-btn small @click='swapSourceDest()'>Swap</v-btn>
+      <v-select :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Add signer to source" autocomplete return-object max-height="600"></v-select>
     </div>
 
-    <v-select :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Add signer to source" autocomplete return-object max-height="600"></v-select>
     <v-btn small @click="makeSelectedPayment()">Pay</v-btn>
     <v-btn small @click="payWithSigners()">Pay with Signers</v-btn>
     <v-btn small @click="infoForSelectedSource()">Info</v-btn>
@@ -156,11 +155,6 @@ export default {
           })
       }
     },
-    swapSourceDest() {
-      const tmp = this.selectedSource
-      this.selectedSource = this.selectedDest
-      this.selectedDest = tmp
-    },
     mergeSelected() {
       Helper.debugLog('merging')
 
@@ -299,12 +293,17 @@ export default {
 <style scoped lang='scss'>
 .top-controls {
     padding: 8px 20px;
+    button {
+        margin: 4px 2px;
+    }
 }
 
 .address-box {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     div.input-group {
+        flex: 1 0 200px;
         margin-right: 16px;
     }
 }
