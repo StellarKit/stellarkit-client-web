@@ -46,12 +46,19 @@
           4. Post offer to exchange to sell tokens for XLM
         </div>
         <div class='expansion-message'>
+          <strong>Price:</strong>
+          <div class='offer-price-fields'>
+            <v-text-field class='number-field' label="Buy XLM" type='number' v-model="offerPriceN"></v-text-field>
+            <v-text-field class='number-field' label="Sell LMB" type='number' v-model="offerPriceD"></v-text-field>
+            <v-text-field class='number-field' label="Amount to sell" type='number' v-model="offerAmount"></v-text-field>
+          </div>
+
           <v-btn small @click="manageOffer()">Manage Offer</v-btn>
         </div>
       </v-expansion-panel-content>
       <v-expansion-panel-content>
         <div slot="header" class='expansion-title'>
-          5. Post offer to exchange to sell tokens for Ethereum
+          5. Post offer to exchange to sell tokens for ETC/BTC
         </div>
         <div class='expansion-message'>
           <div>Bifrost Only</div>
@@ -74,7 +81,7 @@
           7. Buy tokens
         </div>
         <div class='expansion-message'>
-          <v-text-field class='number-field' label="Asset trust limit" type='number' v-model.trim="amountToBuy"></v-text-field>
+          <v-text-field class='number-field' label="Amount to buy" type='number' v-model.trim="amountToBuy"></v-text-field>
 
           <v-btn small @click="buyLamboTokens()">Buy Tokens</v-btn>
         </div>
@@ -118,7 +125,10 @@ export default {
       tokenBuyerAcct: null,
       createAmount: 10000,
       trustLimit: 10000,
-      amountToBuy: 12.4
+      amountToBuy: 12.4,
+      offerPriceN: 10,
+      offerPriceD: 1,
+      offerAmount: 2500
     }
   },
   components: {
@@ -174,12 +184,13 @@ export default {
     manageOffer() {
       Helper.debugLog('Managing Offer...')
 
+      // parseInt shouldn't be necessary, but if you edit the textfields, it changes to a string
       const price = {
-        n: 25,
-        d: 1
+        n: parseInt(this.offerPriceN),
+        d: parseInt(this.offerPriceD)
       }
 
-      StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), '5000', price)
+      StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), String(this.offerAmount), price)
         .then((result) => {
           Helper.debugLog(result, 'Success')
 
@@ -306,6 +317,8 @@ export default {
             Helper.debugLog(offer)
           })
 
+          Helper.debugLog('Offers done')
+
           return null
         })
     },
@@ -336,6 +349,9 @@ export default {
         .then((response) => {
           // Helper.debugLog(response)
           this.deleteOffersFromArray(response.records)
+
+          Helper.debugLog('Deleting Offers Success')
+
           return true
         })
         .catch((error) => {
@@ -410,8 +426,14 @@ export default {
     }
 }
 
+.offer-price-fields {
+    display: flex;
+    max-width: 400px;
+}
+
 .number-field {
     max-width: 200px;
+    margin-right: 12px;
 }
 
 .bottom-buttons {
@@ -438,7 +460,7 @@ export default {
         }
         .expansion-message {
             font-size: 0.9em;
-            padding: 0 26px 10px;
+            padding: 0 42px 10px;
         }
     }
 }
