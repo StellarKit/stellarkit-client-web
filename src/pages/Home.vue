@@ -5,22 +5,20 @@
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
       <v-select :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination accout" autocomplete return-object max-height="600"></v-select>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Add signer to source" autocomplete return-object max-height="600"></v-select>
+      <v-text-field label="Amount for payments" type='number' v-model.trim="amountForPayments"></v-text-field>
     </div>
 
     <v-btn small @click="makeSelectedPayment()">Pay</v-btn>
     <v-btn small @click="payWithSigners()">Pay with Signers</v-btn>
     <v-btn small @click="infoForSelectedSource()">Info</v-btn>
-    <v-btn small @click="transactionsForSelectedSource()">Transactions</v-btn>
-    <v-btn small @click="paymentsForSelectedSource()">Payments</v-btn>
-    <v-btn small @click="operationsForSelectedSource()">Operations</v-btn>
     <v-btn small @click="addSignerForSelected()">Add Signer</v-btn>
     <v-btn small @click="removeSignerForSelected()">Remove Signer</v-btn>
     <v-btn small @click="mergeSelected()">Merge Selected</v-btn>
-    <v-btn small @click="testFederation()">Federation Lookup</v-btn>
+    <v-btn small @click="transactionsForSelectedSource()">Transactions</v-btn>
+    <v-btn small @click="paymentsForSelectedSource()">Payments</v-btn>
+    <v-btn small @click="operationsForSelectedSource()">Operations</v-btn>
     <v-btn small @click="setDomain()">Set Domain</v-btn>
-    <v-btn small @click="setAuthRequiredFlag()">Set AuthRequiredFlag</v-btn>
-    <v-btn small @click="setAuthRevocableFlag()">Set AuthRevocableFlag</v-btn>
-    <v-btn small @click="clearFlags()">Clear Flags</v-btn>
+    <v-btn small @click="testFederation()">Federation Lookup</v-btn>
   </div>
 
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
@@ -56,7 +54,8 @@ export default {
       selectedSource: null,
       selectedDest: null,
       selectedSigner: null,
-      sourceSecretKey: null
+      sourceSecretKey: null,
+      amountForPayments: 20
     }
   },
   mounted() {
@@ -110,51 +109,6 @@ export default {
         this.setDomainPing = !this.setDomainPing
       }
     },
-    setAuthRequiredFlag() {
-      Helper.debugLog('setAuthRequiredFlag...')
-
-      const sourceWallet = this.sourceWallet()
-      if (sourceWallet) {
-        StellarUtils.setFlags(sourceWallet, StellarSdk.AuthRequiredFlag)
-          .then((response) => {
-            Helper.debugLog(response, 'Success')
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
-      }
-    },
-    setAuthRevocableFlag() {
-      Helper.debugLog('setAuthRevocableFlag...')
-
-      const sourceWallet = this.sourceWallet()
-      if (sourceWallet) {
-        StellarUtils.setFlags(sourceWallet, StellarSdk.AuthRevocableFlag)
-          .then((response) => {
-            Helper.debugLog(response, 'Success')
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
-      }
-    },
-    clearFlags() {
-      Helper.debugLog('clearing flags...')
-
-      const sourceWallet = this.sourceWallet()
-      if (sourceWallet) {
-        StellarUtils.clearFlags(sourceWallet, StellarSdk.AuthRequiredFlag | StellarSdk.AuthRevocableFlag)
-          .then((response) => {
-            Helper.debugLog(response, 'Success')
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
-      }
-    },
     mergeSelected() {
       Helper.debugLog('merging')
 
@@ -177,7 +131,7 @@ export default {
 
       const sourceWallet = this.sourceWallet()
       if (sourceWallet && this.signerValid()) {
-        StellarUtils.sendAsset(sourceWallet, this.selectedDest.publicKey, '122', null, null, [this.selectedSigner.secret])
+        StellarUtils.sendAsset(sourceWallet, this.selectedDest.publicKey, String(this.amountForPayments), null, null, [this.selectedSigner.secret])
           .then((response) => {
             StellarUtils.updateBalances()
 
@@ -270,11 +224,11 @@ export default {
       }
     },
     makeSelectedPayment() {
-      Helper.debugLog('paying')
+      Helper.debugLog('paying ' + this.amountForPayments + '...')
 
       const sourceWallet = this.sourceWallet()
       if (sourceWallet && this.destValid()) {
-        StellarUtils.sendAsset(sourceWallet, this.selectedDest.publicKey, '122')
+        StellarUtils.sendAsset(sourceWallet, this.selectedDest.publicKey, String(this.amountForPayments))
           .then((response) => {
             StellarUtils.updateBalances()
 

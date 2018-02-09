@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     createAccount() {
-      Helper.debugLog('create account:')
+      Helper.debugLog('creating account...')
 
       StellarUtils.createTestAccount()
         .then((result) => {

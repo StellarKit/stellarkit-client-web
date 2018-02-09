@@ -33,17 +33,6 @@
        Helper.debugLog(item.secret)
        Helper.debugLog(item.name)
      },
-     createAccount() {
-       Helper.debugLog('create account:')
-
-       StellarUtils.createTestAccount()
-         .then((result) => {
-           Helper.debugLog(result)
-         })
-         .catch((error) => {
-           Helper.debugLog(error)
-         })
-     },
      distributorAccount() {
        const result = StellarAccounts.accountWithName('Distributor')
        if (result) {
