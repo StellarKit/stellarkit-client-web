@@ -18,7 +18,7 @@
           <v-text-field class='number-field' label="Asset trust limit" type='number' v-model.trim="trustLimit"></v-text-field>
 
           <v-btn small @click="setDistributorTrustToken()">Set Distributor Trust Token</v-btn>
-          <div>Bifrost Only</div>
+          <div class='message-comment'>Only needed for Bifrost</div>
           <v-btn small @click="setDistributorTrustETH()">Set Distributor Trust ETC</v-btn>
           <v-btn small @click="setDistributorTrustBTC()">Set Distributor Trust BTC</v-btn>
         </div>
@@ -37,7 +37,7 @@
           3. Lock Issuer so more tokens can be created
         </div>
         <div class='expansion-message'>
-          <div>Don't lock if using Bifrost, the current code fails when locked</div>
+          <div class='message-comment'>Don't lock if using Bifrost, the current code fails when locked</div>
           <v-btn small @click="lockIssuer()">Lock Issuer</v-btn>
         </div>
       </v-expansion-panel-content>
@@ -61,7 +61,7 @@
           5. Post offer to exchange to sell tokens for ETC/BTC
         </div>
         <div class='expansion-message'>
-          <div>Bifrost Only</div>
+          <div class='message-comment'>Bifrost Only</div>
           <v-btn small @click="manageOfferETH()">Manage Offer ETH</v-btn>
           <v-btn small @click="manageOfferBTC()">Manage Offer BTC</v-btn>
         </div>
@@ -91,7 +91,7 @@
           8. Create new account from distributor, set trust, send tokens
         </div>
         <div class='expansion-message'>
-          <div>Issues mulitiple operations. Wait for it to complete.</div>
+          <div class='message-comment'>Issues mulitiple operations. Wait for it to complete.</div>
           <v-btn small @click="newAccountWithTokens()">Create New Account</v-btn>
         </div>
       </v-expansion-panel-content>
@@ -444,6 +444,11 @@ export default {
 .token-steps {
     padding: 20px 40px;
     background: rgba(0,0,0,.04);
+}
+
+.message-comment {
+    font-size: 1.1em;
+    margin-left: 8px;
 }
 
 .expansion-contents {
