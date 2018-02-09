@@ -35,11 +35,11 @@ export default {
           title: 'Testnet at Stellar.org',
           icon: 'cloud_circle'
         },
-        // {
-        //   id: 'mainnet',
-        //   title: 'Main - stellar.org',
-        //   icon: 'cloud_circle'
-        // },
+        {
+          id: 'mainnet',
+          title: 'Main - stellar.org',
+          icon: 'cloud_circle'
+        },
         {
           id: 'stellarkit',
           title: 'Testnet at StellarKit.io',

@@ -9,9 +9,9 @@
     </div>
 
     <v-btn small @click="makeSelectedPayment()">Pay</v-btn>
-    <v-btn small @click="payWithSigners()">Pay with Signers</v-btn>
     <v-btn small @click="infoForSelectedSource()">Info</v-btn>
     <v-btn small @click="addSignerForSelected()">Add Signer</v-btn>
+    <v-btn small @click="payWithSigners()">Pay with Signers</v-btn>
     <v-btn small @click="removeSignerForSelected()">Remove Signer</v-btn>
     <v-btn small @click="mergeSelected()">Merge Selected</v-btn>
     <v-btn small @click="transactionsForSelectedSource()">Transactions</v-btn>

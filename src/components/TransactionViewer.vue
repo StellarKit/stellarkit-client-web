@@ -54,6 +54,7 @@ export default {
         const transaction = new StellarSdk.Transaction(envelope)
 
         this.loadingTransaction = true
+        this.statusMessage = '' // clear any previous warning
 
         StellarUtils.submitTransaction(transaction)
           .then((response) => {
@@ -61,6 +62,7 @@ export default {
 
             Helper.toast('Success', false, 'transaction-dialog')
             this.loadingTransaction = false
+            this.statusMessage = 'Success'
 
             return null
           })

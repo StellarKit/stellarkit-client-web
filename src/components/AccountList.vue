@@ -17,7 +17,7 @@
   <div v-if='items.length === 0' class='zero-accounts'>
     Create an account
   </div>
-  <div v-else class='accounts'>
+  <transition-group v-else class='accounts' name="list" tag="div">
     <div class='account-item' v-for="item in items" @click.stop='clickItem(item)' :key='item.name'>
       <v-tooltip open-delay='200' bottom>
         <div slot="activator">
@@ -31,7 +31,7 @@
         <v-icon>&#xE15C;</v-icon>
       </v-btn>
     </div>
-  </div>
+  </transition-group>
 </div>
 </template>
 
@@ -110,6 +110,18 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+// list animations
+.list-enter-active,
+.list-leave-active {
+    transition: all 0.25s;
+}
+/* .list-leave-active below version 2.1.8 */
+.list-enter,
+.list-leave-to {
+    opacity: 0;
+    transform: scale(.1);
+}
+
 .main-container {
     padding: 10px 0;
     position: relative;
@@ -162,6 +174,9 @@ export default {
             background: white;
             box-shadow: 0 2px 2px rgba(0,0,0,.4);
             line-height: 1.25;
+
+            // for animations - faster?
+            backface-visibility: hidden;
 
             .account-name {
                 font-weight: bold;
