@@ -29,35 +29,16 @@ import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import StellarAccounts from '../js/StellarAccounts.js'
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
-import {
-  StellarWallet
-} from 'stellar-js-utils'
 
 export default {
   mixins: [StellarCommonMixin],
   data() {
     return {
-      lowballerAcct: null,
-      distributorAcct: null,
       paymentStopper: null,
       operationStopper: null,
       tradeStopper: null,
       operations: []
     }
-  },
-  mounted() {
-    // this.lowballerAcct = StellarAccounts.accountWithName('Low Baller')
-    // if (!this.lowballerAcct) {
-    //   StellarUtils.createTestAccount('Low Baller')
-    //     .then((result) => {
-    //       this.lowballerAcct = result
-    //     })
-    //     .catch((error) => {
-    //       Helper.debugLog(error)
-    //     })
-    // }
-
-    this.distributorAcct = StellarAccounts.accountWithName('Distributor')
   },
   methods: {
     addOperation(item) {
@@ -218,28 +199,6 @@ export default {
           Helper.debugLog(error)
         }
       })
-    },
-    setLowballerTrust() {
-      // buyer must trust the distributor
-      StellarUtils.changeTrust(StellarWallet.secret(this.lowballerAcct.secret), StellarAccounts.lamboTokenAsset(), '10000')
-        .then((result) => {
-          Helper.debugLog(result)
-        })
-        .catch((error) => {
-          Helper.debugLog(error)
-        })
-    },
-    makeLowballOffer() {
-      StellarUtils.manageOffer(StellarWallet.secret(this.lowballerAcct.secret), StellarAccounts.lamboTokenAsset(), StellarUtils.lumins(), '2', {
-          n: 44,
-          d: 3
-        })
-        .then((response) => {
-          Helper.debugLog(response, 'SUCCESS')
-        })
-        .catch((error) => {
-          Helper.debugLog(error, 'ERROR')
-        })
     },
     orderbook() {
       Helper.debugLog('Orderbook')

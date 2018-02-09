@@ -72,14 +72,13 @@ class StellarAccounts {
     return StellarAccounts.sharedAccounts()
   }
 
-  addAccount(keyPair, balances, name = null, page = null) {
+  addAccount(keyPair, name = null) {
     const acct = {
       name: name !== null ? name : generateName(),
-      XLM: balances.XLM,
-      LMB: balances.LMB,
+      XLM: 'refreshing...',
+      LMB: 0,
       secret: keyPair.secret(),
-      publicKey: keyPair.publicKey(),
-      page: page
+      publicKey: keyPair.publicKey()
     }
 
     this.shared().add(acct)
@@ -153,6 +152,14 @@ class StellarAccounts {
     acct[symbol] = balance
 
     this.shared().save()
+  }
+
+  replaceAccountWithPublicKey(accountRec, publicKey) {
+    this.deleteAccount(publicKey)
+
+    if (accountRec) {
+      this.shared().add(accountRec)
+    }
   }
 
   secret(index) {

@@ -15,7 +15,7 @@
 
   <div class='accounts-title'>Accounts - click for info</div>
   <div v-if='items.length === 0' class='zero-accounts'>
-    Accounts Empty
+    Create an account
   </div>
   <div v-else class='accounts'>
     <div class='account-item' v-for="item in items" @click.stop='clickItem(item)' :key='item.name'>
@@ -38,13 +38,52 @@
 <script>
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
+import {
+  TimelineMax,
+  Power3
+} from 'gsap'
+import $ from 'jquery'
 
 export default {
   props: ['items'],
   data() {
-    return {}
+    return {
+      timeline: null
+    }
+  },
+  mounted() {
+    setInterval(() => {
+      if (this.items.length === 0) {
+        this.animateCreateButton()
+      } else {
+        if (this.timeline) {
+          this.timeline.kill()
+          this.timeline = null
+        }
+      }
+    }, 2000)
   },
   methods: {
+    animateCreateButton() {
+      if (!this.timeline) {
+        // other tabs have this same view, so only find the one in ours
+        const el = $(this.$el).find('.add-button i')
+
+        this.timeline = new TimelineMax({
+            repeat: -1,
+            yoyo: false,
+            repeatDelay: 1
+          })
+          .to(el, 0.2, {
+            ease: Power3.easeIn,
+            scale: 1.5
+          })
+          .to(el, 0.4, {
+            ease: Power3.easeOut,
+            scale: 1
+          })
+      }
+    },
     createAccount() {
       Helper.debugLog('creating account...')
 

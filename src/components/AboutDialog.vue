@@ -3,11 +3,9 @@
   <div class='main-container'>
     <dialog-titlebar :title=title v-on:close='visible = false' />
 
-    <div class='main-content'>
-      <div class="wheels">
-        <div class='wheel' v-for="index in 12">
-        </div>
-      </div>
+    <!-- added the v-if visible here to kill the animation when dialog closed -->
+    <div v-if='visible' class='main-content'>
+      <div id="rainbow"></div>
 
       <div class='contact-info'>
         <a href='mailto:steve@distantfutu.re'>steve@distantfutu.re</a>San Francisco, CA
@@ -22,6 +20,11 @@
 import {
   DialogTitleBar
 } from 'stellar-js-utils'
+import {
+  TimelineMax,
+  Power0
+} from 'gsap'
+import $ from 'jquery'
 
 export default {
   props: ['ping', 'title'],
@@ -32,22 +35,80 @@ export default {
     return {
       errorMessage: '',
       visible: false,
-      items: []
+      items: [],
+      rainbowTimeline: null,
+      flasher: null
     }
   },
   watch: {
     ping: function () {
       this.visible = true
+
+      this.$nextTick(() => {
+        this.animate()
+      })
     }
   },
   methods: {
-    // sdf
+    animate() {
+      const rainbowElement = $('#rainbow')
+      const duration = 3
+
+      this.rainbowTimeline = new TimelineMax({
+          repeat: -1,
+          repeatdelay: 0,
+          yoyo: false
+        })
+
+        .set(rainbowElement, {
+          boxShadow: '0 0 0 2vmax #800080, 0 0 0 4vmax #DC143C, 0 0 0 6vmax #FF0000, 0 0 0 8vmax #FF4500, 0 0 0 10vmax #FF6347, 0 0 0 12vmax #FFD700, 0 0 0 14vmax #FFFF00, 0 0 0 16vmax #9ACD32, 0 0 0 18vmax #40E0D0, 0 0 0 20vmax #4169E1, 0 0 0 22vmax #7B68EE, 0 0 0 24vmax #BA55D3, 0 0 0 26vmax #800080, 0 0 0 28vmax #DC143C, 0 0 0 30vmax #FF0000, 0 0 0 32vmax #FF4500, 0 0 0 34vmax #FF6347, 0 0 0 36vmax #FFD700, 0 0 0 38vmax #FFFF00, 0 0 0 40vmax #9ACD32, 0 0 0 42vmax #40E0D0, 0 0 0 44vmax #4169E1, 0 0 0 46vmax #7B68EE, 0 0 0 48vmax #BA55D3, 0 0 0 50vmax #9400D3, 0 0 0 52vmax #800080, 0 0 0 54vmax #DC143C, 0 0 0 56vmax #FF0000, 0 0 0 58vmax #FF4500, 0 0 0 60vmax #FF6347, 0 0 0 62vmax #FFD700, 0 0 0 64vmax #FFFF00, 0 0 0 66vmax #9ACD32, 0 0 0 68vmax #40E0D0, 0 0 0 70vmax #4169E1, 0 0 0 72vmax #7B68EE, 0 0 0 74vmax #BA55D3, 0 0 0 76vmax #9400D3, 0 0 0 78vmax #800080, 0 0 0 80vmax #DC143C, 0 0 0 82vmax #FF0000, 0 0 0 84vmax #FF4500, 0 0 0 86vmax #FF6347, 0 0 0 88vmax #FFD700, 0 0 0 90vmax #FFFF00'
+        })
+
+        .to(rainbowElement, duration, {
+          boxShadow: '0 0 0 2vmax #4169E1, 0 0 0 4vmax #7B68EE, 0 0 0 6vmax #BA55D3, 0 0 0 8vmax #800080, 0 0 0 10vmax #DC143C, 0 0 0 12vmax #FF0000, 0 0 0 14vmax #FF4500, 0 0 0 16vmax #FF6347, 0 0 0 18vmax #FFD700, 0 0 0 20vmax #FFFF00, 0 0 0 22vmax #9ACD32, 0 0 0 24vmax #40E0D0, 0 0 0 26vmax #4169E1, 0 0 0 28vmax #7B68EE, 0 0 0 30vmax #BA55D3, 0 0 0 32vmax #9400D3, 0 0 0 34vmax #800080, 0 0 0 36vmax #DC143C, 0 0 0 38vmax #FF0000, 0 0 0 40vmax #FF4500, 0 0 0 42vmax #FF6347, 0 0 0 44vmax #FFD700, 0 0 0 46vmax #FFFF00, 0 0 0 48vmax #9ACD32, 0 0 0 50vmax #40E0D0, 0 0 0 52vmax #4169E1, 0 0 0 54vmax #7B68EE, 0 0 0 56vmax #BA55D3, 0 0 0 58vmax #9400D3, 0 0 0 60vmax #800080, 0 0 0 62vmax #DC143C, 0 0 0 64vmax #FF0000, 0 0 0 66vmax #FF4500, 0 0 0 68vmax #FF6347, 0 0 0 70vmax #FFD700, 0 0 0 72vmax #FFFF00, 0 0 0 74vmax #9ACD32, 0 0 0 76vmax #40E0D0, 0 0 0 78vmax #4169E1, 0 0 0 80vmax #7B68EE, 0 0 0 82vmax #BA55D3, 0 0 0 84vmax #9400D3, 0 0 0 86vmax #800080, 0 0 0 88vmax #DC143C, 0 0 0 90vmax #FF0000',
+          ease: Power0.easeNone
+        }, '+=0')
+        .to(rainbowElement, duration, {
+          boxShadow: '0 0 0 2vmax #FFFF00, 0 0 0 4vmax #9ACD32, 0 0 0 6vmax #40E0D0, 0 0 0 8vmax #4169E1, 0 0 0 10vmax #7B68EE, 0 0 0 12vmax #BA55D3, 0 0 0 14vmax #800080, 0 0 0 16vmax #DC143C, 0 0 0 18vmax #FF0000, 0 0 0 20vmax #FF4500, 0 0 0 22vmax #FF6347, 0 0 0 24vmax #FFD700, 0 0 0 26vmax #FFFF00, 0 0 0 28vmax #9ACD32, 0 0 0 30vmax #40E0D0, 0 0 0 32vmax #4169E1, 0 0 0 34vmax #7B68EE, 0 0 0 36vmax #BA55D3, 0 0 0 38vmax #9400D3, 0 0 0 40vmax #800080, 0 0 0 42vmax #DC143C, 0 0 0 44vmax #FF0000, 0 0 0 46vmax #FF4500, 0 0 0 48vmax #FF6347, 0 0 0 50vmax #FFD700, 0 0 0 52vmax #FFFF00, 0 0 0 54vmax #9ACD32, 0 0 0 56vmax #40E0D0, 0 0 0 58vmax #4169E1, 0 0 0 60vmax #7B68EE, 0 0 0 62vmax #BA55D3, 0 0 0 64vmax #9400D3, 0 0 0 66vmax #800080, 0 0 0 68vmax #DC143C, 0 0 0 70vmax #FF0000, 0 0 0 72vmax #FF4500, 0 0 0 74vmax #FF6347, 0 0 0 76vmax #FFD700, 0 0 0 78vmax #FFFF00, 0 0 0 80vmax #9ACD32, 0 0 0 82vmax #40E0D0, 0 0 0 84vmax #4169E1, 0 0 0 86vmax #7B68EE, 0 0 0 88vmax #BA55D3, 0 0 0 90vmax #9400D3',
+          ease: Power0.easeNone
+        }, '+=0')
+        .to(rainbowElement, duration, {
+          boxShadow: '0 0 0 2vmax #FF4500, 0 0 0 4vmax #FF6347, 0 0 0 6vmax #FFD700, 0 0 0 8vmax #FFFF00, 0 0 0 10vmax #9ACD32, 0 0 0 12vmax #40E0D0, 0 0 0 14vmax #4169E1, 0 0 0 16vmax #7B68EE, 0 0 0 18vmax #BA55D3, 0 0 0 20vmax #800080, 0 0 0 22vmax #DC143C, 0 0 0 24vmax #FF0000, 0 0 0 26vmax #FF4500, 0 0 0 28vmax #FF6347, 0 0 0 30vmax #FFD700, 0 0 0 32vmax #FFFF00, 0 0 0 34vmax #9ACD32, 0 0 0 36vmax #40E0D0, 0 0 0 38vmax #4169E1, 0 0 0 40vmax #7B68EE, 0 0 0 42vmax #BA55D3, 0 0 0 44vmax #9400D3, 0 0 0 46vmax #800080, 0 0 0 48vmax #DC143C, 0 0 0 50vmax #FF0000, 0 0 0 52vmax #FF4500, 0 0 0 54vmax #FF6347, 0 0 0 56vmax #FFD700, 0 0 0 58vmax #FFFF00, 0 0 0 60vmax #9ACD32, 0 0 0 62vmax #40E0D0, 0 0 0 64vmax #4169E1, 0 0 0 66vmax #7B68EE, 0 0 0 68vmax #BA55D3, 0 0 0 70vmax #9400D3, 0 0 0 72vmax #800080, 0 0 0 74vmax #DC143C, 0 0 0 76vmax #FF0000, 0 0 0 78vmax #FF4500, 0 0 0 80vmax #FF6347, 0 0 0 82vmax #FFD700, 0 0 0 84vmax #FFFF00, 0 0 0 86vmax #9ACD32, 0 0 0 88vmax #40E0D0, 0 0 0 90vmax #4169E1',
+          ease: Power0.easeNone
+        }, '+=0')
+        .to(rainbowElement, duration, {
+          boxShadow: '0 0 0 2vmax #800080, 0 0 0 4vmax #DC143C, 0 0 0 6vmax #FF0000, 0 0 0 8vmax #FF4500, 0 0 0 10vmax #FF6347, 0 0 0 12vmax #FFD700, 0 0 0 14vmax #FFFF00, 0 0 0 16vmax #9ACD32, 0 0 0 18vmax #40E0D0, 0 0 0 20vmax #4169E1, 0 0 0 22vmax #7B68EE, 0 0 0 24vmax #BA55D3, 0 0 0 26vmax #800080, 0 0 0 28vmax #DC143C, 0 0 0 30vmax #FF0000, 0 0 0 32vmax #FF4500, 0 0 0 34vmax #FF6347, 0 0 0 36vmax #FFD700, 0 0 0 38vmax #FFFF00, 0 0 0 40vmax #9ACD32, 0 0 0 42vmax #40E0D0, 0 0 0 44vmax #4169E1, 0 0 0 46vmax #7B68EE, 0 0 0 48vmax #BA55D3, 0 0 0 50vmax #9400D3, 0 0 0 52vmax #800080, 0 0 0 54vmax #DC143C, 0 0 0 56vmax #FF0000, 0 0 0 58vmax #FF4500, 0 0 0 60vmax #FF6347, 0 0 0 62vmax #FFD700, 0 0 0 64vmax #FFFF00, 0 0 0 66vmax #9ACD32, 0 0 0 68vmax #40E0D0, 0 0 0 70vmax #4169E1, 0 0 0 72vmax #7B68EE, 0 0 0 74vmax #BA55D3, 0 0 0 76vmax #9400D3, 0 0 0 78vmax #800080, 0 0 0 80vmax #DC143C, 0 0 0 82vmax #FF0000, 0 0 0 84vmax #FF4500, 0 0 0 86vmax #FF6347, 0 0 0 88vmax #FFD700, 0 0 0 90vmax #FFFF00',
+          ease: Power0.easeNone
+        }, '+=0')
+
+      this.flasher = new TimelineMax({
+          repeat: -1,
+          repeatdelay: 0,
+          yoyo: false
+        })
+        .set(rainbowElement, {
+          backgroundColor: 'rgb(255,255,255)'
+        })
+        .to(rainbowElement, 1, {
+          backgroundColor: 'rgb(1,1,1)'
+        }, '+=0')
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 @import '../scss/styles.scss';
+
+#rainbow {
+    position: absolute;
+    left: 60%;
+    top: 90%;
+    width: 11vmax;
+    height: 11vmax;
+    background: white;
+    border-radius: 50%;
+}
 
 .main-container {
     @include standard-dialog-contents();
@@ -72,110 +133,8 @@ export default {
             a {
                 text-decoration: none;
                 color: white;
-                font-size: 3em;
+                font-size: 1.52em;
                 text-shadow: 0 0 20px black;
-            }
-        }
-
-        .wheels {
-            overflow: hidden;
-            height: 500px;
-            width: 1000px;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-
-            .wheel {
-                opacity: 0.2;
-                display: block;
-                height: 500px;
-                width: 1000px;
-                border-radius: 50%;
-                /* color wheels */
-                position: absolute;
-            }
-        }
-        .wheels .wheel:nth-child(1) {
-            background: linear-gradient(#ff8000, #cc6600);
-            animation: spin 5s infinite;
-            animation-delay: 0.0833333333s;
-        }
-        .wheels .wheel:nth-child(2) {
-            background: linear-gradient(yellow, #cccc00);
-            animation: spin 5s infinite;
-            animation-delay: 0.1666666667s;
-        }
-        .wheels .wheel:nth-child(3) {
-            background: linear-gradient(#80ff00, #66cc00);
-            animation: spin 5s infinite;
-            animation-delay: 0.25s;
-        }
-        .wheels .wheel:nth-child(4) {
-            background: linear-gradient(lime, #00cc00);
-            animation: spin 5s infinite;
-            animation-delay: 0.3333333333s;
-        }
-        .wheels .wheel:nth-child(5) {
-            background: linear-gradient(#00ff80, #00cc66);
-            animation: spin 5s infinite;
-            animation-delay: 0.4166666667s;
-        }
-        .wheels .wheel:nth-child(6) {
-            background: linear-gradient(cyan, #00cccc);
-            animation: spin 5s infinite;
-            animation-delay: 0.5s;
-        }
-        .wheels .wheel:nth-child(7) {
-            background: linear-gradient(#0080ff, #0066cc);
-            animation: spin 5s infinite;
-            animation-delay: 0.5833333333s;
-        }
-        .wheels .wheel:nth-child(8) {
-            background: linear-gradient(blue, #0000cc);
-            animation: spin 5s infinite;
-            animation-delay: 0.6666666667s;
-        }
-        .wheels .wheel:nth-child(9) {
-            background: linear-gradient(#8000ff, #6600cc);
-            animation: spin 5s infinite;
-            animation-delay: 0.75s;
-        }
-        .wheels .wheel:nth-child(10) {
-            background: linear-gradient(magenta, #cc00cc);
-            animation: spin 5s infinite;
-            animation-delay: 0.8333333333s;
-        }
-        .wheels .wheel:nth-child(11) {
-            background: linear-gradient(#ff0080, #cc0066);
-            animation: spin 5s infinite;
-            animation-delay: 0.9166666667s;
-        }
-        .wheels .wheel:nth-child(12) {
-            background: linear-gradient(red, #cc0000);
-            animation: spin 5s infinite;
-            animation-delay: 1s;
-        }
-        .wheels .wheel:nth-child(13) {
-            background: linear-gradient(#ff8000, #cc6600);
-            animation: spin 5s infinite;
-            animation-delay: 1.0833333333s;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotateX(0deg) scale(2);
-            }
-            25% {
-                transform: rotateX(90deg);
-            }
-            50% {
-                transform: rotateY(180deg) scale(4);
-            }
-            75% {
-                transform: rotateX(270deg);
-            }
-            100% {
-                transform: rotateY(360deg) scale(2);
             }
         }
     }

@@ -5,8 +5,7 @@
  export default {
    data() {
      return {
-       accountsUI: [],
-       tokensUI: []
+       accountsUI: []
      }
    },
    mounted() {
@@ -45,18 +44,6 @@
      // private
      updateAccountsUI() {
        this.accountsUI = StellarAccounts.accounts()
-
-       // for tokens page
-       this.tokensUI = []
-       this.accountsUI.forEach((acct) => {
-         switch (acct.page) {
-           case 'token':
-             this.tokensUI.push(acct)
-             break
-           default:
-             break
-         }
-       })
      }
    }
  }

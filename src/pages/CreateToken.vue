@@ -7,7 +7,7 @@
 
     <div>2. Click each button in order, but wait for each to complete</div>
   </div>
-  <account-list :items="tokensUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
+  <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
   <div class='expansion-contents'>
     <v-expansion-panel class='custom-expansion-panel'>
       <v-expansion-panel-content v-bind:value="true">
@@ -364,7 +364,7 @@ export default {
       if (!this.issuerAcct) {
         Helper.debugLog('Creating Issuer...')
 
-        StellarUtils.createTestAccount('Issuer', 'token')
+        StellarUtils.createTestAccount('Issuer')
           .then((result) => {
             this.issuerAcct = result
 
@@ -379,7 +379,7 @@ export default {
       if (!this.distributorAcct) {
         Helper.debugLog('Creating Distributor...')
 
-        StellarUtils.createTestAccount('Distributor', 'token')
+        StellarUtils.createTestAccount('Distributor')
           .then((result) => {
             this.distributorAcct = result
 
@@ -394,7 +394,7 @@ export default {
       if (!this.tokenBuyerAcct) {
         Helper.debugLog('Creating Token buyer...')
 
-        StellarUtils.createTestAccount('Token buyer', 'token')
+        StellarUtils.createTestAccount('Token buyer')
           .then((result) => {
             this.tokenBuyerAcct = result
 

@@ -144,7 +144,7 @@ class StellarUtils {
         return this.sendAsset(sourceWallet, keypair.publicKey(), amount, asset)
       })
       .then((result) => {
-        StellarAccounts.addAccount(keypair, {}, null, 'token')
+        StellarAccounts.addAccount(keypair)
 
         Helper.debugLog(result, 'Success')
         this.updateBalances()
@@ -160,30 +160,37 @@ class StellarUtils {
       })
   }
 
-  createTestAccount(name = null, page = null) {
+  createTestAccount(name = null) {
     return new Promise((resolve, reject) => {
       const keyPair = StellarSdk.Keypair.random()
+
+      const accountRec = StellarAccounts.addAccount(keyPair, name)
 
       const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + keyPair.publicKey()
 
       $.get(url, (data) => {
-        // user setup by friendbot won't be on our server until it syncs, so just use stellars testnet
+        // refresh balance on just this account
+        // asking same server as friendbot assuming our node might not be 100% synced?
         this.friendBotServer().loadAccount(keyPair.publicKey())
           .then((account) => {
-            const balances = {}
-
             account.balances.forEach((balance) => {
               if (balance.asset_type === 'native') {
-                balances.XLM = balance.balance
+                accountRec.XLM = balance.balance
               } else {
-                balances[balance.asset_code] = balance.balance
+                accountRec[balance.asset_code] = balance.balance
               }
             })
 
-            resolve(StellarAccounts.addAccount(keyPair, balances, name, page))
+            StellarAccounts.replaceAccountWithPublicKey(accountRec, accountRec.publicKey)
+
+            resolve(accountRec)
           })
           .catch((error) => {
             console.log(JSON.stringify(data))
+
+            // delete the account friend bot failed
+            StellarAccounts.replaceAccountWithPublicKey(null, accountRec.publicKey)
+
             reject(error)
           })
       }, 'json').fail((err) => {
