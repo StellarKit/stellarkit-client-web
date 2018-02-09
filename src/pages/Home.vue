@@ -25,21 +25,22 @@
 
     <v-btn small @click="sendToken()">Send Token</v-btn>
     <v-btn small @click="setDomain()">Set Domain</v-btn>
+    <v-btn small @click="setInflation()">Set Inflation Destination</v-btn>
     <v-btn small @click="testFederation()">Federation Lookup</v-btn>
   </div>
 
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
 
-  <federation-lookup-dialog :ping='enterStringPing' />
-  <set-domain-dialog :ping='setDomainPing' :secretKey='sourceSecretKey' />
+  <simple-dialog :ping='setDomainPing' :secretKey='sourceSecretKey' operation='domain' />
+  <simple-dialog :ping='setInflationPing' :secretKey='sourceSecretKey' operation='inflation' />
+  <simple-dialog :ping='lookupFederationPing' :secretKey='sourceSecretKey' operation='federation' />
 </div>
 </template>
 
 <script>
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import AccountList from '../components/AccountList.vue'
-import FederationLookupDialog from '../components/FederationLookupDialog.vue'
-import SetDomainDialog from '../components/SetDomainDialog.vue'
+import SimpleOperationDialog from '../components/SimpleOperationDialog.vue'
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
 import {
@@ -51,13 +52,13 @@ export default {
   mixins: [StellarCommonMixin],
   components: {
     'account-list': AccountList,
-    'federation-lookup-dialog': FederationLookupDialog,
-    'set-domain-dialog': SetDomainDialog
+    'simple-dialog': SimpleOperationDialog
   },
   data() {
     return {
-      enterStringPing: false,
+      lookupFederationPing: false,
       setDomainPing: false,
+      setInflationPing: false,
       selectedSource: null,
       selectedDest: null,
       selectedSigner: null,
@@ -76,7 +77,7 @@ export default {
       return null
     },
     testFederation() {
-      this.enterStringPing = !this.enterStringPing
+      this.lookupFederationPing = !this.lookupFederationPing
     },
     sourceValid() {
       const result = this.selectedSource ? this.selectedSource.publicKey : null
@@ -114,6 +115,14 @@ export default {
         this.sourceSecretKey = this.selectedSource.secret
 
         this.setDomainPing = !this.setDomainPing
+      }
+    },
+    setInflation() {
+      // set variable to bind to dialogs props
+      if (this.sourceValid()) {
+        this.sourceSecretKey = this.selectedSource.secret
+
+        this.setInflationPing = !this.setInflationPing
       }
     },
     mergeSelected() {

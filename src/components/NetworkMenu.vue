@@ -32,22 +32,22 @@ export default {
       server: null,
       items: [{
           id: 'testnet',
-          title: 'Testnet - stellar.org',
+          title: 'Testnet at Stellar.org',
           icon: 'cloud_circle'
         },
-        {
-          id: 'mainnet',
-          title: 'Main - stellar.org',
-          icon: 'cloud_circle'
-        },
+        // {
+        //   id: 'mainnet',
+        //   title: 'Main - stellar.org',
+        //   icon: 'cloud_circle'
+        // },
         {
           id: 'stellarkit',
-          title: 'Testnet - StellarKit',
+          title: 'Testnet at StellarKit.io',
           icon: 'cloud_circle'
         },
         {
           id: 'local',
-          title: 'Testnet - Local',
+          title: 'Testnet - Local server',
           icon: 'cloud_circle'
         }
       ]

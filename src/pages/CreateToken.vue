@@ -118,7 +118,7 @@ export default {
       tokenBuyerAcct: null,
       createAmount: 10000,
       trustLimit: 10000,
-      amountToBuy: 14.4
+      amountToBuy: 12.4
     }
   },
   components: {
@@ -175,7 +175,7 @@ export default {
       Helper.debugLog('Managing Offer...')
 
       const price = {
-        n: 225,
+        n: 25,
         d: 1
       }
 
