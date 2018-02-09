@@ -41,6 +41,9 @@ class SharedAccounts {
   }
 
   save() {
+    // alert ui to update
+    Helper.emit('stellar-accounts-updated')
+
     // save throttle, probably not necessary, but couldn't hurt
     if (!this._saving) {
       this._saving = true
@@ -49,7 +52,6 @@ class SharedAccounts {
         this._saving = false
 
         Helper.set('accounts', this._accounts)
-        Helper.emit('stellar-accounts-updated')
       }, 500)
     }
   }
