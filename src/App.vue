@@ -158,6 +158,14 @@ export default {
     'network-menu': NetworkMenu,
     'toast-component': ToastComponent
   },
+  watch: {
+    condensedOutput: function () {
+      Helper.set('condensedOutput', this.condensedOutput)
+    },
+    expandXDR: function () {
+      Helper.set('expandXDR', this.expandXDR)
+    }
+  },
   data() {
     return {
       showNavigation: false,
@@ -167,13 +175,16 @@ export default {
       initializing: true,
       menu: false,
       condensedOutput: false,
-      expandXDR: true
+      expandXDR: false
     }
   },
   created() {
     Storage.init()
       .then(() => {
         this.initializing = false
+
+        this.condensedOutput = Helper.get('condensedOutput')
+        this.expandXDR = Helper.get('expandXDR')
       })
       .catch((error) => {
         console.log(error)

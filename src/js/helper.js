@@ -51,44 +51,47 @@ export default class Helper {
   }
 
   static stripBrackets(rawString) {
-    const lineArray = []
+    const condensedOutput = Helper.get('condensedOutput')
+    if (condensedOutput) {
+      const lineArray = []
 
-    // remove excessive brackets
-    const lines = rawString.split('\n')
-    let openIndex = -1
-    let closeIndex = -1
+      // remove excessive brackets
+      const lines = rawString.split('\n')
+      let openIndex = -1
+      let closeIndex = -1
 
-    for (const [index, line] of lines.entries()) {
-      const trimmed = line.trim()
+      for (const [index, line] of lines.entries()) {
+        const trimmed = line.trim()
 
-      if (trimmed.length > 0) {
-        const trimmedRight = line.trimRight()
+        if (trimmed.length > 0) {
+          const trimmedRight = line.trimRight()
 
-        if (trimmed === '}' || trimmed === '},' || trimmed === ']' || trimmed === '],') {
-          closeIndex = index
-        } else {
-          if (trimmedRight.endsWith('{') || trimmedRight.endsWith('[') || trimmedRight.endsWith(',')) {
-            if (trimmed.length > 1) {
-              lineArray.push(trimmedRight.substr(0, trimmedRight.length - 1))
-            } else {
-              openIndex = index
-            }
+          if (trimmed === '}' || trimmed === '},' || trimmed === ']' || trimmed === '],') {
+            closeIndex = index
           } else {
-            lineArray.push(trimmedRight)
+            if (trimmedRight.endsWith('{') || trimmedRight.endsWith('[') || trimmedRight.endsWith(',')) {
+              if (trimmed.length > 1) {
+                lineArray.push(trimmedRight.substr(0, trimmedRight.length - 1))
+              } else {
+                openIndex = index
+              }
+            } else {
+              lineArray.push(trimmedRight)
+            }
           }
         }
+        if ((openIndex - 1) === closeIndex) {
+          lineArray.push(' ')
+          openIndex = -1
+        }
       }
-      if ((openIndex - 1) === closeIndex) {
-        lineArray.push(' ')
-        openIndex = -1
+
+      if (lineArray.length > 0) {
+        const arrayStr = lineArray.join('\n')
+
+        // remove quotes
+        return arrayStr.replace(/"/g, '')
       }
-    }
-
-    if (lineArray.length > 0) {
-      const arrayStr = lineArray.join('\n')
-
-      // remove quotes
-      return arrayStr.replace(/"/g, '')
     }
 
     return rawString
@@ -126,7 +129,7 @@ export default class Helper {
     } else if (typeof object === 'string') {
       return object
     } else if (typeof object === 'object') {
-      const expandXDR = false
+      const expandXDR = Helper.get('expandXDR')
       if (expandXDR) {
         if (object.envelope_xdr) {
           object.envelope_xdr = StellarSdk.xdr.TransactionEnvelope.fromXDR(object.envelope_xdr, 'base64')
