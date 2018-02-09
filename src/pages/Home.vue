@@ -34,7 +34,6 @@ import AccountList from '../components/AccountList.vue'
 import FederationLookupDialog from '../components/FederationLookupDialog.vue'
 import SetDomainDialog from '../components/SetDomainDialog.vue'
 import Helper from '../js/helper.js'
-const StellarSdk = require('stellar-sdk')
 import StellarUtils from '../js/StellarUtils.js'
 import {
   StellarWallet
@@ -200,16 +199,6 @@ export default {
           .forAccount(this.selectedSource.publicKey)
           .stream({
             onmessage: (txResponse) => {
-              if (txResponse.envelope_xdr) {
-                txResponse.envelope_xdr = StellarSdk.xdr.TransactionEnvelope.fromXDR(txResponse.envelope_xdr, 'base64')
-              }
-              if (txResponse.result_xdr) {
-                txResponse.result_xdr = StellarSdk.xdr.TransactionResult.fromXDR(txResponse.result_xdr, 'base64')
-              }
-              if (txResponse.result_meta_xdr) {
-                txResponse.result_meta_xdr = StellarSdk.xdr.TransactionMeta.fromXDR(txResponse.result_meta_xdr, 'base64')
-              }
-
               Helper.debugLog(txResponse)
             },
             onerror: (error) => {

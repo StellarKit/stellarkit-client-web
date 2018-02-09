@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Storage from './storage.js'
 import HelperImplementation from './HelperImplementation.js'
+const StellarSdk = require('stellar-sdk')
 
 export default class Helper {
   static vue() {
@@ -125,6 +126,19 @@ export default class Helper {
     } else if (typeof object === 'string') {
       return object
     } else if (typeof object === 'object') {
+      const expandXDR = false
+      if (expandXDR) {
+        if (object.envelope_xdr) {
+          object.envelope_xdr = StellarSdk.xdr.TransactionEnvelope.fromXDR(object.envelope_xdr, 'base64')
+        }
+        if (object.result_xdr) {
+          object.result_xdr = StellarSdk.xdr.TransactionResult.fromXDR(object.result_xdr, 'base64')
+        }
+        if (object.result_meta_xdr) {
+          object.result_meta_xdr = StellarSdk.xdr.TransactionMeta.fromXDR(object.result_meta_xdr, 'base64')
+        }
+      }
+
       return this.stripBrackets(this.stringify(object))
     }
 
