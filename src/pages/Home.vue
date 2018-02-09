@@ -17,6 +17,13 @@
     <v-btn small @click="transactionsForSelectedSource()">Transactions</v-btn>
     <v-btn small @click="paymentsForSelectedSource()">Payments</v-btn>
     <v-btn small @click="operationsForSelectedSource()">Operations</v-btn>
+
+    <v-tooltip open-delay='800' bottom>
+      <v-btn slot='activator' small @click="trustToken()">Trust Token</v-btn>
+      <span>Account must trust token before it can receive</span>
+    </v-tooltip>
+
+    <v-btn small @click="sendToken()">Send Token</v-btn>
     <v-btn small @click="setDomain()">Set Domain</v-btn>
     <v-btn small @click="testFederation()">Federation Lookup</v-btn>
   </div>
@@ -38,6 +45,7 @@ import StellarUtils from '../js/StellarUtils.js'
 import {
   StellarWallet
 } from 'stellar-js-utils'
+import StellarAccounts from '../js/StellarAccounts.js'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -210,6 +218,40 @@ export default {
     infoForSelectedSource() {
       if (this.sourceValid()) {
         this.infoForPublicKey(this.selectedSource.publicKey)
+      }
+    },
+    trustToken() {
+      Helper.debugLog('Setting token trust...')
+
+      const sourceWallet = this.sourceWallet()
+      if (sourceWallet) {
+        // buyer must trust the distributor
+        StellarUtils.changeTrust(sourceWallet, StellarAccounts.lamboTokenAsset(), String(10000))
+          .then((result) => {
+            Helper.debugLog(result)
+
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error)
+          })
+      }
+    },
+    sendToken() {
+      Helper.debugLog('sending tokens ' + this.amountForPayments + '...')
+
+      const sourceWallet = this.sourceWallet()
+      if (sourceWallet && this.destValid()) {
+        StellarUtils.sendAsset(sourceWallet, this.selectedDest.publicKey, String(this.amountForPayments), StellarAccounts.lamboTokenAsset())
+          .then((response) => {
+            StellarUtils.updateBalances()
+
+            Helper.debugLog(response, 'Success')
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
+          })
       }
     },
     makeSelectedPayment() {
