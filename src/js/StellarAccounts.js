@@ -41,9 +41,17 @@ class SharedAccounts {
   }
 
   save() {
-    Helper.set('accounts', this._accounts)
+    // save throttle, probably not necessary, but couldn't hurt
+    if (!this._saving) {
+      this._saving = true
 
-    Helper.emit('stellar-accounts-updated')
+      setTimeout(() => {
+        this._saving = false
+
+        Helper.set('accounts', this._accounts)
+        Helper.emit('stellar-accounts-updated')
+      }, 500)
+    }
   }
 }
 
