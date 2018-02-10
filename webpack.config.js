@@ -110,8 +110,7 @@ if (process.env.NODE_ENV === 'production') {
     }),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
-        warnings: false,
-        drop_debugger: false
+        warnings: false
       },
       output: {
         comments: false
