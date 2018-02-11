@@ -11,11 +11,9 @@
   },
   "main": "dist/distLib.js",
   "scripts": {
-    "dist": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "distLib": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "dist": "cross-env NODE_ENV=production webpack --progress --hide-modules && node ./build/createIndexHTML.js",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot --content-base src/dev/",
-    "build-dev": "cross-env NODE_ENV=development webpack --progress --hide-modules",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "distLib": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

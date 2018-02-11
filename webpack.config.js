@@ -77,9 +77,7 @@ if (TARGET === 'dist' || TARGET === 'dev') {
   }
 
   module.exports = mergedOptions
-}
-
-if (TARGET === 'distLib') {
+} else if (TARGET === 'distLib') {
   let mergedOptions = merge(common, {
     entry: './src/libEntry.js',
     output: {
