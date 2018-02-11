@@ -15,60 +15,14 @@
               <v-icon>fa-github</v-icon>
             </v-btn>
             <v-tabs-bar slot="extension">
-              <!-- <v-tabs-slider color="white"></v-tabs-slider> -->
-              <v-tooltip open-delay='800' bottom>
-                <v-tabs-item slot='activator' to='/' exact class="custom-tab-item">
+              <v-tooltip v-for='tab in tabs' open-delay='800' :key='tab.path' bottom>
+                <v-tabs-item slot='activator' :to='tab.path' exact class="custom-tab-item">
                   <div class='custom-tab-content'>
-                    <v-icon>&#xE88A;</v-icon>
+                    <v-icon v-html='tab.icon'></v-icon>
                     <div class='bottom-bar' />
                   </div>
                 </v-tabs-item>
-                <span>Make Payments</span>
-              </v-tooltip>
-              <v-tooltip open-delay='800' bottom>
-                <v-tabs-item slot='activator' to='/token' exact class="custom-tab-item">
-                  <div class='custom-tab-content'>
-                    <v-icon>&#xE263;</v-icon>
-                    <div class='bottom-bar' />
-                  </div>
-                </v-tabs-item>
-                <span>Create Token</span>
-              </v-tooltip>
-              <v-tooltip open-delay='800' bottom>
-                <v-tabs-item slot='activator' to='/buytoken' exact class="custom-tab-item">
-                  <div class='custom-tab-content'>
-                    <v-icon>&#xE851;</v-icon>
-                    <div class='bottom-bar' />
-                  </div>
-                </v-tabs-item>
-                <span>Buy token with Bifrost</span>
-              </v-tooltip>
-              <v-tooltip open-delay='800' bottom>
-                <v-tabs-item slot='activator' to='/trades' exact class="custom-tab-item">
-                  <div class='custom-tab-content'>
-                    <v-icon>&#xE8C9;</v-icon>
-                    <div class='bottom-bar' />
-                  </div>
-                </v-tabs-item>
-                <span>Live Trades</span>
-              </v-tooltip>
-              <v-tooltip open-delay='800' bottom>
-                <v-tabs-item slot='activator' to='/trust' exact class="custom-tab-item">
-                  <div class='custom-tab-content'>
-                    <v-icon>&#xE86C;</v-icon>
-                    <div class='bottom-bar' />
-                  </div>
-                </v-tabs-item>
-                <span>Allow Trust</span>
-              </v-tooltip>
-              <v-tooltip open-delay='800' bottom>
-                <v-tabs-item slot='activator' to='/locked' exact class="custom-tab-item">
-                  <div class='custom-tab-content'>
-                    <v-icon>&#xE897;</v-icon>
-                    <div class='bottom-bar' />
-                  </div>
-                </v-tabs-item>
-                <span>Locked Tokens</span>
+                <span>{{tab.tooltip}}</span>
               </v-tooltip>
             </v-tabs-bar>
           </v-toolbar>
@@ -175,7 +129,36 @@ export default {
       initializing: true,
       menu: false,
       condensedOutput: false,
-      expandXDR: false
+      expandXDR: false,
+      tabs: [{
+        icon: String.fromCharCode('0xE88A'),
+        tooltip: 'Make Payments',
+        path: '/'
+      }, {
+        icon: String.fromCharCode('0xE263'),
+        tooltip: 'Create Token',
+        path: '/token'
+      }, {
+        icon: String.fromCharCode('0xE851'),
+        tooltip: 'Buy token with Bifrost',
+        path: '/buytoken'
+      }, {
+        icon: String.fromCharCode('0xE8C9'),
+        tooltip: 'Live Trades',
+        path: '/trades'
+      }, {
+        icon: String.fromCharCode('0xE86C'),
+        tooltip: 'Allow Trust',
+        path: '/trust'
+      }, {
+        icon: String.fromCharCode('0xE897'),
+        tooltip: 'Locked Tokens',
+        path: '/locked'
+      }, {
+        icon: String.fromCharCode('0xE1E0'),
+        tooltip: 'Ledger Nano',
+        path: '/ledger'
+      }]
     }
   },
   created() {
