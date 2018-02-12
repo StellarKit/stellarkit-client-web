@@ -123,7 +123,7 @@ export default {
 }
 
 .main-container {
-    padding: 10px 0;
+    padding: 6px 0;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -133,7 +133,8 @@ export default {
 
     .accounts-title {
         font-weight: bold;
-        font-size: 1.1em;
+        font-size: 1em;
+        color: rgba(255,255,255,.7);
     }
 
     .add-button {
@@ -168,12 +169,13 @@ export default {
             position: relative;
             color: black;
             font-size: 0.85em;
-            margin: 8px 4px 0;
+            margin: 4px;
             padding: 10px 12px 20px;
             border-radius: 8px;
             background: white;
             box-shadow: 0 2px 2px rgba(0,0,0,.4);
             line-height: 1.25;
+            cursor: pointer;
 
             // for animations - faster?
             backface-visibility: hidden;

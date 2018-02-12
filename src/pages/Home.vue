@@ -8,25 +8,25 @@
       <v-text-field label="Amount for payments" type='number' v-model.trim="amountForPayments"></v-text-field>
     </div>
 
-    <v-btn small @click="makeSelectedPayment()">Pay</v-btn>
-    <v-btn small @click="infoForSelectedSource()">Info</v-btn>
-    <v-btn small @click="addSignerForSelected()">Add Signer</v-btn>
-    <v-btn small @click="payWithSigners()">Pay with Signers</v-btn>
-    <v-btn small @click="removeSignerForSelected()">Remove Signer</v-btn>
-    <v-btn small @click="mergeSelected()">Merge Selected</v-btn>
-    <v-btn small @click="transactionsForSelectedSource()">Transactions</v-btn>
-    <v-btn small @click="paymentsForSelectedSource()">Payments</v-btn>
-    <v-btn small @click="operationsForSelectedSource()">Operations</v-btn>
+    <v-btn round @click="makeSelectedPayment()">Pay</v-btn>
+    <v-btn round @click="infoForSelectedSource()">Info</v-btn>
+    <v-btn round @click="addSignerForSelected()">Add Signer</v-btn>
+    <v-btn round @click="payWithSigners()">Pay with Signers</v-btn>
+    <v-btn round @click="removeSignerForSelected()">Remove Signer</v-btn>
+    <v-btn round @click="mergeSelected()">Merge Selected</v-btn>
+    <v-btn round @click="transactionsForSelectedSource()">Transactions</v-btn>
+    <v-btn round @click="paymentsForSelectedSource()">Payments</v-btn>
+    <v-btn round @click="operationsForSelectedSource()">Operations</v-btn>
 
     <v-tooltip open-delay='800' bottom>
-      <v-btn slot='activator' small @click="trustToken()">Trust Token</v-btn>
+      <v-btn round slot='activator' @click="trustToken()">Trust Token</v-btn>
       <span>Account must trust token before it can receive</span>
     </v-tooltip>
 
-    <v-btn small @click="sendToken()">Send Token</v-btn>
-    <v-btn small @click="setDomain()">Set Domain</v-btn>
-    <v-btn small @click="setInflation()">Set Inflation Destination</v-btn>
-    <v-btn small @click="testFederation()">Federation Lookup</v-btn>
+    <v-btn round @click="sendToken()">Send Token</v-btn>
+    <v-btn round @click="setDomain()">Set Domain</v-btn>
+    <v-btn round @click="setInflation()">Set Inflation Destination</v-btn>
+    <v-btn round @click="testFederation()">Federation Lookup</v-btn>
   </div>
 
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />

@@ -7,17 +7,17 @@
 
     <div>1. First setup a Token on the previous tab</div>
     <div>2. Set Source account to Issuer, then set or clear flags to test AuthRequiredFlag</div>
-    <v-btn small @click="setAuthRequiredFlag()">Set AuthRequiredFlag</v-btn>
-    <v-btn small @click="setAuthRevocableFlag()">Set AuthRevocableFlag</v-btn>
-    <v-btn small @click="clearFlags()">Clear Flags</v-btn>
+    <v-btn round @click="setAuthRequiredFlag()">Set AuthRequiredFlag</v-btn>
+    <v-btn round @click="setAuthRevocableFlag()">Set AuthRevocableFlag</v-btn>
+    <v-btn round @click="clearFlags()">Clear Flags</v-btn>
 
     <div>Set Source account to a new account, Click Set Trust, and try to buy Token. It will fail if AuthRequiredFlag set unless you allow trust.</div>
-    <v-btn small @click="allowTrust(true)">Enable Trust For Account</v-btn>
-    <v-btn small @click="allowTrust(false)">Disable Trust For Account</v-btn>
+    <v-btn round @click="allowTrust(true)">Enable Trust For Account</v-btn>
+    <v-btn round @click="allowTrust(false)">Disable Trust For Account</v-btn>
 
     <div>Set Source account, trust asset, try to buy.</div>
-    <v-btn small @click="changeTrust()">Trust Asset</v-btn>
-    <v-btn small @click="buyToken()">Buy Token</v-btn>
+    <v-btn round @click="changeTrust()">Trust Asset</v-btn>
+    <v-btn round @click="buyToken()">Buy Token</v-btn>
   </div>
 
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />

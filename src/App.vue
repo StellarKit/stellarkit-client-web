@@ -303,7 +303,7 @@ html {
         .app-console {
             position: relative;
             display: flex;
-            flex: 1 1 300px;
+            flex: 1 1 80px;
 
             .console-bar {
                 display: flex;
