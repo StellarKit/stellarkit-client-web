@@ -72,8 +72,9 @@ class StellarUtils {
     return this.api().setDomain(sourceWallet, domain)
   }
 
-  makeMultiSig(sourceWallet, publicKey) {
-    return this.api().makeMultiSig(sourceWallet, publicKey)
+  // pass 1 for threshold if either account can sign for med/high operations
+  makeMultiSig(sourceWallet, publicKey, threshold) {
+    return this.api().makeMultiSig(sourceWallet, publicKey, threshold)
   }
 
   removeMultiSig(sourceWallet, secondSecret, secondPublicKey, transactionOpts) {

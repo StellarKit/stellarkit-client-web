@@ -2,7 +2,6 @@
 <div>
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
   <div class='ledger-tab'>
-
     <div>
       <div class='instructions'>
         <div class='title-instructions'>
@@ -14,6 +13,9 @@
       </div>
 
       <v-btn round @click="connectToLedger()">Connect to Ledger</v-btn>
+      <div v-if='connected'>
+        Connected!
+      </div>
 
       <div class='features-slider'>
         <div class='feature-nav'>
@@ -22,7 +24,7 @@
           </v-btn>
           <v-spacer />
           <div class='feature-nav-title'>
-            Create New Account For Ledger
+            {{contentTitle}}
           </div>
           <v-spacer />
           <v-btn icon color='primary' @click='arrowClick(true)'>
@@ -31,70 +33,18 @@
         </div>
 
         <div v-if='tabIndex === 0' class='feature-box'>
-          <div>
-            Create an additional Stellar account that can be controlled by your Ledger. You don't need multiple Ledgers to create multipe Stellar accounts! You also don't have to worry about keeping an additional secret keys safe.
-          </div>
-
-          <div> This feature will:
-            <ol>
-              <li>
-                Create a new account.
-              </li>
-              <li>
-                1 XLM will be sent from your ledger to the new account. This is required to create new accounts on Stellar.
-              </li>
-              <li>
-                Add your ledger as a signer on this new account.
-              </li>
-              <li>
-                Set the 'master' key on the account to 0 disabling the original accounts ability to sign any transactions.
-              </li>
-              <li>
-                This is 'reversible' using the merge account feature below.
-              </li>
-            </ol>
-          </div>
-
-          <div>
-            will create a new account, disable the new accounts secret key and will add your Ledger as a signer on the new account. for your ledger account for all operations. Now you can send coins to that account and withdrawl from that account with ease. Your
-            ledger's master account is not touched, you are creating a new account that can be signed by your ledger's key. For example, you have a high balance account where you store the majority of your coins and you would like a few smaller balance
-            accounts where you can store just a few coins for daily usage.
-          </div>
-
-          <v-btn round @click="createNewAccount()">Create New Account for Ledger</v-btn>
+          <ledger-feature1 :connected='connected' />
         </div>
 
         <div v-else-if='tabIndex === 1' class='feature-box'>
-          <div>
-            Add your ledger as a signer to an existing account
-          </div>
-
-          <div class='address-box'>
-            <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
-          </div>
-
-          <v-btn round @click="giveLedgerSigningPower()">Give Ledger Signing Power</v-btn>
+          <ledger-feature2 :connected='connected' :accountsUI='accountsUI' />
         </div>
 
         <div v-else-if='tabIndex === 2' class='feature-box'>
-          <div>
-            Merge an account into your Ledger account deleting the source account. If you made an account and then changed your mind, just merge it back in. Any balance on the source account will be added to your Ledgers account.
-          </div>
-
-          <div>
-            This is reversible if you just send XLM to that account that is now empty
-          </div>
-
-          <div class='address-box'>
-            <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
-          </div>
-
-          <v-btn round @click="mergeAccountIntoLedger()">Merge Account into Ledger</v-btn>
+          <ledger-feature3 :connected='connected' :accountsUI='accountsUI' />
         </div>
       </div>
-
     </div>
-
   </div>
 </div>
 </div>
@@ -103,37 +53,45 @@
 <script>
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import AccountList from '../components/AccountList.vue'
+import LedgerFeature1 from '../components/LedgerFeature1.vue'
+import LedgerFeature2 from '../components/LedgerFeature2.vue'
+import LedgerFeature3 from '../components/LedgerFeature3.vue'
 import Helper from '../js/helper.js'
-// import StellarAccounts from '../js/StellarAccounts.js'
-// import StellarUtils from '../js/StellarUtils.js'
-// const StellarSdk = require('stellar-sdk')
-// import {
-//   StellarWallet
-// } from 'stellar-js-utils'
+import {
+  LedgerAPI
+} from 'stellar-js-utils'
 
 export default {
   mixins: [StellarCommonMixin],
   components: {
+    'ledger-feature1': LedgerFeature1,
+    'ledger-feature2': LedgerFeature2,
+    'ledger-feature3': LedgerFeature3,
     'account-list': AccountList
   },
   data() {
     return {
-      selectedSource: null,
-      tabIndex: 0
+      tabIndex: 0,
+      contentTitle: '',
+      ledgerAPI: null,
+      connected: false
     }
   },
+  mounted() {
+    this.updateTabIndex(0)
+
+    this.ledgerAPI = new LedgerAPI(!Helper.nodeEnv())
+  },
   methods: {
-    createNewAccount() {
-      // sdf
+    connectToLedger() {
+      this.connected = false
+
+      this.ledgerAPI.connectLedger(() => {
+        this.connected = true
+      }, !this.nodeEnv)
     },
-    giveLedgerSigningPower() {
-      // sdf
-    },
-    mergeAccountIntoLedger() {
-      // sdf
-    },
-    arrowClick(right) {
-      this.tabIndex += right ? 1 : -1
+    updateTabIndex(tabIndex) {
+      this.tabIndex = tabIndex
 
       if (this.tabIndex > 2) {
         this.tabIndex = 0
@@ -141,16 +99,24 @@ export default {
       if (this.tabIndex < 0) {
         this.tabIndex = 2
       }
-    },
-    sourceValid() {
-      const result = this.selectedSource ? this.selectedSource.publicKey : null
 
-      if (Helper.strlen(result) > 0) {
-        return true
+      switch (this.tabIndex) {
+        case 0:
+          this.contentTitle = '#1: Create New Account for Ledger'
+          break
+        case 1:
+          this.contentTitle = '#2: Give Ledger Signing Power'
+          break
+        case 2:
+          this.contentTitle = '#3: Merge Account into Ledger'
+          break
+        default:
+          this.contentTitle = 'unknown index'
+          break
       }
-
-      Helper.debugLog('please select a source account', 'Error')
-      return false
+    },
+    arrowClick(right) {
+      this.updateTabIndex(this.tabIndex + (right ? 1 : -1))
     }
   }
 }
