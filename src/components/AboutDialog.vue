@@ -83,8 +83,6 @@ export default {
           colorIndex -= colors.length
         }
 
-        console.log(colorIndex)
-
         const pixels = (i + 1) * 10
         shadowString += shadowString.length > 0 ? ', ' : ''
 
