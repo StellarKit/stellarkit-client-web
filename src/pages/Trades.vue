@@ -58,6 +58,18 @@ export default {
           name: 'payment ' + asset,
           value: txResponse.amount
         })
+      } else if (txResponse.type === 'payment_path') {
+        let asset = 'native'
+
+        if (txResponse.asset_type !== 'native') {
+          asset = txResponse.asset_code
+        }
+
+        this.addOperation({
+          id: txResponse.id,
+          name: 'payment path' + asset + '/' + txResponse.source_asset_code,
+          value: txResponse.amount
+        })
       } else if (txResponse.type === 'create_account') {
         this.addOperation({
           id: txResponse.id,
