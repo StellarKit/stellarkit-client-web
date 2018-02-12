@@ -1,13 +1,14 @@
 <template>
 <div>
+  <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
+
   <div class='info-area'>
     <div>1. Start with three accounts: Issuer, Distributor and Buyer
     </div>
-    <v-btn class='create-accounts' small @click="createStandardAccounts()">Create Accounts</v-btn>
+    <v-btn round class='create-accounts' small @click="createStandardAccounts()">Create Accounts</v-btn>
 
     <div>2. Click each button in order, but wait for each to complete</div>
   </div>
-  <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
   <div class='expansion-contents'>
     <v-expansion-panel class='custom-expansion-panel'>
       <v-expansion-panel-content v-bind:value="true">
@@ -17,10 +18,10 @@
         <div class='expansion-message'>
           <v-text-field class='number-field' label="Asset trust limit" type='number' v-model.trim="trustLimit"></v-text-field>
 
-          <v-btn small @click="setDistributorTrustToken()">Set Distributor Trust Token</v-btn>
+          <v-btn round @click="setDistributorTrustToken()">Set Distributor Trust Token</v-btn>
           <div class='message-comment'>Only needed for Bifrost</div>
-          <v-btn small @click="setDistributorTrustETH()">Set Distributor Trust ETC</v-btn>
-          <v-btn small @click="setDistributorTrustBTC()">Set Distributor Trust BTC</v-btn>
+          <v-btn round @click="setDistributorTrustETH()">Set Distributor Trust ETC</v-btn>
+          <v-btn round @click="setDistributorTrustBTC()">Set Distributor Trust BTC</v-btn>
         </div>
       </v-expansion-panel-content>
       <v-expansion-panel-content>
@@ -29,7 +30,7 @@
         </div>
         <div class='expansion-message'>
           <v-text-field class='number-field' label="Amount to create" type='number' v-model.trim="createAmount" @keyup.enter="buttonClick('createTokens')"></v-text-field>
-          <v-btn small @click="createTokens()">Create Tokens</v-btn>
+          <v-btn round @click="createTokens()">Create Tokens</v-btn>
         </div>
       </v-expansion-panel-content>
       <v-expansion-panel-content>
@@ -38,7 +39,7 @@
         </div>
         <div class='expansion-message'>
           <div class='message-comment'>Don't lock if using Bifrost, the current code fails when locked</div>
-          <v-btn small @click="lockIssuer()">Lock Issuer</v-btn>
+          <v-btn round @click="lockIssuer()">Lock Issuer</v-btn>
         </div>
       </v-expansion-panel-content>
       <v-expansion-panel-content>
@@ -53,7 +54,7 @@
             <v-text-field class='number-field' label="Amount to sell" type='number' v-model="offerAmount"></v-text-field>
           </div>
 
-          <v-btn small @click="manageOffer()">Manage Offer</v-btn>
+          <v-btn round @click="manageOffer()">Manage Offer</v-btn>
         </div>
       </v-expansion-panel-content>
       <v-expansion-panel-content>
@@ -62,8 +63,8 @@
         </div>
         <div class='expansion-message'>
           <div class='message-comment'>Bifrost Only</div>
-          <v-btn small @click="manageOfferETH()">Manage Offer ETH</v-btn>
-          <v-btn small @click="manageOfferBTC()">Manage Offer BTC</v-btn>
+          <v-btn round @click="manageOfferETH()">Manage Offer ETH</v-btn>
+          <v-btn round @click="manageOfferBTC()">Manage Offer BTC</v-btn>
         </div>
       </v-expansion-panel-content>
       <v-expansion-panel-content>
@@ -73,7 +74,7 @@
         <div class='expansion-message'>
           <v-text-field class='number-field' label="Asset trust limit" type='number' v-model.trim="trustLimit"></v-text-field>
 
-          <v-btn small @click="setBuyerTrust()">Set Buyer Trust</v-btn>
+          <v-btn round @click="setBuyerTrust()">Set Buyer Trust</v-btn>
         </div>
       </v-expansion-panel-content>
       <v-expansion-panel-content>
@@ -83,7 +84,7 @@
         <div class='expansion-message'>
           <v-text-field class='number-field' label="Amount to buy" type='number' v-model.trim="amountToBuy"></v-text-field>
 
-          <v-btn small @click="buyLamboTokens()">Buy Tokens</v-btn>
+          <v-btn round @click="buyLamboTokens()">Buy Tokens</v-btn>
         </div>
       </v-expansion-panel-content>
       <v-expansion-panel-content>
@@ -92,16 +93,16 @@
         </div>
         <div class='expansion-message'>
           <div class='message-comment'>Issues mulitiple operations. Wait for it to complete.</div>
-          <v-btn small @click="newAccountWithTokens()">Create New Account</v-btn>
+          <v-btn round @click="newAccountWithTokens()">Create New Account</v-btn>
         </div>
       </v-expansion-panel-content>
     </v-expansion-panel>
   </div>
 
   <div class='bottom-buttons'>
-    <v-btn small @click="showOffers()">Show Token Offers</v-btn>
-    <v-btn small @click="deleteOffers()">Delete Token Offers</v-btn>
-    <v-btn small @click="paymentPaths()">Payment Paths</v-btn>
+    <v-btn round @click="showOffers()">Show Token Offers</v-btn>
+    <v-btn round @click="deleteOffers()">Delete Token Offers</v-btn>
+    <v-btn round @click="paymentPaths()">Payment Paths</v-btn>
   </div>
 </div>
 </template>

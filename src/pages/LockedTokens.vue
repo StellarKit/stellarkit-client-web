@@ -1,5 +1,7 @@
 <template>
 <div>
+  <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
+
   <div class='top-controls'>
     <div class='instructions'>
       <div class='title-instructions'>
@@ -24,18 +26,16 @@
       </div>
     </div>
 
-    <v-btn small @click="createAccountWithLockedTokens()">Create Account with Locked Tokens</v-btn>
+    <v-btn round @click="createAccountWithLockedTokens()">Create Account with Locked Tokens</v-btn>
 
     <div class='address-box'>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
     </div>
-    <v-btn small @click="createUnlockTransaction()">Create Unlock Transaction</v-btn>
-    <v-btn small @click="viewTransaction()">View Transaction</v-btn>
-    <v-btn small @click="submitTransaction()">Submit Transaction</v-btn>
+    <v-btn round @click="createUnlockTransaction()">Create Unlock Transaction</v-btn>
+    <v-btn round @click="viewTransaction()">View Transaction</v-btn>
+    <v-btn round @click="submitTransaction()">Submit Transaction</v-btn>
 
   </div>
-
-  <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
 
   <transaction-viewer :ping='dialogPing' :transaction='signedTransaction' />
 </div>

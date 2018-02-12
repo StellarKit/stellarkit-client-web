@@ -1,14 +1,14 @@
 <template>
 <div>
-  <v-btn small @click="orderbook()">order book</v-btn>
-  <!-- <v-btn small @click="setLowballerTrust()">Low Ball Trust</v-btn>
-  <v-btn small @click="makeLowballOffer()">Low Ball Offer</v-btn> -->
-  <v-btn small @click="streamPayments()">Payments</v-btn>
-  <v-btn small @click="stopPaymentStream()">Stop Payments</v-btn>
-  <v-btn small @click="streamOperations()">Operations</v-btn>
-  <v-btn small @click="stopOperationStream()">Stop Operations</v-btn>
-  <v-btn small @click="streamTrades()">Trades</v-btn>
-  <v-btn small @click="stopTradeStream()">Stop Trades</v-btn>
+  <v-btn round @click="orderbook()">order book</v-btn>
+  <!-- <v-btn round  @click="setLowballerTrust()">Low Ball Trust</v-btn>
+  <v-btn round  @click="makeLowballOffer()">Low Ball Offer</v-btn> -->
+  <v-btn round @click="streamPayments()">Payments</v-btn>
+  <v-btn round @click="stopPaymentStream()">Stop Payments</v-btn>
+  <v-btn round @click="streamOperations()">Operations</v-btn>
+  <v-btn round @click="stopOperationStream()">Stop Operations</v-btn>
+  <v-btn round @click="streamTrades()">Trades</v-btn>
+  <v-btn round @click="stopTradeStream()">Stop Trades</v-btn>
 
   <div class="operations-content">
     <div class='operations-title'>Operations</div>

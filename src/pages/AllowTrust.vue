@@ -1,5 +1,7 @@
 <template>
 <div>
+  <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
+
   <div class='top-controls'>
     <div class='address-box'>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
@@ -20,7 +22,6 @@
     <v-btn round @click="buyToken()">Buy Token</v-btn>
   </div>
 
-  <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
 </div>
 </template>
 
