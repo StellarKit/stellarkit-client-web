@@ -44,7 +44,7 @@ export default {
     addOperation(item) {
       this.operations.unshift(item)
 
-      this.operations = this.operations.slice(0, 20)
+      this.operations = this.operations.slice(0, 12)
     },
     displayTransaction(txResponse) {
       if (txResponse.type === 'payment') {
@@ -161,7 +161,7 @@ export default {
           this.displayTransaction(txResponse)
         },
         onerror: (error) => {
-          Helper.debugLog(error)
+          Helper.debugLog(error, 'Error')
         }
       })
     },
@@ -184,8 +184,7 @@ export default {
           this.displayTransaction(txResponse)
         },
         onerror: (error) => {
-          Helper.debugLog('Error: ')
-          Helper.debugLog(error)
+          Helper.debugLog(error, 'Error')
         }
       })
     },
@@ -252,11 +251,10 @@ export default {
 .operations-content {
     display: flex;
     width: 100%;
-    min-height: 400px;
+    min-height: 300px;
     flex-direction: column;
     align-items: center;
     padding: 5px;
-    margin: 5px;
     background: rgb(55,55,55);
     color: white;
 
@@ -264,22 +262,35 @@ export default {
         display: flex;
         width: 100%;
 
+        &:nth-child(even) {
+            background: rgba(255, 255, 255, .2);
+        }
+
         .item-name {
             text-align: right;
-            color: green;
-            margin-right: 10px;
+            padding-right: 5px;
             flex: 1 0 50%;
+
+            background: rgba(0,200,0, .4);
         }
 
         .item-value {
             text-align: left;
-            color: red;
             flex: 1 0 50%;
+            padding-left: 5px;
+
+            background: rgba(0,0,200, .4);
         }
     }
 
     .operations-title {
         font-size: 1.2em;
+        padding: 2px 20px;
+        margin-bottom: 4px;
+        font-weight: bold;
+        background: rgb(88,88,88);
+        border-radius: 50px;
+        text-transform: uppercase;
     }
 }
 </style>
