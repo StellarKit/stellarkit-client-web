@@ -90,6 +90,7 @@ class StellarUtils {
     return this.api().submitTransaction(transaction)
   }
 
+  // additionalSigners is an array of StellarWallet (ledger or secret key)
   sendAsset(sourceWallet, destKey, amount, asset = null, memo = null, additionalSigners = null) {
     return this.api().sendAsset(sourceWallet, destKey, amount, asset, memo, additionalSigners)
   }

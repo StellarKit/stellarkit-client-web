@@ -146,7 +146,9 @@ export default {
 
       const sourceWallet = this.sourceWallet()
       if (sourceWallet && this.signerValid()) {
-        StellarUtils.sendAsset(sourceWallet, this.selectedDest.publicKey, String(this.amountForPayments), null, null, [this.selectedSigner.secret])
+        const signerWallet = StellarWallet.secret(this.selectedSigner.secret)
+
+        StellarUtils.sendAsset(sourceWallet, this.selectedDest.publicKey, String(this.amountForPayments), null, null, [signerWallet])
           .then((response) => {
             StellarUtils.updateBalances()
 

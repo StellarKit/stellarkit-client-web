@@ -24,6 +24,7 @@
           <div class='account-name'>{{item.name}}</div>
           <div>XLM: {{item.XLM}}</div>
           <div>LMB: {{item.LMB}}</div>
+          <div v-if='item.signWithLedger'>Sign with Ledger</div>
         </div>
         <span>{{item.publicKey}}</span>
       </v-tooltip>

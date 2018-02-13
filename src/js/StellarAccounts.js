@@ -70,13 +70,14 @@ class StellarAccounts {
     return StellarAccounts.sharedAccounts()
   }
 
-  addAccount(keyPair, name = null) {
+  addAccount(keyPair, name = null, signWithLedger) {
     const acct = {
       name: name !== null ? name : generateName(),
       XLM: 'refreshing...',
       LMB: 0,
       secret: keyPair.secret(),
-      publicKey: keyPair.publicKey()
+      publicKey: keyPair.publicKey(),
+      signWithLedger: signWithLedger
     }
 
     this.shared().add(acct)

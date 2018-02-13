@@ -324,23 +324,27 @@ export default {
         })
     },
     deleteOffersFromArray(offers) {
-      const offer = offers.pop()
-      if (offer) {
-        const buying = StellarUtils.assetFromObject(offer.buying)
-        const selling = StellarUtils.assetFromObject(offer.selling)
+      return new Promise((resolve, reject) => {
+        const offer = offers.pop()
+        if (offer) {
+          const buying = StellarUtils.assetFromObject(offer.buying)
+          const selling = StellarUtils.assetFromObject(offer.selling)
 
-        StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), buying, selling, '0', offer.price_r, offer.id)
-          .then((result) => {
-            Helper.debugLog(result, 'Success')
+          StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), buying, selling, '0', offer.price_r, offer.id)
+            .then((result) => {
+              Helper.debugLog(result, 'Success')
 
-            this.deleteOffersFromArray(offers)
+              resolve(this.deleteOffersFromArray(offers))
+            })
+            .catch((error) => {
+              Helper.debugLog(error, 'Error')
 
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
-      }
+              reject(error)
+            })
+        } else {
+          resolve(true)
+        }
+      })
     },
     deleteOffers() {
       Helper.debugLog('Deleting Offers...')
@@ -349,11 +353,11 @@ export default {
         .call()
         .then((response) => {
           // Helper.debugLog(response)
-          this.deleteOffersFromArray(response.records)
-
-          Helper.debugLog('Deleting Offers Success')
-
-          return true
+          return this.deleteOffersFromArray(response.records)
+        })
+        .then((result) => {
+          Helper.debugLog('Deleted all offers', 'Success')
+          return result
         })
         .catch((error) => {
           Helper.debugLog(error, 'Error')
