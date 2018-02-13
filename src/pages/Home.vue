@@ -43,7 +43,8 @@ import SimpleOperationDialog from '../components/SimpleOperationDialog.vue'
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
 import {
-  StellarWallet
+  StellarWallet,
+  LedgerAPI
 } from 'stellar-js-utils'
 import StellarAccounts from '../js/StellarAccounts.js'
 
@@ -62,11 +63,14 @@ export default {
       selectedDest: null,
       selectedSigner: null,
       sourceSecretKey: null,
-      amountForPayments: 20
+      amountForPayments: 20,
+      ledgerAPI: null
     }
   },
   mounted() {
     StellarUtils.updateBalances()
+
+    this.ledgerAPI = new LedgerAPI(!Helper.nodeEnv())
   },
   methods: {
     sourceWallet() {
@@ -145,19 +149,31 @@ export default {
       Helper.debugLog('path with signers...')
 
       const sourceWallet = this.sourceWallet()
-      if (sourceWallet && this.signerValid()) {
-        const signerWallet = StellarWallet.secret(this.selectedSigner.secret)
+      if (sourceWallet) {
+        let signerWallet = null
 
-        StellarUtils.sendAsset(sourceWallet, this.selectedDest.publicKey, String(this.amountForPayments), null, null, [signerWallet])
-          .then((response) => {
-            StellarUtils.updateBalances()
+        if (this.selectedSource.signWithLedger) {
+          signerWallet = StellarWallet.ledger(this.ledgerAPI, () => {
+            console.log('Confirm on Ledger nano')
+          })
+        }
 
-            Helper.debugLog(response, 'Success')
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
+        if (!signerWallet && this.signerValid()) {
+          signerWallet = StellarWallet.secret(this.selectedSigner.secret)
+        }
+
+        if (signerWallet) {
+          StellarUtils.sendAsset(sourceWallet, this.selectedDest.publicKey, String(this.amountForPayments), null, null, [signerWallet])
+            .then((response) => {
+              StellarUtils.updateBalances()
+
+              Helper.debugLog(response, 'Success')
+              return null
+            })
+            .catch((error) => {
+              Helper.debugLog(error, 'Error')
+            })
+        }
       }
     },
     addSignerForSelected() {

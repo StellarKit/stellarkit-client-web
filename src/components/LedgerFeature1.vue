@@ -66,7 +66,7 @@ export default {
       return false
     },
     createNewAccount() {
-      const enabled = false // disabled for now, not tested
+      const enabled = true // disabled for now, not tested
 
       if (this.connected && enabled) {
         let newAccount = null
