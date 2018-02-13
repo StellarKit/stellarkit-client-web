@@ -1,14 +1,10 @@
 <template>
 <div>
-  <v-btn round @click="orderbook()">order book</v-btn>
-  <!-- <v-btn round  @click="setLowballerTrust()">Low Ball Trust</v-btn>
-  <v-btn round  @click="makeLowballOffer()">Low Ball Offer</v-btn> -->
+  <v-btn round @click="orderbook()">Order book</v-btn>
+  <!-- <v-btn round @click="assets()">Assets</v-btn> -->
   <v-btn round @click="streamPayments()">Payments</v-btn>
-  <v-btn round @click="stopPaymentStream()">Stop Payments</v-btn>
   <v-btn round @click="streamOperations()">Operations</v-btn>
-  <v-btn round @click="stopOperationStream()">Stop Operations</v-btn>
   <v-btn round @click="streamTrades()">Trades</v-btn>
-  <v-btn round @click="stopTradeStream()">Stop Trades</v-btn>
 
   <div class="operations-content">
     <div class='operations-title'>Operations</div>
@@ -142,74 +138,113 @@ export default {
         Helper.debugLog(txResponse)
       }
     },
-    stopPaymentStream() {
+    streamPayments() {
       if (this.paymentStopper !== null) {
         Helper.debugLog('stopping payment stream')
 
         this.paymentStopper()
         this.paymentStopper = null
+      } else {
+        Helper.debugLog('listening for payments')
+
+        const builder = StellarUtils.server().payments()
+          .cursor('now')
+
+        this.paymentStopper = builder.stream({
+          onmessage: (txResponse) => {
+            this.displayTransaction(txResponse)
+          },
+          onerror: (error) => {
+            Helper.debugLog(error, 'Error')
+          }
+        })
       }
     },
-    streamPayments() {
-      Helper.debugLog('listening for payments')
-
-      const builder = StellarUtils.server().payments()
-        .cursor('now')
-
-      this.paymentStopper = builder.stream({
-        onmessage: (txResponse) => {
-          this.displayTransaction(txResponse)
-        },
-        onerror: (error) => {
-          Helper.debugLog(error, 'Error')
-        }
-      })
-    },
-    stopOperationStream() {
+    streamOperations() {
       if (this.operationStopper !== null) {
         Helper.debugLog('stopping operation stream')
 
         this.operationStopper()
         this.operationStopper = null
+      } else {
+        Helper.debugLog('listening for operations')
+
+        const builder = StellarUtils.server().operations()
+          .cursor('now')
+
+        this.operationStopper = builder.stream({
+          onmessage: (txResponse) => {
+            this.displayTransaction(txResponse)
+          },
+          onerror: (error) => {
+            Helper.debugLog(error, 'Error')
+          }
+        })
       }
     },
-    streamOperations() {
-      Helper.debugLog('listening for operations')
-
-      const builder = StellarUtils.server().operations()
-        .cursor('now')
-
-      this.operationStopper = builder.stream({
-        onmessage: (txResponse) => {
-          this.displayTransaction(txResponse)
-        },
-        onerror: (error) => {
-          Helper.debugLog(error, 'Error')
-        }
-      })
-    },
-    stopTradeStream() {
+    streamTrades() {
       if (this.tradeStopper !== null) {
         Helper.debugLog('stopping trade stream')
 
         this.tradeStopper()
         this.tradeStopper = null
+      } else {
+        Helper.debugLog('listening for trades')
+
+        const builder = StellarUtils.server().trades()
+          .cursor('now')
+
+        this.tradeStopper = builder.stream({
+          onmessage: (txResponse) => {
+            this.displayTransaction(txResponse)
+          },
+          onerror: (error) => {
+            Helper.debugLog(error)
+          }
+        })
       }
     },
-    streamTrades() {
-      Helper.debugLog('listening for trades')
+    nextAssetPage(inResponse) {
+      inResponse.next()
+        .then((response) => {
+          for (const rec of response.records) {
+            if (parseFloat(rec.amount) > 0.0) {
+              Helper.debugLog(rec.asset_code + ' ' + rec.amount)
+            }
+          }
+          this.nextAssetPage(response)
+        })
+    },
+    assets() {
+      if (this.assetStopper) {
+        Helper.debugLog('stopping assets')
 
-      const builder = StellarUtils.server().trades()
-        .cursor('now')
+        this.assetStopper()
+        this.assetStopper = null
+      } else {
+        Helper.debugLog('Assets')
 
-      this.tradeStopper = builder.stream({
-        onmessage: (txResponse) => {
-          this.displayTransaction(txResponse)
-        },
-        onerror: (error) => {
-          Helper.debugLog(error)
-        }
-      })
+        const builder = StellarUtils.server().assets()
+          .order('desc')
+
+        builder.call()
+          .then((response) => {
+            for (const rec of response.records) {
+              if (parseFloat(rec.amount) > 0.0) {
+                Helper.debugLog(rec.asset_code + ' ' + rec.amount)
+              }
+            }
+            this.nextAssetPage(response)
+          })
+        // this.assetStopper = builder.stream({
+        //   onmessage: (response) => {
+        //     Helper.debugLog(response)
+        //   },
+        //   onerror: (error) => {
+        //     Helper.debugLog(error, 'Error')
+        //   }
+        // })
+      }
     },
     orderbook() {
       Helper.debugLog('Orderbook')
