@@ -36,12 +36,20 @@
             <router-view></router-view>
           </keep-alive>
         </div>
+
         <div class='app-console'>
           <div class='console-bar'>
             <v-btn icon dark @click.stop='clearLog()'>
               <v-tooltip open-delay='800' bottom>
                 <v-icon slot='activator'>&#xE15C;</v-icon>
                 <span>Clear console</span>
+              </v-tooltip>
+            </v-btn>
+            <v-btn icon dark @click.stop='fullscreenConsole()'>
+              <v-tooltip open-delay='800' bottom>
+                <v-icon v-if='fullscreenMode' slot='activator'>&#xE5D1;</v-icon>
+                <v-icon v-else slot='activator'>&#xE5D0;</v-icon>
+                <span>Full Screen</span>
               </v-tooltip>
             </v-btn>
             <div>
@@ -130,6 +138,7 @@ export default {
       menu: false,
       condensedOutput: false,
       expandXDR: false,
+      fullscreenMode: false,
       tabs: [{
         icon: String.fromCharCode('0xE88A'),
         tooltip: 'Make Payments',
@@ -177,6 +186,13 @@ export default {
     Helper.vue().$on('console', this.log)
   },
   methods: {
+    fullscreenConsole() {
+      const appconsole = $(this.$el).find('.app-console')
+
+      appconsole.toggleClass('fullscreen-console')
+
+      this.fullscreenMode = appconsole.hasClass('fullscreen-console')
+    },
     showGitHub() {
       Helper.openBrowser('https://github.com/StellarKit/stellar-client-web')
     },
@@ -300,6 +316,14 @@ html {
             overflow-y: auto;
         }
 
+        .fullscreen-console {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+
         .app-console {
             position: relative;
             display: flex;
@@ -314,7 +338,7 @@ html {
 
                 button {
                     margin: 0;
-                    color: rgba(255,255,255,.3);
+                    color: rgba(255,255,255,.4);
                     &:hover {
                         color: rgba(255,255,255,1);
                     }

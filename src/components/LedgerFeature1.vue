@@ -18,7 +18,7 @@
         Set the 'master' key on the account to 0 disabling the original accounts ability to sign any transactions.
       </li>
       <li>
-        This is 'reversible' using the merge account feature below.
+        This is 'reversible' using the merge account feature.
       </li>
     </ol>
   </div>
