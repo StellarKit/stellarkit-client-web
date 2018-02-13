@@ -151,11 +151,15 @@ export default {
       const sourceWallet = this.sourceWallet()
       if (sourceWallet) {
         let signerWallet = null
+        let signWithSource = true
 
         if (this.selectedSource.signWithLedger) {
           signerWallet = StellarWallet.ledger(this.ledgerAPI, () => {
-            console.log('Confirm on Ledger nano')
+            Helper.toast('Confirm on Ledger nano')
           })
+
+          // don't want an tx_bad_auth_extra error, source is not needed for our ledger accout
+          signWithSource = false
         }
 
         if (!signerWallet && this.signerValid()) {
@@ -163,7 +167,7 @@ export default {
         }
 
         if (signerWallet) {
-          StellarUtils.sendAsset(sourceWallet, this.selectedDest.publicKey, String(this.amountForPayments), null, null, [signerWallet])
+          StellarUtils.sendAsset(sourceWallet, this.selectedDest.publicKey, String(this.amountForPayments), null, null, [signerWallet], signWithSource)
             .then((response) => {
               StellarUtils.updateBalances()
 

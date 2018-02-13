@@ -9,7 +9,7 @@
         Create a new account.
       </li>
       <li>
-        1 XLM will be sent from your ledger to the new account. This is required to create new accounts on Stellar.
+        2 XLM will be sent from your ledger to the new account. This is required to create new accounts on Stellar.
       </li>
       <li>
         Add your ledger as a signer on this new account.
@@ -28,6 +28,11 @@
     where you can store just a few coins for daily usage.
   </div>
   <v-btn round @click="createNewAccount()">Create New Account for Ledger</v-btn>
+  <div>
+    Now you can test it on the Home tab. First create a new account or use an existing account and send 100 XLM to this new account created. Now select the new account as the source and send XLM back to the account, but click Pay With Signers. It will ask
+    you to confirm on your Ledger, and then the payment will go through. The source account isn't signing this transaction, only the ledger.
+  </div>
+
   <div>{{status}}</div>
 </div>
 </template>
