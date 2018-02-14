@@ -52,6 +52,10 @@ class StellarUtils {
     return this.api().balances(publicKey)
   }
 
+  manageData(sourceWallet, name, value) {
+    return this.api().manageData(sourceWallet, name, value)
+  }
+
   mergeAccount(sourceWallet, destKey) {
     return this.api().mergeAccount(sourceWallet, destKey)
   }

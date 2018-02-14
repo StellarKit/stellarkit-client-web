@@ -142,6 +142,14 @@ export default class Helper {
         }
       }
 
+      // base64 decode for values in manageData operation
+      if (object.data_attr) {
+        for (const name of Object.keys(object.data_attr)) {
+          Helper.debugLog(object.data_attr[name])
+          object.data_attr[name] = window.atob(object.data_attr[name])
+        }
+      }
+
       return this.stripBrackets(this.stringify(object))
     }
 

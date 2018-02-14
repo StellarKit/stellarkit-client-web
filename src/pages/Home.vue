@@ -28,10 +28,13 @@
     <v-btn round @click="setDomain()">Set Domain</v-btn>
     <v-btn round @click="setInflation()">Set Inflation Destination</v-btn>
     <v-btn round @click="testFederation()">Federation Lookup</v-btn>
+    <v-btn round @click="manageDataPing = !manageDataPing">Manage Data</v-btn>
   </div>
 
+  <manage-data-dialog :ping='manageDataPing' />
   <simple-dialog :ping='setDomainPing' :secretKey='sourceSecretKey' operation='domain' />
   <simple-dialog :ping='setInflationPing' :secretKey='sourceSecretKey' operation='inflation' />
+  <simple-dialog :ping='lookupFederationPing' :secretKey='sourceSecretKey' operation='federation' />
   <simple-dialog :ping='lookupFederationPing' :secretKey='sourceSecretKey' operation='federation' />
 </div>
 </template>
@@ -40,6 +43,7 @@
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import AccountList from '../components/AccountList.vue'
 import SimpleOperationDialog from '../components/SimpleOperationDialog.vue'
+import ManageDataDialog from '../components/ManageDataDialog.vue'
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
 import {
@@ -52,13 +56,15 @@ export default {
   mixins: [StellarCommonMixin],
   components: {
     'account-list': AccountList,
-    'simple-dialog': SimpleOperationDialog
+    'simple-dialog': SimpleOperationDialog,
+    'manage-data-dialog': ManageDataDialog
   },
   data() {
     return {
       lookupFederationPing: false,
       setDomainPing: false,
       setInflationPing: false,
+      manageDataPing: false,
       selectedSource: null,
       selectedDest: null,
       selectedSigner: null,
