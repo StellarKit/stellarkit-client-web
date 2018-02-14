@@ -42,8 +42,6 @@ export default class StreamingCache {
   }
 
   loadNextPage() {
-    Helper.debugLog('loading next page...')
-
     let builder
     switch (this.type) {
       case 'payments':
@@ -59,7 +57,7 @@ export default class StreamingCache {
         break
     }
 
-    builder.limit(2)
+    builder.limit(4)
 
     if (this.pagingToken !== 0) {
       builder.cursor(this.pagingToken)
@@ -76,7 +74,7 @@ export default class StreamingCache {
 
           this.pagingToken = response.records[last].paging_token
         } else {
-          Helper.debugLog('whattt?')
+          Helper.debugLog('reached end')
         }
 
         return null
