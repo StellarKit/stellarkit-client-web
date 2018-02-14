@@ -95,8 +95,10 @@ export default {
     next() {
       return this.streamingCache().next()
         .then((result) => {
-          Helper.clearLog()
-          Helper.debugLog(result)
+          if (result) {
+            Helper.clearLog()
+            Helper.debugLog(result)
+          }
         })
         .catch((error) => {
           Helper.debugLog(error)

@@ -10,74 +10,116 @@ export default class StreamingCache {
     this.pagingToken = 0
     this.publicKey = publicKey
     this.streamStopper = null
+    this.reachedEnd = false
+    this.loading = false
   }
 
-  getCurrentPage() {
-    return new Promise((resolve, reject) => {
-      if (this.index >= this.records.length) {
-        return this.loadNextPage()
-          .then(() => {
-            if (this.index >= 0 && this.index < this.records.length) {
-              resolve(this.records[this.index])
-            }
-          })
+  recordForIndex(nextIndex) {
+    if (nextIndex >= 0 && nextIndex < this.records.length) {
+      this.index = nextIndex
+    } else {
+      if (nextIndex > 0) {
+        this.index = this.records.length - 1
       } else {
-        if (this.index >= 0 && this.index < this.records.length) {
-          resolve(this.records[this.index])
+        this.index = 0
+      }
+    }
+
+    if (this.records.length > 0) {
+      return this.records[this.index]
+    }
+
+    return {}
+  }
+
+  getCurrentPage(increment) {
+    return new Promise((resolve, reject) => {
+      if (increment) {
+        const nextIndex = this.index + 1
+
+        if (nextIndex >= this.records.length) {
+          if (this.reachedEnd) {
+            resolve(this.recordForIndex(nextIndex))
+          } else {
+            return this.loadNextPage()
+              .then(() => {
+                resolve(this.recordForIndex(nextIndex))
+              })
+          }
+        } else {
+          resolve(this.recordForIndex(nextIndex))
         }
+      } else {
+        const nextIndex = this.index - 1
+
+        resolve(this.recordForIndex(nextIndex))
       }
     })
   }
 
   next() {
-    ++this.index
-
-    return this.getCurrentPage()
+    return this.getCurrentPage(true)
   }
 
   previous() {
-    --this.index
-
-    return this.getCurrentPage()
+    return this.getCurrentPage(false)
   }
 
   loadNextPage() {
-    let builder
-    switch (this.type) {
-      case 'payments':
-        builder = StellarUtils.server().payments()
-        break
-      case 'transactions':
-        builder = StellarUtils.server().transactions()
-        break
-      case 'operations':
-        builder = StellarUtils.server().operations()
-        break
-      default:
-        break
-    }
+    return new Promise((resolve, reject) => {
+      if (this.loading) {
+        // only load one batch at a time
+        console.log('loading')
+        resolve(null)
+      } else {
+        this.loading = true
 
-    builder.limit(4)
-
-    if (this.pagingToken !== 0) {
-      builder.cursor(this.pagingToken)
-    }
-
-    builder.forAccount(this.publicKey)
-
-    return builder.call()
-      .then((response) => {
-        if (response.records.length > 0) {
-          this.records = this.records.concat(response.records)
-
-          const last = response.records.length - 1
-
-          this.pagingToken = response.records[last].paging_token
-        } else {
-          Helper.debugLog('reached end')
+        let builder
+        switch (this.type) {
+          case 'payments':
+            builder = StellarUtils.server().payments()
+            break
+          case 'transactions':
+            builder = StellarUtils.server().transactions()
+            break
+          case 'operations':
+            builder = StellarUtils.server().operations()
+            break
+          default:
+            break
         }
 
-        return null
-      })
+        builder.limit(4)
+
+        if (this.pagingToken !== 0) {
+          builder.cursor(this.pagingToken)
+        }
+
+        builder.forAccount(this.publicKey)
+
+        return builder.call()
+          .then((response) => {
+            if (response.records.length > 0) {
+              this.records = this.records.concat(response.records)
+
+              const last = response.records.length - 1
+
+              this.pagingToken = response.records[last].paging_token
+            } else {
+              Helper.debugLog('reached end')
+              this.reachedEnd = true
+            }
+
+            this.loading = false
+            resolve(null)
+          })
+          .catch((error) => {
+            this.loading = false
+            Helper.debugLog(error, 'Error')
+
+            reject(null)
+          })
+      }
+    })
   }
 }
