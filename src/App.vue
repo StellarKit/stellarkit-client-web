@@ -39,17 +39,17 @@
 
         <div class='app-console'>
           <div class='console-bar'>
-            <v-btn icon dark @click.stop='clearLog()'>
-              <v-tooltip open-delay='800' bottom>
-                <v-icon slot='activator'>&#xE15C;</v-icon>
-                <span>Clear console</span>
-              </v-tooltip>
-            </v-btn>
             <v-btn icon dark @click.stop='fullscreenConsole()'>
               <v-tooltip open-delay='800' bottom>
                 <v-icon v-if='fullscreenMode' slot='activator'>&#xE5D1;</v-icon>
                 <v-icon v-else slot='activator'>&#xE5D0;</v-icon>
                 <span>Full Screen</span>
+              </v-tooltip>
+            </v-btn>
+            <v-btn icon dark @click.stop='clearLog()'>
+              <v-tooltip open-delay='800' bottom>
+                <v-icon slot='activator'>&#xE15C;</v-icon>
+                <span>Clear console</span>
               </v-tooltip>
             </v-btn>
             <div>
