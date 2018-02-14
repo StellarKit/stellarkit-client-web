@@ -35,7 +35,6 @@
   <simple-dialog :ping='setDomainPing' :secretKey='sourceSecretKey' operation='domain' />
   <simple-dialog :ping='setInflationPing' :secretKey='sourceSecretKey' operation='inflation' />
   <simple-dialog :ping='lookupFederationPing' :secretKey='sourceSecretKey' operation='federation' />
-  <simple-dialog :ping='lookupFederationPing' :secretKey='sourceSecretKey' operation='federation' />
 </div>
 </template>
 
