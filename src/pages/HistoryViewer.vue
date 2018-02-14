@@ -52,6 +52,12 @@ export default {
       ]
     }
   },
+  watch: {
+    selectedSource: function () {
+      this.cache = null
+      Helper.clearLog()
+    }
+  },
   computed: {
     buttonTitle: function () {
       let result = 'Unknown'
@@ -76,6 +82,7 @@ export default {
       this.mode = menuID
 
       this.cache = null
+      Helper.clearLog()
     },
     sourceValid() {
       const result = this.selectedSource ? this.selectedSource.publicKey : null
