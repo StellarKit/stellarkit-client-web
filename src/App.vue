@@ -106,9 +106,6 @@ export default {
     Storage.init()
       .then(() => {
         this.initializing = false
-
-        this.condensedOutput = Helper.get('condensedOutput')
-        this.expandXDR = Helper.get('expandXDR')
       })
       .catch((error) => {
         console.log(error)

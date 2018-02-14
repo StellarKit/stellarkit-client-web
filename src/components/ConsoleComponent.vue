@@ -77,8 +77,8 @@ export default {
     return {
       consoleOutput: '',
       menu: false,
-      condensedOutput: false,
-      expandXDR: false,
+      condensedOutput: Helper.get('condensedOutput'),
+      expandXDR: Helper.get('expandXDR'),
       fullscreenMode: false
     }
   },
