@@ -173,7 +173,7 @@ export default {
             margin: 4px;
             padding: 10px 12px 20px;
             border-radius: 8px;
-            background: white;
+            background: linear-gradient(to bottom, rgb(255,255,255), rgb(240,240,240));
             box-shadow: 0 2px 2px rgba(0,0,0,.4);
             line-height: 1.25;
             cursor: pointer;
