@@ -25,6 +25,14 @@ export default class Helper {
     return inString.length
   }
 
+  static strOK(inString) {
+    if (!inString) {
+      return false
+    }
+
+    return inString.length > 0
+  }
+
   static keyForKey(key) {
     return 'pref-' + key
   }
@@ -166,6 +174,10 @@ export default class Helper {
     newText += this.toStr(result)
 
     this.emit('console', newText)
+  }
+
+  static clearLog() {
+    this.emit('clear-console')
   }
 
   static isFederation(fedString) {

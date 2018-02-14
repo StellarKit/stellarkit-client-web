@@ -6,6 +6,7 @@ import AllowTrust from './pages/AllowTrust.vue'
 import LockedTokens from './pages/LockedTokens.vue'
 import CreateToken from './pages/CreateToken.vue'
 import LedgerNano from './pages/LedgerNano.vue'
+import HistoryViewer from './pages/HistoryViewer.vue'
 import Trades from './pages/Trades.vue'
 import $ from 'jquery'
 import HelperImplementation from './js/HelperImplementation.js'
@@ -49,6 +50,10 @@ const router = new VueRouter({
       path: '/ledger',
       component: LedgerNano,
       name: 'Ledger Nano'
+    }, {
+      path: '/history',
+      component: HistoryViewer,
+      name: 'History Viewer'
     },
     {
       path: '*',

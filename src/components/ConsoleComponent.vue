@@ -84,6 +84,7 @@ export default {
   },
   mounted() {
     Helper.vue().$on('console', this.log)
+    Helper.vue().$on('clear-console', this.clearLog)
   },
   methods: {
     log(output) {

@@ -36,8 +36,8 @@
             <router-view></router-view>
           </keep-alive>
         </div>
+        <console />
       </div>
-      <console />
     </div>
 
     <toast-component />
@@ -99,6 +99,10 @@ export default {
         icon: String.fromCharCode('0xE1E0'),
         tooltip: 'Ledger Nano',
         path: '/ledger'
+      }, {
+        icon: String.fromCharCode('0xE889'),
+        tooltip: 'History Viewer',
+        path: '/history'
       }]
     }
   },

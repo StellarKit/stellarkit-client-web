@@ -1,53 +1,85 @@
-class StreamingCache {
-  constructor(type) {
-    switch (type, publicKey) {
-      case 'payments':
-        break
-      case 'transactions':
-        break
-      case 'operations':
-        break
-    }
+import Helper from '../js/helper.js'
+import StellarUtils from './StellarUtils.js'
 
+export default class StreamingCache {
+  constructor(type, publicKey) {
     // vars
+    this.type = type
     this.records = []
     this.index = -1
-    this.pagingToken = ''
+    this.pagingToken = 0
+    this.publicKey = publicKey
+    this.streamStopper = null
+  }
+
+  getCurrentPage() {
+    return new Promise((resolve, reject) => {
+      if (this.index >= this.records.length) {
+        return this.loadNextPage()
+          .then(() => {
+            if (this.index >= 0 && this.index < this.records.length) {
+              resolve(this.records[this.index])
+            }
+          })
+      } else {
+        if (this.index >= 0 && this.index < this.records.length) {
+          resolve(this.records[this.index])
+        }
+      }
+    })
   }
 
   next() {
     ++this.index
 
-    if (this.index >= this.records.length) {
-      this.loadNextPage()
-    }
-
-    if (this.index >= 0 && this.index < this.records.length) {
-      return this.records[this.index]
-    }
+    return this.getCurrentPage()
   }
 
   previous() {
     --this.index
 
-    if (this.index >= 0 && this.index < this.records.length) {
-      return this.records[this.index]
-    }
+    return this.getCurrentPage()
   }
 
   loadNextPage() {
-    Helper.debugLog('listening for payments')
+    Helper.debugLog('loading next page...')
 
-    const builder = StellarUtils.server().payments()
-      .cursor('now')
+    let builder
+    switch (this.type) {
+      case 'payments':
+        builder = StellarUtils.server().payments()
+        break
+      case 'transactions':
+        builder = StellarUtils.server().transactions()
+        break
+      case 'operations':
+        builder = StellarUtils.server().operations()
+        break
+      default:
+        break
+    }
 
-    this.paymentStopper = builder.stream({
-      onmessage: (txResponse) => {
-        this.records.push(txResponse.records)
-      },
-      onerror: (error) => {
-        Helper.debugLog(error, 'Error')
-      }
-    })
+    builder.limit(2)
+
+    if (this.pagingToken !== 0) {
+      builder.cursor(this.pagingToken)
+    }
+
+    builder.forAccount(this.publicKey)
+
+    return builder.call()
+      .then((response) => {
+        if (response.records.length > 0) {
+          this.records = this.records.concat(response.records)
+
+          const last = response.records.length - 1
+
+          this.pagingToken = response.records[last].paging_token
+        } else {
+          Helper.debugLog('whattt?')
+        }
+
+        return null
+      })
   }
 }
