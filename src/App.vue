@@ -15,15 +15,15 @@
               <v-icon>fa-github</v-icon>
             </v-btn>
             <v-tabs-bar slot="extension">
-              <v-tooltip v-for='tab in tabs' open-delay='800' :key='tab.path' bottom>
-                <v-tabs-item slot='activator' :to='tab.path' exact class="custom-tab-item">
-                  <div class='custom-tab-content'>
+              <v-tabs-item v-if='!tab.disabled' v-for='tab in tabs' :to='tab.path' exact :key='tab.path' class="custom-tab-item">
+                <v-tooltip open-delay='800' bottom>
+                  <div slot='activator' class='custom-tab-content'>
                     <v-icon v-html='tab.icon'></v-icon>
                     <div class='bottom-bar' />
                   </div>
-                </v-tabs-item>
-                <span>{{tab.tooltip}}</span>
-              </v-tooltip>
+                  <span>{{tab.tooltip}}</span>
+                </v-tooltip>
+              </v-tabs-item>
             </v-tabs-bar>
           </v-toolbar>
         </v-tabs>
@@ -98,7 +98,8 @@ export default {
       }, {
         icon: String.fromCharCode('0xE1E0'),
         tooltip: 'Ledger Nano',
-        path: '/ledger'
+        path: '/ledger',
+        disabled: true
       }, {
         icon: String.fromCharCode('0xE889'),
         tooltip: 'History Viewer',

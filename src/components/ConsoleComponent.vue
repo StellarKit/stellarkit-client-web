@@ -112,6 +112,7 @@ export default {
     position: relative;
     display: flex;
     flex: 1 1 80px;
+    background: rgb(0,20,0);
 
     .console-bar {
         display: flex;
@@ -135,10 +136,9 @@ export default {
         outline: none;
         font-size: 0.8em;
         font-family: monospace;
-        background: rgb(0,20,0);
         overflow: auto;
         color: rgb(0,256,150);
-        padding: 10px;
+        margin-left: 24px;
     }
 }
 </style>

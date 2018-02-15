@@ -2,20 +2,41 @@
 <div>
   <div class='top-controls'>
     <div class='address-box'>
+
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
+      <v-menu offset-y :transition=false>
+        <v-btn :ripple=false slot="activator">
+          {{buttonTitle}}
+          <v-icon>&#xE5C5;</v-icon>
+        </v-btn>
+        <v-list>
+          <v-list-tile v-for="item in items" :key="item.title" @click="menuClick(item.menuID)">
+            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
+      <v-menu offset-y :transition=false>
+        <v-btn :ripple=false slot="activator">
+          {{orderButtonTitle}}
+          <v-icon>&#xE5C5;</v-icon>
+        </v-btn>
+        <v-list>
+          <v-list-tile v-for="item in orderItems" :key="item.title" @click="orderMenuClick(item.menuID)">
+            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
     </div>
 
-    <v-menu offset-y>
-      <v-btn color="primary" dark slot="activator">{{buttonTitle}}</v-btn>
-      <v-list>
-        <v-list-tile v-for="item in items" :key="item.title" @click="menuClick(item.menuID)">
-          <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
-    </v-menu>
-
-    <v-btn round @click="next()">Next</v-btn>
-    <v-btn round @click="previous(false)">Previous</v-btn>
+    <div class='button-row'>
+      <v-btn icon color='secondary' @click="previous(false)">
+        <v-icon>&#xE5CB;</v-icon>
+      </v-btn>
+      <v-btn icon color='secondary' @click="next()">
+        <v-icon>&#xE5CC;</v-icon>
+      </v-btn>
+      <div v-if="displayIndex >= 0" class='display-index'>Index: {{displayIndex}}</div>
+    </div>
   </div>
 </div>
 </template>
@@ -37,6 +58,8 @@ export default {
       selectedSource: null,
       mode: 'transactions',
       cache: null,
+      displayIndex: -1,
+      order: 'desc',
       items: [{
           title: 'Transactions',
           menuID: 'transactions'
@@ -48,6 +71,15 @@ export default {
         {
           title: 'Payments',
           menuID: 'payments'
+        }
+      ],
+      orderItems: [{
+          title: 'Ascending Order',
+          menuID: 'asc'
+        },
+        {
+          title: 'Decending Order',
+          menuID: 'desc'
         }
       ]
     }
@@ -75,14 +107,35 @@ export default {
           break
       }
       return result
+    },
+    orderButtonTitle: function () {
+      let result = 'Unknown'
+      switch (this.order) {
+        case 'asc':
+          result = 'Ascending Order'
+          break
+        case 'desc':
+          result = 'Descending Order'
+          break
+        default:
+          break
+      }
+      return result
     }
   },
   methods: {
+    clearUI() {
+      this.cache = null
+      this.displayIndex = -1
+      Helper.clearLog()
+    },
     menuClick(menuID) {
       this.mode = menuID
-
-      this.cache = null
-      Helper.clearLog()
+      this.clearUI()
+    },
+    orderMenuClick(menuID) {
+      this.order = menuID
+      this.clearUI()
     },
     sourceValid() {
       const result = this.selectedSource ? this.selectedSource.publicKey : null
@@ -90,36 +143,52 @@ export default {
       if (Helper.strlen(result) > 0) {
         return true
       }
+
+      Helper.debugLog('please select a source account', 'Error')
+
       return false
     },
     streamingCache() {
-      if (!this.cache) {
-        this.cache = new StreamingCache(this.mode, this.selectedSource.publicKey)
-      }
+      if (this.sourceValid()) {
+        if (!this.cache) {
+          this.cache = new StreamingCache(this.mode, this.selectedSource.publicKey, this.order)
+        }
 
-      return this.cache
+        return this.cache
+      }
+      return null
+    },
+    displayResult(result) {
+      if (result) {
+        Helper.clearLog()
+
+        this.displayIndex = result.index
+        Helper.debugLog(result.record)
+      }
     },
     next() {
-      return this.streamingCache().next()
-        .then((result) => {
-          if (result) {
-            Helper.clearLog()
-            Helper.debugLog(result)
-          }
-        })
-        .catch((error) => {
-          Helper.debugLog(error)
-        })
+      const cache = this.streamingCache()
+      if (cache) {
+        return cache.next()
+          .then((result) => {
+            this.displayResult(result)
+          })
+          .catch((error) => {
+            Helper.debugLog(error)
+          })
+      }
     },
     previous() {
-      return this.streamingCache().previous()
-        .then((result) => {
-          Helper.clearLog()
-          Helper.debugLog(result)
-        })
-        .catch((error) => {
-          Helper.debugLog(error)
-        })
+      const cache = this.streamingCache()
+      if (cache) {
+        return cache.previous()
+          .then((result) => {
+            this.displayResult(result)
+          })
+          .catch((error) => {
+            Helper.debugLog(error)
+          })
+      }
     }
   }
 }
@@ -128,13 +197,25 @@ export default {
 <style scoped lang='scss'>
 .top-controls {
     padding: 20px;
+
+    .button-row {
+        display: flex;
+        align-items: center;
+
+        .display-index {
+            margin: 0 10px;
+            font-size: 1.2em;
+        }
+    }
 }
 
 .address-box {
     display: flex;
     align-items: center;
     div.input-group {
-        margin-right: 16px;
+        max-width: 250px;
     }
+
+    button {}
 }
 </style>

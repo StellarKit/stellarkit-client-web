@@ -2,9 +2,11 @@ import Helper from '../js/helper.js'
 import StellarUtils from './StellarUtils.js'
 
 export default class StreamingCache {
-  constructor(type, publicKey) {
+  constructor(type, publicKey, order) {
     // vars
     this.type = type
+    this.order = order
+
     this.records = []
     this.index = -1
     this.pagingToken = 0
@@ -26,7 +28,17 @@ export default class StreamingCache {
     }
 
     if (this.records.length > 0) {
-      return this.records[this.index]
+      const record = this.records[this.index]
+
+      // links are useless here
+      delete record._links
+
+      const result = {
+        index: this.index,
+        record: record
+      }
+
+      return result
     }
 
     return {}
@@ -90,6 +102,7 @@ export default class StreamingCache {
         }
 
         builder.limit(4)
+          .order(this.order)
 
         if (this.pagingToken !== 0) {
           builder.cursor(this.pagingToken)
