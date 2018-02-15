@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
+var nodeExternals = require('webpack-node-externals');
 
 const common = {
   output: {
@@ -64,6 +65,9 @@ if (TARGET === 'dist' || TARGET === 'dev') {
     target: 'web',
     output: {
       filename: 'site.js'
+    },
+    node: {
+      fs: 'empty'
     }
   })
 
@@ -85,13 +89,7 @@ if (TARGET === 'dist' || TARGET === 'dev') {
       library: 'stellar-client-web',
       libraryTarget: 'umd'
     },
-    externals: [
-      // without this, we'll get two copies of jquery and triggers will fail
-      // also package will be huge
-      'jquery',
-      'stellar-sdk',
-      'stellar-ledger-api'
-    ]
+    externals: [nodeExternals()]
   })
   module.exports = mergedOptions
 }
