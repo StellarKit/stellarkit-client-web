@@ -58,10 +58,14 @@ export default class Helper {
     Storage.set(this.keyForKey(key), value)
   }
 
-  static stripBrackets(rawString) {
+  static stripBrackets(object) {
     const condensedOutput = Helper.get('condensedOutput')
     if (condensedOutput) {
       const lineArray = []
+
+      // remove _links, mostly worthless
+      delete object._links
+      const rawString = this.stringify(object)
 
       // remove excessive brackets
       const lines = rawString.split('\n')
@@ -102,7 +106,7 @@ export default class Helper {
       }
     }
 
-    return rawString
+    return this.stringify(object)
   }
 
   static stringify(object) {
@@ -130,7 +134,7 @@ export default class Helper {
       // returns {} when it fails - check number of keys
       const obj = JSON.parse(json)
       if (Object.keys(obj).length > 0) {
-        return this.stripBrackets(json)
+        return this.stripBrackets(obj)
       }
 
       return object.toString()
@@ -158,7 +162,7 @@ export default class Helper {
         }
       }
 
-      return this.stripBrackets(this.stringify(object))
+      return this.stripBrackets(object)
     }
 
     return typeof object

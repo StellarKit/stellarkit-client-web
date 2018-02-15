@@ -30,9 +30,6 @@ export default class StreamingCache {
     if (this.records.length > 0) {
       const record = this.records[this.index]
 
-      // links are useless here
-      delete record._links
-
       const result = {
         index: this.index,
         record: record
