@@ -1,7 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
-var nodeExternals = require('webpack-node-externals');
 
 const common = {
   output: {
@@ -89,9 +88,9 @@ if (TARGET === 'dist' || TARGET === 'dev') {
       library: 'stellar-client-web',
       libraryTarget: 'umd'
     },
-    externals: [nodeExternals({
-      whitelist: ['vuetify']
-    })]
+    node: {
+      fs: 'empty'
+    }
   })
   module.exports = mergedOptions
 }
