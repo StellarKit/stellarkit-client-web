@@ -88,6 +88,12 @@ if (TARGET === 'dist' || TARGET === 'dev') {
       library: 'stellar-client-web',
       libraryTarget: 'umd'
     },
+    externals: [
+      'node-hid',
+      '@ledgerhq/hw-transport-node-hid',
+      '@ledgerhq/hw-transport-u2f',
+      '@ledgerhq/hw-app-str'
+    ],
     node: {
       fs: 'empty'
     }
