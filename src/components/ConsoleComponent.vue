@@ -138,7 +138,7 @@ export default {
         font-family: monospace;
         overflow: auto;
         color: rgb(0,256,150);
-        margin-left: 24px;
+        margin-left: 30px;
     }
 }
 </style>

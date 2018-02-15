@@ -29,11 +29,17 @@
     </div>
 
     <div class='button-row'>
-      <v-btn icon color='secondary' @click="previous(false)">
-        <v-icon>&#xE5CB;</v-icon>
+      <v-btn icon color='secondary' @click="previous()">
+        <v-tooltip open-delay='800' bottom>
+          <v-icon slot='activator'>&#xE5CB;</v-icon>
+          <span>Previous</span>
+        </v-tooltip>
       </v-btn>
       <v-btn icon color='secondary' @click="next()">
-        <v-icon>&#xE5CC;</v-icon>
+        <v-tooltip open-delay='800' bottom>
+          <v-icon slot='activator'>&#xE5CC;</v-icon>
+          <span>Next</span>
+        </v-tooltip>
       </v-btn>
       <div v-if="displayIndex >= 0" class='display-index'>Index: {{displayIndex}}</div>
     </div>
