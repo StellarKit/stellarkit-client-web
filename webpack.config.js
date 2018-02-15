@@ -89,7 +89,9 @@ if (TARGET === 'dist' || TARGET === 'dev') {
       library: 'stellar-client-web',
       libraryTarget: 'umd'
     },
-    externals: [nodeExternals()]
+    externals: [nodeExternals({
+      whitelist: ['vuetify']
+    })]
   })
   module.exports = mergedOptions
 }
