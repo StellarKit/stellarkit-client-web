@@ -103,6 +103,7 @@
     <v-btn round @click="showOffers()">Show Token Offers</v-btn>
     <v-btn round @click="deleteOffers()">Delete Token Offers</v-btn>
     <v-btn round @click="paymentPaths()">Payment Paths</v-btn>
+    <v-btn round @click="orderbook()">Order book</v-btn>
   </div>
 </div>
 </template>
@@ -409,6 +410,24 @@ export default {
             Helper.debugLog(error)
           })
       }
+    },
+    orderbook() {
+      Helper.debugLog('Orderbook...')
+
+      // const selling = StellarUtils.lumins()
+      // const buying = StellarAccounts.lamboTokenAsset()
+
+      const selling = StellarAccounts.lamboTokenAsset()
+      const buying = StellarUtils.lumins()
+
+      StellarUtils.server().orderbook(selling, buying)
+        .call()
+        .then((response) => {
+          Helper.debugLog(response)
+        })
+        .catch((error) => {
+          Helper.debugLog(error)
+        })
     }
   }
 }

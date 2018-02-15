@@ -1,6 +1,5 @@
 <template>
 <div>
-  <v-btn round @click="orderbook()">Order book</v-btn>
   <!-- <v-btn round @click="assets()">Assets</v-btn> -->
   <v-btn round @click="streamPayments()">Payments</v-btn>
   <v-btn round @click="streamOperations()">Operations</v-btn>
@@ -22,7 +21,6 @@
 
 <script>
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
-import StellarAccounts from '../js/StellarAccounts.js'
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
 
@@ -245,38 +243,6 @@ export default {
         //   }
         // })
       }
-    },
-    orderbook() {
-      Helper.debugLog('Orderbook')
-
-      const selling = StellarUtils.lumins()
-      const buying = StellarAccounts.lamboTokenAsset()
-
-      // const selling = StellarAccounts.lamboTokenAsset()
-      // const buying = StellarUtils.lumins()
-
-      StellarUtils.server().orderbook(selling, buying)
-        .call()
-        .then((response) => {
-          Helper.debugLog(response)
-        })
-      // let max = 12
-      // const closeStream = StellarUtils.server().orderbook(selling, buying)
-      // .stream({
-      //   onmessage: (response) => {
-      //     if (max-- <= 0) {
-      //       closeStream()
-      //     } else {
-      //       this.orderBids = response.bids
-      //       this.orderAsks = response.asks
-      //
-      //       // Helper.debugLog(response)
-      //     }
-      //   },
-      //   onerror: (error) => {
-      //     Helper.debugLog('listen err: ' + JSON.stringify(error))
-      //   }
-      // })
     }
   }
 }
