@@ -27,6 +27,7 @@ build/Release
 node_modules
 jspm_packages
 yarn.lock
+package-lock.json
 build/built
 
 # Optional npm cache directory
