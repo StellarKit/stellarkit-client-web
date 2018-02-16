@@ -89,6 +89,8 @@ if (TARGET === 'dist' || TARGET === 'dev') {
       libraryTarget: 'umd'
     },
     externals: [
+      'ed25519',
+      'node-hid',
       '@ledgerhq/hw-transport-node-hid',
       '@ledgerhq/hw-transport-u2f',
       '@ledgerhq/hw-app-str',
