@@ -89,14 +89,11 @@ if (TARGET === 'dist' || TARGET === 'dev') {
       libraryTarget: 'umd'
     },
     externals: [
-      'node-hid',
       '@ledgerhq/hw-transport-node-hid',
       '@ledgerhq/hw-transport-u2f',
-      '@ledgerhq/hw-app-str'
-    ],
-    node: {
-      fs: 'empty'
-    }
+      '@ledgerhq/hw-app-str',
+      'fs'
+    ]
   })
   module.exports = mergedOptions
 }
