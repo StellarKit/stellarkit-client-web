@@ -75,7 +75,7 @@ export default {
   mounted() {
     StellarUtils.updateBalances()
 
-    this.ledgerAPI = new LedgerAPI(!Helper.nodeEnv())
+    this.ledgerAPI = new LedgerAPI()
   },
   methods: {
     sourceWallet() {

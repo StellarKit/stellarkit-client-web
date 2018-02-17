@@ -16,15 +16,18 @@ const common = {
       },
       {
         test: /\.vue$/,
-        use: 'vue-loader'
+        use: 'vue-loader',
+        exclude: /node_modules/
       },
       {
         test: /\.css$/,
-        use: ['vue-style-loader', 'css-loader']
+        use: ['vue-style-loader', 'css-loader'],
+        exclude: /node_modules/
       },
       {
         test: /\.styl$/,
-        use: ['style-loader', 'css-loader', 'stylus-loader']
+        use: ['style-loader', 'css-loader', 'stylus-loader'],
+        exclude: /node_modules/
       },
       {
         test: /\.js$/,
@@ -48,7 +51,8 @@ const common = {
               enabled: process.env.NODE_ENV === 'production'
             }
           }
-        ]
+        ],
+        exclude: /node_modules/
       }
     ]
   },
@@ -64,9 +68,6 @@ if (TARGET === 'dist' || TARGET === 'dev') {
     target: 'web',
     output: {
       filename: 'site.js'
-    },
-    node: {
-      fs: 'empty'
     }
   })
 
@@ -89,12 +90,7 @@ if (TARGET === 'dist' || TARGET === 'dev') {
       libraryTarget: 'umd'
     },
     externals: [
-      'ed25519',
-      'node-hid',
-      '@ledgerhq/hw-transport-node-hid',
-      '@ledgerhq/hw-transport-u2f',
-      '@ledgerhq/hw-app-str',
-      'fs'
+      'jquery'
     ]
   })
   module.exports = mergedOptions

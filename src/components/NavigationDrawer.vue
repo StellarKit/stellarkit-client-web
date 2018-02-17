@@ -20,7 +20,7 @@
       </v-list-tile-content>
     </v-list-tile>
   </v-list>
-  <donate-dialog :ping='showDonatePing' :nodeEnv="nodeEnv" :donationPublicKey='donationPublicKey' />
+  <donate-dialog :ping='showDonatePing' :donationPublicKey='donationPublicKey' />
   <help-dialog :ping='showHelpPing' title='Help' />
   <about-dialog :ping='showAboutPing' title='About' />
 </v-navigation-drawer>
@@ -47,9 +47,6 @@ export default {
     }
   },
   computed: {
-    nodeEnv: function () {
-      return Helper.nodeEnv()
-    },
     applicationName: function () {
       return Helper.applicationName()
     }

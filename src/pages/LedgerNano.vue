@@ -56,7 +56,6 @@ import AccountList from '../components/AccountList.vue'
 import LedgerFeature1 from '../components/LedgerFeature1.vue'
 import LedgerFeature2 from '../components/LedgerFeature2.vue'
 import LedgerFeature3 from '../components/LedgerFeature3.vue'
-import Helper from '../js/helper.js'
 import {
   LedgerAPI
 } from 'stellar-js-utils'
@@ -80,7 +79,7 @@ export default {
   mounted() {
     this.updateTabIndex(0)
 
-    this.ledgerAPI = new LedgerAPI(!Helper.nodeEnv())
+    this.ledgerAPI = new LedgerAPI()
   },
   methods: {
     connectToLedger() {
@@ -88,7 +87,7 @@ export default {
 
       this.ledgerAPI.connectLedger(() => {
         this.connected = true
-      }, !this.nodeEnv)
+      })
     },
     updateTabIndex(tabIndex) {
       this.tabIndex = tabIndex

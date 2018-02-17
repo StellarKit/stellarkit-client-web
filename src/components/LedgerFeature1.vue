@@ -57,7 +57,7 @@ export default {
     }
   },
   mounted() {
-    this.ledgerAPI = new LedgerAPI(!Helper.nodeEnv())
+    this.ledgerAPI = new LedgerAPI()
   },
   methods: {
     sourceValid() {

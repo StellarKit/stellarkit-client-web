@@ -201,15 +201,6 @@ export default class Helper {
     }
   }
 
-  static nodeEnv() {
-    const isNode = HelperImplementation.nodeEnv()
-
-    if (isNode) {
-      return true
-    }
-    return false
-  }
-
   static applicationName() {
     const name = HelperImplementation.applicationName()
 

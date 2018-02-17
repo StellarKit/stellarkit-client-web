@@ -10,6 +10,9 @@ import HistoryViewer from './pages/HistoryViewer.vue'
 import Trades from './pages/Trades.vue'
 import $ from 'jquery'
 import HelperImplementation from './js/HelperImplementation.js'
+import {
+  LedgerAPITransport
+} from 'stellar-js-utils'
 
 import Vuetify from 'vuetify'
 Vue.use(Vuetify)
@@ -73,5 +76,6 @@ const start = () => {
 
 export {
   start,
-  HelperImplementation
+  HelperImplementation,
+  LedgerAPITransport
 }

@@ -14,14 +14,6 @@ export default class HelperImplementation {
     return false
   }
 
-  static nodeEnv() {
-    if (this.implemenation) {
-      return this.implemenation.nodeEnv()
-    }
-
-    return false
-  }
-
   static applicationName() {
     if (this.implemenation) {
       return this.implemenation.applicationName()
