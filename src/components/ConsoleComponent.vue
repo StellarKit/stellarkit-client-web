@@ -56,15 +56,11 @@
 </template>
 
 <script>
-import BalanceComponent from './BalanceComponent.vue'
 import Helper from '../js/helper.js'
 import $ from 'jquery'
 
 export default {
   props: ['publicKey'],
-  components: {
-    'balance-component': BalanceComponent
-  },
   watch: {
     condensedOutput: function () {
       Helper.set('condensedOutput', this.condensedOutput)
