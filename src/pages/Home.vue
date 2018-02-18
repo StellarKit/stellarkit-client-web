@@ -2,6 +2,9 @@
 <div>
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
   <div class='top-controls'>
+    <div class='page-title'>
+      Basics
+    </div>
     <div class='address-box'>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
       <v-select :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination accout" autocomplete return-object max-height="600"></v-select>

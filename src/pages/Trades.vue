@@ -1,12 +1,16 @@
 <template>
 <div>
+  <div class='page-title'>
+    View Streams
+  </div>
+
   <!-- <v-btn round @click="assets()">Assets</v-btn> -->
   <v-btn round @click="streamPayments()">Payments</v-btn>
   <v-btn round @click="streamOperations()">Operations</v-btn>
   <v-btn round @click="streamTrades()">Trades</v-btn>
 
   <div class="operations-content">
-    <div class='operations-title'>Operations</div>
+    <div class='operations-title'>Live Stream</div>
     <div class='operations-item' v-for="item in operations" :key=item.id>
       <div class='item-name'>
         {{item.name}}:

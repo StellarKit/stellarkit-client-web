@@ -3,10 +3,8 @@
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
   <div class='ledger-tab'>
     <div>
-      <div class='instructions'>
-        <div class='title-instructions'>
-          <strong>Fun with Ledger Nano</strong>
-        </div>
+      <div class='page-title'>
+        Ledger Nano Experiments
         <div>
           (under construction)
         </div>
@@ -46,7 +44,6 @@
       </div>
     </div>
   </div>
-</div>
 </div>
 </template>
 
@@ -155,19 +152,6 @@ export default {
                 font-weight: bold;
                 text-align: center;
             }
-        }
-    }
-
-    .instructions {
-        text-align: center;
-
-        .title-instructions {
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-        div {
-            margin-bottom: 12px;
-            line-height: 1;
         }
     }
 }

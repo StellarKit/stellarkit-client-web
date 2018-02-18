@@ -4,8 +4,8 @@
 
   <div class='top-controls'>
     <div class='instructions'>
-      <div class='title-instructions'>
-        <strong>Lock-up Period for Tokens</strong>
+      <div class='page-title'>
+        Lock-up Period for Tokens
       </div>
 
       <div>
@@ -191,11 +191,6 @@ export default {
 }
 
 .instructions {
-    .title-instructions {
-        text-align: center;
-        font-weight: bold;
-        font-size: 1.2em;
-    }
     div {
         margin-bottom: 12px;
         line-height: 1;

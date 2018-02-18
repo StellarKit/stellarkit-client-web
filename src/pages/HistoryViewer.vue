@@ -1,8 +1,11 @@
 <template>
 <div>
   <div class='top-controls'>
-    <div class='address-box'>
+    <div class='page-title'>
+      History Viewer
+    </div>
 
+    <div class='address-box'>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
       <v-menu offset-y :transition=false>
         <v-btn :ripple=false slot="activator">

@@ -1,6 +1,9 @@
 <template>
 <div>
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
+  <div class='page-title'>
+    Create a Token
+  </div>
 
   <div class='info-area'>
     <div>1. Start with three accounts: Issuer, Distributor and Buyer
