@@ -5,6 +5,7 @@ import BuyToken from './pages/BuyToken.vue'
 import AllowTrust from './pages/AllowTrust.vue'
 import LockedTokens from './pages/LockedTokens.vue'
 import CreateToken from './pages/CreateToken.vue'
+import ICOWizard from './pages/ICOWizard.vue'
 import LedgerNano from './pages/LedgerNano.vue'
 import HistoryViewer from './pages/HistoryViewer.vue'
 import Trades from './pages/Trades.vue'
@@ -41,6 +42,10 @@ const router = new VueRouter({
       path: '/token',
       component: CreateToken,
       name: 'Create Token'
+    }, {
+      path: '/ico',
+      component: ICOWizard,
+      name: 'ICO Wizard'
     }, {
       path: '/trust',
       component: AllowTrust,

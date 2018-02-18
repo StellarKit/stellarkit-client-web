@@ -17,17 +17,9 @@
 
       <div class='features-slider'>
         <div class='feature-nav'>
-          <v-btn icon color='primary' @click='arrowClick(false)'>
-            <v-icon>chevron_left</v-icon>
-          </v-btn>
-          <v-spacer />
           <div class='feature-nav-title'>
             {{contentTitle}}
           </div>
-          <v-spacer />
-          <v-btn icon color='primary' @click='arrowClick(true)'>
-            <v-icon>chevron_right</v-icon>
-          </v-btn>
         </div>
 
         <div v-if='tabIndex === 0' class='feature-box'>
@@ -41,6 +33,13 @@
         <div v-else-if='tabIndex === 2' class='feature-box'>
           <ledger-feature3 :connected='connected' :accountsUI='accountsUI' />
         </div>
+
+        <v-btn color='primary' @click='arrowClick(false)'>
+          Back
+        </v-btn>
+        <v-btn color='primary' @click='arrowClick(true)'>
+          Continue
+        </v-btn>
       </div>
     </div>
   </div>
