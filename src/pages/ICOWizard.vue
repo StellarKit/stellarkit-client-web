@@ -5,16 +5,38 @@
     ICO Wizard
   </div>
 
-  <wizard-view v-on:click-nav="clickWizardNav">
-    <div slot='content'>
-      <div v-if='pageIndex===0'>
-        Hello world
+  <div class='columns'>
+    <wizard-view v-on:click-nav="clickWizardNav" :title='pageTitle'>
+      <div slot='content'>
+        <div v-if='pageIndex===0'>
+          <div class='step-content'>
+            Give your asset a symbol and create an issuing account. Symbol can be 1-12 characters long
+
+            <v-text-field label="Asset Symbol" v-model.trim="assetSymbol"></v-text-field>
+            <v-text-field label="Amount" type='number' v-model.trim="tokenAmount"></v-text-field>
+
+          </div>
+        </div>
+        <div v-if='pageIndex===1'>
+          <div class='step-title'>
+            Give your asset a symbol and create an issuing account.
+          </div>
+        </div>
       </div>
-      <div v-if='pageIndex===1'>
-        OK, got it
+    </wizard-view>
+
+    <div class='summary-view'>
+      <div class='operations-item' v-for="item in summaryItems" :key=item.id>
+        <div class='item-name'>
+          {{item.name}}:
+        </div>
+        <div class='item-value'>
+          {{item.value}}
+        </div>
       </div>
+      </summary-view>
     </div>
-  </wizard-view>
+  </div>
 </div>
 </template>
 
@@ -32,8 +54,33 @@ export default {
   data() {
     return {
       pageIndex: 0,
-      numberOfPages: 2
+      numberOfPages: 2,
+      pageTitle: '',
+      assetSymbol: '',
+      summaryItems: [{
+          name: 'Symbol',
+          value: 'DUH'
+        },
+        {
+          name: 'Issuer',
+          value: 'GHSDFSDFASDFASDFASDFASDFSADF'
+        },
+        {
+          name: 'Distributor',
+          value: 'GHSDFSDFASDFASDFASDFASDFSADF'
+        }
+      ],
+      pageTitles: [
+        'Create Asset',
+        'Create Accounts',
+        'Set Trust',
+        'Create Tokens',
+        'Manage Offer'
+      ]
     }
+  },
+  mounted() {
+    this.updatePageIndex(0)
   },
   methods: {
     updatePageIndex(tabIndex) {
@@ -45,6 +92,8 @@ export default {
       if (this.pageIndex < 0) {
         this.pageIndex = this.numberOfPages - 1
       }
+
+      this.pageTitle = 'Step #' + (this.pageIndex + 1) + '. ' + this.pageTitles[this.pageIndex]
     },
     clickWizardNav(id) {
       switch (id) {
@@ -64,5 +113,36 @@ export default {
 </script>
 
 <style scoped lang='scss'>
-// dddd
+.columns {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+
+    .summary-view {
+        display: flex;
+        flex: 0 1 400px;
+        flex-direction: column;
+
+        .operations-item {
+            display: flex;
+
+            &:nth-child(odd) {
+                background: rgba(0, 0, 0, .02);
+            }
+
+            .item-name {
+                text-align: right;
+                padding-right: 5px;
+                font-weight: bold;
+                flex: 1 0 20%;
+            }
+
+            .item-value {
+                text-align: left;
+                flex: 1 0 50%;
+                padding-left: 5px;
+            }
+        }
+    }
+}
 </style>
