@@ -39,12 +39,25 @@
             Post offer to exchange to sell tokens for XLM. You can do this later if you're not ready to sell the tokens
 
             <div class='offer-price-fields'>
+              <v-text-field label="Token name" v-model.trim="tokenName"></v-text-field>
+              <v-text-field label="Token  description" v-model.trim="tokenDescription"></v-text-field>
+              <v-text-field label="Token conditions" v-model.trim="tokenConditions"></v-text-field>
+            </div>
+
+            <v-btn @click='createIssuer'>Post Sell Offer</v-btn>
+          </div>
+        </div>
+        <div v-if='pageIndex===3'>
+          <div class='step-content'>
+            Post offer to exchange to sell tokens for XLM. You can do this later if you're not ready to sell the tokens
+
+            <div class='offer-price-fields'>
               <v-text-field class='number-field' label="Buy XLM" type='number' v-model.number="offerPriceN"></v-text-field>
               <v-text-field class='number-field' :label="'Sell ' +  assetSymbol" type='number' v-model.number="offerPriceD"></v-text-field>
               <v-text-field class='number-field' label="Amount to sell" type='number' v-model.number="offerAmount"></v-text-field>
             </div>
 
-            <v-btn @click='createIssuer'>Post Sell Offer</v-btn>
+            <v-btn @click='publishTokenInformation'>Publish Token Information </v-btn>
           </div>
         </div>
       </div>
@@ -86,7 +99,7 @@ export default {
   data() {
     return {
       pageIndex: 0,
-      numberOfPages: 3,
+      numberOfPages: 4,
       pageTitle: '',
       tokenAmount: 0,
       selectedSource: null,
@@ -96,6 +109,9 @@ export default {
       offerPriceN: 10,
       offerPriceD: 1,
       offerAmount: 10000,
+      tokenName: '',
+      tokenDescription: '',
+      tokenConditions: '',
       pageTitles: [
         'Create Accounts',
         'Create Asset',
@@ -128,6 +144,9 @@ export default {
     this.updatePageIndex(0)
   },
   methods: {
+    publishTokenInformation() {
+      // ==
+    },
     createTokens() {
       // set distributor trust
     },
