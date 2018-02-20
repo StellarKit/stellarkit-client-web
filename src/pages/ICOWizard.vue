@@ -11,55 +11,57 @@
   <div class='columns'>
     <wizard-view v-on:click-nav="clickWizardNav" v-on:menu-nav="wizardMenuNav" :title='pageTitle' :numPages='numberOfPages' :currentPage='pageIndex' :pageTitles="pageTitles">
       <div slot='content'>
-        <div v-if='pageIndex===0'>
-          <div class='step-content'>
-            Start by creating two accounts. You need a funding account to create the new accounts
+        <transition v-on:enter="animateEnter" v-on:leave="animateLeave" v-bind:css="false" mode='out-in'>
+          <div v-if='pageIndex===0' key='0'>
+            <div class='step-content'>
+              Start by creating two accounts. You need a funding account to create the new accounts
 
-            <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Funding accout" autocomplete return-object max-height="600"></v-select>
+              <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Funding accout" autocomplete return-object max-height="600"></v-select>
 
-            <v-btn @click='createIssuer'>Create Issuer Account</v-btn>
-            <v-btn @click='createDistributor'>Create Distributor Account</v-btn>
-          </div>
-        </div>
-        <div v-if='pageIndex===1'>
-          <div class='step-content'>
-            Give your asset a symbol and create the tokens. Symbol can be 1-12 characters long
-
-            <v-text-field label="Asset Symbol" v-model.trim="assetSymbol"></v-text-field>
-            <v-text-field class='number-field' label="Amount" type='number' v-model.number="tokenAmount"></v-text-field>
-
-            <v-btn @click='createTokens'>Create Tokens</v-btn>
-            <div>Optional step. Lock issuer to prove that no more tokens can ever be created in the future.</div>
-            <v-btn @click="lockIssuer">Lock Issuer</v-btn>
-
-          </div>
-        </div>
-        <div v-if='pageIndex===2'>
-          <div class='step-content'>
-            Post offer to exchange to sell tokens for XLM. You can do this later if you're not ready to sell the tokens
-
-            <div class='offer-price-fields'>
-              <v-text-field label="Token name" v-model.trim="tokenName"></v-text-field>
-              <v-text-field label="Token  description" v-model.trim="tokenDescription"></v-text-field>
-              <v-text-field label="Token conditions" v-model.trim="tokenConditions"></v-text-field>
+              <v-btn @click='createIssuer'>Create Issuer Account</v-btn>
+              <v-btn @click='createDistributor'>Create Distributor Account</v-btn>
             </div>
-
-            <v-btn @click='createIssuer'>Post Sell Offer</v-btn>
           </div>
-        </div>
-        <div v-if='pageIndex===3'>
-          <div class='step-content'>
-            Post offer to exchange to sell tokens for XLM. You can do this later if you're not ready to sell the tokens
+          <div v-if='pageIndex===1' key='1'>
+            <div class='step-content'>
+              Give your asset a symbol and create the tokens. Symbol can be 1-12 characters long
 
-            <div class='offer-price-fields'>
-              <v-text-field class='number-field' label="Buy XLM" type='number' v-model.number="offerPriceN"></v-text-field>
-              <v-text-field class='number-field' :label="'Sell ' +  assetSymbol" type='number' v-model.number="offerPriceD"></v-text-field>
-              <v-text-field class='number-field' label="Amount to sell" type='number' v-model.number="offerAmount"></v-text-field>
+              <v-text-field label="Asset Symbol" v-model.trim="assetSymbol"></v-text-field>
+              <v-text-field class='number-field' label="Amount" type='number' v-model.number="tokenAmount"></v-text-field>
+
+              <v-btn @click='createTokens'>Create Tokens</v-btn>
+              <div>Optional step. Lock issuer to prove that no more tokens can ever be created in the future.</div>
+              <v-btn @click="lockIssuer">Lock Issuer</v-btn>
+
             </div>
-
-            <v-btn @click='publishTokenInformation'>Publish Token Information </v-btn>
           </div>
-        </div>
+          <div v-if='pageIndex===2' key='2'>
+            <div class='step-content'>
+              Post offer to exchange to sell tokens for XLM. You can do this later if you're not ready to sell the tokens
+
+              <div class='offer-price-fields'>
+                <v-text-field label="Token name" v-model.trim="tokenName"></v-text-field>
+                <v-text-field label="Token  description" v-model.trim="tokenDescription"></v-text-field>
+                <v-text-field label="Token conditions" v-model.trim="tokenConditions"></v-text-field>
+              </div>
+
+              <v-btn @click='createIssuer'>Post Sell Offer</v-btn>
+            </div>
+          </div>
+          <div v-if='pageIndex===3' key='3'>
+            <div class='step-content'>
+              Post offer to exchange to sell tokens for XLM. You can do this later if you're not ready to sell the tokens
+
+              <div class='offer-price-fields'>
+                <v-text-field class='number-field' label="Buy XLM" type='number' v-model.number="offerPriceN"></v-text-field>
+                <v-text-field class='number-field' :label="'Sell ' +  assetSymbol" type='number' v-model.number="offerPriceD"></v-text-field>
+                <v-text-field class='number-field' label="Amount to sell" type='number' v-model.number="offerAmount"></v-text-field>
+              </div>
+
+              <v-btn @click='publishTokenInformation'>Publish Token Information </v-btn>
+            </div>
+          </div>
+        </transition>
       </div>
     </wizard-view>
 
@@ -91,6 +93,10 @@ import AccountList from '../components/AccountList.vue'
 import WizardView from '../components/WizardView.vue'
 const StellarSdk = require('stellar-sdk')
 const $ = require('jquery')
+import {
+  TweenMax,
+  Power2
+} from 'gsap'
 
 export default {
   mixins: [StellarCommonMixin, StyleExtractionMixin],
@@ -114,6 +120,7 @@ export default {
       tokenName: '',
       tokenDescription: '',
       tokenConditions: '',
+      reverseTransition: false,
       pageTitles: [
         'Create Accounts',
         'Create Asset',
@@ -146,6 +153,31 @@ export default {
     this.updatePageIndex(0)
   },
   methods: {
+    animateEnter(el, done) {
+      let width = $('.wizard-main').outerWidth()
+
+      if (this.reverseTransition) {
+        width *= -1
+      }
+
+      TweenMax.set(el, {
+        x: width,
+        autoAlpha: 0
+      })
+      TweenMax.to(el, 0.2, {
+        autoAlpha: 1,
+        x: 0,
+        ease: Power2.easeIn,
+        onComplete: done
+      })
+    },
+    animateLeave(el, done) {
+      TweenMax.to(el, 0.05, {
+        autoAlpha: 0,
+        ease: Power2.easeOut,
+        onComplete: done
+      })
+    },
     printTokenInfo() {
       // insert an iframe into the DOM
       // print iframe window.  popups could be blocked, so frame is safter than opening a new window
@@ -199,9 +231,11 @@ export default {
     clickWizardNav(id) {
       switch (id) {
         case 'previous':
+          this.reverseTransition = true
           this.updatePageIndex(this.pageIndex - 1)
           break
         case 'next':
+          this.reverseTransition = false
           this.updatePageIndex(this.pageIndex + 1)
           break
         default:
