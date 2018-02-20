@@ -13,16 +13,38 @@
       <div slot='content'>
         <div v-if='pageIndex===0'>
           <div class='step-content'>
-            Give your asset a symbol and create an issuing account. Symbol can be 1-12 characters long
+            Start by creating two accounts. You need a funding account to fund the new accounts
 
-            <v-text-field label="Asset Symbol" v-model.trim="assetSymbol"></v-text-field>
-            <v-text-field label="Amount" type='number' v-model.number="tokenAmount"></v-text-field>
+            <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Funding accout" autocomplete return-object max-height="600"></v-select>
 
+            <v-btn @click='createIssuer'>Create Issuer Account</v-btn>
+            <v-btn @click='createDistributor'>Create Distributor Account</v-btn>
           </div>
         </div>
         <div v-if='pageIndex===1'>
-          <div class='step-title'>
-            Give your asset a symbol and create an issuing account.
+          <div class='step-content'>
+            Give your asset a symbol and create the tokens. Symbol can be 1-12 characters long
+
+            <v-text-field label="Asset Symbol" v-model.trim="assetSymbol"></v-text-field>
+            <v-text-field class='number-field' label="Amount" type='number' v-model.number="tokenAmount"></v-text-field>
+
+            <v-btn @click='createTokens'>Create Tokens</v-btn>
+            <div>Optional step. Lock issuer to prove that no more tokens can ever be created in the future.</div>
+            <v-btn @click="lockIssuer">Lock Issuer</v-btn>
+
+          </div>
+        </div>
+        <div v-if='pageIndex===2'>
+          <div class='step-content'>
+            Post offer to exchange to sell tokens for XLM. You can do this later if you're not ready to sell the tokens
+
+            <div class='offer-price-fields'>
+              <v-text-field class='number-field' label="Buy XLM" type='number' v-model.number="offerPriceN"></v-text-field>
+              <v-text-field class='number-field' :label="'Sell ' +  assetSymbol" type='number' v-model.number="offerPriceD"></v-text-field>
+              <v-text-field class='number-field' label="Amount to sell" type='number' v-model.number="offerAmount"></v-text-field>
+            </div>
+
+            <v-btn @click='createIssuer'>Post Sell Offer</v-btn>
           </div>
         </div>
       </div>
@@ -53,6 +75,7 @@
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import AccountList from '../components/AccountList.vue'
 import WizardView from '../components/WizardView.vue'
+const StellarSdk = require('stellar-sdk')
 
 export default {
   mixins: [StellarCommonMixin],
@@ -63,13 +86,19 @@ export default {
   data() {
     return {
       pageIndex: 0,
-      numberOfPages: 2,
+      numberOfPages: 3,
       pageTitle: '',
       tokenAmount: 0,
+      selectedSource: null,
       assetSymbol: '',
+      issuerKeypair: null,
+      distributorKeypair: null,
+      offerPriceN: 10,
+      offerPriceD: 1,
+      offerAmount: 10000,
       pageTitles: [
-        'Create Asset',
         'Create Accounts',
+        'Create Asset',
         'Set Trust',
         'Create Tokens',
         'Manage Offer'
@@ -82,8 +111,15 @@ export default {
 
       result.set('Symbol', this.assetSymbol)
       result.set('Amount', this.tokenAmount)
-      result.set('Issuer', 'GHSDFSDFASDFASDFASDFASDFSADF')
-      result.set('Distributor', 'GHSDFSDFASDFASDFASDFASDFSADF')
+
+      if (this.issuerKeypair) {
+        result.set('Issuer', this.issuerKeypair.publicKey())
+        result.set('Issuer Secret', this.issuerKeypair.secret())
+      }
+      if (this.distributorKeypair) {
+        result.set('Distributor', this.distributorKeypair.publicKey())
+        result.set('Distributor Secret', this.distributorKeypair.secret())
+      }
 
       return result
     }
@@ -92,6 +128,18 @@ export default {
     this.updatePageIndex(0)
   },
   methods: {
+    createTokens() {
+      // set distributor trust
+    },
+    lockIssuer() {
+      // ===
+    },
+    createIssuer() {
+      this.issuerKeypair = StellarSdk.Keypair.random()
+    },
+    createDistributor() {
+      this.distributorKeypair = StellarSdk.Keypair.random()
+    },
     updatePageIndex(tabIndex) {
       this.pageIndex = tabIndex
 
@@ -102,7 +150,7 @@ export default {
         this.pageIndex = this.numberOfPages - 1
       }
 
-      this.pageTitle = 'Step #' + (this.pageIndex + 1) + '. ' + this.pageTitles[this.pageIndex]
+      this.pageTitle = 'Step ' + (this.pageIndex + 1) + ': ' + this.pageTitles[this.pageIndex]
     },
     clickWizardNav(id) {
       switch (id) {
@@ -142,9 +190,10 @@ export default {
 
     .summary-view {
         margin: 10px;
+        padding: 0 20px;
 
         display: flex;
-        flex: 0 1 400px;
+        flex: 0 1 auto;
         flex-direction: column;
         background: rgba(0,0,0,.02);
         background: rgba(0,0,30,.05);
@@ -158,15 +207,13 @@ export default {
             text-transform: uppercase;
             align-items: center;
             justify-content: center;
-            padding: 0 20px;
-            background: rgba(0,0,0,.04);
         }
 
         .operations-item {
             display: flex;
 
             &:nth-child(odd) {
-                background: rgba(0, 0, 0, .02);
+                background: rgba(0, 0, 0, .04);
             }
 
             .item-name {
@@ -182,6 +229,11 @@ export default {
                 padding-left: 5px;
             }
         }
+    }
+
+    .number-field {
+        max-width: 200px;
+        margin-right: 12px;
     }
 }
 </style>
