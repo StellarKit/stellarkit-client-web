@@ -154,7 +154,7 @@ export default {
   },
   methods: {
     animateEnter(el, done) {
-      let width = $('.wizard-main').outerWidth()
+      let width = $('.wizard-main').outerWidth() / 4
 
       if (this.reverseTransition) {
         width *= -1
@@ -172,8 +172,15 @@ export default {
       })
     },
     animateLeave(el, done) {
-      TweenMax.to(el, 0.05, {
+      let width = $('.wizard-main').outerWidth() / 4
+
+      if (this.reverseTransition) {
+        width *= -1
+      }
+
+      TweenMax.to(el, 0.1, {
         autoAlpha: 0,
+        x: -width,
         ease: Power2.easeOut,
         onComplete: done
       })

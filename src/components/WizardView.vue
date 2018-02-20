@@ -82,7 +82,7 @@ export default {
 
     .wizard-content-box {
         padding: 20px;
-        flex-basis: 500px;
+        flex-basis: 400px;
 
         .step-content {
             color: black;
