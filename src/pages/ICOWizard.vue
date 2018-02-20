@@ -9,7 +9,7 @@
   </div>
 
   <div class='columns'>
-    <wizard-view v-on:click-nav="clickWizardNav" :title='pageTitle' :numPages='numberOfPages' :currentPage='pageIndex'>
+    <wizard-view v-on:click-nav="clickWizardNav" v-on:menu-nav="wizardMenuNav" :title='pageTitle' :numPages='numberOfPages' :currentPage='pageIndex' :pageTitles="pageTitles">
       <div slot='content'>
         <div v-if='pageIndex===0'>
           <div class='step-content'>
@@ -192,6 +192,9 @@ export default {
       }
 
       this.pageTitle = 'Step ' + (this.pageIndex + 1) + ': ' + this.pageTitles[this.pageIndex]
+    },
+    wizardMenuNav(index) {
+      this.updatePageIndex(index)
     },
     clickWizardNav(id) {
       switch (id) {

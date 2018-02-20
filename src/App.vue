@@ -78,9 +78,13 @@ export default {
         tooltip: 'Create Token',
         path: '/token'
       }, {
-        icon: String.fromCharCode('0xE263'),
-        tooltip: 'ICO Wizard',
-        path: '/ico'
+        icon: String.fromCharCode('0xE86C'),
+        tooltip: 'Allow Trust',
+        path: '/trust'
+      }, {
+        icon: String.fromCharCode('0xE897'),
+        tooltip: 'Locked Tokens',
+        path: '/locked'
       }, {
         icon: String.fromCharCode('0xE851'),
         tooltip: 'Buy token with Bifrost',
@@ -90,17 +94,14 @@ export default {
         tooltip: 'Live Trades',
         path: '/trades'
       }, {
-        icon: String.fromCharCode('0xE86C'),
-        tooltip: 'Allow Trust',
-        path: '/trust'
-      }, {
-        icon: String.fromCharCode('0xE897'),
-        tooltip: 'Locked Tokens',
-        path: '/locked'
+        icon: String.fromCharCode('0xE3E7'),
+        tooltip: 'ICO Wizard',
+        path: '/ico'
       }, {
         icon: String.fromCharCode('0xE1E0'),
         tooltip: 'Ledger Nano',
-        path: '/ledger'
+        path: '/ledger',
+        disabled: true
       }, {
         icon: String.fromCharCode('0xE889'),
         tooltip: 'History Viewer',

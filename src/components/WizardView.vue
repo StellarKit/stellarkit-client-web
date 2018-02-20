@@ -1,29 +1,43 @@
 <template>
-   <div class='wizard-main'>
-    <div class='wizard-title-box'>
-      <div class='wizard-title'>
-        {{title}}
-      </div>
+<div class='wizard-main'>
+  <div class='wizard-title-box'>
+    <div class='wizard-steps-menu'>
+      <v-menu offset-y>
+        <v-btn icon dark small slot="activator">
+          <v-icon>&#xE5C5;</v-icon>
+        </v-btn>
+        <v-list>
+          <v-list-tile v-for="(item, index) in pageTitles" :key="item" @click="menuSelected(index)">
+            <v-list-tile-content>
+              <v-list-tile-title>{{ item }}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
     </div>
-
-    <div class='wizard-content-box'>
-      <slot name="content"></slot>
-    </div>
-
-    <div class='wizard-bottom-box'>
-      <v-btn round color='secondary' @click='buttonClick("previous")' :disabled='disablePreviousButton()'>
-        Previous
-      </v-btn>
-      <v-btn round color='primary' @click='buttonClick("next")' :disabled='disableNextButton()'>
-        Next
-      </v-btn>
+    <div class='wizard-title'>
+      {{title}}
     </div>
   </div>
- </template>
+
+  <div class='wizard-content-box'>
+    <slot name="content"></slot>
+  </div>
+
+  <div class='wizard-bottom-box'>
+    <v-btn round color='secondary' @click='buttonClick("previous")' :disabled='disablePreviousButton()'>
+      Previous
+    </v-btn>
+    <v-btn round color='primary' @click='buttonClick("next")' :disabled='disableNextButton()'>
+      Next
+    </v-btn>
+  </div>
+</div>
+</template>
 
 <script>
 export default {
-  props: ['title', 'numPages', 'currentPage'],
+  props: ['title', 'numPages', 'currentPage', 'pageTitles'],
   data() {
     return {
       sss: 'none'
@@ -35,6 +49,9 @@ export default {
     },
     disablePreviousButton() {
       return this.currentPage === 0
+    },
+    menuSelected(index) {
+      this.$emit('menu-nav', index)
     },
     buttonClick(id) {
       switch (id) {
@@ -78,6 +95,17 @@ export default {
         justify-content: center;
         font-size: 1.1em;
         background: rgba(90,120,200,.8);
+        position: relative;
+
+        .wizard-steps-menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            button {
+                margin: 3px 4px;
+                padding: 0;
+            }
+        }
 
         .wizard-title {
             text-align: center;
