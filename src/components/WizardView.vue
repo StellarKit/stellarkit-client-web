@@ -46,6 +46,8 @@ export default {
 
 <style scoped lang='scss'>
 .wizard-main {
+    margin: 10px;
+
     background: rgba(0,0,30,.05);
     box-shadow: 0 6px 13px -4px rgba(0,0,0,.3);
     border: solid 1px rgba(0,0,0,.02);

@@ -29,6 +29,12 @@
     </wizard-view>
 
     <div class='summary-view'>
+      <div class='summary-header'>Token Information
+        <v-spacer />
+        <v-btn small icon>
+          <v-icon>&#xE8AD;</v-icon>
+        </v-btn>
+      </div>
       <div class='operations-item' v-for="item in summaryItems" :key=item.id>
         <div class='item-name'>
           {{item.name}}:
@@ -61,19 +67,7 @@ export default {
       pageTitle: '',
       tokenAmount: 0,
       assetSymbol: '',
-      summaryItems: [{
-          name: 'Symbol',
-          value: 'DUH'
-        },
-        {
-          name: 'Issuer',
-          value: 'GHSDFSDFASDFASDFASDFASDFSADF'
-        },
-        {
-          name: 'Distributor',
-          value: 'GHSDFSDFASDFASDFASDFASDFSADF'
-        }
-      ],
+      summaryItems: [],
       pageTitles: [
         'Create Asset',
         'Create Accounts',
@@ -87,6 +81,21 @@ export default {
     this.updatePageIndex(0)
   },
   methods: {
+    updateData() {
+      this.summaryItems = [{
+          name: 'Symbol',
+          value: 'DUH'
+        },
+        {
+          name: 'Issuer',
+          value: 'GHSDFSDFASDFASDFASDFASDFSADF'
+        },
+        {
+          name: 'Distributor',
+          value: 'GHSDFSDFASDFASDFASDFASDFSADF'
+        }
+      ]
+    },
     updatePageIndex(tabIndex) {
       this.pageIndex = tabIndex
 
@@ -98,6 +107,8 @@ export default {
       }
 
       this.pageTitle = 'Step #' + (this.pageIndex + 1) + '. ' + this.pageTitles[this.pageIndex]
+
+      this.updateData()
     },
     clickWizardNav(id) {
       switch (id) {
@@ -121,11 +132,13 @@ export default {
     display: flex;
     justify-content: center;
     padding: 20px;
+    flex-wrap: wrap;
 
     .left-col {
         display: flex;
         flex: 1 1 50%;
         justify-content: center;
+        margin-right: 20px;
     }
     .right-col {
         display: flex;
@@ -134,9 +147,26 @@ export default {
     }
 
     .summary-view {
+        margin: 10px;
+
         display: flex;
         flex: 0 1 400px;
         flex-direction: column;
+        background: rgba(0,0,0,.02);
+        background: rgba(0,0,30,.05);
+        box-shadow: 0 6px 13px -4px rgba(0,0,0,.3);
+        border: solid 1px rgba(0,0,0,.02);
+
+        .summary-header {
+            display: flex;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+            background: rgba(0,0,0,.04);
+        }
 
         .operations-item {
             display: flex;
