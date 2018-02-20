@@ -16,7 +16,7 @@
             Give your asset a symbol and create an issuing account. Symbol can be 1-12 characters long
 
             <v-text-field label="Asset Symbol" v-model.trim="assetSymbol"></v-text-field>
-            <v-text-field label="Amount" type='number' v-model.trim="tokenAmount"></v-text-field>
+            <v-text-field label="Amount" type='number' v-model.number="tokenAmount"></v-text-field>
 
           </div>
         </div>
@@ -35,12 +35,12 @@
           <v-icon>&#xE8AD;</v-icon>
         </v-btn>
       </div>
-      <div class='operations-item' v-for="item in summaryItems" :key=item.id>
+      <div class='operations-item' v-for="key in Array.from(summaryMap.keys())" :key=key>
         <div class='item-name'>
-          {{item.name}}:
+          {{key}}:
         </div>
         <div class='item-value'>
-          {{item.value}}
+          {{summaryMap.get(key)}}
         </div>
       </div>
       </summary-view>
@@ -67,7 +67,6 @@ export default {
       pageTitle: '',
       tokenAmount: 0,
       assetSymbol: '',
-      summaryItems: [],
       pageTitles: [
         'Create Asset',
         'Create Accounts',
@@ -77,25 +76,22 @@ export default {
       ]
     }
   },
+  computed: {
+    summaryMap: function () {
+      const result = new Map()
+
+      result.set('Symbol', this.assetSymbol)
+      result.set('Amount', this.tokenAmount)
+      result.set('Issuer', 'GHSDFSDFASDFASDFASDFASDFSADF')
+      result.set('Distributor', 'GHSDFSDFASDFASDFASDFASDFSADF')
+
+      return result
+    }
+  },
   mounted() {
     this.updatePageIndex(0)
   },
   methods: {
-    updateData() {
-      this.summaryItems = [{
-          name: 'Symbol',
-          value: 'DUH'
-        },
-        {
-          name: 'Issuer',
-          value: 'GHSDFSDFASDFASDFASDFASDFSADF'
-        },
-        {
-          name: 'Distributor',
-          value: 'GHSDFSDFASDFASDFASDFASDFSADF'
-        }
-      ]
-    },
     updatePageIndex(tabIndex) {
       this.pageIndex = tabIndex
 
@@ -107,8 +103,6 @@ export default {
       }
 
       this.pageTitle = 'Step #' + (this.pageIndex + 1) + '. ' + this.pageTitles[this.pageIndex]
-
-      this.updateData()
     },
     clickWizardNav(id) {
       switch (id) {
