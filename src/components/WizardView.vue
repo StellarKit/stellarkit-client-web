@@ -11,11 +11,11 @@
     </div>
 
     <div class='wizard-bottom-box'>
-      <v-btn round color='secondary' @click='buttonClick("previous")'>
-        Back
+      <v-btn round color='secondary' @click='buttonClick("previous")' :disabled='disablePreviousButton()'>
+        Previous
       </v-btn>
-      <v-btn round color='primary' @click='buttonClick("next")'>
-        Continue
+      <v-btn round color='primary' @click='buttonClick("next")' :disabled='disableNextButton()'>
+        Next
       </v-btn>
     </div>
   </div>
@@ -23,13 +23,19 @@
 
 <script>
 export default {
-  props: ['title'],
+  props: ['title', 'numPages', 'currentPage'],
   data() {
     return {
       sss: 'none'
     }
   },
   methods: {
+    disableNextButton() {
+      return this.currentPage >= (this.numPages - 1)
+    },
+    disablePreviousButton() {
+      return this.currentPage === 0
+    },
     buttonClick(id) {
       switch (id) {
         case 'previous':

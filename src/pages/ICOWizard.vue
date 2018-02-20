@@ -9,7 +9,7 @@
   </div>
 
   <div class='columns'>
-    <wizard-view v-on:click-nav="clickWizardNav" :title='pageTitle'>
+    <wizard-view v-on:click-nav="clickWizardNav" :title='pageTitle' :numPages='numberOfPages' :currentPage='pageIndex'>
       <div slot='content'>
         <div v-if='pageIndex===0'>
           <div class='step-content'>
