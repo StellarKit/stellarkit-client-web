@@ -3,6 +3,9 @@
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
   <div class='page-title'>
     ICO Wizard
+    <div class='page-subtitle'>
+      Under Construction
+    </div>
   </div>
 
   <div class='columns'>
@@ -56,6 +59,7 @@ export default {
       pageIndex: 0,
       numberOfPages: 2,
       pageTitle: '',
+      tokenAmount: 0,
       assetSymbol: '',
       summaryItems: [{
           name: 'Symbol',
@@ -117,6 +121,17 @@ export default {
     display: flex;
     justify-content: center;
     padding: 20px;
+
+    .left-col {
+        display: flex;
+        flex: 1 1 50%;
+        justify-content: center;
+    }
+    .right-col {
+        display: flex;
+        flex: 1 1 50%;
+        justify-content: center;
+    }
 
     .summary-view {
         display: flex;

@@ -1,6 +1,5 @@
 <template>
-<div class='wizard-centered'>
-  <div class='wizard-main'>
+   <div class='wizard-main'>
     <div class='wizard-title-box'>
       <div class='wizard-title'>
         {{title}}
@@ -20,8 +19,7 @@
       </v-btn>
     </div>
   </div>
-</div>
-</template>
+ </template>
 
 <script>
 export default {
@@ -47,48 +45,43 @@ export default {
 </script>
 
 <style scoped lang='scss'>
-.wizard-centered {
+.wizard-main {
+    background: rgba(0,0,30,.05);
+    box-shadow: 0 6px 13px -4px rgba(0,0,0,.3);
+    border: solid 1px rgba(0,0,0,.02);
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    padding: 10px;
+    flex: 0 1 400px;
 
-    .wizard-main {
-        background: rgba(0,0,30,.05);
-        box-shadow: 0 6px 13px -4px rgba(0,0,0,.3);
-        border: solid 1px rgba(0,0,0,.02);
+    .wizard-content-box {
+        padding: 20px;
+        flex-basis: 500px;
+
+        .step-content {
+            color: black;
+        }
+    }
+
+    .wizard-title-box {
         display: flex;
+        align-items: center;
         justify-content: center;
-        flex-direction: column;
-        padding: 10px;
-        flex: 0 1 400px;
+        font-size: 1.1em;
+        background: rgba(90,120,200,.8);
 
-        .wizard-content-box {
-            padding: 20px;
-            flex-basis: 500px;
-
-            .step-content {
-                color: black;
-            }
+        .wizard-title {
+            text-align: center;
+            font-weight: bold;
+            color: white;
+            padding: 6px 24px;
         }
+    }
 
-        .wizard-title-box {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1em;
-            background: rgba(90,120,200,.8);
-
-            .wizard-title {
-                text-align: center;
-                font-weight: bold;
-                color: white;
-                padding: 6px 24px;
-            }
-        }
-
-        .wizard-bottom-box {
-            display: flex;
-            justify-content: flex-end;
-        }
+    .wizard-bottom-box {
+        display: flex;
+        justify-content: flex-end;
     }
 }
 </style>
