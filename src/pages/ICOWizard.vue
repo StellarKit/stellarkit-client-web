@@ -66,7 +66,7 @@
     <div class='summary-view'>
       <div class='summary-header'>Token Information
         <v-spacer />
-        <v-btn small icon>
+        <v-btn small icon @click='printTokenInfo'>
           <v-icon>&#xE8AD;</v-icon>
         </v-btn>
       </div>
@@ -86,12 +86,14 @@
 
 <script>
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
+import StyleExtractionMixin from '../components/StyleExtractionMixin.js'
 import AccountList from '../components/AccountList.vue'
 import WizardView from '../components/WizardView.vue'
 const StellarSdk = require('stellar-sdk')
+const $ = require('jquery')
 
 export default {
-  mixins: [StellarCommonMixin],
+  mixins: [StellarCommonMixin, StyleExtractionMixin],
   components: {
     'account-list': AccountList,
     'wizard-view': WizardView
@@ -144,6 +146,26 @@ export default {
     this.updatePageIndex(0)
   },
   methods: {
+    printTokenInfo() {
+      // insert an iframe into the DOM
+      // print iframe window.  popups could be blocked, so frame is safter than opening a new window
+      const iframe = $('<iframe></iframe>')[0]
+
+      // const element = document.createElement('iframe')
+      iframe.setAttribute('id', 'printf')
+      iframe.setAttribute('name', 'printf')
+
+      iframe.style.display = 'none'
+      document.body.appendChild(iframe)
+
+      const frameWindow = window.frames['printf']
+      frameWindow.document.head.innerHTML = '<style>body{font-family: Arial, Helvetica, sans-serif;}</style>'
+      frameWindow.document.body.innerHTML = this.styledElementForPrinting($('.summary-view')[0])
+
+      frameWindow.print()
+
+      document.body.removeChild(iframe)
+    },
     publishTokenInformation() {
       // ==
     },
@@ -192,14 +214,12 @@ export default {
 .columns {
     display: flex;
     justify-content: center;
-    padding: 20px;
     flex-wrap: wrap;
 
     .left-col {
         display: flex;
         flex: 1 1 50%;
         justify-content: center;
-        margin-right: 20px;
     }
     .right-col {
         display: flex;
@@ -209,15 +229,10 @@ export default {
 
     .summary-view {
         margin: 10px;
-        padding: 0 20px;
 
         display: flex;
         flex: 0 1 auto;
         flex-direction: column;
-        background: rgba(0,0,0,.02);
-        background: rgba(0,0,30,.05);
-        box-shadow: 0 6px 13px -4px rgba(0,0,0,.3);
-        border: solid 1px rgba(0,0,0,.02);
 
         .summary-header {
             display: flex;
@@ -226,14 +241,12 @@ export default {
             text-transform: uppercase;
             align-items: center;
             justify-content: center;
+            margin-bottom: 10px;
         }
 
         .operations-item {
             display: flex;
-
-            &:nth-child(odd) {
-                background: rgba(0, 0, 0, .04);
-            }
+            font-size: 0.95em;
 
             .item-name {
                 text-align: right;
@@ -244,7 +257,7 @@ export default {
 
             .item-value {
                 text-align: left;
-                flex: 1 0 50%;
+                flex: 1 0 80%;
                 padding-left: 5px;
             }
         }
