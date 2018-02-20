@@ -13,7 +13,7 @@
       <div slot='content'>
         <div v-if='pageIndex===0'>
           <div class='step-content'>
-            Start by creating two accounts. You need a funding account to fund the new accounts
+            Start by creating two accounts. You need a funding account to create the new accounts
 
             <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Funding accout" autocomplete return-object max-height="600"></v-select>
 
