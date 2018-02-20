@@ -5,9 +5,9 @@
   </div>
 
   <!-- <v-btn round @click="assets()">Assets</v-btn> -->
-  <v-btn round @click="streamPayments()">Payments</v-btn>
-  <v-btn round @click="streamOperations()">Operations</v-btn>
-  <v-btn round @click="streamTrades()">Trades</v-btn>
+  <v-btn round @click="streamPayments()">{{paymentsButtonName}}</v-btn>
+  <v-btn round @click="streamOperations()">{{operationsButtonName}}</v-btn>
+  <v-btn round @click="streamTrades()">{{tradesButtonName}}</v-btn>
 
   <div class="operations-content">
     <div class='operations-title'>Live Stream</div>
@@ -36,6 +36,26 @@ export default {
       operationStopper: null,
       tradeStopper: null,
       operations: []
+    }
+  },
+  computed: {
+    paymentsButtonName: function () {
+      if (this.paymentStopper) {
+        return 'Stop Payments'
+      }
+      return 'Payments'
+    },
+    operationsButtonName: function () {
+      if (this.operationStopper) {
+        return 'Stop Operations'
+      }
+      return 'Operations'
+    },
+    tradesButtonName: function () {
+      if (this.tradeStopper) {
+        return 'Stop Trades'
+      }
+      return 'Trades'
     }
   },
   methods: {
