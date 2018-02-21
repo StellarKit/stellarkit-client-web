@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import './scss/vuetify/main.styl'
 import NavigationDrawer from './components/NavigationDrawer.vue'
 import TickerComponent from './components/TickerComponent.vue'
 import ConsoleComponent from './components/ConsoleComponent.vue'
@@ -142,13 +143,6 @@ export default {
   }
 }
 </script>
-
-<style>
-@import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons);
-@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css);
-
-@import '../node_modules/vuetify/dist/vuetify.min.css'
-</style>
 
 <style lang='scss'>
 // gets rid of scrollbars on desktop
