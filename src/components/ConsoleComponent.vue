@@ -83,6 +83,13 @@ export default {
     Helper.vue().$on('clear-console', this.clearLog)
   },
   methods: {
+    fullscreenConsole() {
+      const appconsole = $(this.$el).closest('.app-console')
+
+      appconsole.toggleClass('fullscreen-console')
+
+      this.fullscreenMode = appconsole.hasClass('fullscreen-console')
+    },
     log(output) {
       this.consoleOutput += output + '\n\n'
 
@@ -136,5 +143,13 @@ export default {
         color: rgb(0,256,150);
         margin-left: 30px;
     }
+}
+
+.fullscreen-console {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
 }
 </style>

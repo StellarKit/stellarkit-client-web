@@ -53,7 +53,6 @@ import ConsoleComponent from './components/ConsoleComponent.vue'
 import NetworkMenu from './components/NetworkMenu.vue'
 import Helper from './js/helper.js'
 import Storage from './js/storage.js'
-import $ from 'jquery'
 import ToastComponent from './components/ToastComponent.vue'
 
 export default {
@@ -120,13 +119,6 @@ export default {
       })
   },
   methods: {
-    fullscreenConsole() {
-      const appconsole = $(this.$el).find('.app-console')
-
-      appconsole.toggleClass('fullscreen-console')
-
-      this.fullscreenMode = appconsole.hasClass('fullscreen-console')
-    },
     showGitHub() {
       Helper.openBrowser('https://github.com/StellarKit/stellar-client-web')
     },
@@ -222,14 +214,6 @@ html {
         .router-container {
             width: 100%;
             overflow-y: auto;
-        }
-
-        .fullscreen-console {
-            position: fixed !important;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
         }
     }
 }
