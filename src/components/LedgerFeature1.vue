@@ -48,7 +48,6 @@ import {
 } from 'stellar-js-utils'
 
 export default {
-  props: ['connected'],
   data() {
     return {
       selectedSource: null,
@@ -73,7 +72,7 @@ export default {
     createNewAccount() {
       const enabled = true // disabled for now, not tested
 
-      if (this.connected && enabled) {
+      if (enabled) {
         let newAccount = null
         const keypair = StellarSdk.Keypair.random()
 

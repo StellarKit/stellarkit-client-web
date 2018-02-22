@@ -10,11 +10,6 @@
         </div>
       </div>
 
-      <v-btn round @click="connectToLedger()">Connect to Ledger</v-btn>
-      <div v-if='connected'>
-        Connected!
-      </div>
-
       <div class='features-slider'>
         <div class='feature-nav'>
           <div class='feature-nav-title'>
@@ -23,15 +18,15 @@
         </div>
 
         <div v-if='tabIndex === 0' class='feature-box'>
-          <ledger-feature1 :connected='connected' />
+          <ledger-feature1 />
         </div>
 
         <div v-else-if='tabIndex === 1' class='feature-box'>
-          <ledger-feature2 :connected='connected' :accountsUI='accountsUI' />
+          <ledger-feature2 :accountsUI='accountsUI' />
         </div>
 
         <div v-else-if='tabIndex === 2' class='feature-box'>
-          <ledger-feature3 :connected='connected' :accountsUI='accountsUI' />
+          <ledger-feature3 :accountsUI='accountsUI' />
         </div>
 
         <v-btn color='primary' @click='arrowClick(false)'>
@@ -68,8 +63,7 @@ export default {
     return {
       tabIndex: 0,
       contentTitle: '',
-      ledgerAPI: null,
-      connected: false
+      ledgerAPI: null
     }
   },
   mounted() {
@@ -78,13 +72,6 @@ export default {
     this.ledgerAPI = new LedgerAPI()
   },
   methods: {
-    connectToLedger() {
-      this.connected = false
-
-      this.ledgerAPI.connectLedger(() => {
-        this.connected = true
-      })
-    },
     updateTabIndex(tabIndex) {
       this.tabIndex = tabIndex
 

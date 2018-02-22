@@ -20,7 +20,7 @@ import Helper from '../js/helper.js'
 // } from 'stellar-js-utils'
 
 export default {
-  props: ['connected', 'accountsUI'],
+  props: ['accountsUI'],
   data() {
     return {
       selectedSource: null
