@@ -147,7 +147,7 @@ class StellarUtils {
   }
 
   // returns {account: newAccount, keypair: keypair}
-  newAccountWithTokens(sourceWallet, startingBalance, asset, amount, accountName = null, accountTag = null) {
+  newAccountWithTokens(sourceWallet, tokenWallet, startingBalance, asset, amount, accountName = null, accountTag = null) {
     let info = null
 
     return this.newAccount(sourceWallet, startingBalance, accountName, accountTag)
@@ -155,21 +155,17 @@ class StellarUtils {
         info = result
 
         Helper.debugLog('setting trust...')
-        return this.changeTrust(StellarWallet.secret(info.keypair.secret()), asset, amount)
+        return this.changeTrust(StellarWallet.secret(info.keypair.secret()), asset, '100000')
       })
       .then((result) => {
         Helper.debugLog('sending tokens...')
-        return this.sendAsset(sourceWallet, info.keypair.publicKey(), amount, asset)
+        return this.sendAsset(tokenWallet, info.keypair.publicKey(), amount, asset)
       })
       .then((result) => {
         Helper.debugLog(result, 'Success')
         this.updateBalances()
 
         return info
-      })
-      .catch((error) => {
-        Helper.debugLog(error, 'Error')
-        throw error
       })
   }
 

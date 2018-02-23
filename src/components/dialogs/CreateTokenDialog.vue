@@ -1,5 +1,5 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog lazy persistent v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
   <div class='main-container'>
     <dialog-titlebar :title=title v-on:close='visible = false' />
 
@@ -93,7 +93,7 @@ export default {
           issuingAsset = new StellarSdk.Asset(this.symbol, issuerKeypair.publicKey())
 
           // create distributor from issuer
-          return StellarUtils.newAccountWithTokens(issuerWallet, '2', issuingAsset, String(this.amount), 'Distributor: ' + this.symbol, this.symbol)
+          return StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, '2', issuingAsset, String(this.amount), 'Distributor: ' + this.symbol, this.symbol)
         })
         .then((accountInfo) => {
           // return results and close

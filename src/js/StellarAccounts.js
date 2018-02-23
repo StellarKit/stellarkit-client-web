@@ -72,7 +72,7 @@ class StellarAccounts {
 
   addAccount(keyPair, name = null, signWithLedger, tag = null) {
     const acct = {
-      name: name !== null ? name : generateName(),
+      name: Helper.strOK(name) ? name : generateName(),
       balances: {
         XLM: 'refreshing...'
       },

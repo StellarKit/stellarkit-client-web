@@ -46,12 +46,14 @@
         <v-btn round @click="showOffers()">Show Offers</v-btn>
         <v-btn round @click="deleteOffers()">Delete Offers</v-btn>
         <v-btn round @click="lockIssuer()">Lock Issuer</v-btn>
+        <v-btn round @click="createUserAccount()">Create Account</v-btn>
       </div>
     </div>
   </div>
 
   <manage-offer-dialog :ping='offerDialogPing' />
-  <create-token-dialog v-on:token-created=' createDialogResult ' :ping='createDialogPing ' />
+  <create-account-dialog :ping='accountDialogPing' :project='dialogProject' />
+  <create-token-dialog v-on:token-created='createDialogResult' :ping='createDialogPing ' />
 </div>
 </template>
 
@@ -60,6 +62,7 @@ import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import Helper from '../js/helper.js'
 import AccountList from '../components/AccountList.vue'
 import CreateTokenDialog from '../components/dialogs/CreateTokenDialog.vue'
+import CreateAccountDialog from '../components/dialogs/CreateAccountDialog.vue'
 import ManageOfferDialog from '../components/dialogs/ManageOfferDialog.vue'
 import StyleExtractionMixin from '../components/StyleExtractionMixin.js'
 const $ = require('jquery')
@@ -73,7 +76,8 @@ export default {
   components: {
     'account-list': AccountList,
     'create-token-dialog': CreateTokenDialog,
-    'manage-offer-dialog': ManageOfferDialog
+    'manage-offer-dialog': ManageOfferDialog,
+    'create-account-dialog': CreateAccountDialog
   },
   computed: {
     menuButtonName: function () {
@@ -108,7 +112,9 @@ export default {
       summaryMap: [],
       projectIndex: 0,
       createDialogPing: false,
-      offerDialogPing: false
+      offerDialogPing: false,
+      dialogProject: null,
+      accountDialogPing: false
     }
   },
   mounted() {
@@ -184,6 +190,11 @@ export default {
     },
     manageOffer() {
       this.offerDialogPing = !this.offerDialogPing
+    },
+    createUserAccount() {
+      this.dialogProject = this.currentProject()
+
+      this.accountDialogPing = !this.accountDialogPing
     },
     showOffers() {
       Helper.debugLog('Offers...')
