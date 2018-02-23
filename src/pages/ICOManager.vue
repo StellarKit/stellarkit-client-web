@@ -98,7 +98,7 @@ export default {
     }
   },
   mounted() {
-    this.tokenProjects = Helper.get('token-projects')
+    this.tokenProjects = this.loadProjects()
     if (!this.tokenProjects) {
       this.tokenProjects = []
     }
@@ -107,6 +107,7 @@ export default {
   methods: {
     deleteTokenProject() {
       this.tokenProjects.splice(this.projectIndex, 1)
+      this.saveProjects()
     },
     updateProjectIndex(index) {
       this.projectIndex = index
@@ -156,7 +157,13 @@ export default {
       })
 
       this.updateProjectIndex(this.tokenProjects.length - 1)
+      this.saveProjects()
+    },
+    saveProjects() {
       Helper.set('token-projects', this.tokenProjects)
+    },
+    loadProjects() {
+      return Helper.get('token-projects')
     },
     displayToken(index) {
       this.updateProjectIndex(index)
