@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     createToken() {
-      let issuerWallet = null
+      let issuerKeypair = null
       let issuingAsset = null
 
       if (this.amount < 1) {
@@ -90,17 +90,16 @@ export default {
       // create issuer
       StellarUtils.newAccount(fundingWallet, '4', 'Issuer: ' + this.symbol)
         .then((accountInfo) => {
-          issuerWallet = StellarWallet.secret(accountInfo.keypair.secret())
-          issuingAsset = new StellarSdk.Asset(this.symbol, accountInfo.keypair.publicKey())
+          issuerKeypair = accountInfo.keypair
+          const issuerWallet = StellarWallet.secret(issuerKeypair.secret())
+          issuingAsset = new StellarSdk.Asset(this.symbol, issuerKeypair.publicKey())
 
           // create distributor from issuer
           return StellarUtils.newAccountWithTokens(issuerWallet, '2', issuingAsset, String(this.amount), 'Distributor: ' + this.symbol)
         })
         .then((accountInfo) => {
-          const distributorWallet = StellarWallet.secret(accountInfo.keypair.secret())
-
           // return results and close
-          this.$emit('token-created', issuerWallet, distributorWallet, issuingAsset)
+          this.$emit('token-created', issuerKeypair, accountInfo.keypair, issuingAsset)
           this.visible = false
 
           return null

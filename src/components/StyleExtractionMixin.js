@@ -1,10 +1,31 @@
 import Helper from '../js/helper.js'
+const $ = require('jquery')
 
 export default {
   data() {
     return {}
   },
   methods: {
+    printTokenInfo(element) {
+      // insert an iframe into the DOM
+      // print iframe window.  popups could be blocked, so frame is safter than opening a new window
+      const iframe = $('<iframe></iframe>')[0]
+
+      // const element = document.createElement('iframe')
+      iframe.setAttribute('id', 'printf')
+      iframe.setAttribute('name', 'printf')
+
+      iframe.style.display = 'none'
+      document.body.appendChild(iframe)
+
+      const frameWindow = window.frames['printf']
+      frameWindow.document.head.innerHTML = '<style>body{font-family: Arial, Helvetica, sans-serif;}</style>'
+      frameWindow.document.body.innerHTML = this.styledElementForPrinting(element[0])
+
+      frameWindow.print()
+
+      document.body.removeChild(iframe)
+    },
     styledElementForPrinting(inElement) {
       const printContents = document.createElement('div')
       printContents.setAttribute('class', 'print-wrapper')

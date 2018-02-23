@@ -68,7 +68,7 @@
     <div class='summary-view'>
       <div class='summary-header'>Token Information
         <v-spacer />
-        <v-btn small icon @click='printTokenInfo'>
+        <v-btn small icon @click='printInfo'>
           <v-icon>&#xE8AD;</v-icon>
         </v-btn>
       </div>
@@ -153,6 +153,9 @@ export default {
     this.updatePageIndex(0)
   },
   methods: {
+    printInfo() {
+      this.printTokenInfo($('.summary-view'))
+    },
     animateEnter(el, done) {
       let width = $('.wizard-main').outerWidth() / 4
 
@@ -184,26 +187,6 @@ export default {
         ease: Power2.easeOut,
         onComplete: done
       })
-    },
-    printTokenInfo() {
-      // insert an iframe into the DOM
-      // print iframe window.  popups could be blocked, so frame is safter than opening a new window
-      const iframe = $('<iframe></iframe>')[0]
-
-      // const element = document.createElement('iframe')
-      iframe.setAttribute('id', 'printf')
-      iframe.setAttribute('name', 'printf')
-
-      iframe.style.display = 'none'
-      document.body.appendChild(iframe)
-
-      const frameWindow = window.frames['printf']
-      frameWindow.document.head.innerHTML = '<style>body{font-family: Arial, Helvetica, sans-serif;}</style>'
-      frameWindow.document.body.innerHTML = this.styledElementForPrinting($('.summary-view')[0])
-
-      frameWindow.print()
-
-      document.body.removeChild(iframe)
     },
     publishTokenInformation() {
       // ==
