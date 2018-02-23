@@ -17,14 +17,14 @@
 </template>
 
 <script>
-import Helper from '../js/helper.js'
+import Helper from '../../js/helper.js'
 import {
   DialogTitleBar
 } from 'stellar-js-utils'
-import StellarCommonMixin from '../components/StellarCommonMixin.js'
-import StellarUtils from '../js/StellarUtils.js'
+import StellarCommonMixin from '../StellarCommonMixin.js'
+import StellarUtils from '../../js/StellarUtils.js'
 const StellarSdk = require('stellar-sdk')
-import ToastComponent from './ToastComponent.vue'
+import ToastComponent from '../ToastComponent.vue'
 
 export default {
   props: ['ping', 'transaction'],
@@ -88,7 +88,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-@import '../scss/styles.scss';
+@import '../../scss/styles.scss';
 
 .main-container {
     @include standard-dialog-contents();

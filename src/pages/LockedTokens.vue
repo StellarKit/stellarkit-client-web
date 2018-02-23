@@ -37,14 +37,14 @@
 
   </div>
 
-  <transaction-viewer :ping='dialogPing' :transaction='signedTransaction' />
+  <transaction-dialog :ping='dialogPing' :transaction='signedTransaction' />
 </div>
 </template>
 
 <script>
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import AccountList from '../components/AccountList.vue'
-import TransactionViewer from '../components/TransactionViewer.vue'
+import TransactionDialog from '../components/dialogs/TransactionDialog.vue'
 import Helper from '../js/helper.js'
 import StellarAccounts from '../js/StellarAccounts.js'
 import StellarUtils from '../js/StellarUtils.js'
@@ -57,7 +57,7 @@ export default {
   mixins: [StellarCommonMixin],
   components: {
     'account-list': AccountList,
-    'transaction-viewer': TransactionViewer
+    'transaction-dialog': TransactionDialog
   },
   data() {
     return {
