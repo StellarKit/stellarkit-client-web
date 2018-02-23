@@ -22,8 +22,9 @@
       <v-tooltip open-delay='200' bottom>
         <div slot="activator">
           <div class='account-name'>{{item.name}}</div>
-          <div>XLM: {{item.XLM}}</div>
-          <div>LMB: {{item.LMB}}</div>
+          <div v-for="(value, key) in item.balances" :key='key'>
+            {{key}}: {{value}}
+          </div>
           <div v-if='item.signWithLedger'>Sign with Ledger</div>
         </div>
         <span>{{item.publicKey}}</span>

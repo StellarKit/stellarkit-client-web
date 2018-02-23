@@ -128,37 +128,44 @@ class StellarUtils {
   }
 
   // returns {account: newAccount, keypair: keypair}
-  newAccountWithTokens(sourceWallet, amountXLM, asset, amount) {
-    let newAccount = null
+  newAccount(sourceWallet, startingBalance) {
     const keypair = StellarSdk.Keypair.random()
 
     Helper.debugLog('creating account...')
     Helper.debugLog(keypair.publicKey())
     Helper.debugLog(keypair.secret())
 
-    const destWallet = StellarWallet.secret(keypair.secret())
+    return this.createAccount(sourceWallet, keypair.publicKey(), startingBalance)
+      .then((account) => {
+        StellarAccounts.addAccount(keypair)
 
-    return this.createAccount(sourceWallet, keypair.publicKey(), amountXLM)
+        return {
+          account: account,
+          keypair: keypair
+        }
+      })
+  }
+
+  // returns {account: newAccount, keypair: keypair}
+  newAccountWithTokens(sourceWallet, startingBalance, asset, amount) {
+    let info = null
+
+    return this.newAccount(sourceWallet, startingBalance)
       .then((result) => {
-        newAccount = result
+        info = result
 
         Helper.debugLog('setting trust...')
-        return this.changeTrust(destWallet, asset, '10000')
+        return this.changeTrust(StellarWallet.secret(info.keypair.secret()), asset, amount)
       })
       .then((result) => {
         Helper.debugLog('sending tokens...')
-        return this.sendAsset(sourceWallet, keypair.publicKey(), amount, asset)
+        return this.sendAsset(sourceWallet, info.keypair.publicKey(), amount, asset)
       })
       .then((result) => {
-        StellarAccounts.addAccount(keypair)
-
         Helper.debugLog(result, 'Success')
         this.updateBalances()
 
-        return {
-          account: newAccount,
-          keypair: keypair
-        }
+        return info
       })
       .catch((error) => {
         Helper.debugLog(error, 'Error')
@@ -181,9 +188,9 @@ class StellarUtils {
           .then((account) => {
             account.balances.forEach((balance) => {
               if (balance.asset_type === 'native') {
-                accountRec.XLM = balance.balance
+                accountRec.balances.XLM = balance.balance
               } else {
-                accountRec[balance.asset_code] = balance.balance
+                accountRec.balances[balance.asset_code] = balance.balance
               }
             })
 

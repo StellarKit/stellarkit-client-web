@@ -73,8 +73,9 @@ class StellarAccounts {
   addAccount(keyPair, name = null, signWithLedger) {
     const acct = {
       name: name !== null ? name : generateName(),
-      XLM: 'refreshing...',
-      LMB: 0,
+      balances: {
+        XLM: 'refreshing...'
+      },
       secret: keyPair.secret(),
       publicKey: keyPair.publicKey(),
       signWithLedger: signWithLedger
@@ -148,7 +149,7 @@ class StellarAccounts {
     const accounts = this.shared().accounts()
     const acct = accounts[index]
 
-    acct[symbol] = balance
+    acct.balances[symbol] = balance
 
     this.shared().save()
   }
