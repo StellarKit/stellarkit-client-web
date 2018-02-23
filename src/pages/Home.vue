@@ -208,7 +208,7 @@ export default {
 
       const sourceWallet = this.sourceWallet()
       if (sourceWallet && this.signerValid()) {
-        StellarUtils.removeMultiSig(sourceWallet, this.selectedSigner.secret, this.selectedSigner.publicKey)
+        StellarUtils.removeMultiSig(sourceWallet, StellarWallet.secret(this.selectedSigner.secret))
           .then((result) => {
             Helper.debugLog(result, 'Success')
             return null

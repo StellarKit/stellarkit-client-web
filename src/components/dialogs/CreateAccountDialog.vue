@@ -76,7 +76,8 @@ export default {
       timeLockSeconds: 10,
       modal: false,
       date: null,
-      accountName: null
+      accountName: null,
+      unlockTransaction: null
     }
   },
   watch: {
@@ -101,22 +102,27 @@ export default {
 
       const fundingWallet = StellarWallet.ledger(new LedgerAPI(), () => {
         this.statusMessage = 'Confirm transaction on Ledger Nano'
+        this.displayToast(this.statusMessage)
       })
 
       const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
-      const issuerWallet = StellarWallet.secret(this.project.issuerSecret)
+      const distributorWallet = StellarWallet.secret(this.project.distributorSecret)
 
-      StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, String(this.xlmBalance), asset, String(this.tokenBalance), this.accountName, this.project.symbol)
+      StellarUtils.newAccountWithTokens(fundingWallet, distributorWallet, String(this.xlmBalance), asset, String(this.tokenBalance), this.accountName, this.project.symbol)
         .then((result) => {
           // result is {account: newAccount, keypair: keypair}
           Helper.debugLog(result.account)
 
           if (this.timeLockEnabled) {
             Helper.debugLog('adding funding account as signer...')
+            const newWallet = StellarWallet.secret(result.keypair.secret())
 
             return fundingWallet.publicKey()
               .then((fundingPublicKey) => {
-                return StellarUtils.makeMultiSig(StellarWallet.secret(result.keypair.secret()), fundingPublicKey)
+                return StellarUtils.makeMultiSig(newWallet, fundingPublicKey)
+              })
+              .then(() => {
+                return this.createUnlockTransaction(newWallet, fundingWallet)
               })
           }
 
@@ -136,8 +142,42 @@ export default {
           this.loading = false
         })
     },
-    displayErrorMessage(message) {
-      Helper.toast(message, true, 'create-account-dialog')
+    timeFromNow(secondsAhead = 0) {
+      return secondsAhead + Math.round((new Date()).getTime() / 1000)
+    },
+    createUnlockTransaction(newAccountWallet, fundingWallet) {
+      // for debugging
+      const seconds = 10
+      let minTime = this.timeFromNow(seconds).toString()
+
+      if (this.date) {
+        minTime = this.date.getSeconds()
+      }
+
+      const transactionOpts = {
+        timebounds: {
+          minTime: minTime,
+          maxTime: '0' // crashes without this
+        }
+      }
+
+      // using source account instead of distributor, sequence numbers would be different in the future
+      return StellarUtils.removeMultiSigTransaction(newAccountWallet, fundingWallet, transactionOpts)
+        .then((transaction) => {
+          this.unlockTransaction = transaction.toEnvelope().toXDR('base64')
+          Helper.debugLog(this.unlockTransaction, 'Success')
+
+          Helper.debugLog('You can submit the transaction in ' + seconds + ' seconds')
+          Helper.toast('Transaction valid in ' + seconds + ' seconds')
+
+          return transaction
+        })
+        .catch((error) => {
+          Helper.debugLog(error, 'Error')
+        })
+    },
+    displayToast(message, error = false) {
+      Helper.toast(message, error, 'create-account-dialog')
     }
   }
 }

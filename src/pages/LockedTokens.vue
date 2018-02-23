@@ -131,7 +131,7 @@ export default {
         }
 
         // using source account instead of distributor, sequence numbers would be different in the future
-        StellarUtils.removeMultiSigTransaction(StellarWallet.secret(this.selectedSource.secret), distributorAccount.secret, distributorAccount.publicKey, transactionOpts)
+        StellarUtils.removeMultiSigTransaction(StellarWallet.secret(this.selectedSource.secret), StellarWallet.secret(distributorAccount.secret), transactionOpts)
           .then((transaction) => {
             this.signedTransaction = transaction.toEnvelope().toXDR('base64')
             Helper.debugLog(this.signedTransaction, 'Success')

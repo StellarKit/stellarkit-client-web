@@ -51,7 +51,7 @@
     </div>
   </div>
 
-  <manage-offer-dialog :ping='offerDialogPing' />
+  <manage-offer-dialog :ping='offerDialogPing' :project='dialogProject' />
   <create-account-dialog :ping='accountDialogPing' :project='dialogProject' />
   <create-token-dialog v-on:token-created='createDialogResult' :ping='createDialogPing ' />
 </div>
@@ -189,11 +189,11 @@ export default {
       this.updateProjectIndex(index)
     },
     manageOffer() {
+      this.dialogProject = this.currentProject()
       this.offerDialogPing = !this.offerDialogPing
     },
     createUserAccount() {
       this.dialogProject = this.currentProject()
-
       this.accountDialogPing = !this.accountDialogPing
     },
     showOffers() {
@@ -341,6 +341,7 @@ export default {
         }
 
         .button-holder {
+            margin-top: 10px;
             display: flex;
             justify-content: center;
         }

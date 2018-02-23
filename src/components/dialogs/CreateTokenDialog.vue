@@ -81,12 +81,13 @@ export default {
 
       const fundingWallet = StellarWallet.ledger(new LedgerAPI(), () => {
         this.statusMessage = 'Confirm transaction on Ledger Nano'
+        this.displayToast(this.statusMessage)
       })
 
       this.loading = true
 
       // create issuer
-      StellarUtils.newAccount(fundingWallet, '4', 'Issuer: ' + this.symbol, this.symbol)
+      StellarUtils.newAccount(fundingWallet, '2', 'Issuer: ' + this.symbol, this.symbol)
         .then((accountInfo) => {
           issuerKeypair = accountInfo.keypair
           const issuerWallet = StellarWallet.secret(issuerKeypair.secret())
@@ -109,8 +110,8 @@ export default {
           this.loading = false
         })
     },
-    displayErrorMessage(message) {
-      Helper.toast(message, true, 'create-token-dialog')
+    displayToast(message, error = false) {
+      Helper.toast(message, error, 'create-token-dialog')
     }
   }
 }

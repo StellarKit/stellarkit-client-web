@@ -81,13 +81,13 @@ class StellarUtils {
     return this.api().makeMultiSig(sourceWallet, publicKey, threshold)
   }
 
-  removeMultiSig(sourceWallet, secondSecret, secondPublicKey, transactionOpts) {
-    return this.api().removeMultiSig(sourceWallet, secondSecret, secondPublicKey, transactionOpts)
+  removeMultiSig(sourceWallet, secondWallet, transactionOpts) {
+    return this.api().removeMultiSig(sourceWallet, secondWallet, transactionOpts)
   }
 
   // get the transaction for later submission
-  removeMultiSigTransaction(sourceWallet, secondSecret, secondPublicKey, transactionOpts) {
-    return this.api().removeMultiSigTransaction(sourceWallet, secondSecret, secondPublicKey, transactionOpts)
+  removeMultiSigTransaction(sourceWallet, secondWallet, transactionOpts) {
+    return this.api().removeMultiSigTransaction(sourceWallet, secondWallet, transactionOpts)
   }
 
   submitTransaction(transaction) {
@@ -147,7 +147,7 @@ class StellarUtils {
   }
 
   // returns {account: newAccount, keypair: keypair}
-  newAccountWithTokens(sourceWallet, tokenWallet, startingBalance, asset, amount, accountName = null, accountTag = null) {
+  newAccountWithTokens(sourceWallet, distributorWallet, startingBalance, asset, amount, accountName = null, accountTag = null) {
     let info = null
 
     return this.newAccount(sourceWallet, startingBalance, accountName, accountTag)
@@ -159,7 +159,7 @@ class StellarUtils {
       })
       .then((result) => {
         Helper.debugLog('sending tokens...')
-        return this.sendAsset(tokenWallet, info.keypair.publicKey(), amount, asset)
+        return this.sendAsset(distributorWallet, info.keypair.publicKey(), amount, asset)
       })
       .then((result) => {
         Helper.debugLog(result, 'Success')

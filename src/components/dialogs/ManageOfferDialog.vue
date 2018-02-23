@@ -1,5 +1,5 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog lazy persistent v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
   <div class='main-container'>
     <dialog-titlebar :title=title v-on:close='visible = false' />
 
@@ -71,15 +71,14 @@ export default {
     manageOffer() {
       Helper.debugLog('Managing Offer...')
 
-      const project = this.currentProject()
-      if (project) {
+      if (this.project) {
         // parseInt shouldn't be necessary, but if you edit the textfields, it changes to a string
         const price = {
           n: parseInt(this.offerPriceN),
           d: parseInt(this.offerPriceD)
         }
 
-        const asset = new StellarSdk.Asset(project.symbol, project.distributor)
+        const asset = new StellarSdk.Asset(this.project.symbol, this.project.distributor)
 
         StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), StellarUtils.lumins(), asset, String(this.offerAmount), price)
           .then((result) => {
