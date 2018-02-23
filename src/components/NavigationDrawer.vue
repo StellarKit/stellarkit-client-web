@@ -31,8 +31,8 @@ import {
   PaymentDialog
 } from 'stellar-js-utils'
 import Helper from '../js/helper.js'
-import ExpansionDialog from './ExpansionDialog.vue'
-import AboutDialog from './AboutDialog.vue'
+import ExpansionDialog from './dialogs/ExpansionDialog.vue'
+import AboutDialog from './dialogs/AboutDialog.vue'
 
 export default {
   props: ['ping'],

@@ -44,8 +44,7 @@
                 <v-text-field label="Token  description" v-model.trim="tokenDescription"></v-text-field>
                 <v-text-field label="Token conditions" v-model.trim="tokenConditions"></v-text-field>
               </div>
-
-              <v-btn @click='createIssuer'>Post Sell Offer</v-btn>
+              <v-btn @click='publishTokenInformation'>Publish Token Information </v-btn>
             </div>
           </div>
           <div v-if='pageIndex===3' key='3'>
@@ -57,8 +56,7 @@
                 <v-text-field class='number-field' :label="'Sell ' +  assetSymbol" type='number' v-model.number="offerPriceD"></v-text-field>
                 <v-text-field class='number-field' label="Amount to sell" type='number' v-model.number="offerAmount"></v-text-field>
               </div>
-
-              <v-btn @click='publishTokenInformation'>Publish Token Information </v-btn>
+              <v-btn @click='createIssuer'>Post Sell Offer</v-btn>
             </div>
           </div>
         </transition>

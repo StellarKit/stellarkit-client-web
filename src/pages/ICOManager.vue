@@ -40,11 +40,18 @@
           {{summaryMap.get(key)}}
         </div>
       </div>
-      </summary-view>
+
+      <div class='button-holder'>
+        <v-btn round @click="manageOffer()">Manage Offer</v-btn>
+        <v-btn round @click="showOffers()">Show Offers</v-btn>
+        <v-btn round @click="deleteOffers()">Delete Offers</v-btn>
+        <v-btn round @click="lockIssuer()">Lock Issuer</v-btn>
+      </div>
     </div>
   </div>
 
-  <create-token-dialog v-on:token-created='createDialogResult' :ping='createDialogPing' />
+  <manage-offer-dialog :ping='offerDialogPing' />
+  <create-token-dialog v-on:token-created=' createDialogResult ' :ping='createDialogPing ' />
 </div>
 </template>
 
@@ -52,15 +59,21 @@
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import Helper from '../js/helper.js'
 import AccountList from '../components/AccountList.vue'
-import CreateTokenDialog from '../components/CreateTokenDialog.vue'
+import CreateTokenDialog from '../components/dialogs/CreateTokenDialog.vue'
+import ManageOfferDialog from '../components/dialogs/ManageOfferDialog.vue'
 import StyleExtractionMixin from '../components/StyleExtractionMixin.js'
 const $ = require('jquery')
+import StellarUtils from '../js/StellarUtils.js'
+import {
+  StellarWallet
+} from 'stellar-js-utils'
 
 export default {
   mixins: [StellarCommonMixin, StyleExtractionMixin],
   components: {
     'account-list': AccountList,
-    'create-token-dialog': CreateTokenDialog
+    'create-token-dialog': CreateTokenDialog,
+    'manage-offer-dialog': ManageOfferDialog
   },
   computed: {
     menuButtonName: function () {
@@ -94,7 +107,8 @@ export default {
       tokenProjects: [],
       summaryMap: [],
       projectIndex: 0,
-      createDialogPing: false
+      createDialogPing: false,
+      offerDialogPing: false
     }
   },
   mounted() {
@@ -168,6 +182,86 @@ export default {
     displayToken(index) {
       this.updateProjectIndex(index)
     },
+    manageOffer() {
+      this.offerDialogPing = !this.offerDialogPing
+    },
+    showOffers() {
+      Helper.debugLog('Offers...')
+
+      const project = this.currentProject()
+      if (project) {
+        StellarUtils.server().offers('accounts', project.distributor)
+          .call()
+          .then((response) => {
+            response.records.forEach((offer) => {
+              Helper.debugLog(offer)
+            })
+
+            Helper.debugLog('Offers done')
+
+            return null
+          })
+      }
+    },
+    deleteOffersFromArray(project, offers) {
+      return new Promise((resolve, reject) => {
+        const offer = offers.pop()
+        if (offer) {
+          const buying = StellarUtils.assetFromObject(offer.buying)
+          const selling = StellarUtils.assetFromObject(offer.selling)
+
+          StellarUtils.manageOffer(StellarWallet.secret(project.distributorSecret), buying, selling, '0', offer.price_r, offer.id)
+            .then((result) => {
+              Helper.debugLog(result, 'Success')
+
+              resolve(this.deleteOffersFromArray(project, offers))
+            })
+            .catch((error) => {
+              Helper.debugLog(error, 'Error')
+
+              reject(error)
+            })
+        } else {
+          resolve(true)
+        }
+      })
+    },
+    deleteOffers() {
+      Helper.debugLog('Deleting Offers...')
+      const project = this.currentProject()
+      if (project) {
+        StellarUtils.server().offers('accounts', this.project.distributor)
+          .call()
+          .then((response) => {
+            // Helper.debugLog(response)
+            return this.deleteOffersFromArray(project, response.records)
+          })
+          .then((result) => {
+            Helper.debugLog('Deleted all offers', 'Success')
+            return result
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
+            return false
+          })
+      }
+    },
+    lockIssuer() {
+      Helper.debugLog('Locking issuer...')
+      const project = this.currentProject()
+      if (project) {
+        StellarUtils.lockAccount(StellarWallet.secret(project.issuerSecret))
+          .then((result) => {
+            Helper.debugLog('locked!')
+            Helper.debugLog(result)
+
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error)
+          })
+      }
+    },
     projectsMenuClick(index, action) {
       switch (action) {
         case 'create':
@@ -233,6 +327,11 @@ export default {
                 flex: 1 0 80%;
                 padding-left: 5px;
             }
+        }
+
+        .button-holder {
+            display: flex;
+            justify-content: center;
         }
     }
 }

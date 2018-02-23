@@ -115,7 +115,7 @@ export default {
 // list animations
 .list-enter-active,
 .list-leave-active {
-    transition: all 0.25s;
+    transition: all 0.2s;
 }
 /* .list-leave-active below version 2.1.8 */
 .list-enter,

@@ -26,14 +26,14 @@
 </template>
 
 <script>
-import Helper from '../js/helper.js'
+import Helper from '../../js/helper.js'
 import {
   DialogTitleBar,
   StellarWallet
 } from 'stellar-js-utils'
-import StellarCommonMixin from './StellarCommonMixin.js'
-import StellarUtils from '../js/StellarUtils.js'
-import ToastComponent from './ToastComponent.vue'
+import StellarCommonMixin from '../StellarCommonMixin.js'
+import StellarUtils from '../../js/StellarUtils.js'
+import ToastComponent from '../ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')
 
 export default {
@@ -202,7 +202,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-@import '../scss/styles.scss';
+@import '../../scss/styles.scss';
 
 .main-container {
     @include standard-dialog-contents();

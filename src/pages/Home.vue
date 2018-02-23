@@ -44,8 +44,8 @@
 <script>
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import AccountList from '../components/AccountList.vue'
-import SimpleOperationDialog from '../components/SimpleOperationDialog.vue'
-import ManageDataDialog from '../components/ManageDataDialog.vue'
+import SimpleOperationDialog from '../components/dialogs/SimpleOperationDialog.vue'
+import ManageDataDialog from '../components/dialogs/ManageDataDialog.vue'
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
 import {
