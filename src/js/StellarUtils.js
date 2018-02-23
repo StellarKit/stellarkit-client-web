@@ -128,7 +128,7 @@ class StellarUtils {
   }
 
   // returns {account: newAccount, keypair: keypair}
-  newAccount(sourceWallet, startingBalance) {
+  newAccount(sourceWallet, startingBalance, name = null) {
     const keypair = StellarSdk.Keypair.random()
 
     Helper.debugLog('creating account...')
@@ -137,7 +137,7 @@ class StellarUtils {
 
     return this.createAccount(sourceWallet, keypair.publicKey(), startingBalance)
       .then((account) => {
-        StellarAccounts.addAccount(keypair)
+        StellarAccounts.addAccount(keypair, name)
 
         return {
           account: account,
@@ -147,10 +147,10 @@ class StellarUtils {
   }
 
   // returns {account: newAccount, keypair: keypair}
-  newAccountWithTokens(sourceWallet, startingBalance, asset, amount) {
+  newAccountWithTokens(sourceWallet, startingBalance, asset, amount, accountName = null) {
     let info = null
 
-    return this.newAccount(sourceWallet, startingBalance)
+    return this.newAccount(sourceWallet, startingBalance, accountName)
       .then((result) => {
         info = result
 

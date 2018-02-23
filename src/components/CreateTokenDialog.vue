@@ -88,13 +88,13 @@ export default {
       this.loading = true
 
       // create issuer
-      StellarUtils.newAccount(fundingWallet, '4')
+      StellarUtils.newAccount(fundingWallet, '4', 'Issuer: ' + this.symbol)
         .then((accountInfo) => {
           issuerWallet = StellarWallet.secret(accountInfo.keypair.secret())
           issuingAsset = new StellarSdk.Asset(this.symbol, accountInfo.keypair.publicKey())
 
           // create distributor from issuer
-          return StellarUtils.newAccountWithTokens(issuerWallet, '2', issuingAsset, String(this.amount))
+          return StellarUtils.newAccountWithTokens(issuerWallet, '2', issuingAsset, String(this.amount), 'Distributor: ' + this.symbol)
         })
         .then((accountInfo) => {
           const distributorWallet = StellarWallet.secret(accountInfo.keypair.secret())
