@@ -16,7 +16,7 @@
         <v-icon>&#xE5C5;</v-icon>
       </v-btn>
       <v-list dense>
-        <v-list-tile v-for="(item, index) in tokenMenuItems" :key="item.title" @click="projectsMenuClick(index)">
+        <v-list-tile v-for="(item, index) in tokenMenuItems" :key="item.title" @click="projectsMenuClick(index, item.action)">
           <v-list-tile-title>{{ item.title }}</v-list-tile-title>
         </v-list-tile>
       </v-list>
@@ -25,6 +25,9 @@
     <div class='summary-view'>
       <div class='summary-header'>Token Information
         <v-spacer />
+        <v-btn small icon @click='deleteTokenProject'>
+          <v-icon>close</v-icon>
+        </v-btn>
         <v-btn small icon @click='printInfo'>
           <v-icon>&#xE8AD;</v-icon>
         </v-btn>
@@ -102,6 +105,9 @@ export default {
     this.updateProjectIndex(0)
   },
   methods: {
+    deleteTokenProject() {
+      this.tokenProjects.splice(this.projectIndex, 1)
+    },
     updateProjectIndex(index) {
       this.projectIndex = index
 
@@ -109,6 +115,8 @@ export default {
 
       const project = this.currentProject()
       if (project) {
+        this.setAccountsTag(project.symbol)
+
         this.summaryMap.set('Symbol', project.symbol)
         this.summaryMap.set('Amount', project.tokenAmount)
 
@@ -116,15 +124,15 @@ export default {
         this.summaryMap.set('Issuer Secret', project.issuerSecret)
         this.summaryMap.set('Distributor', project.distributor)
         this.summaryMap.set('Distributor Secret', project.distributorSecret)
+      } else {
+        this.setAccountsTag(null)
       }
     },
     currentProject() {
       if (this.tokenProjects.length > 0) {
-        console.log('fuckkk')
         if (this.projectIndex >= this.tokenProjects.length) {
           this.updateProjectIndex(0)
         }
-        console.log(this.projectIndex)
 
         return this.tokenProjects[this.projectIndex]
       }
@@ -153,13 +161,13 @@ export default {
     displayToken(index) {
       this.updateProjectIndex(index)
     },
-    projectsMenuClick(item) {
-      switch (item.action) {
+    projectsMenuClick(index, action) {
+      switch (action) {
         case 'create':
           this.createToken()
           break
         default:
-          this.displayToken(item)
+          this.displayToken(index)
           break
       }
     }

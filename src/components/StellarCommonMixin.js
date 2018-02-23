@@ -5,7 +5,8 @@
  export default {
    data() {
      return {
-       accountsUI: []
+       accountsUI: [],
+       accountsTag: null
      }
    },
    mounted() {
@@ -41,9 +42,20 @@
        Helper.debugLog('Go to the Tokens tab and create a token first.', 'Error')
        return null
      },
+     setAccountsTag(tag) {
+       this.accountsTag = tag
+
+       this.updateAccountsUI()
+     },
      // private
      updateAccountsUI() {
        this.accountsUI = StellarAccounts.accounts()
+
+       if (this.accountsTag) {
+         this.accountsUI = this.accountsUI.filter(value => {
+           return value.tag === this.accountsTag
+         })
+       }
      }
    }
  }

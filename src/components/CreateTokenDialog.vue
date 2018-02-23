@@ -10,7 +10,7 @@
       </div>
       <div class='help-email'>
         <v-text-field label='Symbol' v-model.trim="symbol" ref='input'></v-text-field>
-        <v-text-field label='Amount' v-model.number="amount" @keyup.enter="createToken()"></v-text-field>
+        <v-text-field label='Amount' v-model.number="amount" type='number' @keyup.enter="createToken()"></v-text-field>
       </div>
       <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>
@@ -33,14 +33,12 @@ import {
   StellarWallet,
   LedgerAPI
 } from 'stellar-js-utils'
-import StellarCommonMixin from './StellarCommonMixin.js'
 import StellarUtils from '../js/StellarUtils.js'
 import ToastComponent from './ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')
 
 export default {
   props: ['ping'],
-  mixins: [StellarCommonMixin],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent
@@ -88,14 +86,14 @@ export default {
       this.loading = true
 
       // create issuer
-      StellarUtils.newAccount(fundingWallet, '4', 'Issuer: ' + this.symbol)
+      StellarUtils.newAccount(fundingWallet, '4', 'Issuer: ' + this.symbol, this.symbol)
         .then((accountInfo) => {
           issuerKeypair = accountInfo.keypair
           const issuerWallet = StellarWallet.secret(issuerKeypair.secret())
           issuingAsset = new StellarSdk.Asset(this.symbol, issuerKeypair.publicKey())
 
           // create distributor from issuer
-          return StellarUtils.newAccountWithTokens(issuerWallet, '2', issuingAsset, String(this.amount), 'Distributor: ' + this.symbol)
+          return StellarUtils.newAccountWithTokens(issuerWallet, '2', issuingAsset, String(this.amount), 'Distributor: ' + this.symbol, this.symbol)
         })
         .then((accountInfo) => {
           // return results and close
