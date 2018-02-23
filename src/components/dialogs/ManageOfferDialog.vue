@@ -10,9 +10,9 @@
       </div>
       <div class='help-email'>
         <strong>Price:</strong>
-        <v-text-field label="Buy XLM" type='number' v-model="offerPriceN" ref='input'></v-text-field>
-        <v-text-field label="Sell LMB" type='number' v-model="offerPriceD"></v-text-field>
-        <v-text-field label="Amount to sell" type='number' v-model="offerAmount"></v-text-field>
+        <v-text-field label="Buy XLM" type='number' v-model.number="offerPriceN" ref='input'></v-text-field>
+        <v-text-field :label="sellLabel" type='number' v-model.number="offerPriceD"></v-text-field>
+        <v-text-field label="Amount to sell" type='number' v-model.number="offerAmount"></v-text-field>
       </div>
       <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>
@@ -44,6 +44,11 @@ export default {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent
   },
+  computed: {
+    sellLabel: function () {
+      return 'Sell ' + this.project.symbol
+    }
+  },
   data() {
     return {
       visible: false,
@@ -72,15 +77,14 @@ export default {
       Helper.debugLog('Managing Offer...')
 
       if (this.project) {
-        // parseInt shouldn't be necessary, but if you edit the textfields, it changes to a string
         const price = {
-          n: parseInt(this.offerPriceN),
-          d: parseInt(this.offerPriceD)
+          n: this.offerPriceN,
+          d: this.offerPriceD
         }
 
-        const asset = new StellarSdk.Asset(this.project.symbol, this.project.distributor)
+        const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
 
-        StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), StellarUtils.lumins(), asset, String(this.offerAmount), price)
+        StellarUtils.manageOffer(StellarWallet.secret(this.project.distributorSecret), StellarUtils.lumins(), asset, String(this.offerAmount), price)
           .then((result) => {
             Helper.debugLog(result, 'Success')
             return null

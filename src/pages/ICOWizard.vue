@@ -41,7 +41,7 @@
 
               <div class='offer-price-fields'>
                 <v-text-field label="Token name" v-model.trim="tokenName"></v-text-field>
-                <v-text-field label="Token  description" v-model.trim="tokenDescription"></v-text-field>
+                <v-text-field label="Token description" v-model.trim="tokenDescription"></v-text-field>
                 <v-text-field label="Token conditions" v-model.trim="tokenConditions"></v-text-field>
               </div>
               <v-btn @click='publishTokenInformation'>Publish Token Information </v-btn>
