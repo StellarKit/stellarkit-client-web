@@ -264,6 +264,8 @@ export default {
           .then((result) => {
             Helper.debugLog(result)
 
+            StellarUtils.updateBalances()
+
             return null
           })
           .catch((error) => {
