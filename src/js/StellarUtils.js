@@ -60,8 +60,8 @@ class StellarUtils {
     return this.api().mergeAccount(sourceWallet, destKey)
   }
 
-  manageOffer(transWallet, sourceWallet, buying, selling, amount, price, offerID = 0) {
-    return this.api().manageOffer(transWallet, sourceWallet, buying, selling, amount, price, offerID)
+  manageOffer(sourceWallet, fundingWallet, buying, selling, amount, price, offerID = 0) {
+    return this.api().manageOffer(sourceWallet, fundingWallet, buying, selling, amount, price, offerID)
   }
 
   changeTrust(sourceWallet, asset, amount) {
