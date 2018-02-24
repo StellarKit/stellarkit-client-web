@@ -241,7 +241,7 @@ export default {
       Helper.debugLog('Deleting Offers...')
       const project = this.currentProject()
       if (project) {
-        StellarUtils.server().offers('accounts', this.project.distributor)
+        StellarUtils.server().offers('accounts', project.distributor)
           .call()
           .then((response) => {
             // Helper.debugLog(response)
