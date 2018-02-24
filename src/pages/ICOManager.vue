@@ -4,8 +4,8 @@
 
   <div class='page-title'>
     ICO Manager
-    <div class='page-subtitle'>
-      Under Construction
+    <div class='page-subtitle' style="color: red;">
+      Only works with Ledger Nano. Under Construction
     </div>
   </div>
   <div class='page-contents'>
