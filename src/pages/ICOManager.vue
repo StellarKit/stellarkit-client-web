@@ -38,7 +38,7 @@
       </v-list>
     </v-menu>
 
-    <div class='summary-view'>
+    <div v-if='showSummary' class='summary-view'>
       <div class='summary-header'>Token Information
         <v-spacer />
         <v-btn small icon @click='deleteTokenProject'>
@@ -135,7 +135,8 @@ export default {
       offerDialogPing: false,
       sendTokensDialogPing: false,
       dialogProject: null,
-      accountDialogPing: false
+      accountDialogPing: false,
+      showSummary: false
     }
   },
   mounted() {
@@ -161,6 +162,8 @@ export default {
     deleteTokenProject() {
       this.tokenProjects.splice(this.projectIndex, 1)
       this.saveProjects()
+
+      this.updateProjectIndex(0)
     },
     updateProjectIndex(index) {
       this.projectIndex = index
@@ -170,6 +173,7 @@ export default {
       const project = this.currentProject()
       if (project) {
         this.setAccountsTag(project.symbol)
+        this.showSummary = true
 
         this.summaryMap.set('Symbol', project.symbol)
         this.summaryMap.set('Amount', project.tokenAmount)
@@ -180,6 +184,7 @@ export default {
         this.summaryMap.set('Distributor Secret', project.distributorSecret)
       } else {
         this.setAccountsTag(null)
+        this.showSummary = false
       }
     },
     currentProject() {
