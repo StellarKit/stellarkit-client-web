@@ -42,6 +42,7 @@
       </div>
 
       <div class='button-holder'>
+        <v-btn round @click="sendTokens()">Send Tokens</v-btn>
         <v-btn round @click="manageOffer()">Manage Offer</v-btn>
         <v-btn round @click="showOffers()">Show Offers</v-btn>
         <v-btn round @click="deleteOffers()">Delete Offers</v-btn>
@@ -52,6 +53,7 @@
   </div>
 
   <manage-offer-dialog :ping='offerDialogPing' :project='dialogProject' />
+  <send-tokens-dialog :ping='sendTokensDialogPing' :project='dialogProject' />
   <create-account-dialog :ping='accountDialogPing' :project='dialogProject' />
   <create-token-dialog v-on:token-created='createDialogResult' :ping='createDialogPing ' />
 </div>
@@ -64,6 +66,7 @@ import AccountList from '../components/AccountList.vue'
 import CreateTokenDialog from '../components/dialogs/CreateTokenDialog.vue'
 import CreateAccountDialog from '../components/dialogs/CreateAccountDialog.vue'
 import ManageOfferDialog from '../components/dialogs/ManageOfferDialog.vue'
+import SendTokensDialog from '../components/dialogs/SendTokensDialog.vue'
 import StyleExtractionMixin from '../components/StyleExtractionMixin.js'
 const $ = require('jquery')
 import StellarUtils from '../js/StellarUtils.js'
@@ -77,7 +80,8 @@ export default {
     'account-list': AccountList,
     'create-token-dialog': CreateTokenDialog,
     'manage-offer-dialog': ManageOfferDialog,
-    'create-account-dialog': CreateAccountDialog
+    'create-account-dialog': CreateAccountDialog,
+    'send-tokens-dialog': SendTokensDialog
   },
   computed: {
     menuButtonName: function () {
@@ -113,6 +117,7 @@ export default {
       projectIndex: 0,
       createDialogPing: false,
       offerDialogPing: false,
+      sendTokensDialogPing: false,
       dialogProject: null,
       accountDialogPing: false
     }
@@ -191,6 +196,10 @@ export default {
     manageOffer() {
       this.dialogProject = this.currentProject()
       this.offerDialogPing = !this.offerDialogPing
+    },
+    sendTokens() {
+      this.dialogProject = this.currentProject()
+      this.sendTokensDialogPing = !this.sendTokensDialogPing
     },
     createUserAccount() {
       this.dialogProject = this.currentProject()

@@ -85,15 +85,13 @@ export default {
       this.visible = true
       this.domain = ''
       this.statusMessage = ''
+      this.accountName = generateName()
 
       // autofocus hack
       this.$nextTick(() => {
         this.$refs.input.focus()
       })
     }
-  },
-  mounted() {
-    this.accountName = generateName()
   },
   methods: {
     createAccount() {

@@ -95,7 +95,7 @@ export default {
         path: '/trades'
       }, {
         icon: String.fromCharCode('0xE3E7'),
-        tooltip: 'ICO Wizard',
+        tooltip: 'ICO Manager',
         path: '/ico'
       }, {
         icon: String.fromCharCode('0xE1E0'),

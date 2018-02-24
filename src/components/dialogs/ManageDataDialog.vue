@@ -82,7 +82,7 @@ export default {
           this.statusMessage = 'Setting key value data...'
           this.loading = true
 
-          StellarUtils.manageData(sourceWallet, this.name, this.value)
+          StellarUtils.manageData(sourceWallet, null, this.name, this.value)
             .then((result) => {
               Helper.debugLog(result)
               this.loading = false
