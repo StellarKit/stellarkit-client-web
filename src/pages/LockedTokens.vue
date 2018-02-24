@@ -1,13 +1,12 @@
 <template>
 <div>
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
+  <div class='page-title'>
+    Lock-up Period for Tokens
+  </div>
 
   <div class='top-controls'>
     <div class='instructions'>
-      <div class='page-title'>
-        Lock-up Period for Tokens
-      </div>
-
       <div>
         Many ICOs require a lock-up period for assets after they are sold, even if just for the duration of the public sale. While there are various ways to achieve this in Stellar, we recommend using a multisig escrow account.
       </div>
