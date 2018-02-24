@@ -4,8 +4,10 @@ import StellarAccounts from './StellarAccounts.js'
 import StellarServer from './StellarServer.js'
 import Helper from '../js/helper.js'
 import {
-  StellarWallet
+  StellarWallet,
+  LedgerAPI
 } from 'stellar-js-utils'
+import axios from 'axios'
 
 class StellarUtils {
   constructor() {
@@ -172,6 +174,49 @@ class StellarUtils {
       })
   }
 
+  displayLedgerInfo() {
+    const fundingWallet = StellarWallet.ledger(new LedgerAPI())
+    fundingWallet.publicKey()
+      .then((publicKey) => {
+        return this.api().accountInfo(publicKey)
+      })
+      .then((info) => {
+        Helper.debugLog(info)
+      })
+  }
+
+  sendTestnetXLMToLedger() {
+    let ledgerPublicKey
+
+    const fundingWallet = StellarWallet.ledger(new LedgerAPI())
+    fundingWallet.publicKey()
+      .then((publicKey) => {
+        const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + publicKey
+
+        ledgerPublicKey = publicKey
+
+        return axios.get(url)
+      })
+      .then((info) => {
+        Helper.debugLog(info)
+      })
+      .catch((error) => {
+        Helper.debugLog(error, 'Error')
+
+        // we get op_already_exists if this account already exists, so create new account and merge
+        if (Helper.strOK(ledgerPublicKey)) {
+          const keyPair = StellarSdk.Keypair.random()
+          const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + keyPair.publicKey()
+          return axios.get(url)
+            .then((data) => {
+              Helper.debugLog(data, 'Success')
+
+              return this.api().mergeAccount(StellarWallet.secret(keyPair.secret()), ledgerPublicKey)
+            })
+        }
+      })
+  }
+
   createTestAccount(name = null) {
     return new Promise((resolve, reject) => {
       const keyPair = StellarSdk.Keypair.random()
@@ -181,6 +226,8 @@ class StellarUtils {
       const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + keyPair.publicKey()
 
       $.get(url, (data) => {
+        Helper.debugLog(data, 'Success')
+
         // refresh balance on just this account
         // asking same server as friendbot assuming our node might not be 100% synced?
         this.friendBotServer().loadAccount(keyPair.publicKey())
@@ -198,7 +245,7 @@ class StellarUtils {
             resolve(accountRec)
           })
           .catch((error) => {
-            console.log(JSON.stringify(data))
+            Helper.debugLog(error, 'Error')
 
             // delete the account friend bot failed
             StellarAccounts.replaceAccountWithPublicKey(null, accountRec.publicKey)

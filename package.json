@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "sillyname": "^0.1.0",
+    "axios": "^0.17.1",
     "localforage": "^1.5.7",
     "gsap": "^1.20.4",
     "stellar-js-utils": "git://github.com/StellarKit/stellar-js-utils",

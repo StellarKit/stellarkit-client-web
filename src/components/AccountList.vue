@@ -94,7 +94,7 @@ export default {
           Helper.debugLog(result)
         })
         .catch((error) => {
-          Helper.debugLog(error)
+          Helper.debugLog(error, 'Error')
         })
     },
     clickItem(item) {

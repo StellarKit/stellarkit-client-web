@@ -48,6 +48,8 @@
         <v-btn round @click="deleteOffers()">Delete Offers</v-btn>
         <v-btn round @click="lockIssuer()">Lock Issuer</v-btn>
         <v-btn round @click="createUserAccount()">Create Account</v-btn>
+        <v-btn round @click="displayLedgerInfo()">Display Ledger Info</v-btn>
+        <v-btn round @click="sendTestnetXLMToLedger()">Refill Ledger Balance</v-btn>
       </div>
     </div>
   </div>
@@ -130,6 +132,12 @@ export default {
     this.updateProjectIndex(0)
   },
   methods: {
+    displayLedgerInfo() {
+      StellarUtils.displayLedgerInfo()
+    },
+    sendTestnetXLMToLedger() {
+      StellarUtils.sendTestnetXLMToLedger()
+    },
     deleteTokenProject() {
       this.tokenProjects.splice(this.projectIndex, 1)
       this.saveProjects()
