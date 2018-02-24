@@ -84,7 +84,7 @@ export default {
 
         const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
 
-        StellarUtils.manageOffer(StellarWallet.secret(this.project.distributorSecret), StellarUtils.lumins(), asset, String(this.offerAmount), price)
+        StellarUtils.manageOffer(StellarWallet.secret(this.project.distributorSecret), null, StellarUtils.lumins(), asset, String(this.offerAmount), price)
           .then((result) => {
             Helper.debugLog(result, 'Success')
             return null

@@ -196,7 +196,7 @@ export default {
         d: parseInt(this.offerPriceD)
       }
 
-      StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), String(this.offerAmount), price)
+      StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), null, StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), String(this.offerAmount), price)
         .then((result) => {
           Helper.debugLog(result, 'Success')
 
@@ -214,7 +214,7 @@ export default {
         d: 10
       }
 
-      StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), StellarAccounts.ethereumAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
+      StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), null, StellarAccounts.ethereumAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
         .then((result) => {
           Helper.debugLog(result, 'Success')
 
@@ -232,7 +232,7 @@ export default {
         d: 10
       }
 
-      StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), StellarAccounts.bitcoinAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
+      StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), null, StellarAccounts.bitcoinAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
         .then((result) => {
           Helper.debugLog(result, 'Success')
 
@@ -335,7 +335,7 @@ export default {
           const buying = StellarUtils.assetFromObject(offer.buying)
           const selling = StellarUtils.assetFromObject(offer.selling)
 
-          StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), buying, selling, '0', offer.price_r, offer.id)
+          StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), null, buying, selling, '0', offer.price_r, offer.id)
             .then((result) => {
               Helper.debugLog(result, 'Success')
 

@@ -221,7 +221,7 @@ export default {
           const buying = StellarUtils.assetFromObject(offer.buying)
           const selling = StellarUtils.assetFromObject(offer.selling)
 
-          StellarUtils.manageOffer(StellarWallet.secret(project.distributorSecret), buying, selling, '0', offer.price_r, offer.id)
+          StellarUtils.manageOffer(StellarWallet.secret(project.distributorSecret), null, buying, selling, '0', offer.price_r, offer.id)
             .then((result) => {
               Helper.debugLog(result, 'Success')
 
