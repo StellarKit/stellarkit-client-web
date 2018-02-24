@@ -7,6 +7,22 @@
     <div class='page-subtitle' style="color: red;">
       Only works with Ledger Nano. Under Construction
     </div>
+    <div class='ledger-menu'>
+      <v-menu offset-y :transition=false>
+        <v-btn small color='secondary' :ripple=false slot="activator">
+          Ledger Nano
+          <v-icon>&#xE5C5;</v-icon>
+        </v-btn>
+        <v-list dense>
+          <v-list-tile @click="ledgerMenu('info')">
+            <v-list-tile-title>Display Ledger Info</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="ledgerMenu('refill')">
+            <v-list-tile-title>Refill Ledger Balance</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
+    </div>
   </div>
   <div class='page-contents'>
 
@@ -48,8 +64,6 @@
         <v-btn round @click="deleteOffers()">Delete Offers</v-btn>
         <v-btn round @click="lockIssuer()">Lock Issuer</v-btn>
         <v-btn round @click="createUserAccount()">Create Account</v-btn>
-        <v-btn round @click="displayLedgerInfo()">Display Ledger Info</v-btn>
-        <v-btn round @click="sendTestnetXLMToLedger()">Refill Ledger Balance</v-btn>
       </div>
     </div>
   </div>
@@ -132,11 +146,17 @@ export default {
     this.updateProjectIndex(0)
   },
   methods: {
-    displayLedgerInfo() {
-      StellarUtils.displayLedgerInfo()
-    },
-    sendTestnetXLMToLedger() {
-      StellarUtils.sendTestnetXLMToLedger()
+    ledgerMenu(id) {
+      switch (id) {
+        case 'info':
+          StellarUtils.displayLedgerInfo()
+          break
+        case 'refill':
+          StellarUtils.sendTestnetXLMToLedger()
+          break
+        default:
+          break
+      }
     },
     deleteTokenProject() {
       this.tokenProjects.splice(this.projectIndex, 1)
@@ -362,6 +382,12 @@ export default {
             display: flex;
             justify-content: center;
         }
+    }
+
+    .ledger-menu {
+        position: absolute;
+        top: 0;
+        right: 0;
     }
 }
 </style>

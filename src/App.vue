@@ -223,6 +223,7 @@ html {
 <style  lang='scss'>
 // used on each page (not in app)
 .page-title {
+    position: relative;
     text-align: center;
     font-weight: bold;
     font-size: 1.2em;

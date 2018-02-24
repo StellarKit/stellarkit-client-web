@@ -188,6 +188,8 @@ class StellarUtils {
   sendTestnetXLMToLedger() {
     let ledgerPublicKey
 
+    Helper.debugLog('refilling ledger...')
+
     const fundingWallet = StellarWallet.ledger(new LedgerAPI())
     fundingWallet.publicKey()
       .then((publicKey) => {
@@ -205,6 +207,8 @@ class StellarUtils {
 
         // we get op_already_exists if this account already exists, so create new account and merge
         if (Helper.strOK(ledgerPublicKey)) {
+          Helper.debugLog('creating new account and merging...')
+
           const keyPair = StellarSdk.Keypair.random()
           const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + keyPair.publicKey()
           return axios.get(url)
