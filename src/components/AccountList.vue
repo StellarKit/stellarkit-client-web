@@ -155,7 +155,7 @@ export default {
 
     .zero-accounts {
         text-align: center;
-        padding: 30px 0;
+        padding: 12px 0;
         font-size: 2em;
         color: rgba(255,255,255,.2);
         text-transform: uppercase;
