@@ -32,7 +32,8 @@
 import Helper from '../../js/helper.js'
 import {
   DialogTitleBar,
-  StellarWallet
+  StellarWallet,
+  LedgerAPI
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
@@ -46,7 +47,10 @@ export default {
   },
   computed: {
     sellLabel: function () {
-      return 'Sell ' + this.project.symbol
+      if (this.project) {
+        return 'Sell ' + this.project.symbol
+      }
+      return 'Sell Token'
     }
   },
   data() {
@@ -76,6 +80,11 @@ export default {
     manageOffer() {
       Helper.debugLog('Managing Offer...')
 
+      const fundingWallet = StellarWallet.ledger(new LedgerAPI(), () => {
+        this.statusMessage = 'Confirm transaction on Ledger Nano'
+        this.displayToast(this.statusMessage)
+      })
+
       if (this.project) {
         const price = {
           n: this.offerPriceN,
@@ -84,18 +93,27 @@ export default {
 
         const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
 
-        StellarUtils.manageOffer(StellarWallet.secret(this.project.distributorSecret), null, StellarUtils.lumins(), asset, String(this.offerAmount), price)
+        StellarUtils.manageOffer(StellarWallet.secret(this.project.distributorSecret), fundingWallet, StellarUtils.lumins(), asset, String(this.offerAmount), price)
           .then((result) => {
             Helper.debugLog(result, 'Success')
+            this.displayToast('Success')
+
             return null
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
+
+            let message = error.message
+            if (message === 'connection failed') {
+              message = 'Ledger Nano not found'
+            }
+
+            this.displayToast(message, true)
           })
       }
     },
-    displayErrorMessage(message) {
-      Helper.toast(message, true, 'manage-offer-dialog')
+    displayToast(message, error = false) {
+      Helper.toast(message, error, 'manage-offer-dialog')
     }
   }
 }
