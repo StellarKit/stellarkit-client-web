@@ -68,7 +68,7 @@ export default {
   methods: {
     createToken() {
       let issuerKeypair = null
-      let issuingAsset = null
+      let asset = null
 
       if (this.amount < 1) {
         this.statusMessage = 'Create token amount must be greater than 0'
@@ -91,20 +91,21 @@ export default {
         .then((accountInfo) => {
           issuerKeypair = accountInfo.keypair
           const issuerWallet = StellarWallet.secret(issuerKeypair.secret())
-          issuingAsset = new StellarSdk.Asset(this.symbol, issuerKeypair.publicKey())
+          asset = new StellarSdk.Asset(this.symbol, issuerKeypair.publicKey())
 
           // create distributor from issuer
-          return StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, '2', issuingAsset, String(this.amount), 'Distributor: ' + this.symbol, this.symbol)
+          return StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, '2', asset, String(this.amount), 'Distributor: ' + this.symbol, this.symbol)
         })
         .then((accountInfo) => {
           // return results and close
-          this.$emit('token-created', issuerKeypair, accountInfo.keypair, issuingAsset)
+          this.$emit('token-created', issuerKeypair, accountInfo.keypair, asset)
           this.visible = false
 
           return null
         })
         .catch((error) => {
           this.statusMessage = 'Error: ' + error.message
+          Helper.debugLog(error)
         })
         .finally(() => {
           this.loading = false

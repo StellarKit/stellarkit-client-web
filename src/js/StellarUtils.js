@@ -154,8 +154,11 @@ class StellarUtils {
       .then((result) => {
         info = result
 
+        // just make sure limit is at least > amount, but boosting it up just in case
+        const trustLimit = Math.max(amount * 2, 100000)
+
         Helper.debugLog('setting trust...')
-        return this.changeTrust(StellarWallet.secret(info.keypair.secret()), asset, '100000')
+        return this.changeTrust(StellarWallet.secret(info.keypair.secret()), asset, String(trustLimit))
       })
       .then((result) => {
         Helper.debugLog('sending tokens...')
