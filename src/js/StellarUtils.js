@@ -1,5 +1,4 @@
 const StellarSdk = require('stellar-sdk')
-const $ = require('jquery')
 import StellarAccounts from './StellarAccounts.js'
 import StellarServer from './StellarServer.js'
 import Helper from '../js/helper.js'
@@ -222,15 +221,13 @@ class StellarUtils {
   }
 
   createTestAccount(name = null) {
-    return new Promise((resolve, reject) => {
-      const keyPair = StellarSdk.Keypair.random()
+    const keyPair = StellarSdk.Keypair.random()
+    const accountRec = StellarAccounts.addAccount(keyPair, name)
 
-      const accountRec = StellarAccounts.addAccount(keyPair, name)
-
-      const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + keyPair.publicKey()
-
-      $.get(url, (data) => {
-        Helper.debugLog(data, 'Success')
+    const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + keyPair.publicKey()
+    return axios.get(url)
+      .then((info) => {
+        Helper.debugLog(info, 'Success')
 
         // refresh balance on just this account
         // asking same server as friendbot assuming our node might not be 100% synced?
@@ -246,20 +243,15 @@ class StellarUtils {
 
             StellarAccounts.replaceAccountWithPublicKey(accountRec, accountRec.publicKey)
 
-            resolve(accountRec)
+            return accountRec
           })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-
-            // delete the account friend bot failed
-            StellarAccounts.replaceAccountWithPublicKey(null, accountRec.publicKey)
-
-            reject(error)
-          })
-      }, 'json').fail((err) => {
-        reject(err)
       })
-    })
+      .catch((error) => {
+        Helper.debugLog(error, 'Error')
+
+        // delete the account friend bot failed
+        StellarAccounts.replaceAccountWithPublicKey(null, accountRec.publicKey)
+      })
   }
 
   updateBalances(logSuccess = false) {

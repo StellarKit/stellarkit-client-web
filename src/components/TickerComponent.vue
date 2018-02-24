@@ -7,7 +7,7 @@
 </template>
 
 <script>
-const $ = require('jquery')
+const axios = require('axios')
 
 export default {
   data() {
@@ -27,26 +27,29 @@ export default {
   },
   methods: {
     fetch() {
-      $.get('https://api.coinmarketcap.com/v1/ticker/stellar/', {
-        json: true
-      }, (data) => {
-        const item = data[0]
-        this.price = parseFloat(item.price_usd).toFixed(4)
+      const url = 'https://api.coinmarketcap.com/v1/ticker/stellar/'
+      axios.get(url)
+        .then((result) => {
+          const item = result.data[0]
+          this.price = parseFloat(item.price_usd).toFixed(4)
 
-        const percentage = parseFloat(item.percent_change_24h)
-        this.goingUp = true
-        if (percentage < 0) {
-          this.goingUp = false
-        }
-        this.percentChange = percentage
+          const percentage = parseFloat(item.percent_change_24h)
+          this.goingUp = true
+          if (percentage < 0) {
+            this.goingUp = false
+          }
+          this.percentChange = percentage
 
-        const vol = Number(parseInt(item['24h_volume_usd']))
-        this.volume = vol.toLocaleString()
+          const vol = Number(parseInt(item['24h_volume_usd']))
+          this.volume = vol.toLocaleString()
 
-        this.valid = true
-      }, 'json').fail(() => {
-        console.log('failed')
-      })
+          this.valid = true
+
+          return null
+        })
+        .catch((error) => {
+          console.log(JSON.stringify(error))
+        })
     }
   }
 }
