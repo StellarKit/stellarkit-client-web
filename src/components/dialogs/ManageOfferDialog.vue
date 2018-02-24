@@ -12,7 +12,7 @@
         <strong>Price:</strong>
         <v-text-field label="Buy XLM" type='number' v-model.number="offerPriceN" ref='input'></v-text-field>
         <v-text-field :label="sellLabel" type='number' v-model.number="offerPriceD"></v-text-field>
-        <v-text-field label="Amount to sell" type='number' v-model.number="offerAmount"></v-text-field>
+        <v-text-field label="Amount to sell" type='number' v-model.number="offerAmount" @keyup.enter="manageOffer()"></v-text-field>
       </div>
       <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>

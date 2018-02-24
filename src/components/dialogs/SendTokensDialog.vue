@@ -10,7 +10,7 @@
       </div>
       <div class='help-email'>
         <v-text-field label="Destination public key" v-model="publicKey" ref='input'></v-text-field>
-        <v-text-field label="Amount to sell" type='number' v-model.number="amount"></v-text-field>
+        <v-text-field label="Amount to sell" type='number' v-model.number="amount" @keyup.enter="sendTokens()"></v-text-field>
       </div>
       <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>

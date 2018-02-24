@@ -9,12 +9,12 @@
         <div class='sub-header'> {{subHeader}} </div>
       </div>
       <div class='help-email'>
-        <v-text-field :label='inputLabel' v-model.trim="domain" @keyup.native.enter="doOperation()" ref='input'></v-text-field>
+        <v-text-field :label='inputLabel' v-model.trim="domain" @keyup.enter="doOperation()" ref='input'></v-text-field>
       </div>
       <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round color='primary' slot="activator" @click.native="doOperation()" :loading="loading">{{buttonTitle}}</v-btn>
+          <v-btn round color='primary' slot="activator" @click="doOperation()" :loading="loading">{{buttonTitle}}</v-btn>
           <span>{{tooltip}}</span>
         </v-tooltip>
       </div>

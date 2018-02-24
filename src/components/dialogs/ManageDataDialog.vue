@@ -14,13 +14,13 @@
       </div>
 
       <div class='help-email'>
-        <v-text-field label='Name' v-model.trim="name" @keyup.native.enter="addData()" ref='input'></v-text-field>
-        <v-text-field label='Value' v-model.trim="value" @keyup.native.enter="addData()" ref='input'></v-text-field>
+        <v-text-field label='Name' v-model.trim="name" @keyup.enter="addData()" ref='input'></v-text-field>
+        <v-text-field label='Value' v-model.trim="value" @keyup.enter="addData()"></v-text-field>
       </div>
       <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round color='primary' slot="activator" @click.native="addData()" :loading="loading">Add Data</v-btn>
+          <v-btn round color='primary' slot="activator" @click="addData()" :loading="loading">Add Data</v-btn>
           <span>{{tooltip}}</span>
         </v-tooltip>
       </div>
