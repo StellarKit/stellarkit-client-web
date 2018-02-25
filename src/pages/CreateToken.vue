@@ -467,6 +467,7 @@ export default {
 .bottom-buttons {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .token-steps {

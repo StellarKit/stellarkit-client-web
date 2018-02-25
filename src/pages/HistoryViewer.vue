@@ -221,6 +221,8 @@ export default {
 .address-box {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+
     div.input-group {
         max-width: 250px;
     }

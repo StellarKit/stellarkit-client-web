@@ -3,32 +3,7 @@
   <div class='app-wrapper' v-if='!initializing'>
     <navivation-drawer :ping='showNavigation' />
     <div class='main-container'>
-      <div class="top-bar">
-        <v-tabs centered>
-          <ticker-component />
-
-          <v-toolbar dark class='top-toolbar'>
-            <v-toolbar-side-icon @click='showDrawer'></v-toolbar-side-icon>
-            <v-toolbar-title>{{pageTitle()}}</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn icon @click="showGitHub">
-              <v-icon>fa-github</v-icon>
-            </v-btn>
-            <v-tabs-bar slot="extension">
-              <v-tabs-item v-if='!tab.disabled' v-for='tab in tabs' :to='tab.path' exact :key='tab.path' class="custom-tab-item">
-                <v-tooltip open-delay='800' bottom>
-                  <div slot='activator' class='custom-tab-content'>
-                    <v-icon v-html='tab.icon'></v-icon>
-                    <div class='bottom-bar' />
-                  </div>
-                  <span>{{tab.tooltip}}</span>
-                </v-tooltip>
-              </v-tabs-item>
-            </v-tabs-bar>
-          </v-toolbar>
-        </v-tabs>
-      </div>
-
+      <header-bar v-on:show-drawer='showDrawer' v-on:show-github='showGitHub' />
       <network-menu />
       <div class='app-content'>
         <div class='router-container '>
@@ -48,6 +23,7 @@
 <script>
 import './scss/vuetify/main.styl'
 import NavigationDrawer from './components/NavigationDrawer.vue'
+import HeaderBar from './components/HeaderBar.vue'
 import TickerComponent from './components/TickerComponent.vue'
 import ConsoleComponent from './components/ConsoleComponent.vue'
 import NetworkMenu from './components/NetworkMenu.vue'
@@ -61,7 +37,8 @@ export default {
     'navivation-drawer': NavigationDrawer,
     'network-menu': NetworkMenu,
     'toast-component': ToastComponent,
-    'console': ConsoleComponent
+    'console': ConsoleComponent,
+    'header-bar': HeaderBar
   },
   data() {
     return {
@@ -148,17 +125,6 @@ html {
 #app {
     height: 100%;
 }
-
-// hack for toolbar being too tall
-#app > div.application--wrap > div > div.main-container > div.top-bar > div > nav > div.toolbar__content {
-    height: auto !important;
-}
-
-// hack for toolbar title left margin
-#app > div.application--wrap > div > div.main-container > div.top-bar > div > nav > div.toolbar__content > div.toolbar__title {
-    margin: 0;
-    font-size: 1.3em;
-}
 </style>
 
 <style  lang='scss' scoped>
@@ -171,38 +137,6 @@ html {
     display: flex;
     flex: 1;
     flex-direction: column;
-
-    .top-bar {
-        width: 100%;
-        box-shadow: 0 1px 4px rgba(0,0,0,.5);
-
-        .top-toolbar {
-            background: linear-gradient(to bottom, rgb(55,55,55) , rgb(22,22,22));
-        }
-
-        li.custom-tab-item {
-            color: white;
-
-            a.tabs__item {
-                .custom-tab-content {
-                    display: flex;
-                    flex-direction: column;
-
-                    .bottom-bar {
-                        opacity: 0;
-                        height: 2px;
-                        width: 100%;
-                        background: white;
-                    }
-                }
-                &.tabs__item--active {
-                    .bottom-bar {
-                        opacity: 1;
-                    }
-                }
-            }
-        }
-    }
 
     .app-content {
         display: flex;
