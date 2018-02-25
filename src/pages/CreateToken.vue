@@ -4,6 +4,7 @@
   <instructions-header>
     <div>1. Start with three accounts: Issuer, Distributor and Buyer</div>
     <div>2. Click each button in order, but wait for each to complete</div>
+    <div>3. Sometimes the friendbot gets weird and fails to create accounts</div>
   </instructions-header>
 
   <div class='expansion-contents'>
