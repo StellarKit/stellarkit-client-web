@@ -2,16 +2,18 @@
 <div>
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
   <instructions-header>
-    <div>Content coming soon...</div>
+    <div>1. Works with Ledger nano to fund creating accounts.</div>
+    <div>2. Use the Ledger button on right to add testnet XLM.</div>
+    <div>3. Launch Stellar App on Ledger.</div>
   </instructions-header>
 
   <div class='page-title'>
-    <div class='page-subtitle' style="color: red;">
+    <div class='page-subtitle'>
       Only works with Ledger Nano. Under Construction
     </div>
-    <div class='ledger-menu'>
+    <div>
       <v-menu offset-y :transition=false>
-        <v-btn small color='primary' :ripple=false slot="activator">
+        <v-btn small :ripple=false slot="activator">
           Ledger Nano
           <v-icon>&#xE5C5;</v-icon>
         </v-btn>
@@ -27,9 +29,8 @@
     </div>
   </div>
   <div class='page-contents'>
-
     <v-menu offset-y :transition=false>
-      <v-btn small :ripple=false slot="activator">
+      <v-btn small color='primary' :ripple=false slot="activator">
         {{menuButtonName}}
         <v-icon>&#xE5C5;</v-icon>
       </v-btn>
@@ -336,63 +337,63 @@ export default {
 <style scoped lang='scss'>
 @import '../scss/styles.scss';
 
-.main-container {
-    width: 100%;
+.page-title {
+    position: relative;
+    font-weight: bold;
+    font-size: 1.2em;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    align-content: center;
 
-    .page-contents {
-        width: 100%;
+    .page-subtitle {
+        font-size: 0.9em;
+        font-weight: normal;
+    }
+}
+
+.page-contents {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.summary-view {
+    margin: 10px;
+
+    display: flex;
+    flex: 0 1 auto;
+    flex-direction: column;
+
+    .summary-header {
         display: flex;
-        flex-direction: column;
+        font-weight: bold;
+        font-size: 1.1em;
+        text-transform: uppercase;
         align-items: center;
-
-        min-height: 300px;
+        justify-content: center;
+        margin-bottom: 10px;
     }
 
-    .summary-view {
-        margin: 10px;
-
+    .operations-item {
         display: flex;
-        flex: 0 1 auto;
-        flex-direction: column;
+        font-size: 0.95em;
 
-        .summary-header {
-            display: flex;
+        .item-name {
+            text-align: right;
+            padding-right: 5px;
             font-weight: bold;
-            font-size: 1.1em;
-            text-transform: uppercase;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
+            flex: 1 1 20%;
         }
 
-        .operations-item {
-            display: flex;
-            font-size: 0.95em;
-
-            .item-name {
-                text-align: right;
-                padding-right: 5px;
-                font-weight: bold;
-                flex: 1 0 20%;
-            }
-
-            .item-value {
-                text-align: left;
-                flex: 1 0 80%;
-                padding-left: 5px;
-            }
+        .item-value {
+            text-align: left;
+            flex: 2 2 80%;
+            padding-left: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 0;
         }
-    }
-
-    .ledger-menu {
-        position: absolute;
-        top: 0;
-        right: 0;
     }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
 <div class='header-bar'>
   <div class='left-header-bar'>
-    <v-btn dark icon small @click='clickButton("menu")'>
+    <v-btn icon small @click='clickButton("menu")'>
       <v-icon>&#xE5D2;</v-icon>
     </v-btn>
 
@@ -110,7 +110,7 @@ export default {
 
         .tab-indicator {
             font-size: 1.2em;
-            color: rgba(255,255,255,.2);
+            color: rgba(255,255,255,.4);
             font-weight: bold;
         }
         @media all and (max-width: 600px) {
