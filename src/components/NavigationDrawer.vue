@@ -1,16 +1,16 @@
 <template>
-<v-navigation-drawer absolute clipped dark temporary v-model="drawer">
-  <v-toolbar>
-    <v-list>
+<v-navigation-drawer absolute clipped temporary v-model="drawer">
+  <div>
+    <v-list dense>
       <v-list-tile @click="clickItem()">
         <v-list-tile-title class="title">
           {{applicationName}}
         </v-list-tile-title>
       </v-list-tile>
     </v-list>
-  </v-toolbar>
+  </div>
   <v-divider></v-divider>
-  <v-list>
+  <v-list dense>
     <v-list-tile v-for="item in items" :key="item.title" @click="clickItem(item)">
       <v-list-tile-action>
         <v-icon>{{ item.icon }}</v-icon>
