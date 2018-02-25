@@ -2,10 +2,6 @@
 <div>
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
   <instructions-header>
-    <div>Content coming soon...</div>
-  </instructions-header>
-
-  <div class='top-controls'>
     <div class='instructions'>
       <div>
         Many ICOs require a lock-up period for assets after they are sold, even if just for the duration of the public sale. While there are various ways to achieve this in Stellar, we recommend using a multisig escrow account.
@@ -24,7 +20,9 @@
         <strong>Note:</strong> The AUTH REVOCABLE flag is a <strong>problematic</strong> mechanism because it does not provide the user any guarantees with regard to when or if the assets will be unlocked.
       </div>
     </div>
+  </instructions-header>
 
+  <div class='top-controls'>
     <v-btn round small @click="createAccountWithLockedTokens()">Create Account with Locked Tokens</v-btn>
 
     <div class='address-box'>
