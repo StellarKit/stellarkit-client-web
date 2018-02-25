@@ -8,7 +8,7 @@
     <div class='address-box'>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
       <v-menu offset-y :transition=false>
-        <v-btn :ripple=false slot="activator">
+        <v-btn small :ripple=false slot="activator">
           {{buttonTitle}}
           <v-icon>&#xE5C5;</v-icon>
         </v-btn>
@@ -19,7 +19,7 @@
         </v-list>
       </v-menu>
       <v-menu offset-y :transition=false>
-        <v-btn :ripple=false slot="activator">
+        <v-btn small :ripple=false slot="activator">
           {{orderButtonTitle}}
           <v-icon>&#xE5C5;</v-icon>
         </v-btn>

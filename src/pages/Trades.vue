@@ -4,10 +4,10 @@
     View Streams
   </div>
 
-  <!-- <v-btn round @click="assets()">Assets</v-btn> -->
-  <v-btn round @click="streamPayments()">{{paymentsButtonName}}</v-btn>
-  <v-btn round @click="streamOperations()">{{operationsButtonName}}</v-btn>
-  <v-btn round @click="streamTrades()">{{tradesButtonName}}</v-btn>
+  <!-- <v-btn round small @click="assets()">Assets</v-btn> -->
+  <v-btn round small @click="streamPayments()">{{paymentsButtonName}}</v-btn>
+  <v-btn round small @click="streamOperations()">{{operationsButtonName}}</v-btn>
+  <v-btn round small @click="streamTrades()">{{tradesButtonName}}</v-btn>
 
   <div class="operations-content">
     <div class='operations-title'>Live Stream</div>

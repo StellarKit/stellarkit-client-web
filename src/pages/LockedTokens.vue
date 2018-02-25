@@ -25,14 +25,14 @@
       </div>
     </div>
 
-    <v-btn round @click="createAccountWithLockedTokens()">Create Account with Locked Tokens</v-btn>
+    <v-btn round small @click="createAccountWithLockedTokens()">Create Account with Locked Tokens</v-btn>
 
     <div class='address-box'>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
     </div>
-    <v-btn round @click="createUnlockTransaction()">Create Unlock Transaction</v-btn>
-    <v-btn round @click="viewTransaction()">View Transaction</v-btn>
-    <v-btn round @click="submitTransaction()">Submit Transaction</v-btn>
+    <v-btn round small @click="createUnlockTransaction()">Create Unlock Transaction</v-btn>
+    <v-btn round small @click="viewTransaction()">View Transaction</v-btn>
+    <v-btn round small @click="submitTransaction()">Submit Transaction</v-btn>
 
   </div>
 

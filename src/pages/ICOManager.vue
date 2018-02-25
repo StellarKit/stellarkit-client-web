@@ -27,7 +27,7 @@
   <div class='page-contents'>
 
     <v-menu offset-y :transition=false>
-      <v-btn :ripple=false slot="activator">
+      <v-btn small :ripple=false slot="activator">
         {{menuButtonName}}
         <v-icon>&#xE5C5;</v-icon>
       </v-btn>
@@ -58,12 +58,12 @@
       </div>
 
       <div class='button-holder'>
-        <v-btn round @click="sendTokens()">Send Tokens</v-btn>
-        <v-btn round @click="manageOffer()">Manage Offer</v-btn>
-        <v-btn round @click="showOffers()">Show Offers</v-btn>
-        <v-btn round @click="deleteOffers()">Delete Offers</v-btn>
-        <v-btn round @click="lockIssuer()">Lock Issuer</v-btn>
-        <v-btn round @click="createUserAccount()">Create Account</v-btn>
+        <v-btn round small @click="sendTokens()">Send Tokens</v-btn>
+        <v-btn round small @click="manageOffer()">Manage Offer</v-btn>
+        <v-btn round small @click="showOffers()">Show Offers</v-btn>
+        <v-btn round small @click="deleteOffers()">Delete Offers</v-btn>
+        <v-btn round small @click="lockIssuer()">Lock Issuer</v-btn>
+        <v-btn round small @click="createUserAccount()">Create Account</v-btn>
       </div>
     </div>
   </div>

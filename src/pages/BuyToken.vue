@@ -6,7 +6,7 @@
 
   <div>This is only going to work if you have setup a local server with Bifrost, BTC and ETH servers configured. </div>
   <div>See <a href="https://github.com/StellarKit" target="_blank">https://github.com/StellarKit</a> for docker images to test on testnet.</div>
-  <v-btn round @click="showDialog">Buy Token</v-btn>
+  <v-btn round small @click="showDialog">Buy Token</v-btn>
 
   <buy-token-dialog :ping='showDialogPing' :params='params' :allowHTTP='allowHTTP' />
 </div>

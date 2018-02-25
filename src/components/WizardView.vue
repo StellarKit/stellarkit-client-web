@@ -25,10 +25,10 @@
   </div>
 
   <div class='wizard-bottom-box'>
-    <v-btn round color='secondary' @click='buttonClick("previous")' :disabled='disablePreviousButton()'>
+    <v-btn round small color='secondary' @click='buttonClick("previous")' :disabled='disablePreviousButton()'>
       Previous
     </v-btn>
-    <v-btn round color='primary' @click='buttonClick("next")' :disabled='disableNextButton()'>
+    <v-btn round small color='primary' @click='buttonClick("next")' :disabled='disableNextButton()'>
       Next
     </v-btn>
   </div>

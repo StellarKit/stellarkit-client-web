@@ -27,7 +27,7 @@
     ledger's master account is not touched, you are creating a new account that can be signed by your ledger's key. For example, you have a high balance account where you store the majority of your coins and you would like a few smaller balance accounts
     where you can store just a few coins for daily usage.
   </div>
-  <v-btn round @click="createNewAccount()">Create New Account for Ledger</v-btn>
+  <v-btn round small @click="createNewAccount()">Create New Account for Ledger</v-btn>
   <div>
     Now you can test it on the Home tab. First create a new account or use an existing account and send 100 XLM to this new account created. Now select the new account as the source and send XLM back to the account, but click Pay With Signers. It will ask
     you to confirm on your Ledger, and then the payment will go through. The source account isn't signing this transaction, only the ledger.

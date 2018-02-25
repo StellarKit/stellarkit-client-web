@@ -8,7 +8,7 @@
       <div>{{statusMessage}}</div>
 
       <div class='button-holder'>
-        <v-btn round color='primary' slot="activator" @click="submitTransaction()" :loading="loadingTransaction">Submit</v-btn>
+        <v-btn round small color='primary' slot="activator" @click="submitTransaction()" :loading="loadingTransaction">Submit</v-btn>
       </div>
       <toast-component :absolute=true location='transaction-dialog' :bottom=false :top=true />
     </div>

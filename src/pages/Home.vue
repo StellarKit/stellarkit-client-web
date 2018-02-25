@@ -12,26 +12,26 @@
       <v-text-field label="Amount for payments" type='number' v-model.trim="amountForPayments"></v-text-field>
     </div>
 
-    <v-btn round @click="makeSelectedPayment()">Pay</v-btn>
-    <v-btn round @click="infoForSelectedSource()">Info</v-btn>
-    <v-btn round @click="addSignerForSelected()">Add Signer</v-btn>
-    <v-btn round @click="payWithSigners()">Pay with Signers</v-btn>
-    <v-btn round @click="removeSignerForSelected()">Remove Signer</v-btn>
-    <v-btn round @click="mergeSelected()">Merge Selected</v-btn>
-    <v-btn round @click="transactionsForSelectedSource()">Transactions</v-btn>
-    <v-btn round @click="paymentsForSelectedSource()">Payments</v-btn>
-    <v-btn round @click="operationsForSelectedSource()">Operations</v-btn>
+    <v-btn round small @click="makeSelectedPayment()">Pay</v-btn>
+    <v-btn round small @click="infoForSelectedSource()">Info</v-btn>
+    <v-btn round small @click="addSignerForSelected()">Add Signer</v-btn>
+    <v-btn round small @click="payWithSigners()">Pay with Signers</v-btn>
+    <v-btn round small @click="removeSignerForSelected()">Remove Signer</v-btn>
+    <v-btn round small @click="mergeSelected()">Merge Selected</v-btn>
+    <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
+    <v-btn round small @click="paymentsForSelectedSource()">Payments</v-btn>
+    <v-btn round small @click="operationsForSelectedSource()">Operations</v-btn>
 
     <v-tooltip open-delay='800' bottom>
-      <v-btn round slot='activator' @click="trustToken()">Trust Token</v-btn>
+      <v-btn round small slot='activator' @click="trustToken()">Trust Token</v-btn>
       <span>Account must trust token before it can receive</span>
     </v-tooltip>
 
-    <v-btn round @click="sendToken()">Send Token</v-btn>
-    <v-btn round @click="setDomain()">Set Domain</v-btn>
-    <v-btn round @click="setInflation()">Set Inflation Destination</v-btn>
-    <v-btn round @click="testFederation()">Federation Lookup</v-btn>
-    <v-btn round @click="manageDataPing = !manageDataPing">Manage Data</v-btn>
+    <v-btn round small @click="sendToken()">Send Token</v-btn>
+    <v-btn round small @click="setDomain()">Set Domain</v-btn>
+    <v-btn round small @click="setInflation()">Set Inflation Destination</v-btn>
+    <v-btn round small @click="testFederation()">Federation Lookup</v-btn>
+    <v-btn round small @click="manageDataPing = !manageDataPing">Manage Data</v-btn>
   </div>
 
   <manage-data-dialog :ping='manageDataPing' />

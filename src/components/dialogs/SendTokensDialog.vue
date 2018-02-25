@@ -15,7 +15,7 @@
       <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round color='primary' slot="activator" @click="sendTokens()" :loading="loading">Send Tokens</v-btn>
+          <v-btn round small color='primary' slot="activator" @click="sendTokens()" :loading="loading">Send Tokens</v-btn>
           <span>Post an offer to Stellar</span>
         </v-tooltip>
       </div>
