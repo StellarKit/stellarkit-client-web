@@ -237,15 +237,7 @@ class StellarUtils {
         // asking same server as friendbot assuming our node might not be 100% synced?
         this.friendBotServer().loadAccount(keyPair.publicKey())
           .then((account) => {
-            account.balances.forEach((balance) => {
-              if (balance.asset_type === 'native') {
-                accountRec.balances.XLM = balance.balance
-              } else {
-                accountRec.balances[balance.asset_code] = balance.balance
-              }
-            })
-
-            StellarAccounts.replaceAccountWithPublicKey(accountRec, accountRec.publicKey)
+            this.updateBalances()
 
             return accountRec
           })
@@ -254,7 +246,7 @@ class StellarUtils {
         Helper.debugLog(error, 'Error')
 
         // delete the account friend bot failed
-        StellarAccounts.replaceAccountWithPublicKey(null, accountRec.publicKey)
+        StellarAccounts.deleteAccount(accountRec.publicKey)
       })
   }
 

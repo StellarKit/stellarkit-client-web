@@ -156,17 +156,12 @@ class StellarAccounts {
     const accounts = this.shared().accounts()
     const acct = accounts[index]
 
-    acct.balances[symbol] = balance
+    const n = parseFloat(balance)
+    const noZeroes = n.toString() // "1.245"
+
+    acct.balances[symbol] = noZeroes
 
     this.shared().save()
-  }
-
-  replaceAccountWithPublicKey(accountRec, publicKey) {
-    this.deleteAccount(publicKey)
-
-    if (accountRec) {
-      this.shared().add(accountRec)
-    }
   }
 
   secret(index) {
