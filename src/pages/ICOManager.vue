@@ -9,7 +9,7 @@
     </div>
     <div class='ledger-menu'>
       <v-menu offset-y :transition=false>
-        <v-btn small color='secondary' :ripple=false slot="activator">
+        <v-btn small color='primary' :ripple=false slot="activator">
           Ledger Nano
           <v-icon>&#xE5C5;</v-icon>
         </v-btn>

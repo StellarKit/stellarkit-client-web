@@ -11,27 +11,28 @@
       <v-select :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Add signer to source" autocomplete return-object max-height="600"></v-select>
       <v-text-field label="Amount for payments" type='number' v-model.trim="amountForPayments"></v-text-field>
     </div>
+    <div class='button-group'>
+      <v-btn round small @click="makeSelectedPayment()">Pay</v-btn>
+      <v-btn round small @click="infoForSelectedSource()">Info</v-btn>
+      <v-btn round small @click="addSignerForSelected()">Add Signer</v-btn>
+      <v-btn round small @click="payWithSigners()">Pay with Signers</v-btn>
+      <v-btn round small @click="removeSignerForSelected()">Remove Signer</v-btn>
+      <v-btn round small @click="mergeSelected()">Merge Selected</v-btn>
+      <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
+      <v-btn round small @click="paymentsForSelectedSource()">Payments</v-btn>
+      <v-btn round small @click="operationsForSelectedSource()">Operations</v-btn>
 
-    <v-btn round small @click="makeSelectedPayment()">Pay</v-btn>
-    <v-btn round small @click="infoForSelectedSource()">Info</v-btn>
-    <v-btn round small @click="addSignerForSelected()">Add Signer</v-btn>
-    <v-btn round small @click="payWithSigners()">Pay with Signers</v-btn>
-    <v-btn round small @click="removeSignerForSelected()">Remove Signer</v-btn>
-    <v-btn round small @click="mergeSelected()">Merge Selected</v-btn>
-    <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
-    <v-btn round small @click="paymentsForSelectedSource()">Payments</v-btn>
-    <v-btn round small @click="operationsForSelectedSource()">Operations</v-btn>
+      <v-tooltip open-delay='800' bottom>
+        <v-btn round small slot='activator' @click="trustToken()">Trust Token</v-btn>
+        <span>Account must trust token before it can receive</span>
+      </v-tooltip>
 
-    <v-tooltip open-delay='800' bottom>
-      <v-btn round small slot='activator' @click="trustToken()">Trust Token</v-btn>
-      <span>Account must trust token before it can receive</span>
-    </v-tooltip>
-
-    <v-btn round small @click="sendToken()">Send Token</v-btn>
-    <v-btn round small @click="setDomain()">Set Domain</v-btn>
-    <v-btn round small @click="setInflation()">Set Inflation Destination</v-btn>
-    <v-btn round small @click="testFederation()">Federation Lookup</v-btn>
-    <v-btn round small @click="manageDataPing = !manageDataPing">Manage Data</v-btn>
+      <v-btn round small @click="sendToken()">Send Token</v-btn>
+      <v-btn round small @click="setDomain()">Set Domain</v-btn>
+      <v-btn round small @click="setInflation()">Set Inflation Destination</v-btn>
+      <v-btn round small @click="testFederation()">Federation Lookup</v-btn>
+      <v-btn round small @click="manageDataPing = !manageDataPing">Manage Data</v-btn>
+    </div>
   </div>
 
   <manage-data-dialog :ping='manageDataPing' />
@@ -314,8 +315,15 @@ export default {
 <style scoped lang='scss'>
 .top-controls {
     padding: 10px 20px;
-    button {
-        margin: 4px 2px;
+
+    .button-group {
+        justify-content: center;
+        display: flex;
+        flex-wrap: wrap;
+
+        button {
+            margin: 4px 2px;
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 <template>
 <div class='menu-button-container'>
   <v-menu offset-y>
-    <v-btn small slot="activator">
+    <v-btn small class='tiny-button' color='primary' slot="activator">
       Network
       <v-icon>&#xE5C5;</v-icon>
     </v-btn>
@@ -16,8 +16,8 @@
       </v-list-tile>
     </v-list>
   </v-menu>
-  <span class='network-string'>{{serverURL()}}</span>
-  <v-btn class='horizon-button' small color='secondary' @click="horizonMetrics()">Horizon Metrics</v-btn>
+  <div class='network-string'>{{serverURL()}}</div>
+  <v-btn small class='tiny-button' color='primary' @click="horizonMetrics()">Horizon Metrics</v-btn>
 </div>
 </template>
 
@@ -97,17 +97,20 @@ export default {
     align-content: flex-start;
     border-bottom: solid 1px rgba(0,0,0,.04);
 
-    span.network-string {
-        margin-left: 10px;
+    .network-string {
+        margin-left: 2px;
         color: rgba(0,0,0,.7);
         font-weight: bold;
         font-size: 1em;
         flex: 1 1 auto;
         white-space: nowrap;
         overflow: hidden;
+        width: 0; // ellipse would not work without this
         text-overflow: ellipsis;
     }
 
-    .horizon-button {}
+    .tiny-button {
+        margin: 3px;
+    }
 }
 </style>

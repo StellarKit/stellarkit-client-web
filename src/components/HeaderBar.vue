@@ -34,7 +34,7 @@ export default {
   props: ['items'],
   computed: {
     pageTitle: function () {
-      return 'Home'
+      return this.$route.name
     }
   },
   data() {
@@ -112,6 +112,11 @@ export default {
             font-size: 1.2em;
             color: rgba(255,255,255,.2);
             font-weight: bold;
+        }
+        @media all and (max-width: 600px) {
+            .tab-indicator {
+                visibility: hidden;
+            }
         }
     }
 

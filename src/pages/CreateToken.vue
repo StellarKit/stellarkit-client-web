@@ -8,7 +8,7 @@
   <div class='info-area'>
     <div>1. Start with three accounts: Issuer, Distributor and Buyer
     </div>
-    <v-btn round small class='create-accounts' small @click="createStandardAccounts()">Create Accounts</v-btn>
+    <v-btn round small color='primary' class='create-accounts' small @click="createStandardAccounts()">Create Accounts</v-btn>
 
     <div>2. Click each button in order, but wait for each to complete</div>
   </div>

@@ -24,7 +24,6 @@
 import './scss/vuetify/main.styl'
 import NavigationDrawer from './components/NavigationDrawer.vue'
 import HeaderBar from './components/HeaderBar.vue'
-import TickerComponent from './components/TickerComponent.vue'
 import ConsoleComponent from './components/ConsoleComponent.vue'
 import NetworkMenu from './components/NetworkMenu.vue'
 import Helper from './js/helper.js'
@@ -33,7 +32,6 @@ import ToastComponent from './components/ToastComponent.vue'
 
 export default {
   components: {
-    'ticker-component': TickerComponent,
     'navivation-drawer': NavigationDrawer,
     'network-menu': NetworkMenu,
     'toast-component': ToastComponent,
