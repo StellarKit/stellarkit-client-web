@@ -5,10 +5,11 @@
   </instructions-header>
 
   <!-- <v-btn round small @click="assets()">Assets</v-btn> -->
-  <v-btn round small @click="streamPayments()">{{paymentsButtonName}}</v-btn>
-  <v-btn round small @click="streamOperations()">{{operationsButtonName}}</v-btn>
-  <v-btn round small @click="streamTrades()">{{tradesButtonName}}</v-btn>
-
+  <div class='button-group'>
+    <v-btn round small @click="streamPayments()">{{paymentsButtonName}}</v-btn>
+    <v-btn round small @click="streamOperations()">{{operationsButtonName}}</v-btn>
+    <v-btn round small @click="streamTrades()">{{tradesButtonName}}</v-btn>
+  </div>
   <div class="operations-content">
     <div class='operations-title'>Live Stream</div>
     <div class='operations-item' v-for="item in operations" :key=item.id>

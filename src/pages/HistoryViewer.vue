@@ -212,6 +212,11 @@ export default {
     .button-row {
         display: flex;
         align-items: center;
+        justify-content: center;
+
+        button {
+            margin: 0 12px;
+        }
 
         .display-index {
             margin: 0 10px;
@@ -229,8 +234,11 @@ export default {
     div.input-group {
         max-width: 250px;
         min-width: 140px;
+        margin-right: 6px;
     }
 
-    button {}
+    button {
+        margin: 4px;
+    }
 }
 </style>
