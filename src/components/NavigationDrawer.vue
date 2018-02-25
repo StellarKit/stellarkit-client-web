@@ -99,6 +99,7 @@ export default {
         }
       }
 
+      // hide drawer for every click
       this.drawer = false
     }
   }

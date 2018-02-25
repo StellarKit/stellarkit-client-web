@@ -17,6 +17,10 @@ class StellarUtils {
     return this.s.server()
   }
 
+  isTestnet() {
+    return this.s.isTestnet()
+  }
+
   friendBotServer() {
     return this.s.friendBotServer()
   }

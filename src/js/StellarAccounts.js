@@ -1,7 +1,7 @@
 const StellarSdk = require('stellar-sdk')
 const generateName = require('sillyname')
 import Helper from '../js/helper.js'
-
+import StellarUtils from './StellarUtils.js'
 class SharedAccounts {
   constructor() {
     this._accounts = []
@@ -70,7 +70,7 @@ class StellarAccounts {
     return StellarAccounts.sharedAccounts()
   }
 
-  addAccount(keyPair, name = null, signWithLedger, tag = null) {
+  addAccount(keyPair, name = null, tag = null) {
     const acct = {
       name: Helper.strOK(name) ? name : generateName(),
       balances: {
@@ -78,8 +78,8 @@ class StellarAccounts {
       },
       secret: keyPair.secret(),
       publicKey: keyPair.publicKey(),
-      signWithLedger: signWithLedger,
-      tag: tag
+      tag: tag,
+      mainnet: !StellarUtils.isTestnet()
     }
 
     this.shared().add(acct)
@@ -100,7 +100,13 @@ class StellarAccounts {
   }
 
   accounts() {
-    return this.shared().accounts()
+    const isMainnet = !StellarUtils.isTestnet()
+
+    const result = this.shared().accounts().filter(value => {
+      return isMainnet === Boolean(value.mainnet) // could be undefined
+    })
+
+    return result
   }
 
   deleteAccount(publicKey) {

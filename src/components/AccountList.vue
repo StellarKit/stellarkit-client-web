@@ -25,7 +25,6 @@
           <div v-for="(value, key) in item.balances" :key='key'>
             {{key}}: {{value}}
           </div>
-          <div v-if='item.signWithLedger'>Sign with Ledger</div>
         </div>
         <span>{{item.publicKey}}</span>
       </v-tooltip>

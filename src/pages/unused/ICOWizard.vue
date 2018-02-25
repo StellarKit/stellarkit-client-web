@@ -82,17 +82,17 @@
 </template>
 
 <script>
-import StellarCommonMixin from '../components/StellarCommonMixin.js'
-import StyleExtractionMixin from '../components/StyleExtractionMixin.js'
-import AccountList from '../components/AccountList.vue'
-import WizardView from '../components/WizardView.vue'
+import StellarCommonMixin from '../../components/StellarCommonMixin.js'
+import StyleExtractionMixin from '../../components/StyleExtractionMixin.js'
+import AccountList from '../../components/AccountList.vue'
+import WizardView from '../../components/WizardView.vue'
 const StellarSdk = require('stellar-sdk')
 const $ = require('jquery')
 import {
   TweenMax,
   Power2
 } from 'gsap'
-import InstructionsHeader from '../components/InstructionsHeader.vue'
+import InstructionsHeader from '../../components/InstructionsHeader.vue'
 
 export default {
   mixins: [StellarCommonMixin, StyleExtractionMixin],

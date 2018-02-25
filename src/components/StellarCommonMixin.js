@@ -12,6 +12,7 @@
    mounted() {
      this.updateAccountsUI()
      Helper.vue().$on('stellar-accounts-updated', this.updateAccountsUI)
+     Helper.vue().$on('stellar-network-updated', this.updateAccountsUI)
    },
    methods: {
      infoForPublicKey(publicKey) {

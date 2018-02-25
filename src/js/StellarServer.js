@@ -5,9 +5,22 @@
  } from 'stellar-js-utils'
 
  export default class StellarServer {
+   constructor() {
+     this.serverChanged = true
+
+     Helper.vue().$on('stellar-network-updated', () => {
+       this.serverChanged = true
+     })
+   }
+
    server() {
      this._setupServer()
      return this._horizon.server()
+   }
+
+   isTestnet() {
+     this._setupServer()
+     return this._horizon.isTestnet()
    }
 
    serverAPI() {
@@ -25,18 +38,21 @@
 
    serverURL() {
      this._setupServer()
-
      return this._horizon.serverURL()
    }
 
    _setupServer() {
-     const serverKey = Helper.get('server')
+     if (this.serverChanged) {
+       this.serverChanged = false
 
-     if (this._serverKey !== serverKey) {
-       this._horizon = this._createHorizonServer(serverKey)
-       this._serverKey = serverKey
+       const serverKey = Helper.get('server')
 
-       this._serverAPI = new StellarAPI(this._horizon)
+       if (this._serverKey !== serverKey) {
+         this._horizon = this._createHorizonServer(serverKey)
+         this._serverKey = serverKey
+
+         this._serverAPI = new StellarAPI(this._horizon)
+       }
      }
    }
 

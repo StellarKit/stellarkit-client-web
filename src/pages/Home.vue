@@ -2,7 +2,9 @@
 <div>
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
   <instructions-header>
-    <div>Content coming soon...</div>
+    <div>1. Create accounts on the testnet</div>
+    <div>2. Some buttons require setting source/destination accounts before clicking</div>
+    <div>3. Create a token on the second tab first to use the token buttons</div>
   </instructions-header>
   <div class='top-controls'>
     <div class='address-box'>
@@ -161,19 +163,9 @@ export default {
 
       const sourceWallet = this.sourceWallet()
       if (sourceWallet) {
-        let signerWallet = null
+        if (this.signerValid()) {
+          const signerWallet = StellarWallet.secret(this.selectedSigner.secret)
 
-        if (this.selectedSource.signWithLedger) {
-          signerWallet = StellarWallet.ledger(this.ledgerAPI, () => {
-            Helper.toast('Confirm on Ledger nano')
-          })
-        }
-
-        if (!signerWallet && this.signerValid()) {
-          signerWallet = StellarWallet.secret(this.selectedSigner.secret)
-        }
-
-        if (signerWallet) {
           StellarUtils.sendAsset(sourceWallet, null, this.selectedDest.publicKey, String(this.amountForPayments), null, null, [signerWallet])
             .then((response) => {
               StellarUtils.updateBalances()

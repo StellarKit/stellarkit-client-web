@@ -73,6 +73,10 @@ export default {
     },
     menuSelected(item) {
       Helper.set('server', item.id)
+
+      // alert ui to update
+      Helper.emit('stellar-network-updated')
+
       this.$forceUpdate()
     },
     clickItem(item) {
@@ -82,7 +86,6 @@ export default {
         default:
           break
       }
-      this.drawer = false
     }
   }
 }

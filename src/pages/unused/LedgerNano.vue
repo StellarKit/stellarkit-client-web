@@ -39,15 +39,15 @@
 </template>
 
 <script>
-import StellarCommonMixin from '../components/StellarCommonMixin.js'
-import AccountList from '../components/AccountList.vue'
-import LedgerFeature1 from '../components/LedgerFeature1.vue'
-import LedgerFeature2 from '../components/LedgerFeature2.vue'
-import LedgerFeature3 from '../components/LedgerFeature3.vue'
+import StellarCommonMixin from '../../components/StellarCommonMixin.js'
+import AccountList from '../../components/AccountList.vue'
+import LedgerFeature1 from '../../components/LedgerFeature1.vue'
+import LedgerFeature2 from '../../components/LedgerFeature2.vue'
+import LedgerFeature3 from '../../components/LedgerFeature3.vue'
 import {
   LedgerAPI
 } from 'stellar-js-utils'
-import InstructionsHeader from '../components/InstructionsHeader.vue'
+import InstructionsHeader from '../../components/InstructionsHeader.vue'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -104,7 +104,7 @@ export default {
 </script>
 
 <style scoped lang='scss'>
-@import '../scss/styles.scss';
+@import '../../scss/styles.scss';
 
 .ledger-tab {
     padding: 20px;
