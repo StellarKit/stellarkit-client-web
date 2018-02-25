@@ -2,19 +2,21 @@
 <div>
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
   <instructions-header>
-    <div>Content coming soon...</div>
+    <div>1. Start with three accounts: Issuer, Distributor and Buyer</div>
+    <div>2. Click each button in order, but wait for each to complete</div>
   </instructions-header>
 
-  <div class='info-area'>
-    <div>1. Start with three accounts: Issuer, Distributor and Buyer
-    </div>
-    <v-btn round small color='primary' class='create-accounts' small @click="createStandardAccounts()">Create Accounts</v-btn>
-
-    <div>2. Click each button in order, but wait for each to complete</div>
-  </div>
   <div class='expansion-contents'>
     <v-expansion-panel class='custom-expansion-panel'>
       <v-expansion-panel-content v-bind:value="true">
+        <div slot="header" class='expansion-title'>
+          0. Create Accounts
+        </div>
+        <div class='expansion-message'>
+          <v-btn round small @click="createStandardAccounts">Create Issuer and Distributor</v-btn>
+        </div>
+      </v-expansion-panel-content>
+      <v-expansion-panel-content>
         <div slot="header" class='expansion-title'>
           1. Distributor needs to trust the Issuer of asset
         </div>
@@ -140,9 +142,6 @@ export default {
   components: {
     'account-list': AccountList,
     'instructions-header': InstructionsHeader
-  },
-  mounted() {
-    this.createStandardAccounts()
   },
   methods: {
     newAccountWithTokens() {
@@ -496,10 +495,16 @@ export default {
         }
         .expansion-message {
             font-size: 0.9em;
-            padding: 0 42px 10px;
+            padding: 0 42px;
             background: rgba(0,0,0,.025);
             border-top: solid 1px rgba(0,0,0,.05);
         }
     }
+}
+</style>
+
+<style lang='scss'>
+div.expansion-contents > ul > li.expansion-panel__container > div.expansion-panel__header {
+    padding: 3px 30px !important;
 }
 </style>
