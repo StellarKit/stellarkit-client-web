@@ -1,8 +1,13 @@
 <template>
-<div class='instructions-header'>
-  <v-btn flat class='tiny-button' @click="slotVisible = !slotVisible">Help
-    <v-icon>&#xE5C5;</v-icon>
-  </v-btn>
+<div>
+  <div class='instructions-header'>
+    <v-btn dark flat class='tiny-button' @click="slotVisible = !slotVisible">Help
+      <v-icon>&#xE5C5;</v-icon>
+    </v-btn>
+    <div class='centered-title'>
+      {{pageTitle}}
+    </div>
+  </div>
   <div v-if='slotVisible' class='slot-hider'>
     <slot></slot>
   </div>
@@ -16,6 +21,11 @@ export default {
       slotVisible: false
     }
   },
+  computed: {
+    pageTitle: function () {
+      return this.$route.name
+    }
+  },
   methods: {
     horizonMetrics() {
       // sdfsdf
@@ -26,15 +36,31 @@ export default {
 
 <style lang='scss' scoped>
 .instructions-header {
-    background: rgba(0,0,0,.02);
+    position: relative;
+    background: darken(steelblue, 4%);
+
     button {
         height: 30px;
         margin: 0;
     }
-    border-bottom: solid 1px rgba(0,0,0,.08);
 
-    .slot-hider {
-        margin: 8px 20px;
+    .centered-title {
+        pointer-events: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: rgba(255,255,255,.8);
+        font-weight: bold;
+        font-size: 1.1em;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
     }
+}
+
+.slot-hider {
+    padding: 8px 20px;
 }
 </style>
