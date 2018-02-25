@@ -245,6 +245,8 @@ class StellarUtils {
       .catch((error) => {
         Helper.debugLog(error, 'Error')
 
+        Helper.toast('Friendbot must be down again!', true)
+
         // delete the account friend bot failed
         StellarAccounts.deleteAccount(accountRec.publicKey)
       })
