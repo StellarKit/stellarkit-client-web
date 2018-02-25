@@ -59,7 +59,7 @@
         </div>
       </div>
 
-      <div class='button-holder'>
+      <div class='button-group'>
         <v-btn round small @click="sendTokens()">Send Tokens</v-btn>
         <v-btn round small @click="manageOffer()">Manage Offer</v-btn>
         <v-btn round small @click="showOffers()">Show Offers</v-btn>
@@ -334,6 +334,8 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+@import '../scss/styles.scss';
+
 .main-container {
     width: 100%;
     display: flex;
@@ -384,12 +386,6 @@ export default {
                 flex: 1 0 80%;
                 padding-left: 5px;
             }
-        }
-
-        .button-holder {
-            margin-top: 10px;
-            display: flex;
-            justify-content: center;
         }
     }
 

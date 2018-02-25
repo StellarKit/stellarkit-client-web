@@ -150,21 +150,3 @@ html {
     }
 }
 </style>
-
-// unscoped, shared on every page
-<style  lang='scss'>
-// used on each page (not in app)
-.page-title {
-    position: relative;
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.2em;
-    background: rgba(0,0,0,.02);
-    box-shadow: 0 0 3px rgba(0,0,0,0.125);
-
-    .page-subtitle {
-        font-size: 0.9em;
-        font-weight: normal;
-    }
-}
-</style>

@@ -104,6 +104,8 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+@import '../scss/styles.scss';
+
 .ledger-tab {
     padding: 20px;
 

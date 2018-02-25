@@ -67,6 +67,8 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+@import '../scss/styles.scss';
+
 .main-container {
     display: flex;
     flex-direction: column;

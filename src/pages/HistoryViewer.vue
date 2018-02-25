@@ -204,6 +204,8 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+@import '../scss/styles.scss';
+
 .top-controls {
     padding: 10px 20px;
 
@@ -222,9 +224,11 @@ export default {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    justify-content: center;
 
     div.input-group {
         max-width: 250px;
+        min-width: 140px;
     }
 
     button {}

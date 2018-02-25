@@ -161,6 +161,8 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+@import '../scss/styles.scss';
+
 .top-controls {
     padding: 10px 20px;
 }

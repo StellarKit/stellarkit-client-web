@@ -277,6 +277,8 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+@import '../scss/styles.scss';
+
 .operations-content {
     display: flex;
     width: 100%;

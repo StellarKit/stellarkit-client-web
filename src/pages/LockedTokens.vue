@@ -28,10 +28,11 @@
     <div class='address-box'>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
     </div>
-    <v-btn round small @click="createUnlockTransaction()">Create Unlock Transaction</v-btn>
-    <v-btn round small @click="viewTransaction()">View Transaction</v-btn>
-    <v-btn round small @click="submitTransaction()">Submit Transaction</v-btn>
-
+    <div class='button-group'>
+      <v-btn round small @click="createUnlockTransaction()">Create Unlock Transaction</v-btn>
+      <v-btn round small @click="viewTransaction()">View Transaction</v-btn>
+      <v-btn round small @click="submitTransaction()">Submit Transaction</v-btn>
+    </div>
   </div>
 
   <transaction-dialog :ping='dialogPing' :transaction='signedTransaction' />
@@ -178,6 +179,8 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+@import '../scss/styles.scss';
+
 .top-controls {
     padding: 10px 20px;
 }

@@ -105,7 +105,7 @@
     </v-expansion-panel>
   </div>
 
-  <div class='bottom-buttons'>
+  <div class='button-group'>
     <v-btn round small @click="showOffers()">Show Token Offers</v-btn>
     <v-btn round small @click="deleteOffers()">Delete Token Offers</v-btn>
     <v-btn round small @click="paymentPaths()">Payment Paths</v-btn>
@@ -440,6 +440,8 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+@import '../scss/styles.scss';
+
 .info-area {
     position: relative;
     display: flex;
@@ -464,12 +466,6 @@ export default {
 .number-field {
     max-width: 200px;
     margin-right: 12px;
-}
-
-.bottom-buttons {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
 }
 
 .token-steps {
