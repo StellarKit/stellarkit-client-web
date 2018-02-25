@@ -1,12 +1,9 @@
 <template>
 <div>
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
-  <div class='page-title'>
-    ICO Wizard
-    <div class='page-subtitle'>
-      Under Construction
-    </div>
-  </div>
+  <instructions-header>
+    <div>Content coming soon...</div>
+  </instructions-header>
 
   <div class='columns'>
     <wizard-view v-on:click-nav="clickWizardNav" v-on:menu-nav="wizardMenuNav" :title='pageTitle' :numPages='numberOfPages' :currentPage='pageIndex' :pageTitles="pageTitles">
@@ -95,12 +92,14 @@ import {
   TweenMax,
   Power2
 } from 'gsap'
+import InstructionsHeader from '../components/InstructionsHeader.vue'
 
 export default {
   mixins: [StellarCommonMixin, StyleExtractionMixin],
   components: {
     'account-list': AccountList,
-    'wizard-view': WizardView
+    'wizard-view': WizardView,
+    'instructions-header': InstructionsHeader
   },
   data() {
     return {

@@ -1,9 +1,9 @@
 <template>
 <div>
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
-  <div class='page-title'>
-    Basics
-  </div>
+  <instructions-header>
+    <div>Content coming soon...</div>
+  </instructions-header>
   <div class='top-controls'>
     <div class='address-box'>
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
@@ -45,6 +45,7 @@
 <script>
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import AccountList from '../components/AccountList.vue'
+import InstructionsHeader from '../components/InstructionsHeader.vue'
 import SimpleOperationDialog from '../components/dialogs/SimpleOperationDialog.vue'
 import ManageDataDialog from '../components/dialogs/ManageDataDialog.vue'
 import Helper from '../js/helper.js'
@@ -60,7 +61,8 @@ export default {
   components: {
     'account-list': AccountList,
     'simple-dialog': SimpleOperationDialog,
-    'manage-data-dialog': ManageDataDialog
+    'manage-data-dialog': ManageDataDialog,
+    'instructions-header': InstructionsHeader
   },
   data() {
     return {
@@ -322,7 +324,7 @@ export default {
         flex-wrap: wrap;
 
         button {
-            margin: 4px 2px;
+            margin: 4px;
         }
     }
 }

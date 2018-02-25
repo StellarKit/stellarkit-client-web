@@ -1,9 +1,9 @@
 <template>
 <div>
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
-  <div class='page-title'>
-    Lock-up Period for Tokens
-  </div>
+  <instructions-header>
+    <div>Content coming soon...</div>
+  </instructions-header>
 
   <div class='top-controls'>
     <div class='instructions'>
@@ -51,12 +51,14 @@ const StellarSdk = require('stellar-sdk')
 import {
   StellarWallet
 } from 'stellar-js-utils'
+import InstructionsHeader from '../components/InstructionsHeader.vue'
 
 export default {
   mixins: [StellarCommonMixin],
   components: {
     'account-list': AccountList,
-    'transaction-dialog': TransactionDialog
+    'transaction-dialog': TransactionDialog,
+    'instructions-header': InstructionsHeader
   },
   data() {
     return {

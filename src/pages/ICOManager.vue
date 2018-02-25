@@ -1,9 +1,11 @@
 <template>
 <div>
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
+  <instructions-header>
+    <div>Content coming soon...</div>
+  </instructions-header>
 
   <div class='page-title'>
-    ICO Manager
     <div class='page-subtitle' style="color: red;">
       Only works with Ledger Nano. Under Construction
     </div>
@@ -89,6 +91,7 @@ import StellarUtils from '../js/StellarUtils.js'
 import {
   StellarWallet
 } from 'stellar-js-utils'
+import InstructionsHeader from '../components/InstructionsHeader.vue'
 
 export default {
   mixins: [StellarCommonMixin, StyleExtractionMixin],
@@ -97,7 +100,8 @@ export default {
     'create-token-dialog': CreateTokenDialog,
     'manage-offer-dialog': ManageOfferDialog,
     'create-account-dialog': CreateAccountDialog,
-    'send-tokens-dialog': SendTokensDialog
+    'send-tokens-dialog': SendTokensDialog,
+    'instructions-header': InstructionsHeader
   },
   computed: {
     menuButtonName: function () {

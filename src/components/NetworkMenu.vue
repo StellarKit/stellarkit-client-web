@@ -1,7 +1,7 @@
 <template>
 <div class='menu-button-container'>
   <v-menu offset-y>
-    <v-btn small class='tiny-button' color='primary' slot="activator">
+    <v-btn small outline class='tiny-button' color='primary' slot="activator">
       Network
       <v-icon>&#xE5C5;</v-icon>
     </v-btn>
@@ -17,7 +17,7 @@
     </v-list>
   </v-menu>
   <div class='network-string'>{{serverURL()}}</div>
-  <v-btn small class='tiny-button' color='primary' @click="horizonMetrics()">Horizon Metrics</v-btn>
+  <v-btn small outline class='tiny-button' color='primary' @click="horizonMetrics()">Horizon Metrics</v-btn>
 </div>
 </template>
 
@@ -91,15 +91,15 @@ export default {
 <style lang='scss' scoped>
 .menu-button-container {
     background: rgba(0,0,0, .02);
+    padding-bottom: 1px;
     width: 100%;
     display: flex;
     align-items: center;
     align-content: flex-start;
-    border-bottom: solid 1px rgba(0,0,0,.04);
 
     .network-string {
         margin-left: 2px;
-        color: rgba(0,0,0,.7);
+        color: rgba(0,0,0,.6);
         font-weight: bold;
         font-size: 1em;
         flex: 1 1 auto;
@@ -110,7 +110,7 @@ export default {
     }
 
     .tiny-button {
-        margin: 3px;
+        margin: 3px 4px;
     }
 }
 </style>

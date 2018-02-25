@@ -1,8 +1,8 @@
 <template>
 <div class='main-container'>
-  <div class='page-title'>
-    Buy a Token with Bifrost
-  </div>
+  <instructions-header>
+    <div>Content coming soon...</div>
+  </instructions-header>
 
   <div>This is only going to work if you have setup a local server with Bifrost, BTC and ETH servers configured. </div>
   <div>See <a href="https://github.com/StellarKit" target="_blank">https://github.com/StellarKit</a> for docker images to test on testnet.</div>
@@ -20,6 +20,7 @@ import {
 } from 'stellar-js-utils'
 import StellarAccounts from '../js/StellarAccounts.js'
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
+import InstructionsHeader from '../components/InstructionsHeader.vue'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -35,7 +36,8 @@ export default {
     }
   },
   components: {
-    'buy-token-dialog': BuyTokenDialog
+    'buy-token-dialog': BuyTokenDialog,
+    'instructions-header': InstructionsHeader
   },
   methods: {
     showDialog() {

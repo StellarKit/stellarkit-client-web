@@ -1,9 +1,9 @@
 <template>
 <div>
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
-  <div class='page-title'>
-    Allow Trust
-  </div>
+  <instructions-header>
+    <div>Content coming soon...</div>
+  </instructions-header>
 
   <div class='top-controls'>
     <div class='address-box'>
@@ -38,11 +38,13 @@ import StellarUtils from '../js/StellarUtils.js'
 import {
   StellarWallet
 } from 'stellar-js-utils'
+import InstructionsHeader from '../components/InstructionsHeader.vue'
 
 export default {
   mixins: [StellarCommonMixin],
   components: {
-    'account-list': AccountList
+    'account-list': AccountList,
+    'instructions-header': InstructionsHeader
   },
   data() {
     return {

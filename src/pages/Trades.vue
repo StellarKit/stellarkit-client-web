@@ -1,8 +1,8 @@
 <template>
 <div>
-  <div class='page-title'>
-    View Streams
-  </div>
+  <instructions-header>
+    <div>Content coming soon...</div>
+  </instructions-header>
 
   <!-- <v-btn round small @click="assets()">Assets</v-btn> -->
   <v-btn round small @click="streamPayments()">{{paymentsButtonName}}</v-btn>
@@ -27,6 +27,7 @@
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
+import InstructionsHeader from '../components/InstructionsHeader.vue'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -37,6 +38,9 @@ export default {
       tradeStopper: null,
       operations: []
     }
+  },
+  components: {
+    'instructions-header': InstructionsHeader
   },
   computed: {
     paymentsButtonName: function () {

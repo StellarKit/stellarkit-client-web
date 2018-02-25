@@ -1,8 +1,8 @@
 <template>
 <div>
-  <div class='page-title'>
-    History Viewer
-  </div>
+  <instructions-header>
+    <div>Content coming soon...</div>
+  </instructions-header>
 
   <div class='top-controls'>
     <div class='address-box'>
@@ -55,13 +55,13 @@ import StellarCommonMixin from '../components/StellarCommonMixin.js'
 // const StellarSdk = require('stellar-sdk')
 import Helper from '../js/helper.js'
 import StreamingCache from '../js/StreamingCache.js'
-// import StellarUtils from '../js/StellarUtils.js'
-// import {
-//   StellarWallet
-// } from 'stellar-js-utils'
+import InstructionsHeader from '../components/InstructionsHeader.vue'
 
 export default {
   mixins: [StellarCommonMixin],
+  components: {
+    'instructions-header': InstructionsHeader
+  },
   data() {
     return {
       selectedSource: null,

@@ -3,12 +3,9 @@
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
   <div class='ledger-tab'>
     <div>
-      <div class='page-title'>
-        Ledger Nano Experiments
-        <div>
-          (under construction)
-        </div>
-      </div>
+      <instructions-header>
+        <div>Content coming soon...</div>
+      </instructions-header>
 
       <div class='features-slider'>
         <div class='feature-nav'>
@@ -50,6 +47,7 @@ import LedgerFeature3 from '../components/LedgerFeature3.vue'
 import {
   LedgerAPI
 } from 'stellar-js-utils'
+import InstructionsHeader from '../components/InstructionsHeader.vue'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -57,7 +55,8 @@ export default {
     'ledger-feature1': LedgerFeature1,
     'ledger-feature2': LedgerFeature2,
     'ledger-feature3': LedgerFeature3,
-    'account-list': AccountList
+    'account-list': AccountList,
+    'instructions-header': InstructionsHeader
   },
   data() {
     return {

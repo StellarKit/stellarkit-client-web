@@ -40,3 +40,7 @@ $border-radius: 8px;
     justify-content: flex-end;
   }
 }
+
+button {
+  user-select: none;
+}

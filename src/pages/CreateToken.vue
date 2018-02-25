@@ -1,9 +1,9 @@
 <template>
 <div>
   <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
-  <div class='page-title'>
-    Create a Token
-  </div>
+  <instructions-header>
+    <div>Content coming soon...</div>
+  </instructions-header>
 
   <div class='info-area'>
     <div>1. Start with three accounts: Issuer, Distributor and Buyer
@@ -120,6 +120,7 @@ import StellarUtils from '../js/StellarUtils.js'
 import {
   StellarWallet
 } from 'stellar-js-utils'
+import InstructionsHeader from '../components/InstructionsHeader.vue'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -137,7 +138,8 @@ export default {
     }
   },
   components: {
-    'account-list': AccountList
+    'account-list': AccountList,
+    'instructions-header': InstructionsHeader
   },
   mounted() {
     this.createStandardAccounts()
