@@ -205,7 +205,7 @@ export default {
 
 <style scoped lang='scss'>
 .top-controls {
-    padding: 20px;
+    padding: 10px 20px;
 
     .button-row {
         display: flex;

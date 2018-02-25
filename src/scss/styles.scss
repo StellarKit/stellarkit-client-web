@@ -24,3 +24,19 @@ $border-radius: 8px;
   border-radius: 6px;
   overflow: hidden;
 }
+
+@mixin inner-dialog-contents {
+  // for the toast absolute
+  position: relative;
+  overflow: hidden;
+
+  padding: 12px;
+
+  flex: 1 1 auto;
+  font-size: 1.2em;
+
+  .button-holder {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

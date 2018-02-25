@@ -344,7 +344,7 @@ export default {
         flex-direction: column;
         align-items: center;
 
-        min-height: 400px;
+        min-height: 300px;
     }
 
     .summary-view {

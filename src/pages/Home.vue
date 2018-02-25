@@ -313,7 +313,7 @@ export default {
 
 <style scoped lang='scss'>
 .top-controls {
-    padding: 8px 20px;
+    padding: 10px 20px;
     button {
         margin: 4px 2px;
     }

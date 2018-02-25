@@ -91,7 +91,6 @@ export default {
 <style lang='scss' scoped>
 .menu-button-container {
     background: rgba(0,0,0, .02);
-    padding: 3px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -100,9 +99,9 @@ export default {
 
     span.network-string {
         margin-left: 10px;
+        color: rgba(0,0,0,.7);
         font-weight: bold;
-        color: rgba(50,70,130,.8);
-        font-size: 1.1em;
+        font-size: 1em;
         flex: 1 1 auto;
         white-space: nowrap;
         overflow: hidden;

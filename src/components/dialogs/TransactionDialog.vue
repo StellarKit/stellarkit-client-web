@@ -94,14 +94,7 @@ export default {
     @include standard-dialog-contents();
 
     .help-contents {
-        // for the toast absolute
-        position: relative;
-        overflow: hidden;
-
-        padding: 20px;
-        font-size: 1.2em;
-
-        flex: 1 1 auto;
+        @include inner-dialog-contents();
 
         textarea {
             width: 100%;
@@ -114,11 +107,6 @@ export default {
             overflow: auto;
             color: rgb(0,256,150);
             padding: 10px;
-        }
-
-        .button-holder {
-            display: flex;
-            justify-content: flex-end;
         }
     }
 }

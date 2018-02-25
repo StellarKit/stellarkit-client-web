@@ -188,14 +188,7 @@ export default {
     @include standard-dialog-contents();
 
     .help-contents {
-        // for the toast absolute
-        position: relative;
-        overflow: hidden;
-
-        padding: 20px;
-        font-size: 1.2em;
-
-        flex: 1 1 auto;
+        @include inner-dialog-contents();
 
         .help-text {
             div {
@@ -219,12 +212,6 @@ export default {
                     margin-right: 16px;
                 }
             }
-        }
-
-        .button-holder {
-            margin-top: 10px;
-            display: flex;
-            justify-content: flex-end;
         }
 
         .status-message {
