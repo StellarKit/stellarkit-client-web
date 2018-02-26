@@ -19,7 +19,12 @@
       <v-btn round small @click="addSignerForSelected()">Add Signer</v-btn>
       <v-btn round small @click="payWithSigners()">Pay with Signers</v-btn>
       <v-btn round small @click="removeSignerForSelected()">Remove Signer</v-btn>
-      <v-btn round small @click="mergeSelected()">Merge Selected</v-btn>
+
+      <v-tooltip open-delay='800' bottom>
+        <v-btn round small slot='activator' @click="mergeSelected()">Merge Selected</v-btn>
+        <span>Merges source into destination</span>
+      </v-tooltip>
+
       <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
       <v-btn round small @click="paymentsForSelectedSource()">Payments</v-btn>
       <v-btn round small @click="operationsForSelectedSource()">Operations</v-btn>
