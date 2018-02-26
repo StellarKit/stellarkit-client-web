@@ -11,6 +11,8 @@ import axios from 'axios'
 class StellarUtils {
   constructor() {
     this.s = new StellarServer()
+
+    this.vars = {}
   }
 
   server() {
@@ -142,11 +144,12 @@ class StellarUtils {
 
     return this.createAccount(sourceWallet, keypair.publicKey(), startingBalance)
       .then((account) => {
-        StellarAccounts.addAccount(keypair, name, false, tag)
+        const accountRec = StellarAccounts.addAccount(keypair, name, false, tag)
 
         return {
           account: account,
-          keypair: keypair
+          keypair: keypair,
+          accountRec: accountRec
         }
       })
   }
@@ -224,7 +227,42 @@ class StellarUtils {
       })
   }
 
+  // Public Key    GBW74UVOXKGHO3WX6AV5ZGTB4JYBKCEJOUQAUSI25NRO3PKY5BC7WYZS
+  // Secret Key    SA3W53XXG64ITFFIYQSBIJDG26LMXYRIMEVMNQMFAQJOYCZACCYBA34L
+
+  // SDNWCD4F63WBLU3E2QANDMVR3KLW6D5KBBENQSLSGC62X3PCHFMZQWHU
+  // GCFJ3JX6P5UZFABESJRZXNN2TH4UV67RGD5ECNTDUGPMIRQTFABXWWXV
+
+  doCreateTestAccount(name = null) {
+    const sourceWallet = StellarWallet.secret('SDNWCD4F63WBLU3E2QANDMVR3KLW6D5KBBENQSLSGC62X3PCHFMZQWHU')
+    return this.newAccount(sourceWallet, '1000', name)
+      .then((result) => {
+        this.updateBalances()
+        Helper.debugLog(result.account, 'Success')
+
+        return result.accountRec
+      })
+      .catch((error) => {
+        Helper.debugLog(error, 'Error')
+      })
+  }
+
   createTestAccount(name = null) {
+    // we need this to run synchronously so that sequence numbers don't get out of sync
+    if (!this.vars.syncPromise) {
+      this.vars.syncPromise = Promise.resolve()
+    }
+
+    const result = this.vars.syncPromise.then(() => {
+      return this.doCreateTestAccount(name)
+    })
+
+    this.vars.syncPromise = result
+
+    return result
+  }
+
+  createTestAccountFriendBot(name = null) {
     const keyPair = StellarSdk.Keypair.random()
     const accountRec = StellarAccounts.addAccount(keyPair, name)
 
