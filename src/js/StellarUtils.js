@@ -142,15 +142,20 @@ class StellarUtils {
     Helper.debugLog(keypair.publicKey())
     Helper.debugLog(keypair.secret())
 
+    const accountRec = StellarAccounts.addAccount(keypair, name, false, tag)
+
     return this.createAccount(sourceWallet, keypair.publicKey(), startingBalance)
       .then((account) => {
-        const accountRec = StellarAccounts.addAccount(keypair, name, false, tag)
-
         return {
           account: account,
           keypair: keypair,
           accountRec: accountRec
         }
+      })
+      .catch((error) => {
+        StellarAccounts.deleteAccount(keypair.publicKey())
+
+        throw error
       })
   }
 
@@ -244,6 +249,9 @@ class StellarUtils {
       })
       .catch((error) => {
         Helper.debugLog(error, 'Error')
+
+        // failed, try friendbot as a backup
+        return this.createTestAccountFriendBot(name)
       })
   }
 
@@ -287,6 +295,8 @@ class StellarUtils {
 
         // delete the account friend bot failed
         StellarAccounts.deleteAccount(accountRec.publicKey)
+
+        throw error
       })
   }
 
