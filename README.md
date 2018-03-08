@@ -11,7 +11,7 @@ To build and run:
 
 To build installer
 
-    npm dist
+    npm run dist
 
 ### Donations
 
