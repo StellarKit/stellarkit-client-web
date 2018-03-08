@@ -2,7 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 
-const common = {
+let common = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/dist/'
@@ -56,14 +56,15 @@ const common = {
       }
     ]
   },
-  devtool: 'eval-source-map'
+  devtool: 'eval-source-map',
+  mode: 'development'
 }
 
 // target differences
 const TARGET = process.env.npm_lifecycle_event
 
 if (TARGET === 'dist' || TARGET === 'dev') {
-  let mergedOptions = merge(common, {
+  common = merge(common, {
     entry: './src/entry.js',
     target: 'web',
     output: {
@@ -72,17 +73,15 @@ if (TARGET === 'dist' || TARGET === 'dev') {
   })
 
   if (TARGET === 'dist') {
-    mergedOptions = merge(mergedOptions, {
+    common = merge(common, {
       output: {
         // public path so css images are located
         publicPath: '/'
       }
     })
   }
-
-  module.exports = mergedOptions
 } else if (TARGET === 'distLib') {
-  let mergedOptions = merge(common, {
+  common = merge(common, {
     entry: './src/libEntry.js',
     output: {
       filename: 'distLib.js',
@@ -93,32 +92,14 @@ if (TARGET === 'dist' || TARGET === 'dev') {
       'jquery'
     ]
   })
-  module.exports = mergedOptions
 }
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = false
-
-  // http://vue-loader.vuejs.org/en/workflow/production.html
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      },
-      output: {
-        comments: false
-      }
-    })
-  ])
+  module.exports = merge(common, {
+    mode: 'production',
+    devtool: false
+  })
 } else {
   // development
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    // Add module names to factory functions so they appear in browser profiler.
-    new webpack.NamedModulesPlugin()
-  ])
+  module.exports = common
 }

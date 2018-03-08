@@ -5,8 +5,8 @@
 
     <div class='help-contents'>
       <div class='help-text'>
-        <div>Send tokens to account</div>
-        <div class='sub-header'>Account must have already set trust on your asset</div>
+        <div>Add an account</div>
+        <div class='sub-header'>Paste in a secret key, or create new account on testnet</div>
       </div>
       <div class='help-email'>
         <v-text-field label="Destination public key" v-model="publicKey" ref='input'></v-text-field>
@@ -15,12 +15,12 @@
       <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round small color='primary' slot="activator" @click="sendTokens()" :loading="loading">Send Tokens</v-btn>
-          <span>Post an offer to Stellar</span>
+          <v-btn round small color='primary' slot="activator" @click="sendTokens()" :loading="loading">Add Account</v-btn>
+          <span>Add account</span>
         </v-tooltip>
       </div>
 
-      <toast-component :absolute=true location='send-tokens-dialog' :bottom=false :top=true />
+      <toast-component :absolute=true location='create-account-dialog' :bottom=false :top=true />
     </div>
   </div>
 </v-dialog>
@@ -43,18 +43,10 @@ export default {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent
   },
-  computed: {
-    sellLabel: function() {
-      if (this.project) {
-        return 'Sell ' + this.project.symbol
-      }
-      return 'Sell Token'
-    }
-  },
   data() {
     return {
       visible: false,
-      title: 'Send Tokens',
+      title: 'Create Account',
       statusMessage: '',
       loading: false,
       publicKey: 10,
@@ -76,42 +68,13 @@ export default {
   methods: {
     sendTokens() {
       if (!Helper.strOK(this.publicKey)) {
-        Helper.debugLog('Destination key is empty')
+        this.displayToast('Secret key is empty')
       } else {
-        Helper.debugLog('Managing Offer...')
-
-        const fundingWallet = StellarWallet.ledger(new LedgerAPI(), () => {
-          this.statusMessage = 'Confirm transaction on Ledger Nano'
-          this.displayToast(this.statusMessage)
-        })
-
-        if (this.project) {
-          const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
-
-          StellarUtils.sendAsset(StellarWallet.secret(this.project.distributorSecret), fundingWallet, this.publicKey, String(this.amount), asset)
-            .then((result) => {
-              Helper.debugLog(result, 'Success')
-              this.displayToast('Success')
-
-              StellarUtils.updateBalances()
-
-              return null
-            })
-            .catch((error) => {
-              Helper.debugLog(error, 'Error')
-
-              let message = error.message
-              if (message === 'connection failed') {
-                message = 'Ledger Nano not found'
-              }
-
-              this.displayToast(message, true)
-            })
-        }
+        // ddd
       }
     },
     displayToast(message, error = false) {
-      Helper.toast(message, error, 'send-tokens-dialog')
+      Helper.toast(message, error, 'create-account-dialog')
     }
   }
 }
