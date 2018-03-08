@@ -95,11 +95,12 @@ if (TARGET === 'dist' || TARGET === 'dev') {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports = merge(common, {
+  common = merge(common, {
     mode: 'production',
     devtool: false
   })
 } else {
   // development
-  module.exports = common
 }
+
+module.exports = common
