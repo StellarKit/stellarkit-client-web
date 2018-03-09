@@ -39,9 +39,11 @@
       <v-btn round small @click="setInflation()">Set Inflation Destination</v-btn>
       <v-btn round small @click="testFederation()">Federation Lookup</v-btn>
       <v-btn round small @click="manageDataPing = !manageDataPing">Manage Data</v-btn>
+      <v-btn round small @click="saveSecretDialogPing = !saveSecretDialogPing">Save/Print Keys</v-btn>
     </div>
   </div>
 
+  <save-secret-dialog :ping='saveSecretDialogPing' />
   <manage-data-dialog :ping='manageDataPing' />
   <simple-dialog :ping='setDomainPing' :secretKey='sourceSecretKey' operation='domain' />
   <simple-dialog :ping='setInflationPing' :secretKey='sourceSecretKey' operation='inflation' />
@@ -62,6 +64,7 @@ import {
   LedgerAPI
 } from 'stellar-js-utils'
 import StellarAccounts from '../js/StellarAccounts.js'
+import SavePrintSecretDialog from '../components/dialogs/SavePrintSecretDialog.vue'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -69,7 +72,8 @@ export default {
     'account-list': AccountList,
     'simple-dialog': SimpleOperationDialog,
     'manage-data-dialog': ManageDataDialog,
-    'instructions-header': InstructionsHeader
+    'instructions-header': InstructionsHeader,
+    'save-secret-dialog': SavePrintSecretDialog
   },
   data() {
     return {
@@ -77,6 +81,7 @@ export default {
       setDomainPing: false,
       setInflationPing: false,
       manageDataPing: false,
+      saveSecretDialogPing: false,
       selectedSource: null,
       selectedDest: null,
       selectedSigner: null,

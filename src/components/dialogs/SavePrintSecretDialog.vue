@@ -4,7 +4,7 @@
     <div class='dialog-contents'>
       <div class='top-dialog-text'>Don't loose these keys! Print or save them to a secure USB or hard disk</div>
 
-      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" label="Funding account" return-object max-height="600"></v-select>
+      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" label="Account" return-object max-height="600"></v-select>
 
       <div class='operations-item' v-for="key in Array.from(summaryMap.keys())" :key=key>
         <div class='item-name'>
@@ -79,6 +79,10 @@ export default {
           break
         }
       }
+      if (!this.selectedSource && this.accountsUI.length > 0) {
+        this.selectedSource = this.accountsUI[0]
+      }
+
       this.updateSummary()
     },
     updateSummary() {
