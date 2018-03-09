@@ -1,11 +1,32 @@
 <template>
 <div class='main-container'>
-  <v-btn class='add-button' icon dark @click="createAccount()">
-    <v-tooltip open-delay='800' bottom>
-      <v-icon slot='activator'>&#xE147;</v-icon>
-      <span>Create new account</span>
-    </v-tooltip>
-  </v-btn>
+  <div class='add-button'>
+    <v-menu v-if='isTestnet()' offset-y :transition=false>
+      <v-btn icon dark slot="activator">
+        <v-tooltip open-delay='800' bottom>
+          <v-icon slot='activator'>&#xE147;</v-icon>
+          <span>Create new account</span>
+        </v-tooltip>
+      </v-btn>
+
+      <v-list dense>
+        <v-list-tile @click="accountMenu('test')">
+          <v-list-tile-title>Create New Testnet Account</v-list-tile-title>
+        </v-list-tile>
+        <v-list-tile @click="accountMenu('other')">
+          <v-list-tile-title>More Options...</v-list-tile-title>
+        </v-list-tile>
+      </v-list>
+    </v-menu>
+
+    <v-btn v-else icon dark @click="accountMenu('other')">
+      <v-tooltip open-delay='800' bottom>
+        <v-icon slot='activator'>&#xE147;</v-icon>
+        <span>Create new account</span>
+      </v-tooltip>
+    </v-btn>
+  </div>
+
   <v-btn class='refresh-button' icon dark @click="refresh()">
     <v-tooltip open-delay='800' bottom>
       <v-icon slot='activator'>&#xE5D5;</v-icon>
@@ -33,12 +54,15 @@
       </v-btn>
     </div>
   </transition-group>
+
+  <new-account-dialog :ping='newAccountDialogPing' />
 </div>
 </template>
 
 <script>
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
+import NewAccountDialog from './dialogs/NewAccountDialog.vue'
 import {
   TimelineMax,
   Power3
@@ -49,8 +73,12 @@ export default {
   props: ['items'],
   data() {
     return {
-      timeline: null
+      timeline: null,
+      newAccountDialogPing: false
     }
+  },
+  components: {
+    'new-account-dialog': NewAccountDialog
   },
   mounted() {
     setInterval(() => {
@@ -65,6 +93,9 @@ export default {
     }, 2000)
   },
   methods: {
+    isTestnet() {
+      return StellarUtils.isTestnet()
+    },
     animateCreateButton() {
       if (!this.timeline) {
         // other tabs have this same view, so only find the one in ours
@@ -85,16 +116,23 @@ export default {
           })
       }
     },
-    createAccount() {
-      Helper.debugLog('creating account...')
-
-      StellarUtils.createTestAccount()
-        .then((result) => {
-          Helper.debugLog(result)
-        })
-        .catch((error) => {
-          Helper.debugLog(error, 'Error')
-        })
+    accountMenu(id) {
+      switch (id) {
+        case 'test':
+          StellarUtils.createTestAccount()
+            .then((result) => {
+              Helper.debugLog(result)
+            })
+            .catch((error) => {
+              Helper.debugLog(error, 'Error')
+            })
+          break
+        case 'other':
+          this.newAccountDialogPing = !this.newAccountDialogPing
+          break
+        default:
+          break
+      }
     },
     clickItem(item) {
       this.$emit('click-item', item)
@@ -142,7 +180,10 @@ export default {
         position: absolute;
         top: 0;
         left: 0;
-        margin: 0;
+
+        button {
+            margin: 0;
+        }
     }
 
     .refresh-button {

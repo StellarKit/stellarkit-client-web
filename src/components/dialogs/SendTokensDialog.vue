@@ -57,7 +57,7 @@ export default {
       title: 'Send Tokens',
       statusMessage: '',
       loading: false,
-      publicKey: 10,
+      publicKey: '',
       amount: 10
     }
   },
