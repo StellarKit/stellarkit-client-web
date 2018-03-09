@@ -55,3 +55,10 @@ button {
     margin: 4px;
   }
 }
+
+// SNG hack, not sure why when building for production
+// the input groups are collapsing vertically inside a flex box
+// this fixes it, but not sure why See NewAccountDialog for repo
+.input-group {
+  display: block;
+}
