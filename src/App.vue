@@ -41,8 +41,6 @@ export default {
   data() {
     return {
       showNavigation: false,
-      snackbarText: '',
-      snackbarModel: false,
       initializing: true,
       tabs: [{
         icon: String.fromCharCode('0xE88A'),
@@ -99,10 +97,6 @@ export default {
     },
     showDrawer() {
       this.showNavigation = !this.showNavigation
-    },
-    toast(message) {
-      this.snackbarText = message
-      this.snackbarModel = !this.snackbarModel
     },
     pageTitle() {
       return this.$router.currentRoute.name

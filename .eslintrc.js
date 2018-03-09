@@ -70,7 +70,7 @@ module.exports = {
       'vars': 'all',
       'args': 'none'
     }],
-    'eol-last': 2,
+    // 'eol-last': 2,
     'space-before-blocks': 2,
     'no-self-compare': 2,
     'no-lone-blocks': 2,

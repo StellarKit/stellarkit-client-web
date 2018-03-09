@@ -21,8 +21,12 @@
       <v-btn round small @click="removeSignerForSelected()">Remove Signer</v-btn>
 
       <v-tooltip open-delay='800' bottom>
-        <v-btn round small slot='activator' @click="mergeSelected()">Merge Selected</v-btn>
+        <v-btn round small slot='activator' @click="mergeSelected()">Merge to Destination</v-btn>
         <span>Merges source into destination</span>
+      </v-tooltip>
+      <v-tooltip open-delay='800' bottom>
+        <v-btn round small slot='activator' @click="mergeToLedger()">Merge to Ledger</v-btn>
+        <span>Merges source into Ledger Nano</span>
       </v-tooltip>
 
       <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
@@ -155,8 +159,10 @@ export default {
       Helper.debugLog('merging')
 
       const sourceWallet = this.sourceWallet()
-      if (sourceWallet) {
-        StellarUtils.mergeAccount(sourceWallet, this.selectedDest.publicKey)
+      if (sourceWallet && this.destValid()) {
+        const destWallet = StellarWallet.secret(this.selectedDest.secret)
+
+        StellarUtils.mergeAccount(sourceWallet, destWallet)
           .then((response) => {
             StellarUtils.updateBalances()
 
@@ -165,6 +171,28 @@ export default {
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
+          })
+      }
+    },
+    mergeToLedger() {
+      Helper.debugLog('merging')
+
+      const sourceWallet = this.sourceWallet()
+      if (sourceWallet) {
+        const ledgerWallet = StellarWallet.ledger(this.ledgerAPI, () => {
+          Helper.toast('Confirm transaction on Nano...')
+        })
+
+        StellarUtils.mergeAccount(sourceWallet, ledgerWallet)
+          .then((response) => {
+            StellarUtils.updateBalances()
+
+            Helper.debugLog(response, 'Success')
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error)
+            Helper.toast('Failed to connect to Ledger Nano', true)
           })
       }
     },
