@@ -10,6 +10,9 @@
       <div class='contact-info'>
         <a href='mailto:steve@distantfutu.re'>steve@distantfutu.re</a>San Francisco, CA
       </div>
+      <div class='initials-text'>
+        <a href='https://tripping.tech' target="_blank">LSD</a>
+      </div>
     </div>
 
   </div>
@@ -42,7 +45,7 @@ export default {
     }
   },
   watch: {
-    ping: function () {
+    ping: function() {
       this.visible = true
 
       this.$nextTick(() => {
@@ -156,6 +159,18 @@ export default {
         text-align: right;
         font-size: 1em;
         background: black;
+
+        .initials-text {
+            position: absolute;
+            bottom: -2px;
+            left: 434px;
+            z-index: 1;
+
+            a {
+                color: rgba(0,0,0,.1);
+                text-decoration: none;
+            }
+        }
 
         .contact-info {
             z-index: 1;

@@ -59,6 +59,8 @@
         </div>
       </div>
 
+      <save-secret-dialog :ping='saveSecretDialogPing' />
+
       <toast-component :absolute=true location='create-account-dialog' :bottom=false :top=true />
     </div>
   </div>
@@ -78,13 +80,15 @@ import ToastComponent from '../ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')
 const generateName = require('sillyname')
 import StellarCommonMixin from '../StellarCommonMixin.js'
+import SavePrintSecretDialog from './SavePrintSecretDialog.vue'
 
 export default {
   mixins: [StellarCommonMixin],
-  props: ['ping', 'project'],
+  props: ['ping'],
   components: {
     'dialog-titlebar': DialogTitleBar,
-    'toast-component': ToastComponent
+    'toast-component': ToastComponent,
+    'save-secret-dialog': SavePrintSecretDialog
   },
   data() {
     return {
@@ -96,7 +100,8 @@ export default {
       name: generateName(),
       isMainnet: false,
       mode: 'start',
-      selectedSource: null
+      selectedSource: null,
+      saveSecretDialogPing: false
     }
   },
   computed: {
@@ -163,12 +168,7 @@ export default {
 
       StellarUtils.newAccount(fundingWallet, '1')
         .then((accountInfo) => {
-          Helper.debugLog(accountInfo.keypair)
-
-          this.displayToast('Account Created! Save the secret key!')
-          StellarUtils.updateBalances()
-
-          this.loading = false
+          this.accountCreated(accountInfo)
         })
     },
     createAccount() {
@@ -188,14 +188,25 @@ export default {
         // create issuer
         StellarUtils.newAccount(fundingWallet, '1')
           .then((accountInfo) => {
-            Helper.debugLog(accountInfo.keypair)
-
-            this.displayToast('Account Created! Save the secret key!')
-            StellarUtils.updateBalances()
-
-            this.loading = false
+            this.accountCreated(accountInfo)
           })
       }
+    },
+    accountCreated(accountInfo) {
+      this.displayToast('Account Created! Save the secret key!')
+      StellarUtils.updateBalances()
+
+      this.loading = false
+      this.name = ''
+      this.selectedSource = null
+
+      Helper.debugLog('New Account')
+      Helper.debugLog(accountInfo.keypair.publicKey())
+      Helper.debugLog(accountInfo.keypair.secret())
+
+      setTimeout(() => {
+        this.saveSecretDialogPing = !this.saveSecretDialogPing
+      }, 1000)
     },
     displayToast(message, error = false) {
       Helper.toast(message, error, 'create-account-dialog')
