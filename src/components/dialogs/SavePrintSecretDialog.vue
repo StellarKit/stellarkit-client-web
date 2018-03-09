@@ -39,6 +39,8 @@ import {
 import ToastComponent from '../ToastComponent.vue'
 import StellarUtils from '../../js/StellarUtils.js'
 import StellarCommonMixin from '../StellarCommonMixin.js'
+const SaveFile = require('save-file')
+const $ = require('jquery')
 
 export default {
   props: ['ping', 'secret'],
@@ -96,11 +98,68 @@ export default {
         this.summaryMap.set('Secret', '--')
       }
     },
+    printFile() {
+      if (this.selectedSource) {
+        // insert an iframe into the DOM
+        // print iframe window.  popups could be blocked, so frame is safter than opening a new window
+        const iframe = $('<iframe></iframe>')[0]
+
+        iframe.setAttribute('id', 'printkeys')
+        iframe.setAttribute('name', 'printkeys')
+
+        // other code has this, but makes it blank here?
+        // iframe.style.display = 'none'
+        document.body.appendChild(iframe)
+
+        const frameWindow = window.frames['printkeys']
+        frameWindow.document.head.innerHTML = '<style>body{margin-top: 100px; font-size: 12px; text-align: center; font-family: Arial, Helvetica, sans-serif;}</style>'
+        frameWindow.document.body.innerHTML = '<div>' + this.keyString(true) + '</div>'
+
+        frameWindow.print()
+
+        document.body.removeChild(iframe)
+      } else {
+        Helper.DebugLog('Nothing to print?')
+      }
+    },
+    keyString(html = false) {
+      let result = ''
+      if (this.selectedSource) {
+        const network = this.isMainnet ? '(mainnet)' : '(testnet)'
+        let newLines = '\n\n'
+        if (html) {
+          newLines = '<br><br>'
+        }
+        result += newLines
+        result += 'Stellar account keys: ' + network
+        result += newLines
+        result += 'Public: ' + this.selectedSource.publicKey
+        result += newLines
+        result += 'Secret: ' + this.selectedSource.secret
+      }
+
+      return result
+    },
+    saveFile() {
+      if (this.selectedSource) {
+        SaveFile(this.keyString(), 'stellar-account-keys.txt', (err, data) => {
+          if (err) {
+            Helper.debugLog('save failed')
+          }
+
+          Helper.debugLog('file saved')
+        })
+      } else {
+        Helper.debugLog('Nothing to save?')
+      }
+    },
     buttonClick(id) {
       switch (id) {
         case 'save-keys':
+          this.saveFile()
           break
         case 'print-keys':
+          this.printFile()
           break
         default:
           break

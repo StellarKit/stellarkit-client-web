@@ -44,12 +44,13 @@
     "webpack-merge": "^4.1.2"
   },
   "dependencies": {
-    "sillyname": "^0.1.0",
     "axios": "^0.18.0",
-    "localforage": "^1.6.0",
     "gsap": "^1.20.4",
-    "stellar-js-utils": "git://github.com/StellarKit/stellar-js-utils",
     "jquery": "^3.3.1",
+    "localforage": "^1.6.0",
+    "save-file": "^1.2.0",
+    "sillyname": "^0.1.0",
+    "stellar-js-utils": "git://github.com/StellarKit/stellar-js-utils",
     "stellar-sdk": "^0.8.0"
   }
 }
