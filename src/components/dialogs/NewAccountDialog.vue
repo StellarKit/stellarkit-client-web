@@ -40,6 +40,7 @@
             :type="showSecret ? 'text' : 'password'"></v-text-field>
 
           <v-text-field spellcheck="false" label="Account name" v-model.trim="name" @keyup.enter="createAccount()" hint="Name helps you keep track of multiple accounts."> </v-text-field>
+          <v-text-field label='Starting XLM Balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccount()"></v-text-field>
 
           <v-tooltip open-delay='200' bottom>
             <v-btn round color='primary' slot="activator" @click="createAccount()" :loading="loading">Create Account</v-btn>
@@ -51,6 +52,7 @@
           <div class='note-text'>Have your Ledger plugged in with the Stellar app running. 1 XLM will be spent to fund the new account.</div>
 
           <v-text-field spellcheck="false" autofocus label="Account name" v-model.trim="name" @keyup.enter="createAccountWithLedger()" hint="Name helps you keep track of multiple accounts."> </v-text-field>
+          <v-text-field label='Starting XLM Balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccountWithLedger()"></v-text-field>
 
           <v-tooltip open-delay='200' bottom>
             <v-btn round color='primary' slot="activator" @click="createAccountWithLedger()" :loading="loading">Create Account</v-btn>
@@ -102,7 +104,8 @@ export default {
       mode: 'start',
       selectedSource: null,
       newAccountSecret: '',
-      saveSecretDialogPing: false
+      saveSecretDialogPing: false,
+      xlmBalance: 1
     }
   },
   computed: {
@@ -116,6 +119,7 @@ export default {
       this.secretKey = ''
       this.name = generateName()
       this.mode = 'start'
+      this.xlmBalance = 1
       this.isMainnet = !StellarUtils.isTestnet()
     }
   },
@@ -167,7 +171,7 @@ export default {
 
       this.loading = true
 
-      StellarUtils.newAccount(fundingWallet, '1')
+      StellarUtils.newAccount(fundingWallet, String(this.xlmBalance))
         .then((accountInfo) => {
           this.accountCreated(accountInfo)
         })
@@ -187,7 +191,7 @@ export default {
         this.loading = true
 
         // create issuer
-        StellarUtils.newAccount(fundingWallet, '1')
+        StellarUtils.newAccount(fundingWallet, String(this.xlmBalance))
           .then((accountInfo) => {
             this.accountCreated(accountInfo)
           })
