@@ -1,18 +1,31 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="400">
+<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="480">
   <div class='main-container'>
-    <div>Don't loose these keys! Print or save them to a secure USB or hard disk</div>
-    <div class='buttons-area'>
-      <v-tooltip open-delay='200' bottom>
-        <v-btn color='primary' slot="activator" @click="buttonClick('add-account')">Save Keys...</v-btn>
-        <span>Add existing account with a secret key</span>
-      </v-tooltip>
-      <v-tooltip open-delay='200' bottom>
-        <v-btn color='primary' slot="activator" @click="buttonClick('create-account')">Print Keys...</v-btn>
-        <span>Create a new account with a source account's secret key</span>
-      </v-tooltip>
-    </div>
+    <div class='dialog-contents'>
+      <div class='top-dialog-text'>Don't loose these keys! Print or save them to a secure USB or hard disk</div>
 
+      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" label="Funding account" return-object max-height="600"></v-select>
+
+      <div class='operations-item' v-for="key in Array.from(summaryMap.keys())" :key=key>
+        <div class='item-name'>
+          {{key}}:
+        </div>
+        <div class='item-value'>
+          {{summaryMap.get(key)}}
+        </div>
+      </div>
+
+      <div class='buttons-area'>
+        <v-tooltip open-delay='200' bottom>
+          <v-btn color='primary' slot="activator" @click="buttonClick('save-keys')">Save Keys...</v-btn>
+          <span>Save the keys to a file on a USB or disk</span>
+        </v-tooltip>
+        <v-tooltip open-delay='200' bottom>
+          <v-btn color='primary' slot="activator" @click="buttonClick('print-keys')">Print Keys...</v-btn>
+          <span>Print the keys for safety</span>
+        </v-tooltip>
+      </div>
+    </div>
     <toast-component :absolute=true location='save-keys-dialog' :bottom=false :top=true />
   </div>
 </v-dialog>
@@ -25,9 +38,11 @@ import {
 } from 'stellar-js-utils'
 import ToastComponent from '../ToastComponent.vue'
 import StellarUtils from '../../js/StellarUtils.js'
+import StellarCommonMixin from '../StellarCommonMixin.js'
 
 export default {
-  props: ['ping'],
+  props: ['ping', 'secret'],
+  mixins: [StellarCommonMixin],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent
@@ -35,19 +50,58 @@ export default {
   data() {
     return {
       visible: false,
-      isMainnet: false
+      isMainnet: false,
+      summaryMap: [],
+      selectedSource: null
     }
   },
   watch: {
+    selectedSource: function() {
+      this.updateSummary()
+    },
     ping: function() {
       this.visible = true
       this.isMainnet = !StellarUtils.isTestnet()
+      this.setup()
     }
   },
   mounted() {
     this.isMainnet = !StellarUtils.isTestnet()
+
+    this.setup()
   },
   methods: {
+    setup() {
+      // find account with the secret passed in
+      for (const account of this.accountsUI) {
+        if (account.secret === this.secret) {
+          this.selectedSource = account
+          break
+        }
+      }
+      this.updateSummary()
+    },
+    updateSummary() {
+      this.summaryMap = new Map()
+
+      if (this.selectedSource) {
+        this.summaryMap.set('Public', this.selectedSource.publicKey)
+        this.summaryMap.set('Secret', this.selectedSource.secret)
+      } else {
+        this.summaryMap.set('Public', '--')
+        this.summaryMap.set('Secret', '--')
+      }
+    },
+    buttonClick(id) {
+      switch (id) {
+        case 'save-keys':
+          break
+        case 'print-keys':
+          break
+        default:
+          break
+      }
+    },
     displayToast(message, error = false) {
       Helper.toast(message, error, 'save-keys-dialog')
     }
@@ -61,8 +115,33 @@ export default {
 .main-container {
     @include standard-dialog-contents();
 
-    .help-contents {
+    .dialog-contents {
         @include inner-dialog-contents();
+
+        .top-dialog-text {
+            margin-bottom: 10px;
+        }
+        .operations-item {
+            display: flex;
+            font-size: 0.65em;
+
+            .item-name {
+                text-align: right;
+                padding-right: 5px;
+                font-weight: bold;
+                flex: 1 1 10%;
+            }
+
+            .item-value {
+                text-align: left;
+                flex: 2 2 90%;
+                padding-left: 5px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: 0;
+            }
+        }
 
         .buttons-area {
             width: 100%;

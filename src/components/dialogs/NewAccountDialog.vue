@@ -24,7 +24,7 @@
 
           <v-text-field spellcheck="false" autofocus label="Secret key" :counter="56" v-model.trim="secretKey" @keyup.enter="addExistingAccount()" hint="Starts with an 'S'" :append-icon="showSecret ? 'visibility_off' : 'visibility'" :append-icon-cb="() => (showSecret = !showSecret)"
             :type="showSecret ? 'text' : 'password'"></v-text-field>
-          <v-text-field spellcheck="false" label="Account name" v-model.trim="name" @keyup.enter="addExistingAccount()" hint="Name helps you keep track of multiple accounts."> </v-text-field>
+          <v-text-field spellcheck="false" label="Account name" v-model.trim="name" @keyup.enter="addExistingAccount()" hint="A unique name helps you keep track of multiple accounts"> </v-text-field>
 
           <v-tooltip open-delay='200' bottom>
             <v-btn round color='primary' slot="activator" @click="addExistingAccount()" :loading="loading">Add Account</v-btn>
@@ -59,7 +59,7 @@
         </div>
       </div>
 
-      <save-secret-dialog :ping='saveSecretDialogPing' />
+      <save-secret-dialog :ping='saveSecretDialogPing' :secret='newAccountSecret' />
 
       <toast-component :absolute=true location='create-account-dialog' :bottom=false :top=true />
     </div>
@@ -101,6 +101,7 @@ export default {
       isMainnet: false,
       mode: 'start',
       selectedSource: null,
+      newAccountSecret: '',
       saveSecretDialogPing: false
     }
   },
@@ -205,6 +206,8 @@ export default {
       Helper.debugLog(accountInfo.keypair.secret())
 
       setTimeout(() => {
+        // update this before showing the dialog
+        this.newAccountSecret = accountInfo.keypair.secret()
         this.saveSecretDialogPing = !this.saveSecretDialogPing
       }, 1000)
     },
