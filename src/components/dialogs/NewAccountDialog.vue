@@ -191,6 +191,10 @@ export default {
           .then((accountInfo) => {
             this.accountCreated(accountInfo)
           })
+          .catch((error) => {
+            Helper.debugLog(error)
+            this.displayToast('Failed to connect to Ledger Nano', true)
+          })
       }
     },
     accountCreated(accountInfo) {
