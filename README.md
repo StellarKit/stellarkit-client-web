@@ -9,7 +9,11 @@ To build and run:
     npm install
     npm run dev
 
-To build installer
+You need https for testing Ledger Nano
+
+    npm run devHTTPS
+
+To build  
 
     npm run dist
 

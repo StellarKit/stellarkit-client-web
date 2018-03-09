@@ -63,7 +63,7 @@ let common = {
 // target differences
 const TARGET = process.env.npm_lifecycle_event
 
-if (TARGET === 'dist' || TARGET === 'dev') {
+if (TARGET === 'dist' || TARGET === 'dev' || TARGET === 'devHTTPS') {
   common = merge(common, {
     entry: './src/entry.js',
     target: 'web',
