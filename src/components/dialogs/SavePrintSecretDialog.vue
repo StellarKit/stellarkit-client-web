@@ -103,8 +103,6 @@ export default {
         iframe.setAttribute('id', 'printkeys')
         iframe.setAttribute('name', 'printkeys')
 
-        // other code has this, but makes it blank here?
-        // iframe.style.display = 'none'
         document.body.appendChild(iframe)
 
         const frameWindow = window.frames['printkeys']

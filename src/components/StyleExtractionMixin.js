@@ -15,7 +15,6 @@ export default {
       iframe.setAttribute('id', 'printf')
       iframe.setAttribute('name', 'printf')
 
-      iframe.style.display = 'none'
       document.body.appendChild(iframe)
 
       const frameWindow = window.frames['printf']

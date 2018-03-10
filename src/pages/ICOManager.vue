@@ -51,15 +51,16 @@
           <v-icon>&#xE8AD;</v-icon>
         </v-btn>
       </div>
-      <div class='operations-item' v-for="key in Array.from(summaryMap.keys())" :key=key>
-        <div class='item-name'>
-          {{key}}:
-        </div>
-        <div class='item-value'>
-          {{summaryMap.get(key)}}
+      <div class='summary-list'>
+        <div class='operations-item' v-for="key in Array.from(summaryMap.keys())" :key=key>
+          <div class='item-name'>
+            {{key}}:
+          </div>
+          <div class='item-value'>
+            {{summaryMap.get(key)}}
+          </div>
         </div>
       </div>
-
       <div class='button-group'>
         <v-btn round small @click="sendTokens()">Send Tokens</v-btn>
         <v-btn round small @click="manageOffer()">Manage Offer</v-btn>
@@ -105,7 +106,7 @@ export default {
     'instructions-header': InstructionsHeader
   },
   computed: {
-    menuButtonName: function () {
+    menuButtonName: function() {
       const project = this.currentProject()
       if (project) {
         return 'Token: ' + project.symbol
@@ -113,7 +114,7 @@ export default {
 
       return 'Create Token'
     },
-    tokenMenuItems: function () {
+    tokenMenuItems: function() {
       const result = []
 
       for (const item of this.tokenProjects) {
@@ -204,7 +205,7 @@ export default {
       return null
     },
     printInfo() {
-      this.printTokenInfo($('.summary-view'))
+      this.printTokenInfo($('.summary-list'))
     },
     createToken() {
       Helper.debugLog('creating token')
@@ -392,6 +393,7 @@ export default {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-family: monospace;
             width: 0;
         }
     }
