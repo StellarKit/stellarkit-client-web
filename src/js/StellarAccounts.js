@@ -110,12 +110,14 @@ class StellarAccounts {
   }
 
   deleteAccount(publicKey) {
-    const index = this.accountIndexWithPublicKey(publicKey)
+    const accounts = this.shared().accounts()
 
-    if (index !== -1) {
-      this.shared().delete(index)
-    } else {
-      console.log('index not found')
+    // must get real index from shared since we are deleting with an index
+    for (const [index, val] of accounts.entries()) {
+      if (publicKey === val.publicKey) {
+        this.shared().delete(index)
+        break
+      }
     }
   }
 
@@ -128,17 +130,6 @@ class StellarAccounts {
       }
     }
     return null
-  }
-
-  accountIndexWithPublicKey(publicKey) {
-    const accounts = this.accounts()
-
-    for (const [index, val] of accounts.entries()) {
-      if (publicKey === val.publicKey) {
-        return index
-      }
-    }
-    return -1
   }
 
   accountWithPublicKey(publicKey) {
