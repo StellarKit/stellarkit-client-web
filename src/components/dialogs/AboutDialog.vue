@@ -1,5 +1,5 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="500">
   <div class='main-container'>
     <dialog-titlebar :title=title v-on:close='visible = false' />
 
@@ -63,9 +63,13 @@ export default {
       const frequency = 0.2
 
       for (let i = 0; i < 32; ++i) {
-        const red = Math.sin(frequency * i + 0) * 127 + 128
-        const grn = Math.sin(frequency * i + 2) * 127 + 128
-        const blu = Math.sin(frequency * i + 4) * 127 + 128
+        let red = Math.sin(frequency * i + 0) * 127 + 128
+        let grn = Math.sin(frequency * i + 2) * 127 + 128
+        let blu = Math.sin(frequency * i + 4) * 127 + 128
+
+        red *= 0.4
+        grn *= 0.4
+        blu *= 0.8
 
         colors.push('#' + this.byte2Hex(red) + this.byte2Hex(grn) + this.byte2Hex(blu))
       }
@@ -86,7 +90,7 @@ export default {
           colorIndex -= colors.length
         }
 
-        const pixels = (i + 1) * 10
+        const pixels = (i + 1) * 8
         shadowString += shadowString.length > 0 ? ', ' : ''
 
         shadowString += '0 0 0 ' + pixels + 'px ' + colors[colorIndex]
@@ -125,7 +129,7 @@ export default {
         .set(rainbowElement, {
           backgroundColor: 'rgb(255,255,255)'
         })
-        .to(rainbowElement, 1, {
+        .to(rainbowElement, 3, {
           backgroundColor: 'rgb(0,0,0)'
         }, '+=0')
     }
@@ -138,10 +142,10 @@ export default {
 
 #rainbow {
     position: absolute;
-    left: 60%;
-    top: 90%;
-    width: 11vmax;
-    height: 11vmax;
+    left: 283px;
+    top: 82px;
+    width: 80px;
+    height: 80px;
     background: white;
     border-radius: 50%;
 }
@@ -151,7 +155,7 @@ export default {
 
     .main-content {
         position: relative;
-        height: 200px;
+        height: 220px;
         overflow: hidden;
         display: flex;
         justify-content: center;
@@ -162,8 +166,8 @@ export default {
 
         .initials-text {
             position: absolute;
-            bottom: -2px;
-            left: 434px;
+            bottom: 62px;
+            left: 310px;
             z-index: 1;
 
             a {
@@ -178,13 +182,14 @@ export default {
             justify-content: center;
             flex-direction: column;
             font-family: $fancyFontFamily;
-            text-shadow: 0 0 20px black;
+            text-shadow: 0 0 5px black;
+            font-weight: bold;
 
             a {
                 text-decoration: none;
                 color: white;
-                font-size: 1.72em;
-                text-shadow: 0 0 20px black;
+                font-size: 1.78em;
+                text-shadow: 0 0 5px black;
             }
         }
     }
