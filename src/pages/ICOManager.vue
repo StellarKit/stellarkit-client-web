@@ -62,12 +62,12 @@
         </div>
       </div>
       <div class='button-group'>
+        <v-btn round small @click="createUserAccount()">Create Account</v-btn>
         <v-btn round small @click="sendTokens()">Send Tokens</v-btn>
         <v-btn round small @click="manageOffer()">Manage Offer</v-btn>
         <v-btn round small @click="showOffers()">Show Offers</v-btn>
         <v-btn round small @click="deleteOffers()">Delete Offers</v-btn>
         <v-btn round small @click="lockIssuer()">Lock Issuer</v-btn>
-        <v-btn round small @click="createUserAccount()">Create Account</v-btn>
       </div>
     </div>
   </div>
@@ -78,6 +78,7 @@
   <create-token-dialog v-on:token-created='createDialogResult' :ping='createDialogPing' />
   <confirm-dialog v-on:confirm-dialog-ok='deleteTokenProjectConfirmed' :ping='confirmDialogPing' title='Delete Token Project?' message='Do you want to delete this token project? Tokens will remain on the network, but make sure you have your keys.' okTitle='Delete Project'
   />
+  <confirm-dialog v-on:confirm-dialog-ok='lockIssuerConfirmed' :ping='confirmLockDialogPing' title='Lock Issuer?' message='Any tokens or currency on this account will be locked for good.' okTitle='Lock Issuer' />
 </div>
 </template>
 
@@ -147,7 +148,8 @@ export default {
       dialogProject: null,
       accountDialogPing: false,
       showSummary: false,
-      confirmDialogPing: false
+      confirmDialogPing: false,
+      confirmLockDialogPing: false
     }
   },
   mounted() {
@@ -158,6 +160,22 @@ export default {
     this.updateProjectIndex(0)
   },
   methods: {
+    lockIssuerConfirmed() {
+      Helper.debugLog('Locking issuer...')
+      const project = this.currentProject()
+      if (project) {
+        StellarUtils.lockAccount(StellarWallet.secret(project.issuerSecret))
+          .then((result) => {
+            Helper.debugLog('locked!')
+            Helper.debugLog(result)
+
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error)
+          })
+      }
+    },
     deleteTokenProjectConfirmed() {
       this.tokenProjects.splice(this.projectIndex, 1)
       this.saveProjects()
@@ -314,20 +332,7 @@ export default {
       }
     },
     lockIssuer() {
-      Helper.debugLog('Locking issuer...')
-      const project = this.currentProject()
-      if (project) {
-        StellarUtils.lockAccount(StellarWallet.secret(project.issuerSecret))
-          .then((result) => {
-            Helper.debugLog('locked!')
-            Helper.debugLog(result)
-
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error)
-          })
-      }
+      this.confirmLockDialogPing = !this.confirmLockDialogPing
     },
     projectsMenuClick(index, action) {
       switch (action) {
