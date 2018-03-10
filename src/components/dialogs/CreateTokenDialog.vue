@@ -9,7 +9,7 @@
         <div class='sub-header'>Give your asset a symbol and create the tokens. Symbol can be 1-12 characters long</div>
       </div>
       <div class='help-email'>
-        <v-text-field label='Symbol' v-model.trim="symbol" ref='input'></v-text-field>
+        <v-text-field label='Symbol' v-model.trim="symbol" @keyup.enter="createToken()" ref='input'></v-text-field>
         <v-text-field label='Amount' v-model.number="amount" type='number' @keyup.enter="createToken()"></v-text-field>
       </div>
       <div class='status-message'>{{statusMessage}}</div>
@@ -49,19 +49,23 @@ export default {
       title: 'Create Token',
       statusMessage: '',
       symbol: '',
-      amount: 0,
+      amount: 1000000,
       loading: false
     }
   },
   watch: {
-    ping: function () {
+    ping: function() {
       this.visible = true
       this.domain = ''
       this.statusMessage = ''
+      this.symbol = ''
+      this.amount = 1000000
 
       // autofocus hack
       this.$nextTick(() => {
-        this.$refs.input.focus()
+        if (this.$refs.input) {
+          this.$refs.input.focus()
+        }
       })
     }
   },

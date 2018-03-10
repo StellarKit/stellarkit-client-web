@@ -142,7 +142,7 @@ class StellarUtils {
     Helper.debugLog(keypair.publicKey())
     Helper.debugLog(keypair.secret())
 
-    const accountRec = StellarAccounts.addAccount(keypair, name, false, tag)
+    const accountRec = StellarAccounts.addAccount(keypair, name, tag)
 
     return this.createAccount(sourceWallet, keypair.publicKey(), startingBalance)
       .then((account) => {

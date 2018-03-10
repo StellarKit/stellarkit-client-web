@@ -79,7 +79,7 @@ export default {
         Helper.debugLog('creating account...')
         Helper.debugLog(keypair.publicKey())
 
-        StellarAccounts.addAccount(keypair, null, true)
+        StellarAccounts.addAccount(keypair)
 
         const newWallet = StellarWallet.secret(keypair.secret())
         const ledgerWallet = StellarWallet.ledger(this.ledgerAPI, () => {
