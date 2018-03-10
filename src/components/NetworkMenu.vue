@@ -5,12 +5,14 @@
       Network
       <v-icon>&#xE5C5;</v-icon>
     </v-btn>
-    <v-list>
-      <v-list-tile v-for="item in items" :key="item.title" @click="menuSelected(item)">
-        <v-icon style='margin-right: 8px;'>{{item.icon}}</v-icon>
-        <v-list-tile-content>
-          <v-list-tile-title>{{item.title}}</v-list-tile-title>
-        </v-list-tile-content>
+    <v-list dense>
+      <v-list-tile v-for="item in items" :key="item.title + (item.main ? 'main':'test')" @click="menuSelected(item)">
+        <div class='network-menu-item'>
+          <div class='menu-tile-title'>{{item.title}}</div>
+
+          <div v-if='item.main' class='network-main'>MAIN</div>
+          <div v-else class='network-test'>TEST</div>
+        </div>
       </v-list-tile>
     </v-list>
   </v-menu>
@@ -30,23 +32,23 @@ export default {
       server: null,
       items: [{
           id: 'testnet',
-          title: 'Stellar.org (test)',
-          icon: 'cloud_circle'
+          main: false,
+          title: 'Stellar.org'
         },
         {
           id: 'mainnet',
-          title: 'Stellar.org (main)',
-          icon: 'cloud_circle'
+          main: true,
+          title: 'Stellar.org'
         },
         {
           id: 'stellarkit',
-          title: 'StellarKit.io (test)',
-          icon: 'cloud_circle'
+          main: false,
+          title: 'StellarKit.io'
         },
         {
           id: 'local',
-          title: 'Local server (test)',
-          icon: 'cloud_circle'
+          main: false,
+          title: 'Local server'
         }
       ]
     }
@@ -112,6 +114,38 @@ export default {
 
     .tiny-button {
         margin: 3px 4px;
+    }
+}
+
+.network-menu-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 1.3em;
+
+    .menu-tile-title {
+        flex: 1 0 auto;
+        margin-right: 16px;
+    }
+
+    .network-main,
+    .network-test {
+        flex: 0 0 auto;
+        padding: 1px 8px;
+        text-align: center;
+        min-width: 50px;
+        color: white;
+        font-size: 0.8em;
+        border-radius: 3px;
+        font-weight: bold;
+    }
+
+    .network-test {
+        background: rgba(8, 128, 200, .6);
+    }
+
+    .network-main {
+        background: rgba(28, 180, 28, .6);
     }
 }
 </style>
