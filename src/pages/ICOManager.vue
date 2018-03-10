@@ -75,7 +75,9 @@
   <manage-offer-dialog :ping='offerDialogPing' :project='dialogProject' />
   <send-tokens-dialog :ping='sendTokensDialogPing' :project='dialogProject' />
   <create-account-dialog :ping='accountDialogPing' :project='dialogProject' />
-  <create-token-dialog v-on:token-created='createDialogResult' :ping='createDialogPing ' />
+  <create-token-dialog v-on:token-created='createDialogResult' :ping='createDialogPing' />
+  <confirm-dialog v-on:confirm-dialog-ok='deleteTokenProjectConfirmed' :ping='confirmDialogPing' title='Delete Token Project?' message='Do you want to delete this token project? Tokens will remain on the network, but make sure you have your keys.' okTitle='Delete Project'
+  />
 </div>
 </template>
 
@@ -87,6 +89,7 @@ import CreateTokenDialog from '../components/dialogs/CreateTokenDialog.vue'
 import CreateAccountDialog from '../components/dialogs/CreateAccountDialog.vue'
 import ManageOfferDialog from '../components/dialogs/ManageOfferDialog.vue'
 import SendTokensDialog from '../components/dialogs/SendTokensDialog.vue'
+import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue'
 import StyleExtractionMixin from '../components/StyleExtractionMixin.js'
 const $ = require('jquery')
 import StellarUtils from '../js/StellarUtils.js'
@@ -103,7 +106,8 @@ export default {
     'manage-offer-dialog': ManageOfferDialog,
     'create-account-dialog': CreateAccountDialog,
     'send-tokens-dialog': SendTokensDialog,
-    'instructions-header': InstructionsHeader
+    'instructions-header': InstructionsHeader,
+    'confirm-dialog': ConfirmDialog
   },
   computed: {
     menuButtonName: function() {
@@ -142,7 +146,8 @@ export default {
       sendTokensDialogPing: false,
       dialogProject: null,
       accountDialogPing: false,
-      showSummary: false
+      showSummary: false,
+      confirmDialogPing: false
     }
   },
   mounted() {
@@ -153,6 +158,12 @@ export default {
     this.updateProjectIndex(0)
   },
   methods: {
+    deleteTokenProjectConfirmed() {
+      this.tokenProjects.splice(this.projectIndex, 1)
+      this.saveProjects()
+
+      this.updateProjectIndex(0)
+    },
     ledgerMenu(id) {
       switch (id) {
         case 'info':
@@ -166,10 +177,7 @@ export default {
       }
     },
     deleteTokenProject() {
-      this.tokenProjects.splice(this.projectIndex, 1)
-      this.saveProjects()
-
-      this.updateProjectIndex(0)
+      this.confirmDialogPing = !this.confirmDialogPing
     },
     updateProjectIndex(index) {
       this.projectIndex = index
