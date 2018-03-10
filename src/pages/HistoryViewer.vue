@@ -94,13 +94,13 @@ export default {
     }
   },
   watch: {
-    selectedSource: function () {
+    selectedSource: function() {
       this.cache = null
       Helper.clearLog()
     }
   },
   computed: {
-    buttonTitle: function () {
+    buttonTitle: function() {
       let result = 'Unknown'
       switch (this.mode) {
         case 'transactions':
@@ -117,7 +117,7 @@ export default {
       }
       return result
     },
-    orderButtonTitle: function () {
+    orderButtonTitle: function() {
       let result = 'Unknown'
       switch (this.order) {
         case 'asc':
