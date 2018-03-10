@@ -62,10 +62,10 @@ import $ from 'jquery'
 export default {
   props: ['publicKey'],
   watch: {
-    condensedOutput: function () {
+    condensedOutput: function() {
       Helper.set('condensedOutput', this.condensedOutput)
     },
-    expandXDR: function () {
+    expandXDR: function() {
       Helper.set('expandXDR', this.expandXDR)
     }
   },
@@ -141,7 +141,7 @@ export default {
         font-family: monospace;
         overflow: auto;
         color: rgb(0,256,150);
-        margin-left: 30px;
+        margin: 10px 0 0 30px;
     }
 }
 

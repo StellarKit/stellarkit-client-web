@@ -171,7 +171,7 @@ export default {
             z-index: 1;
 
             a {
-                color: rgba(0,0,0,.1);
+                color: rgba(0,0,0,.08);
                 text-decoration: none;
             }
         }
