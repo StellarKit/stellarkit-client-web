@@ -120,7 +120,7 @@ class StellarAccounts {
   }
 
   accountWithName(name) {
-    const accounts = this.shared().accounts()
+    const accounts = this.accounts()
 
     for (const val of accounts) {
       if (name === val.name) {
@@ -131,7 +131,7 @@ class StellarAccounts {
   }
 
   accountIndexWithPublicKey(publicKey) {
-    const accounts = this.shared().accounts()
+    const accounts = this.accounts()
 
     for (const [index, val] of accounts.entries()) {
       if (publicKey === val.publicKey) {
@@ -142,7 +142,7 @@ class StellarAccounts {
   }
 
   accountWithPublicKey(publicKey) {
-    const accounts = this.shared().accounts()
+    const accounts = this.accounts()
 
     for (const val of accounts.entries()) {
       if (publicKey === val.publicKey) {
@@ -153,7 +153,7 @@ class StellarAccounts {
   }
 
   updateBalance(index, symbol, balance) {
-    const accounts = this.shared().accounts()
+    const accounts = this.accounts()
     const acct = accounts[index]
 
     const n = parseFloat(balance)
@@ -165,7 +165,7 @@ class StellarAccounts {
   }
 
   secret(index) {
-    const accounts = this.shared().accounts()
+    const accounts = this.accounts()
 
     const acct = accounts[index]
 
@@ -173,7 +173,7 @@ class StellarAccounts {
   }
 
   publicKey(index) {
-    const accounts = this.shared().accounts()
+    const accounts = this.accounts()
 
     const acct = accounts[index]
 
@@ -181,7 +181,7 @@ class StellarAccounts {
   }
 
   keyPair(index) {
-    const accounts = this.shared().accounts()
+    const accounts = this.accounts()
 
     const acct = accounts[index]
     return StellarSdk.Keypair.fromSecret(acct.secret)

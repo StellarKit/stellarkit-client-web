@@ -52,7 +52,6 @@ export default {
   data() {
     return {
       visible: false,
-      isMainnet: false,
       summaryMap: [],
       selectedSource: null
     }
@@ -63,13 +62,10 @@ export default {
     },
     ping: function() {
       this.visible = true
-      this.isMainnet = !StellarUtils.isTestnet()
       this.setup()
     }
   },
   mounted() {
-    this.isMainnet = !StellarUtils.isTestnet()
-
     this.setup()
   },
   methods: {
@@ -125,7 +121,9 @@ export default {
     keyString(html = false) {
       let result = ''
       if (this.selectedSource) {
-        const network = this.isMainnet ? '(mainnet)' : '(testnet)'
+        const isMainnet = !StellarUtils.isTestnet()
+
+        const network = isMainnet ? '(mainnet)' : '(testnet)'
         let newLines = '\n\n'
         if (html) {
           newLines = '<br><br>'

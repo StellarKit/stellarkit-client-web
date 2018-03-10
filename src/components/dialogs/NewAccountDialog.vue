@@ -100,7 +100,6 @@ export default {
       showSecret: false,
       secretKey: '',
       name: generateName(),
-      isMainnet: false,
       mode: 'start',
       selectedSource: null,
       newAccountSecret: '',
@@ -120,11 +119,7 @@ export default {
       this.name = generateName()
       this.mode = 'start'
       this.xlmBalance = 1
-      this.isMainnet = !StellarUtils.isTestnet()
     }
-  },
-  mounted() {
-    this.isMainnet = !StellarUtils.isTestnet()
   },
   methods: {
     sourceValid() {
