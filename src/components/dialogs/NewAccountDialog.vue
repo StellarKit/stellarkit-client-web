@@ -108,12 +108,12 @@ export default {
     }
   },
   computed: {
-    showBack: function() {
+    showBack: function () {
       return this.mode !== 'start'
     }
   },
   watch: {
-    ping: function() {
+    ping: function () {
       this.visible = true
       this.secretKey = ''
       this.name = generateName()
@@ -166,7 +166,7 @@ export default {
 
       this.loading = true
 
-      StellarUtils.newAccount(fundingWallet, String(this.xlmBalance))
+      StellarUtils.newAccount(fundingWallet, String(this.xlmBalance), this.name)
         .then((accountInfo) => {
           this.accountCreated(accountInfo)
         })
@@ -186,7 +186,7 @@ export default {
         this.loading = true
 
         // create issuer
-        StellarUtils.newAccount(fundingWallet, String(this.xlmBalance))
+        StellarUtils.newAccount(fundingWallet, String(this.xlmBalance), this.name)
           .then((accountInfo) => {
             this.accountCreated(accountInfo)
           })
