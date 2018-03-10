@@ -33,6 +33,18 @@ export default class Helper {
     return inString.length > 0
   }
 
+  static stripZeros(floatString) {
+    const n = parseFloat(floatString)
+    const noZeroes = n.toString() // "1.245"
+
+    // I don't want 5e-7, so bail if has an 'e'
+    if (noZeroes.indexOf('e') !== -1) {
+      return floatString
+    }
+
+    return noZeroes
+  }
+
   static keyForKey(key) {
     return 'pref-' + key
   }

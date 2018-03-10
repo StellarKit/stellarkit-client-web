@@ -12,13 +12,13 @@
   </div>
   <div class="operations-content">
     <div class='operations-title'>Live Stream</div>
-    <div class='operations-item' v-for="item in operations" :key=item.id>
-      <div class='item-name'>
+    <div class='operations-item' v-for="item in operations" :key='item.id + item.name'>
+      <a :href='item.link' class='item-name' target='_blank'>
         {{item.name}}:
-      </div>
-      <div class='item-value'>
+      </a>
+      <a :href='item.link' class='item-value' target='_blank'>
         {{item.value}}
-      </div>
+      </a>
     </div>
   </div>
 </div>
@@ -44,19 +44,19 @@ export default {
     'instructions-header': InstructionsHeader
   },
   computed: {
-    paymentsButtonName: function () {
+    paymentsButtonName: function() {
       if (this.paymentStopper) {
         return 'Stop Payments'
       }
       return 'Payments'
     },
-    operationsButtonName: function () {
+    operationsButtonName: function() {
       if (this.operationStopper) {
         return 'Stop Operations'
       }
       return 'Operations'
     },
-    tradesButtonName: function () {
+    tradesButtonName: function() {
       if (this.tradeStopper) {
         return 'Stop Trades'
       }
@@ -64,25 +64,27 @@ export default {
     }
   },
   methods: {
-    addOperation(item) {
+    addOperation(item, tx) {
+      item.link = tx._links.self.href
+
       this.operations.unshift(item)
 
       this.operations = this.operations.slice(0, 12)
     },
     displayTransaction(txResponse) {
       if (txResponse.type === 'payment') {
-        let asset = 'native'
+        let asset = 'XLM'
 
         if (txResponse.asset_type !== 'native') {
           asset = txResponse.asset_code
         }
         this.addOperation({
           id: txResponse.id,
-          name: 'payment ' + asset,
-          value: txResponse.amount
-        })
+          name: 'Payment ' + asset,
+          value: Helper.stripZeros(txResponse.amount)
+        }, txResponse)
       } else if (txResponse.type === 'payment_path') {
-        let asset = 'native'
+        let asset = 'XLM'
 
         if (txResponse.asset_type !== 'native') {
           asset = txResponse.asset_code
@@ -90,24 +92,24 @@ export default {
 
         this.addOperation({
           id: txResponse.id,
-          name: 'payment path' + asset + '/' + txResponse.source_asset_code,
-          value: txResponse.amount
-        })
+          name: 'Payment path' + asset + '/' + txResponse.source_asset_code,
+          value: Helper.stripZeros(txResponse.amount)
+        }, txResponse)
       } else if (txResponse.type === 'create_account') {
         this.addOperation({
           id: txResponse.id,
-          name: 'create account',
-          value: txResponse.starting_balance
-        })
+          name: 'Create Account',
+          value: Helper.stripZeros(txResponse.starting_balance)
+        }, txResponse)
       } else if (txResponse.type === 'account_merge') {
         this.addOperation({
           id: txResponse.id,
-          name: 'account merge',
+          name: 'Account Merge',
           value: 'merging'
-        })
+        }, txResponse)
       } else if (txResponse.type === 'manage_offer') {
-        let buying = 'native'
-        let selling = 'native'
+        let buying = 'XLM'
+        let selling = 'XLM'
 
         if (txResponse.buying_asset_type !== 'native') {
           buying = txResponse.buying_asset_code
@@ -117,11 +119,11 @@ export default {
         }
         this.addOperation({
           id: txResponse.id,
-          name: 'manage offer',
-          value: 'selling: ' + selling + ' buying: ' + buying
-        })
+          name: 'Manage Offer',
+          value: 'Selling: ' + selling + ' Buying: ' + buying
+        }, txResponse)
       } else if (txResponse.type === 'change_trust') {
-        let asset = 'native'
+        let asset = 'XLM'
 
         if (txResponse.asset_type !== 'native') {
           asset = txResponse.asset_code
@@ -129,22 +131,22 @@ export default {
 
         this.addOperation({
           id: txResponse.id,
-          name: 'change trust',
+          name: 'Change Trust',
           value: asset
-        })
+        }, txResponse)
       } else if (txResponse.type === 'set_options') {
         let value = 'unknown'
         if (txResponse.inflation_dest) {
-          value = 'inflation_dest = ' + txResponse.inflation_dest
+          value = 'Inflation dest = ' + txResponse.inflation_dest
         }
 
         this.addOperation({
           id: txResponse.id,
-          name: 'set options',
+          name: 'Set Options',
           value: value
-        })
+        }, txResponse)
       } else if (txResponse.type === 'allow_trust') {
-        let asset = 'native'
+        let asset = 'XLM'
 
         if (txResponse.asset_type !== 'native') {
           asset = txResponse.asset_code
@@ -152,15 +154,15 @@ export default {
 
         this.addOperation({
           id: txResponse.id,
-          name: 'allow trust',
+          name: 'Allow Trust',
           value: asset
-        })
+        }, txResponse)
       } else if (txResponse.type === 'manage_data') {
         this.addOperation({
           id: txResponse.id,
-          name: 'manage data',
-          value: 'name = ' + txResponse.name + ' value = ' + txResponse.value
-        })
+          name: 'Manage Data',
+          value: 'Name = ' + txResponse.name + ' Value = ' + txResponse.value
+        }, txResponse)
       } else {
         Helper.debugLog(txResponse)
       }
@@ -182,7 +184,11 @@ export default {
             this.displayTransaction(txResponse)
           },
           onerror: (error) => {
-            Helper.debugLog(error, 'Error')
+            if (error['isTrusted'] === true) {
+              // not sure what this is, but ignoring it, constantly logs
+            } else {
+              Helper.debugLog(error, 'onerror')
+            }
           }
         })
       }
@@ -204,7 +210,11 @@ export default {
             this.displayTransaction(txResponse)
           },
           onerror: (error) => {
-            Helper.debugLog(error, 'Error')
+            if (error['isTrusted'] === true) {
+              // not sure what this is, but ignoring it, constantly logs
+            } else {
+              Helper.debugLog(error, 'onerror')
+            }
           }
         })
       }
@@ -226,7 +236,11 @@ export default {
             this.displayTransaction(txResponse)
           },
           onerror: (error) => {
-            Helper.debugLog(error)
+            if (error['isTrusted'] === true) {
+              // not sure what this is, but ignoring it, constantly logs
+            } else {
+              Helper.debugLog(error, 'onerror')
+            }
           }
         })
       }
@@ -268,7 +282,7 @@ export default {
         //     Helper.debugLog(response)
         //   },
         //   onerror: (error) => {
-        //     Helper.debugLog(error, 'Error')
+        //     Helper.debugLog(error, 'onerror')
         //   }
         // })
       }
@@ -286,7 +300,6 @@ export default {
     min-height: 300px;
     flex-direction: column;
     align-items: center;
-    padding: 5px;
     background: rgb(55,55,55);
     color: white;
 
@@ -295,33 +308,38 @@ export default {
         width: 100%;
 
         &:nth-child(even) {
-            background: rgba(255, 255, 255, .2);
+            background: rgba(255, 255, 255, .1);
         }
 
         .item-name {
             text-align: right;
             padding-right: 5px;
             flex: 1 0 50%;
+            text-decoration: none;
+            color: white;
 
-            background: rgba(0,200,0, .4);
+            background: rgba(0,55,40, .2);
         }
 
         .item-value {
             text-align: left;
             flex: 1 0 50%;
             padding-left: 5px;
-
-            background: rgba(0,0,200, .4);
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
+            background: rgba(0,0,200, .1);
         }
     }
 
     .operations-title {
-        font-size: 1.2em;
-        padding: 2px 20px;
-        margin-bottom: 4px;
+        width: 100%;
+        text-align: center;
+        background: rgba(0,0,0,.3);
+        font-size: 1em;
+        color: rgba(255,255,255,.5);
         font-weight: bold;
-        background: rgb(88,88,88);
-        border-radius: 50px;
+        margin: 2px 0;
         text-transform: uppercase;
     }
 }

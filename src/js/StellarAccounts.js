@@ -147,10 +147,7 @@ class StellarAccounts {
     const accounts = this.accounts()
     const acct = accounts[index]
 
-    const n = parseFloat(balance)
-    const noZeroes = n.toString() // "1.245"
-
-    acct.balances[symbol] = noZeroes
+    acct.balances[symbol] = Helper.stripZeros(balance)
 
     this.shared().save()
   }

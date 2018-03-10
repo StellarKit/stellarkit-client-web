@@ -7,11 +7,9 @@
     </v-btn>
     <v-list>
       <v-list-tile v-for="item in items" :key="item.title" @click="menuSelected(item)">
-        <v-list-tile-action>
-          <v-icon>{{ item.icon }}</v-icon>
-        </v-list-tile-action>
+        <v-icon style='margin-right: 8px;'>{{item.icon}}</v-icon>
         <v-list-tile-content>
-          <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+          <v-list-tile-title>{{item.title}}</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
     </v-list>
@@ -32,22 +30,22 @@ export default {
       server: null,
       items: [{
           id: 'testnet',
-          title: 'Testnet at Stellar.org',
+          title: 'Stellar.org (test)',
           icon: 'cloud_circle'
         },
         {
           id: 'mainnet',
-          title: 'Main - stellar.org',
+          title: 'Stellar.org (main)',
           icon: 'cloud_circle'
         },
         {
           id: 'stellarkit',
-          title: 'Testnet at StellarKit.io',
+          title: 'StellarKit.io (test)',
           icon: 'cloud_circle'
         },
         {
           id: 'local',
-          title: 'Testnet - Local server',
+          title: 'Local server (test)',
           icon: 'cloud_circle'
         }
       ]

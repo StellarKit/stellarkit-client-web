@@ -34,7 +34,7 @@
     </v-tooltip>
   </v-btn>
 
-  <div class='accounts-title'>Accounts - click for info</div>
+  <div class='accounts-title'>Accounts - Click for Info</div>
   <div v-if='items.length === 0' class='zero-accounts'>
     Create an account
   </div>
