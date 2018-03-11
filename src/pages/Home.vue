@@ -21,12 +21,8 @@
       <v-btn round small @click="removeSignerForSelected()">Remove Signer</v-btn>
 
       <v-tooltip open-delay='800' bottom>
-        <v-btn round small slot='activator' @click="mergeSelected()">Merge to Destination</v-btn>
+        <v-btn round small slot='activator' @click="mergeSelected()">Merge Accounts</v-btn>
         <span>Merges source into destination</span>
-      </v-tooltip>
-      <v-tooltip open-delay='800' bottom>
-        <v-btn round small slot='activator' @click="mergeToLedger()">Merge to Ledger</v-btn>
-        <span>Merges source into Ledger Nano</span>
       </v-tooltip>
 
       <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
@@ -49,6 +45,7 @@
 
   <save-secret-dialog :ping='saveSecretDialogPing' />
   <manage-data-dialog :ping='manageDataPing' />
+  <merge-dialog :ping='mergeDialogPing' />
   <simple-dialog :ping='setDomainPing' operation='domain' />
   <simple-dialog :ping='setInflationPing' operation='inflation' />
   <simple-dialog :ping='lookupFederationPing' operation='federation' />
@@ -61,6 +58,7 @@ import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import AccountList from '../components/AccountList.vue'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
 import SimpleOperationDialog from '../components/dialogs/SimpleOperationDialog.vue'
+import MergeDialog from '../components/dialogs/MergeDialog.vue'
 import ManageDataDialog from '../components/dialogs/ManageDataDialog.vue'
 import TrustTokenDialog from '../components/dialogs/TrustTokenDialog.vue'
 import Helper from '../js/helper.js'
@@ -80,7 +78,8 @@ export default {
     'manage-data-dialog': ManageDataDialog,
     'instructions-header': InstructionsHeader,
     'save-secret-dialog': SavePrintSecretDialog,
-    'trust-token-dialog': TrustTokenDialog
+    'trust-token-dialog': TrustTokenDialog,
+    'merge-dialog': MergeDialog
   },
   data() {
     return {
@@ -89,6 +88,7 @@ export default {
       setInflationPing: false,
       manageDataPing: false,
       saveSecretDialogPing: false,
+      mergeDialogPing: false,
       trustDialogPing: false,
       selectedSource: null,
       selectedDest: null,
@@ -149,45 +149,7 @@ export default {
       this.setInflationPing = !this.setInflationPing
     },
     mergeSelected() {
-      Helper.debugLog('merging')
-
-      const sourceWallet = this.sourceWallet()
-      if (sourceWallet && this.destValid()) {
-        const destWallet = StellarWallet.secret(this.selectedDest.secret)
-
-        StellarUtils.mergeAccount(sourceWallet, destWallet)
-          .then((response) => {
-            StellarUtils.updateBalances()
-
-            Helper.debugLog(response, 'Success')
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
-      }
-    },
-    mergeToLedger() {
-      Helper.debugLog('merging')
-
-      const sourceWallet = this.sourceWallet()
-      if (sourceWallet) {
-        const ledgerWallet = StellarWallet.ledger(this.ledgerAPI, () => {
-          Helper.toast('Confirm transaction on Nano...')
-        })
-
-        StellarUtils.mergeAccount(sourceWallet, ledgerWallet)
-          .then((response) => {
-            StellarUtils.updateBalances()
-
-            Helper.debugLog(response, 'Success')
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error)
-            Helper.toast('Failed to connect to Ledger Nano', true)
-          })
-      }
+      this.mergeDialogPing = !this.mergeDialogPing
     },
     payWithSigners() {
       Helper.debugLog('path with signers...')

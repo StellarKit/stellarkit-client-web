@@ -5,20 +5,17 @@
 
     <div class='help-contents'>
       <div class='help-text'>
-        <div>You need to trust an asset before you can accept it.</div>
-        <div class='sub-header'>You'll need the assets symbol and issuing account address. This can be found normally at the https://tokens-home-page/.well-known/stellar.toml</div>
+        <div>Merging an account destroys the source account.</div>
+        <div class='sub-header'>
+          Great if you have some XLM in another account and you want to extract the balance into another account. If the source has any other assets, the destination must first trust that asset.</div>
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showDest=false />
-
-        <v-text-field hide-details label='Symbol' v-model.trim="symbol" @keyup.enter="trustToken()" ref='input'></v-text-field>
-        <v-text-field hide-details label='Issuer Address' v-model.trim="address" @keyup.enter="trustToken()"></v-text-field>
-        <v-text-field persistent-hint label='Trust Limit' v-model.number="trustLimit" @keyup.enter="trustToken()" hint="Set Trust Limit to zero to remove the trust line"></v-text-field>
+        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showDest=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round color='primary' slot="activator" @click="trustToken()" :loading="loading">Set Trust</v-btn>
+          <v-btn round color='primary' slot="activator" @click="mergeAccounts()" :loading="loading">Merge into Destination</v-btn>
           <span>Change's the trust link to the issuer's account</span>
         </v-tooltip>
       </div>
@@ -34,16 +31,12 @@ import Helper from '../../js/helper.js'
 import {
   DialogTitleBar
 } from 'stellar-js-utils'
-import StellarCommonMixin from '../StellarCommonMixin.js'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
-const StellarSdk = require('stellar-sdk')
-import StellarAccounts from '../../js/StellarAccounts.js'
 import DialogAccountsView from './DialogAccountsView.vue'
 
 export default {
   props: ['ping'],
-  mixins: [StellarCommonMixin],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent,
@@ -52,27 +45,13 @@ export default {
   data() {
     return {
       visible: false,
-      title: 'Trust Token',
-      symbol: '',
-      address: '',
-      trustLimit: 100000,
+      title: 'Merge Source into Destination',
       loading: false
     }
   },
   watch: {
     ping: function() {
       this.visible = true
-      this.domain = ''
-
-      // default to our example token
-      this.symbol = ''
-      this.address = ''
-
-      const asset = StellarAccounts.lamboTokenAsset()
-      if (asset) {
-        this.symbol = asset.getCode()
-        this.address = asset.getIssuer()
-      }
 
       // autofocus hack
       this.$nextTick(() => {
@@ -86,32 +65,28 @@ export default {
     dialogAccounts() {
       return this.$refs.dialogAccounts
     },
-    trustToken() {
-      if (Helper.strOK(this.symbol) && Helper.strOK(this.address)) {
-        const sourceWallet = this.dialogAccounts().sourceWallet()
-        if (sourceWallet) {
-          Helper.debugLog('Setting trust...')
-          this.loading = true
+    mergeAccounts() {
+      const sourceWallet = this.dialogAccounts().sourceWallet()
+      const destWallet = this.dialogAccounts().destWallet()
+      if (sourceWallet && destWallet) {
+        Helper.debugLog('Merging...')
+        this.loading = true
 
-          const asset = new StellarSdk.Asset(this.symbol, this.address)
+        StellarUtils.mergeAccount(sourceWallet, destWallet)
+          .then((response) => {
+            Helper.debugLog(response)
+            this.loading = false
 
-          StellarUtils.changeTrust(sourceWallet, asset, String(this.trustLimit))
-            .then((result) => {
-              Helper.debugLog(result)
-              this.loading = false
+            StellarUtils.updateBalances()
 
-              StellarUtils.updateBalances()
-
-              this.displayToast('Success!')
-            })
-            .catch((error) => {
-              Helper.debugLog(error, 'Error')
-              this.loading = false
-              this.displayToast('Error!', true)
-            })
-        }
-      } else {
-        this.displayToast('Type in a symbol and issuer key!', true)
+            this.displayToast('Success!')
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
+            this.loading = false
+            this.displayToast('Error!', true)
+          })
       }
     },
     displayToast(message, error = false) {

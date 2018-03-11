@@ -33,7 +33,6 @@ import Helper from '../../js/helper.js'
 import {
   DialogTitleBar
 } from 'stellar-js-utils'
-import StellarCommonMixin from '../StellarCommonMixin.js'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
 // const StellarSdk = require('stellar-sdk')
@@ -41,7 +40,6 @@ import DialogAccountsView from './DialogAccountsView.vue'
 
 export default {
   props: ['ping'],
-  mixins: [StellarCommonMixin],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent,
