@@ -15,7 +15,6 @@
         <v-text-field hide-details label='Name' v-model.trim="name" @keyup.enter="addData()" ref='input'></v-text-field>
         <v-text-field hide-details label='Value' v-model.trim="value" @keyup.enter="addData()"></v-text-field>
       </div>
-      <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
           <v-btn round color='primary' slot="activator" @click="addData()" :loading="loading">Add Data</v-btn>
@@ -53,7 +52,6 @@ export default {
       visible: false,
       title: 'Edit Account Data',
       selectedSource: null,
-      statusMessage: '',
       name: '',
       value: '',
       tooltip: '',
@@ -64,7 +62,6 @@ export default {
     ping: function() {
       this.visible = true
       this.domain = ''
-      this.statusMessage = ''
 
       // autofocus hack
       this.$nextTick(() => {
@@ -81,18 +78,20 @@ export default {
       if (Helper.strOK(this.name)) {
         const sourceWallet = this.dialogAccounts().sourceWallet()
         if (sourceWallet) {
-          this.statusMessage = 'Setting key value data...'
+          Helper.debugLog('Setting key value data...')
           this.loading = true
 
           StellarUtils.manageData(sourceWallet, null, this.name, this.value)
             .then((result) => {
               Helper.debugLog(result)
               this.loading = false
+
               this.displayToast('Success!')
             })
             .catch((error) => {
               Helper.debugLog(error)
               this.loading = false
+
               this.displayToast('Error!', true)
             })
         }
@@ -129,10 +128,6 @@ export default {
 
         .help-email {
             margin: 0 30px 16px;
-        }
-
-        .status-message {
-            font-size: 0.8em;
         }
     }
 }

@@ -233,10 +233,6 @@ export default {
         .help-email {
             margin: 0 30px;
         }
-
-        .status-message {
-            font-size: 0.8em;
-        }
     }
 }
 </style>
