@@ -39,7 +39,8 @@
 import Helper from '../../js/helper.js'
 import {
   DialogTitleBar,
-  StellarWallet
+  StellarWallet,
+  LedgerAPI
 } from 'stellar-js-utils'
 import StellarCommonMixin from '../StellarCommonMixin.js'
 import StellarUtils from '../../js/StellarUtils.js'
@@ -94,7 +95,16 @@ export default {
     trustToken() {
       // value can be empty to erase both key and value
       if (Helper.strOK(this.symbol) && Helper.strOK(this.address)) {
-        const sourceWallet = this.sourceWallet()
+        let sourceWallet = null
+
+        if (this.useLedger) {
+          sourceWallet = StellarWallet.ledger(new LedgerAPI(), () => {
+            this.displayToast(this.statusMessage)
+          })
+        } else {
+          sourceWallet = this.sourceWallet()
+        }
+
         if (sourceWallet) {
           Helper.debugLog('Setting trust...')
           this.loading = true
