@@ -71,14 +71,14 @@ export default {
     },
     addSigner(removeSigner = false) {
       const sourceWallet = this.dialogAccounts().sourceWallet()
-      const signingWallet = this.dialogAccounts().signingWallet()
-      if (sourceWallet && signingWallet) {
+      const signerWallet = this.dialogAccounts().signerWallet()
+      if (sourceWallet && signerWallet) {
         Helper.debugLog(removeSigner ? 'Removing signer...' : 'Adding signer...')
 
         if (removeSigner) {
           this.removing = true
 
-          StellarUtils.removeMultiSig(sourceWallet, signingWallet)
+          StellarUtils.removeMultiSig(sourceWallet, signerWallet)
             .then((result) => {
               Helper.debugLog(result)
               this.removing = false
@@ -94,7 +94,7 @@ export default {
         } else {
           this.adding = true
 
-          StellarUtils.makeMultiSig(sourceWallet, signingWallet)
+          StellarUtils.makeMultiSig(sourceWallet, signerWallet)
             .then((result) => {
               Helper.debugLog(result)
               this.adding = false
