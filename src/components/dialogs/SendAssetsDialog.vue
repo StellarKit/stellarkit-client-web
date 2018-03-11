@@ -9,7 +9,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showDest=true :showAmount=true :showAdditionalSigner=true />
+        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showDest=true :showAmount=true :showAdditionalSigner=true :showAsset=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -77,7 +77,9 @@ export default {
           additionalSigners = [additionalSignerWallet]
         }
 
-        StellarUtils.sendAsset(sourceWallet, null, destWallet, String(amount), null, null, additionalSigners)
+        const asset = this.dialogAccounts().asset()
+
+        StellarUtils.sendAsset(sourceWallet, null, destWallet, String(amount), asset, null, additionalSigners)
           .then((result) => {
             Helper.debugLog(result)
             this.loading = false

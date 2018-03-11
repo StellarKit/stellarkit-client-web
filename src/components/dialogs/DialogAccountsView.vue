@@ -18,6 +18,16 @@
     </div>
   </div>
 
+  <div v-if='showAsset' class='account-choice-box'>
+    <div>
+      <v-checkbox hide-details label='Send XLM' v-model="sendXLM"></v-checkbox>
+    </div>
+    <div v-if='!sendXLM' class='inset-choice-box'>
+      <v-text-field label="Asset Code" v-model.trim="assetCode" ref='input'></v-text-field>
+      <v-text-field label="Asset Issuer" v-model.trim="assetIssuer" ref='input'></v-text-field>
+    </div>
+  </div>
+
   <div v-if='showAmount' class='account-choice-box'>
     <v-text-field hide-details label="Amount" type='number' v-model.number="amountXLM"></v-text-field>
   </div>
@@ -69,9 +79,10 @@ import {
   StellarWallet,
   LedgerAPI
 } from 'stellar-js-utils'
+const StellarSdk = require('stellar-sdk')
 
 export default {
-  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAdditionalSigner', 'showAmount'],
+  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAdditionalSigner', 'showAmount', 'showAsset'],
   mixins: [StellarCommonMixin],
   data() {
     return {
@@ -90,7 +101,11 @@ export default {
       differentFundingAccount: false,
       additionalSigner: false,
       amountXLM: 2,
-      ledgerAPI: null
+      ledgerAPI: null,
+
+      assetCode: '',
+      assetIssuer: '',
+      sendXLM: true
     }
   },
   watch: {
@@ -219,6 +234,20 @@ export default {
     },
     amount() {
       return this.amountXLM
+    },
+    asset() {
+      if (this.sendXLM) {
+        return null
+      }
+
+      if (Helper.strOK(this.assetCode) && Helper.strOK(this.assetIssuer)) {
+        return new StellarSdk.Asset(this.assetCode, this.assetIssuer)
+      }
+
+      this._displayToast('Please enter an asset code and issuer', true)
+      Helper.debugLog('Please enter an asset code and issuer', 'Error')
+
+      return null
     },
     // ======================================================
     // Private

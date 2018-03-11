@@ -16,7 +16,6 @@
     <div class='button-group'>
       <v-btn round small @click="makeSelectedPayment()">Pay</v-btn>
       <v-btn round small @click="addRemoveSigner()">Add/Remove Signer</v-btn>
-      <v-btn round small @click="payWithSigners()">Pay with Signers</v-btn>
 
       <v-tooltip open-delay='800' bottom>
         <v-btn round small slot='activator' @click="mergeSelected()">Merge Accounts</v-btn>
@@ -156,27 +155,6 @@ export default {
     },
     mergeSelected() {
       this.mergeDialogPing = !this.mergeDialogPing
-    },
-    payWithSigners() {
-      Helper.debugLog('path with signers...')
-
-      const sourceWallet = this.sourceWallet()
-      if (sourceWallet) {
-        if (this.signerValid()) {
-          const signerWallet = StellarWallet.secret(this.selectedSigner.secret)
-
-          StellarUtils.sendAsset(sourceWallet, null, StellarWallet.secret(this.selectedDest.secret), String(this.amountForPayments), null, null, [signerWallet])
-            .then((response) => {
-              StellarUtils.updateBalances()
-
-              Helper.debugLog(response, 'Success')
-              return null
-            })
-            .catch((error) => {
-              Helper.debugLog(error, 'Error')
-            })
-        }
-      }
     },
     addRemoveSigner() {
       this.addRemoveSignerDialogPing = !this.addRemoveSignerDialogPing
