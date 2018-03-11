@@ -11,7 +11,7 @@
     <v-expansion-panel class='custom-expansion-panel'>
       <v-expansion-panel-content v-bind:value="true">
         <div slot="header" class='expansion-title'>
-          0. Create Accounts
+          0. Create Accounts (testnet only)
         </div>
         <div class='expansion-message'>
           <v-btn round small @click="createStandardAccounts">Create Issuer and Distributor</v-btn>

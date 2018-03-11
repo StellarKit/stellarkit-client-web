@@ -184,7 +184,7 @@ export default {
       } else {
         this.loadingFederation = true
 
-        Helper.debugLog('Talking to federation server...')
+        Helper.debugLog('Talking to federation server: ' + this.inputText)
 
         StellarSdk.FederationServer.resolve(this.inputText)
           .then(federationRecord => {
@@ -198,7 +198,7 @@ export default {
             this.loadingFederation = false
             this.displayToast('Failed: see console', true)
 
-            Helper.debugLog(error, 'Error')
+            Helper.debugLog(error)
           })
       }
     },

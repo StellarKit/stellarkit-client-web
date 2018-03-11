@@ -197,7 +197,7 @@ export default class Helper {
   }
 
   static isFederation(fedString) {
-    const regEx = /^\w+([.-]?\w+)*\*\w+([.-]?\w+)*(\.\w{2,3})+$/
+    const regEx = /^\w+([.-]?\w+)*\*\w+([.-]?\w+)*(\.\w{2,10})+$/
 
     if (regEx.test(fedString)) {
       return true
