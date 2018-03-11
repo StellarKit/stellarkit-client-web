@@ -6,7 +6,7 @@
     <div class='help-contents'>
       <div class='help-text'>
         <div>Send tokens to account</div>
-        <div class='sub-header'>Account must have already set trust on your asset</div>
+        <div class='sub-header'>Account must have already set trust on the asset</div>
       </div>
       <div class='help-email'>
         <v-text-field label="Destination public key" v-model="publicKey" ref='input'></v-text-field>
@@ -16,7 +16,7 @@
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
           <v-btn round small color='primary' slot="activator" @click="sendTokens()" :loading="loading">Send Tokens</v-btn>
-          <span>Post an offer to Stellar</span>
+          <span>Send the tokens</span>
         </v-tooltip>
       </div>
 

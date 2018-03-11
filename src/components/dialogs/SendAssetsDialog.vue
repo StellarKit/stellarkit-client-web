@@ -5,7 +5,7 @@
 
     <div class='help-contents'>
       <div class='help-text'>
-        <div>Send XML to the destination account.</div>
+        <div>Send a payment to the destination account.</div>
       </div>
 
       <div class='help-email'>
@@ -13,8 +13,8 @@
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round color='primary' slot="activator" @click="sendXLM()" :loading="loading">Send XLM</v-btn>
-          <span>Change's the trust link to the issuer's account</span>
+          <v-btn round color='primary' slot="activator" @click="sendXLM()" :loading="loading">Send Payment</v-btn>
+          <span>Send the payment</span>
         </v-tooltip>
       </div>
 
