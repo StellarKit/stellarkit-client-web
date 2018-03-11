@@ -124,7 +124,7 @@ export default {
     }
   },
   methods: {
-    legerAPI() {
+    sharedLegerAPI() {
       if (!this.ledgerAPI) {
         this.ledgerAPI = new LedgerAPI()
       }
@@ -134,7 +134,7 @@ export default {
       let result = null
 
       if (this.useLedgerSrc) {
-        result = StellarWallet.ledger(this.ledgerAPI(), () => {
+        result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
           this._displayToast('Confirm on your Ledger Nano')
         })
       } else {
@@ -149,7 +149,7 @@ export default {
       let result = null
 
       if (this.useLedgerDest) {
-        result = StellarWallet.ledger(this.ledgerAPI(), () => {
+        result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
           this._displayToast('Confirm on your Ledger Nano')
         })
       } else {
@@ -164,7 +164,7 @@ export default {
       let result = null
 
       if (this.useLedgerSigning) {
-        result = StellarWallet.ledger(this.ledgerAPI(), () => {
+        result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
           this._displayToast('Confirm on your Ledger Nano')
         })
       } else {
@@ -179,7 +179,7 @@ export default {
       let result = null
 
       if (this.useLedgerSigning) {
-        result = StellarWallet.ledger(this.ledgerAPI(), () => {
+        result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
           this._displayToast('Confirm on your Ledger Nano')
         })
       } else {
@@ -194,7 +194,7 @@ export default {
       let result = null
 
       if (this.useLedgerFunding) {
-        result = StellarWallet.ledger(this.ledgerAPI(), () => {
+        result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
           this._displayToast('Confirm on your Ledger Nano')
         })
       } else {
