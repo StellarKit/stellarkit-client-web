@@ -10,7 +10,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=showSource :showDest=showDest />
+        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=showSource :showDest=showDest :showFunding=showFunding />
         <v-text-field :label='inputLabel' v-model.trim="inputText" @keyup.enter="doOperation()" ref='input'></v-text-field>
       </div>
       <div class='button-holder'>
@@ -55,7 +55,8 @@ export default {
       subHeader: '',
       loading: false,
       showSource: false,
-      showDest: false
+      showDest: false,
+      showFunding: false
     }
   },
   mounted() {

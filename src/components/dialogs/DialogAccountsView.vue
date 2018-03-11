@@ -1,22 +1,37 @@
 <template>
 <div>
-  <div v-if='showSource'>
+  <div v-if='showSource' class='account-choice-box'>
     <div>
       <v-checkbox hide-details label='Use Ledger Nano for source account' v-model="useLedgerSrc"></v-checkbox>
     </div>
-    <div v-if='!useLedgerSrc'>
+    <div v-if='!useLedgerSrc' class='inset-choice-box'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
 
-  <div v-if='showDest'>
+  <div v-if='showDest' class='account-choice-box'>
     <div>
       <v-checkbox hide-details label='Use Ledger Nano for destination account' v-model="useLedgerDest"></v-checkbox>
     </div>
-    <div v-if='!useLedgerDest'>
+    <div v-if='!useLedgerDest' class='inset-choice-box'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
+
+  <div v-if='showFunding' class='account-choice-box'>
+    <div>
+      <v-checkbox hide-details label='Use different funding account' v-model="differentFundingAccount"></v-checkbox>
+    </div>
+    <div v-if='differentFundingAccount' class='inset-choice-box'>
+      <div>
+        <v-checkbox hide-details label='Use Ledger Nano for funding account' v-model="useLedgerFunding"></v-checkbox>
+      </div>
+      <div v-if='!useLedgerFunding' class='inset-choice-box'>
+        <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedFunding" clearable label="Funding account" autocomplete return-object max-height="600"></v-select>
+      </div>
+    </div>
+  </div>
+
 </div>
 </template>
 
@@ -29,14 +44,17 @@ import {
 } from 'stellar-js-utils'
 
 export default {
-  props: ['showSource', 'showDest'],
+  props: ['showSource', 'showDest', 'showFunding'],
   mixins: [StellarCommonMixin],
   data() {
     return {
       useLedgerSrc: false,
       useLedgerDest: false,
+      useLedgerFunding: false,
       selectedSource: null,
-      selectedDest: null
+      selectedDest: null,
+      selectedFunding: null,
+      differentFundingAccount: false
     }
   },
   watch: {
@@ -112,3 +130,15 @@ export default {
   }
 }
 </script>
+
+<style lang='scss' scoped>
+.account-choice-box {
+    padding: 8px;
+    margin-bottom: 8px;
+    background: rgba(0,0,0,.06);
+
+    .inset-choice-box {
+        margin-left: 20px;
+    }
+}
+</style>
