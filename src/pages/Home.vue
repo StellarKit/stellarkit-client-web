@@ -7,12 +7,6 @@
     <div>3. Create a token on the second tab first to use the token buttons</div>
   </instructions-header>
   <div class='top-controls'>
-    <div class='address-box'>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination account" autocomplete return-object max-height="600"></v-select>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Add signer to source" autocomplete return-object max-height="600"></v-select>
-      <v-text-field hide-details label="Amount for payments" type='number' v-model.trim="amountForPayments"></v-text-field>
-    </div>
     <div class='button-group'>
       <v-btn round small @click="makeSelectedPayment()">Pay</v-btn>
       <v-btn round small @click="addRemoveSigner()">Add/Remove Signer</v-btn>
@@ -22,16 +16,11 @@
         <span>Merges source into destination</span>
       </v-tooltip>
 
-      <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
-      <v-btn round small @click="paymentsForSelectedSource()">Payments</v-btn>
-      <v-btn round small @click="operationsForSelectedSource()">Operations</v-btn>
-
       <v-tooltip open-delay='800' bottom>
         <v-btn round small slot='activator' @click="trustToken()">Trust Token</v-btn>
         <span>Account must trust token before it can receive</span>
       </v-tooltip>
 
-      <v-btn round small @click="sendToken()">Send Token</v-btn>
       <v-btn round small @click="setDomain()">Set Domain</v-btn>
       <v-btn round small @click="setInflation()">Set Inflation Destination</v-btn>
       <v-btn round small @click="testFederation()">Federation Lookup</v-btn>
@@ -62,13 +51,7 @@ import SendAssetsDialog from '../components/dialogs/SendAssetsDialog.vue'
 import MergeDialog from '../components/dialogs/MergeDialog.vue'
 import ManageDataDialog from '../components/dialogs/ManageDataDialog.vue'
 import TrustTokenDialog from '../components/dialogs/TrustTokenDialog.vue'
-import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
-import {
-  StellarWallet,
-  LedgerAPI
-} from 'stellar-js-utils'
-import StellarAccounts from '../js/StellarAccounts.js'
 import SavePrintSecretDialog from '../components/dialogs/SavePrintSecretDialog.vue'
 
 export default {
@@ -94,58 +77,15 @@ export default {
       addRemoveSignerDialogPing: false,
       sendAssetsDialogPing: false,
       mergeDialogPing: false,
-      trustDialogPing: false,
-      selectedSource: null,
-      selectedDest: null,
-      selectedSigner: null,
-      amountForPayments: 20,
-      ledgerAPI: null
+      trustDialogPing: false
     }
   },
   mounted() {
     StellarUtils.updateBalances()
-
-    this.ledgerAPI = new LedgerAPI()
   },
   methods: {
-    sourceWallet() {
-      if (this.sourceValid()) {
-        return StellarWallet.secret(this.selectedSource.secret)
-      }
-      return null
-    },
     testFederation() {
       this.lookupFederationPing = !this.lookupFederationPing
-    },
-    sourceValid() {
-      const result = this.selectedSource ? this.selectedSource.publicKey : null
-
-      if (Helper.strlen(result) > 0) {
-        return true
-      }
-      Helper.debugLog('please select a source account', 'Error')
-
-      return false
-    },
-    destValid() {
-      const result = this.selectedDest ? this.selectedDest.publicKey : null
-
-      if (Helper.strlen(result) > 0) {
-        return true
-      }
-      Helper.debugLog('please select a dest account', 'Error')
-
-      return false
-    },
-    signerValid() {
-      const result = this.selectedSigner ? this.selectedSigner.publicKey : null
-
-      if (Helper.strlen(result) > 0) {
-        return true
-      }
-      Helper.debugLog('please select a signer account', 'Error')
-
-      return false
     },
     setDomain() {
       this.setDomainPing = !this.setDomainPing
@@ -159,60 +99,8 @@ export default {
     addRemoveSigner() {
       this.addRemoveSignerDialogPing = !this.addRemoveSignerDialogPing
     },
-    operationsForSelectedSource() {
-      if (this.sourceValid()) {
-        StellarUtils.server().operations()
-          .forAccount(this.selectedSource.publicKey)
-          .call()
-          .then((response) => {
-            Helper.debugLog(response)
-          })
-      }
-    },
-    paymentsForSelectedSource() {
-      if (this.sourceValid()) {
-        StellarUtils.server().payments()
-          .forAccount(this.selectedSource.publicKey)
-          .call()
-          .then((response) => {
-            Helper.debugLog(response)
-            return null
-          })
-      }
-    },
-    transactionsForSelectedSource() {
-      if (this.sourceValid()) {
-        StellarUtils.server().transactions()
-          .forAccount(this.selectedSource.publicKey)
-          .stream({
-            onmessage: (txResponse) => {
-              Helper.debugLog(txResponse)
-            },
-            onerror: (error) => {
-              Helper.debugLog(error)
-            }
-          })
-      }
-    },
     trustToken() {
       this.trustDialogPing = !this.trustDialogPing
-    },
-    sendToken() {
-      Helper.debugLog('sending tokens ' + this.amountForPayments + '...')
-
-      const sourceWallet = this.sourceWallet()
-      if (sourceWallet && this.destValid()) {
-        StellarUtils.sendAsset(sourceWallet, null, StellarWallet.secret(this.selectedDest.secret), String(this.amountForPayments), StellarAccounts.lamboTokenAsset())
-          .then((response) => {
-            StellarUtils.updateBalances()
-
-            Helper.debugLog(response, 'Success')
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
-      }
     },
     makeSelectedPayment() {
       this.sendAssetsDialogPing = !this.sendAssetsDialogPing

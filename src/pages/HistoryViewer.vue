@@ -31,6 +31,12 @@
       </v-menu>
     </div>
 
+    <div class='button-group'>
+      <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
+      <v-btn round small @click="paymentsForSelectedSource()">Payments</v-btn>
+      <v-btn round small @click="operationsForSelectedSource()">Operations</v-btn>
+    </div>
+
     <div class='button-row'>
       <v-btn icon color='secondary' @click="previous()">
         <v-tooltip open-delay='800' bottom>
@@ -52,7 +58,7 @@
 
 <script>
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
-// const StellarSdk = require('stellar-sdk')
+import StellarUtils from '../js/StellarUtils.js'
 import Helper from '../js/helper.js'
 import StreamingCache from '../js/StreamingCache.js'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
@@ -133,6 +139,41 @@ export default {
     }
   },
   methods: {
+    operationsForSelectedSource() {
+      if (this.sourceValid()) {
+        StellarUtils.server().operations()
+          .forAccount(this.selectedSource.publicKey)
+          .call()
+          .then((response) => {
+            Helper.debugLog(response)
+          })
+      }
+    },
+    paymentsForSelectedSource() {
+      if (this.sourceValid()) {
+        StellarUtils.server().payments()
+          .forAccount(this.selectedSource.publicKey)
+          .call()
+          .then((response) => {
+            Helper.debugLog(response)
+            return null
+          })
+      }
+    },
+    transactionsForSelectedSource() {
+      if (this.sourceValid()) {
+        StellarUtils.server().transactions()
+          .forAccount(this.selectedSource.publicKey)
+          .stream({
+            onmessage: (txResponse) => {
+              Helper.debugLog(txResponse)
+            },
+            onerror: (error) => {
+              Helper.debugLog(error)
+            }
+          })
+      }
+    },
     clearUI() {
       this.cache = null
       this.displayIndex = -1
@@ -213,6 +254,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-top: 8px;
 
         button {
             margin: 0 12px;
