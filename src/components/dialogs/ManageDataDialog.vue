@@ -87,7 +87,7 @@ export default {
 
         if (this.useLedger) {
           sourceWallet = StellarWallet.ledger(new LedgerAPI(), () => {
-            this.displayToast(this.statusMessage)
+            this.displayToast('Confirm on your Ledger Nano')
           })
         } else {
           sourceWallet = this.sourceWallet()
