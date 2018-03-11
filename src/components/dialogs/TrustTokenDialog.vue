@@ -19,8 +19,7 @@
 
         <v-text-field hide-details label='Symbol' v-model.trim="symbol" @keyup.enter="trustToken()" ref='input'></v-text-field>
         <v-text-field hide-details label='Issuer Address' v-model.trim="address" @keyup.enter="trustToken()"></v-text-field>
-        <v-text-field hide-details label='Trust Limit' v-model.number="trustLimit" @keyup.enter="trustToken()"></v-text-field>
-        <div>Set Trust Limit to zero to remove the trust line</div>
+        <v-text-field persistent-hint label='Trust Limit' v-model.number="trustLimit" @keyup.enter="trustToken()" hint="Set Trust Limit to zero to remove the trust line"></v-text-field>
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
