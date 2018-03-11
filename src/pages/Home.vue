@@ -15,7 +15,6 @@
     </div>
     <div class='button-group'>
       <v-btn round small @click="makeSelectedPayment()">Pay</v-btn>
-      <v-btn round small @click="infoForSelectedSource()">Info</v-btn>
       <v-btn round small @click="addSignerForSelected()">Add Signer</v-btn>
       <v-btn round small @click="payWithSigners()">Pay with Signers</v-btn>
       <v-btn round small @click="removeSignerForSelected()">Remove Signer</v-btn>
@@ -235,11 +234,6 @@ export default {
               Helper.debugLog(error)
             }
           })
-      }
-    },
-    infoForSelectedSource() {
-      if (this.sourceValid()) {
-        this.infoForPublicKey(this.selectedSource.publicKey)
       }
     },
     trustToken() {
