@@ -49,9 +49,9 @@
 
   <save-secret-dialog :ping='saveSecretDialogPing' />
   <manage-data-dialog :ping='manageDataPing' />
-  <simple-dialog :ping='setDomainPing' :secretKey='sourceSecretKey' operation='domain' />
-  <simple-dialog :ping='setInflationPing' :secretKey='sourceSecretKey' operation='inflation' />
-  <simple-dialog :ping='lookupFederationPing' :secretKey='sourceSecretKey' operation='federation' />
+  <simple-dialog :ping='setDomainPing' operation='domain' />
+  <simple-dialog :ping='setInflationPing' operation='inflation' />
+  <simple-dialog :ping='lookupFederationPing' operation='federation' />
   <trust-token-dialog :ping='trustDialogPing' />
 </div>
 </template>
@@ -93,7 +93,6 @@ export default {
       selectedSource: null,
       selectedDest: null,
       selectedSigner: null,
-      sourceSecretKey: null,
       amountForPayments: 20,
       ledgerAPI: null
     }
@@ -144,20 +143,10 @@ export default {
       return false
     },
     setDomain() {
-      // set variable to bind to dialogs props
-      if (this.sourceValid()) {
-        this.sourceSecretKey = this.selectedSource.secret
-
-        this.setDomainPing = !this.setDomainPing
-      }
+      this.setDomainPing = !this.setDomainPing
     },
     setInflation() {
-      // set variable to bind to dialogs props
-      if (this.sourceValid()) {
-        this.sourceSecretKey = this.selectedSource.secret
-
-        this.setInflationPing = !this.setInflationPing
-      }
+      this.setInflationPing = !this.setInflationPing
     },
     mergeSelected() {
       Helper.debugLog('merging')

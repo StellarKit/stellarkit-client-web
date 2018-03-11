@@ -1,22 +1,27 @@
 <template>
 <div>
-  <div>
-    <v-checkbox hide-details label='Use Ledger Nano for source account' v-model="useLedger"></v-checkbox>
+  <div v-if='showSource'>
+    <div>
+      <v-checkbox hide-details label='Use Ledger Nano for source account' v-model="useLedgerSrc"></v-checkbox>
+    </div>
+    <div v-if='!useLedgerSrc'>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
+    </div>
   </div>
-  <div v-if='!useLedgerSrc' class='address-box'>
-    <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
-  </div>
-  <div>
-    <v-checkbox hide-details label='Use Ledger Nano for destination account' v-model="useLedger"></v-checkbox>
-  </div>
-  <div v-if='!useLedgerDest' class='address-box'>
-    <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination account" autocomplete return-object max-height="600"></v-select>
+
+  <div v-if='showDest'>
+    <div>
+      <v-checkbox hide-details label='Use Ledger Nano for destination account' v-model="useLedgerDest"></v-checkbox>
+    </div>
+    <div v-if='!useLedgerDest'>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination account" autocomplete return-object max-height="600"></v-select>
+    </div>
   </div>
 </div>
 </template>
 
 <script>
-import Helper from '../js/helper.js'
+import Helper from '../../js/helper.js'
 import StellarCommonMixin from '../StellarCommonMixin.js'
 import {
   StellarWallet,
@@ -24,9 +29,11 @@ import {
 } from 'stellar-js-utils'
 
 export default {
+  props: ['showSource', 'showDest'],
+  mixins: [StellarCommonMixin],
   data() {
     return {
-      useLedgerSrc: true,
+      useLedgerSrc: false,
       useLedgerDest: false,
       selectedSource: null,
       selectedDest: null
@@ -99,14 +106,8 @@ export default {
 
       return false
     },
-    toastDialogID() {
-      // Must override
-      Helper.debugLog('Must override toastDialogID', 'Error')
-
-      return null
-    },
-    displayToast(message, error = false) {
-      Helper.toast(message, error, 'trust-token-dialog')
+    displayToast(message, error) {
+      this.$emit('toast', message, error)
     }
   }
 }

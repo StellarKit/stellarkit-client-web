@@ -10,12 +10,7 @@
       </div>
 
       <div class='help-email'>
-        <div>
-          <v-checkbox hide-details label='Use Ledger Nano for source account' v-model="useLedger"></v-checkbox>
-        </div>
-        <div v-if='!useLedger' class='address-box'>
-          <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
-        </div>
+        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showDest=false />
 
         <v-text-field hide-details label='Symbol' v-model.trim="symbol" @keyup.enter="trustToken()" ref='input'></v-text-field>
         <v-text-field hide-details label='Issuer Address' v-model.trim="address" @keyup.enter="trustToken()"></v-text-field>
@@ -37,28 +32,27 @@
 <script>
 import Helper from '../../js/helper.js'
 import {
-  DialogTitleBar,
-  StellarWallet,
-  LedgerAPI
+  DialogTitleBar
 } from 'stellar-js-utils'
 import StellarCommonMixin from '../StellarCommonMixin.js'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')
 import StellarAccounts from '../../js/StellarAccounts.js'
+import DialogAccountsView from './DialogAccountsView.vue'
 
 export default {
   props: ['ping'],
   mixins: [StellarCommonMixin],
   components: {
     'dialog-titlebar': DialogTitleBar,
-    'toast-component': ToastComponent
+    'toast-component': ToastComponent,
+    'dialog-accounts': DialogAccountsView
   },
   data() {
     return {
       visible: false,
       title: 'Trust Token',
-      selectedSource: null,
       symbol: '',
       address: '',
       useLedger: true,
@@ -91,18 +85,12 @@ export default {
     }
   },
   methods: {
+    dialogAccounts() {
+      return this.$refs.dialogAccounts
+    },
     trustToken() {
       if (Helper.strOK(this.symbol) && Helper.strOK(this.address)) {
-        let sourceWallet = null
-
-        if (this.useLedger) {
-          sourceWallet = StellarWallet.ledger(new LedgerAPI(), () => {
-            this.displayToast('Confirm on your Ledger Nano')
-          })
-        } else {
-          sourceWallet = this.sourceWallet()
-        }
-
+        const sourceWallet = this.dialogAccounts().sourceWallet()
         if (sourceWallet) {
           Helper.debugLog('Setting trust...')
           this.loading = true
@@ -127,24 +115,6 @@ export default {
       } else {
         this.displayToast('Type in a symbol and issuer key!', true)
       }
-    },
-    sourceWallet() {
-      if (this.sourceValid()) {
-        return StellarWallet.secret(this.selectedSource.secret)
-      }
-      return null
-    },
-    sourceValid() {
-      const result = this.selectedSource ? this.selectedSource.publicKey : null
-
-      if (Helper.strlen(result) > 0) {
-        return true
-      }
-
-      this.displayToast('Please select a source account', true)
-
-      Helper.debugLog('Please select a source account', 'Error')
-      return false
     },
     displayToast(message, error = false) {
       Helper.toast(message, error, 'trust-token-dialog')
