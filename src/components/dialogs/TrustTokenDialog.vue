@@ -92,7 +92,6 @@ export default {
   },
   methods: {
     trustToken() {
-      // value can be empty to erase both key and value
       if (Helper.strOK(this.symbol) && Helper.strOK(this.address)) {
         let sourceWallet = null
 
