@@ -6,7 +6,7 @@
 
   <div class='top-controls'>
     <div class='address-box'>
-      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
+      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
       <v-menu offset-y :transition=false>
         <v-btn small :ripple=false slot="activator">
           {{buttonTitle}}

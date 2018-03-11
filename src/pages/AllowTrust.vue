@@ -7,7 +7,7 @@
 
   <div class='top-controls'>
     <div class='address-box'>
-      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
+      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
     </div>
 
     <div>1. First setup a Token on the previous tab</div>

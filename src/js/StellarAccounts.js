@@ -88,15 +88,30 @@ class StellarAccounts {
   }
 
   ethereumAsset() {
-    return new StellarSdk.Asset('ETH', this.accountWithName('Issuer').publicKey)
+    const acct = this.accountWithName('Issuer')
+    if (acct) {
+      return new StellarSdk.Asset('ETH', acct.publicKey)
+    }
+
+    return null
   }
 
   bitcoinAsset() {
-    return new StellarSdk.Asset('BTC', this.accountWithName('Issuer').publicKey)
+    const acct = this.accountWithName('Issuer')
+    if (acct) {
+      return new StellarSdk.Asset('BTC', acct.publicKey)
+    }
+
+    return null
   }
 
   lamboTokenAsset() {
-    return new StellarSdk.Asset('LMB', this.accountWithName('Issuer').publicKey)
+    const acct = this.accountWithName('Issuer')
+    if (acct) {
+      return new StellarSdk.Asset('LMB', acct.publicKey)
+    }
+
+    return null
   }
 
   accounts() {

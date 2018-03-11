@@ -5,8 +5,8 @@
 
     <div class='help-contents'>
       <div class='help-text'>
-        <div>Add data to your account</div>
-        <div class='sub-header'>Data is limited to 64 bytes</div>
+        <div>You need to trust an asset before you can accept it.</div>
+        <div class='sub-header'>You'll need the assets symbol and issuing account address. This can be found normally at the https://tokens-home-page/.well-known/stellar.toml</div>
       </div>
 
       <div class='help-email'>
@@ -17,18 +17,19 @@
           <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
         </div>
 
-        <v-text-field hide-details label='Name' v-model.trim="name" @keyup.enter="addData()" ref='input'></v-text-field>
-        <v-text-field hide-details label='Value' v-model.trim="value" @keyup.enter="addData()"></v-text-field>
+        <v-text-field hide-details label='Symbol' v-model.trim="symbol" @keyup.enter="trustToken()" ref='input'></v-text-field>
+        <v-text-field hide-details label='Issuer Address' v-model.trim="address" @keyup.enter="trustToken()"></v-text-field>
+        <v-text-field hide-details label='Trust Limit' v-model.number="trustLimit" @keyup.enter="trustToken()"></v-text-field>
+        <div>Set Trust Limit to zero to remove the trust line</div>
       </div>
-      <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round small color='primary' slot="activator" @click="addData()" :loading="loading">Add Data</v-btn>
-          <span>{{tooltip}}</span>
+          <v-btn round color='primary' slot="activator" @click="trustToken()" :loading="loading">Set Trust</v-btn>
+          <span>Change's the trust link to the issuer's account</span>
         </v-tooltip>
       </div>
 
-      <toast-component :absolute=true location='data-dialog' :bottom=false :top=true />
+      <toast-component :absolute=true location='trust-token-dialog' :bottom=false :top=true />
     </div>
   </div>
 </v-dialog>
@@ -43,7 +44,8 @@ import {
 import StellarCommonMixin from '../StellarCommonMixin.js'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
-// const StellarSdk = require('stellar-sdk')
+const StellarSdk = require('stellar-sdk')
+import StellarAccounts from '../../js/StellarAccounts.js'
 
 export default {
   props: ['ping'],
@@ -55,13 +57,12 @@ export default {
   data() {
     return {
       visible: false,
-      title: 'Edit Account Data',
+      title: 'Trust Token',
       selectedSource: null,
-      statusMessage: '',
-      name: '',
-      value: '',
-      tooltip: '',
+      symbol: '',
+      address: '',
       useLedger: true,
+      trustLimit: 100000,
       loading: false
     }
   },
@@ -69,38 +70,54 @@ export default {
     ping: function() {
       this.visible = true
       this.domain = ''
-      this.statusMessage = ''
       this.useLedger = true
+
+      // default to our example token
+      this.symbol = ''
+      this.address = ''
+
+      const asset = StellarAccounts.lamboTokenAsset()
+      if (asset) {
+        this.symbol = asset.getCode()
+        this.address = asset.getIssuer()
+      }
 
       // autofocus hack
       this.$nextTick(() => {
-        this.$refs.input.focus()
+        if (this.$refs.input) {
+          this.$refs.input.focus()
+        }
       })
     }
   },
   methods: {
-    addData() {
+    trustToken() {
       // value can be empty to erase both key and value
-      if (Helper.strOK(this.name)) {
+      if (Helper.strOK(this.symbol) && Helper.strOK(this.address)) {
         const sourceWallet = this.sourceWallet()
         if (sourceWallet) {
-          this.statusMessage = 'Setting key value data...'
+          Helper.debugLog('Setting trust...')
           this.loading = true
 
-          StellarUtils.manageData(sourceWallet, null, this.name, this.value)
+          const asset = new StellarSdk.Asset(this.symbol, this.address)
+
+          StellarUtils.changeTrust(sourceWallet, asset, String(this.trustLimit))
             .then((result) => {
               Helper.debugLog(result)
               this.loading = false
-              this.statusMessage = 'Success!'
+
+              StellarUtils.updateBalances()
+
+              this.displayToast('Success!')
             })
             .catch((error) => {
-              Helper.debugLog(error)
+              Helper.debugLog(error, 'Error')
               this.loading = false
-              this.statusMessage = 'Error!'
+              this.displayToast('Error!', true)
             })
         }
       } else {
-        this.statusMessage = 'Type in a key first'
+        this.displayToast('Type in a symbol and issuer key!', true)
       }
     },
     sourceWallet() {
@@ -116,11 +133,13 @@ export default {
         return true
       }
 
-      Helper.debugLog('please select a source account', 'Error')
+      this.displayToast('Please select a source account', true)
+
+      Helper.debugLog('Please select a source account', 'Error')
       return false
     },
-    displayErrorMessage(message) {
-      Helper.toast(message, true, 'data-dialog')
+    displayToast(message, error = false) {
+      Helper.toast(message, error, 'trust-token-dialog')
     }
   }
 }

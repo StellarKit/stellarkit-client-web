@@ -7,7 +7,7 @@
     This is reversible if you just send XLM to that account that is now empty
   </div>
   <div class='address-box'>
-    <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
+    <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
   </div>
   <v-btn round small @click="mergeAccountIntoLedger()">Merge Account into Ledger</v-btn>
 </div>

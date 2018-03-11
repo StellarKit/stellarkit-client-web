@@ -8,10 +8,10 @@
   </instructions-header>
   <div class='top-controls'>
     <div class='address-box'>
-      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
-      <v-select :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination accout" autocomplete return-object max-height="600"></v-select>
-      <v-select :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Add signer to source" autocomplete return-object max-height="600"></v-select>
-      <v-text-field label="Amount for payments" type='number' v-model.trim="amountForPayments"></v-text-field>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination account" autocomplete return-object max-height="600"></v-select>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Add signer to source" autocomplete return-object max-height="600"></v-select>
+      <v-text-field hide-details label="Amount for payments" type='number' v-model.trim="amountForPayments"></v-text-field>
     </div>
     <div class='button-group'>
       <v-btn round small @click="makeSelectedPayment()">Pay</v-btn>
@@ -52,6 +52,7 @@
   <simple-dialog :ping='setDomainPing' :secretKey='sourceSecretKey' operation='domain' />
   <simple-dialog :ping='setInflationPing' :secretKey='sourceSecretKey' operation='inflation' />
   <simple-dialog :ping='lookupFederationPing' :secretKey='sourceSecretKey' operation='federation' />
+  <trust-token-dialog :ping='trustDialogPing' />
 </div>
 </template>
 
@@ -61,6 +62,7 @@ import AccountList from '../components/AccountList.vue'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
 import SimpleOperationDialog from '../components/dialogs/SimpleOperationDialog.vue'
 import ManageDataDialog from '../components/dialogs/ManageDataDialog.vue'
+import TrustTokenDialog from '../components/dialogs/TrustTokenDialog.vue'
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
 import {
@@ -77,7 +79,8 @@ export default {
     'simple-dialog': SimpleOperationDialog,
     'manage-data-dialog': ManageDataDialog,
     'instructions-header': InstructionsHeader,
-    'save-secret-dialog': SavePrintSecretDialog
+    'save-secret-dialog': SavePrintSecretDialog,
+    'trust-token-dialog': TrustTokenDialog
   },
   data() {
     return {
@@ -86,6 +89,7 @@ export default {
       setInflationPing: false,
       manageDataPing: false,
       saveSecretDialogPing: false,
+      trustDialogPing: false,
       selectedSource: null,
       selectedDest: null,
       selectedSigner: null,
@@ -288,23 +292,7 @@ export default {
       }
     },
     trustToken() {
-      Helper.debugLog('Setting token trust...')
-
-      const sourceWallet = this.sourceWallet()
-      if (sourceWallet) {
-        // buyer must trust the distributor
-        StellarUtils.changeTrust(sourceWallet, StellarAccounts.lamboTokenAsset(), String(10000))
-          .then((result) => {
-            Helper.debugLog(result)
-
-            StellarUtils.updateBalances()
-
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error)
-          })
-      }
+      this.trustDialogPing = !this.trustDialogPing
     },
     sendToken() {
       Helper.debugLog('sending tokens ' + this.amountForPayments + '...')
@@ -355,6 +343,7 @@ export default {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    margin-bottom: 16px;
     div.input-group {
         flex: 1 0 200px;
         margin-right: 16px;

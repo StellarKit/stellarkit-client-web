@@ -13,7 +13,7 @@
             <div class='step-content'>
               Start by creating two accounts. You need a funding account to create the new accounts
 
-              <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Funding accout" autocomplete return-object max-height="600"></v-select>
+              <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Funding account" autocomplete return-object max-height="600"></v-select>
 
               <v-btn @click='createIssuer'>Create Issuer Account</v-btn>
               <v-btn @click='createDistributor'>Create Distributor Account</v-btn>

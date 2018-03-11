@@ -4,7 +4,7 @@
     Add your ledger as a signer to an existing account
   </div>
   <div class='address-box'>
-    <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source accout" autocomplete return-object max-height="600"></v-select>
+    <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
   </div>
   <v-btn round small @click="giveLedgerSigningPower()">Give Ledger Signing Power</v-btn>
 </div>
