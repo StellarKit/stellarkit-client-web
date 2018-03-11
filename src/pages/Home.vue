@@ -49,6 +49,7 @@
   <simple-dialog :ping='lookupFederationPing' operation='federation' />
   <trust-token-dialog :ping='trustDialogPing' />
   <add-remove-signer :ping='addRemoveSignerDialogPing' />
+  <send-assets-dialog :ping='sendAssetsDialogPing' />
 </div>
 </template>
 
@@ -58,6 +59,7 @@ import AccountList from '../components/AccountList.vue'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
 import SimpleOperationDialog from '../components/dialogs/SimpleOperationDialog.vue'
 import AddRemoveSignerDialog from '../components/dialogs/AddRemoveSignerDialog.vue'
+import SendAssetsDialog from '../components/dialogs/SendAssetsDialog.vue'
 import MergeDialog from '../components/dialogs/MergeDialog.vue'
 import ManageDataDialog from '../components/dialogs/ManageDataDialog.vue'
 import TrustTokenDialog from '../components/dialogs/TrustTokenDialog.vue'
@@ -80,7 +82,8 @@ export default {
     'save-secret-dialog': SavePrintSecretDialog,
     'trust-token-dialog': TrustTokenDialog,
     'merge-dialog': MergeDialog,
-    'add-remove-signer': AddRemoveSignerDialog
+    'add-remove-signer': AddRemoveSignerDialog,
+    'send-assets-dialog': SendAssetsDialog
   },
   data() {
     return {
@@ -90,6 +93,7 @@ export default {
       manageDataPing: false,
       saveSecretDialogPing: false,
       addRemoveSignerDialogPing: false,
+      sendAssetsDialogPing: false,
       mergeDialogPing: false,
       trustDialogPing: false,
       selectedSource: null,
@@ -161,7 +165,7 @@ export default {
         if (this.signerValid()) {
           const signerWallet = StellarWallet.secret(this.selectedSigner.secret)
 
-          StellarUtils.sendAsset(sourceWallet, null, this.selectedDest.publicKey, String(this.amountForPayments), null, null, [signerWallet])
+          StellarUtils.sendAsset(sourceWallet, null, StellarWallet.secret(this.selectedDest.secret), String(this.amountForPayments), null, null, [signerWallet])
             .then((response) => {
               StellarUtils.updateBalances()
 
@@ -220,7 +224,7 @@ export default {
 
       const sourceWallet = this.sourceWallet()
       if (sourceWallet && this.destValid()) {
-        StellarUtils.sendAsset(sourceWallet, null, this.selectedDest.publicKey, String(this.amountForPayments), StellarAccounts.lamboTokenAsset())
+        StellarUtils.sendAsset(sourceWallet, null, StellarWallet.secret(this.selectedDest.secret), String(this.amountForPayments), StellarAccounts.lamboTokenAsset())
           .then((response) => {
             StellarUtils.updateBalances()
 
@@ -233,21 +237,7 @@ export default {
       }
     },
     makeSelectedPayment() {
-      Helper.debugLog('paying ' + this.amountForPayments + '...')
-
-      const sourceWallet = this.sourceWallet()
-      if (sourceWallet && this.destValid()) {
-        StellarUtils.sendAsset(sourceWallet, null, this.selectedDest.publicKey, String(this.amountForPayments))
-          .then((response) => {
-            StellarUtils.updateBalances()
-
-            Helper.debugLog(response, 'Success')
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
-      }
+      this.sendAssetsDialogPing = !this.sendAssetsDialogPing
     }
   }
 }

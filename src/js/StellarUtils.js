@@ -102,8 +102,8 @@ class StellarUtils {
   }
 
   // additionalSigners is an array of StellarWallet (ledger or secret key)
-  sendAsset(sourceWallet, fundingWallet, destKey, amount, asset = null, memo = null, additionalSigners = null) {
-    return this.api().sendAsset(sourceWallet, fundingWallet, destKey, amount, asset, memo, additionalSigners)
+  sendAsset(sourceWallet, fundingWallet, destWallet, amount, asset = null, memo = null, additionalSigners = null) {
+    return this.api().sendAsset(sourceWallet, fundingWallet, destWallet, amount, asset, memo, additionalSigners)
   }
 
   buyTokens(sourceWallet, sendAsset, destAsset, sendMax, destAmount) {
@@ -175,7 +175,7 @@ class StellarUtils {
       })
       .then((result) => {
         Helper.debugLog('sending tokens...')
-        return this.sendAsset(distributorWallet, null, info.keypair.publicKey(), amount, asset)
+        return this.sendAsset(distributorWallet, null, StellarWallet.secret(info.keypair.secret()), amount, asset)
       })
       .then((result) => {
         Helper.debugLog(result, 'Success')

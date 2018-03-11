@@ -88,7 +88,7 @@ export default {
         if (this.project) {
           const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
 
-          StellarUtils.sendAsset(StellarWallet.secret(this.project.distributorSecret), fundingWallet, this.publicKey, String(this.amount), asset)
+          StellarUtils.sendAsset(StellarWallet.secret(this.project.distributorSecret), fundingWallet, StellarWallet.public(this.publicKey), String(this.amount), asset)
             .then((result) => {
               Helper.debugLog(result, 'Success')
               this.displayToast('Success')

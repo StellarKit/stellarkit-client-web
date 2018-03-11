@@ -18,6 +18,10 @@
     </div>
   </div>
 
+  <div v-if='showAmount' class='account-choice-box'>
+    <v-text-field hide-details label="Amount" type='number' v-model.number="amountXLM"></v-text-field>
+  </div>
+
   <div v-if='showSigner' class='account-choice-box'>
     <div>
       <v-checkbox hide-details label='Add Ledger Nano as a signer account' v-model="useLedgerSigning"></v-checkbox>
@@ -67,7 +71,7 @@ import {
 } from 'stellar-js-utils'
 
 export default {
-  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAdditionalSigner'],
+  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAdditionalSigner', 'showAmount'],
   mixins: [StellarCommonMixin],
   data() {
     return {
@@ -85,6 +89,7 @@ export default {
 
       differentFundingAccount: false,
       additionalSigner: false,
+      amountXLM: 2,
       ledgerAPI: null
     }
   },
@@ -199,6 +204,9 @@ export default {
       }
 
       return result
+    },
+    amount() {
+      return this.amountXLM
     },
     // ======================================================
     // Private

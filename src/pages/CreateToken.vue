@@ -267,7 +267,7 @@ export default {
         return
       }
 
-      StellarUtils.sendAsset(StellarWallet.secret(this.issuerAcct.secret), null, this.distributorAcct.publicKey, String(amount), StellarAccounts.lamboTokenAsset(), 'Created Tokens')
+      StellarUtils.sendAsset(StellarWallet.secret(this.issuerAcct.secret), null, StellarWallet.secret(this.distributorAcct.secret), String(amount), StellarAccounts.lamboTokenAsset(), 'Created Tokens')
         .then((response) => {
           Helper.debugLog(response, 'Success')
 
