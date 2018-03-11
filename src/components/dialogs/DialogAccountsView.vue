@@ -99,6 +99,7 @@ export default {
         this.useLedgerDest = false
         this.useLedgerFunding = false
         this.useLedgerSigning = false
+        this.useLedgerAdditionalSigner = false
       }
     },
     useLedgerDest: function() {
@@ -106,6 +107,7 @@ export default {
         this.useLedgerSrc = false
         this.useLedgerFunding = false
         this.useLedgerSigning = false
+        this.useLedgerAdditionalSigner = false
       }
     },
     useLedgerFunding: function() {
@@ -113,6 +115,7 @@ export default {
         this.useLedgerSrc = false
         // this.useLedgerDest = false
         this.useLedgerSigning = false
+        this.useLedgerAdditionalSigner = false
       }
     },
     useLedgerSigning: function() {
@@ -120,6 +123,15 @@ export default {
         this.useLedgerSrc = false
         this.useLedgerFunding = false
         this.useLedgerDest = false
+        this.useLedgerAdditionalSigner = false
+      }
+    },
+    useLedgerAdditionalSigner: function() {
+      if (this.useLedgerSigning) {
+        this.useLedgerSrc = false
+        this.useLedgerFunding = false
+        this.useLedgerDest = false
+        this.useLedgerSigning = false
       }
     }
   },
@@ -178,7 +190,7 @@ export default {
     additionalSignerWallet() {
       let result = null
 
-      if (this.useLedgerSigning) {
+      if (this.useLedgerAdditionalSigner) {
         result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
           this._displayToast('Confirm on your Ledger Nano')
         })
@@ -236,14 +248,16 @@ export default {
       return false
     },
     _additionalSignerValid() {
-      const result = this.selectedAdditionalSigner ? this.selectedAdditionalSigner.publicKey : null
+      if (this.additionalSigner) {
+        const result = this.selectedAdditionalSigner ? this.selectedAdditionalSigner.publicKey : null
 
-      if (Helper.strOK(result)) {
-        return true
+        if (Helper.strOK(result)) {
+          return true
+        }
+
+        this._displayToast('Please select an additional signing account', true)
+        Helper.debugLog('Please select an additional signing account', 'Error')
       }
-
-      this._displayToast('Please select an additional signing account', true)
-      Helper.debugLog('Please select an additional signing account', 'Error')
 
       return false
     },
@@ -260,14 +274,16 @@ export default {
       return false
     },
     _fundingValid() {
-      const result = this.selectedFunding ? this.selectedFunding.publicKey : null
+      if (this.differentFundingAccount) {
+        const result = this.selectedFunding ? this.selectedFunding.publicKey : null
 
-      if (Helper.strOK(result)) {
-        return true
+        if (Helper.strOK(result)) {
+          return true
+        }
+
+        this._displayToast('Please select a funding account', true)
+        Helper.debugLog('Please select a funding account', 'Error')
       }
-
-      this._displayToast('Please select a funding account', true)
-      Helper.debugLog('Please select a funding account', 'Error')
 
       return false
     },

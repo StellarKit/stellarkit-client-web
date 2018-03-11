@@ -9,7 +9,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showDest=true :showAmount=true />
+        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showDest=true :showAmount=true :showAdditionalSigner=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -71,7 +71,13 @@ export default {
         Helper.debugLog('Sending XLM...')
         this.loading = true
 
-        StellarUtils.sendAsset(sourceWallet, null, destWallet, String(amount))
+        let additionalSigners = null
+        const additionalSignerWallet = this.dialogAccounts().additionalSignerWallet()
+        if (additionalSignerWallet) {
+          additionalSigners = [additionalSignerWallet]
+        }
+
+        StellarUtils.sendAsset(sourceWallet, null, destWallet, String(amount), null, null, additionalSigners)
           .then((result) => {
             Helper.debugLog(result)
             this.loading = false
