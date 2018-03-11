@@ -95,7 +95,7 @@ export default {
     useLedgerFunding: function() {
       if (this.useLedgerFunding) {
         this.useLedgerSrc = false
-        this.useLedgerDest = false
+        // this.useLedgerDest = false
         this.useLedgerSigning = false
       }
     },
@@ -119,7 +119,7 @@ export default {
 
       if (this.useLedgerSrc) {
         result = StellarWallet.ledger(this.ledgerAPI(), () => {
-          this.displayToast('Confirm on your Ledger Nano')
+          this._displayToast('Confirm on your Ledger Nano')
         })
       } else {
         if (this._sourceValid()) {
@@ -134,7 +134,7 @@ export default {
 
       if (this.useLedgerDest) {
         result = StellarWallet.ledger(this.ledgerAPI(), () => {
-          this.displayToast('Confirm on your Ledger Nano')
+          this._displayToast('Confirm on your Ledger Nano')
         })
       } else {
         if (this._destValid()) {
@@ -149,7 +149,7 @@ export default {
 
       if (this.useLedgerSigning) {
         result = StellarWallet.ledger(this.ledgerAPI(), () => {
-          this.displayToast('Confirm on your Ledger Nano')
+          this._displayToast('Confirm on your Ledger Nano')
         })
       } else {
         if (this._signerValid()) {
@@ -164,7 +164,7 @@ export default {
 
       if (this.useLedgerFunding) {
         result = StellarWallet.ledger(this.ledgerAPI(), () => {
-          this.displayToast('Confirm on your Ledger Nano')
+          this._displayToast('Confirm on your Ledger Nano')
         })
       } else {
         if (this._fundingValid()) {
@@ -184,7 +184,7 @@ export default {
         return true
       }
 
-      this.displayToast('Please select a destination account', true)
+      this._displayToast('Please select a destination account', true)
       Helper.debugLog('Please select a destination account', 'Error')
 
       return false
@@ -196,7 +196,7 @@ export default {
         return true
       }
 
-      this.displayToast('Please select a signing account', true)
+      this._displayToast('Please select a signing account', true)
       Helper.debugLog('Please select a signing account', 'Error')
 
       return false
@@ -208,7 +208,7 @@ export default {
         return true
       }
 
-      this.displayToast('Please select a source account', true)
+      this._displayToast('Please select a source account', true)
       Helper.debugLog('Please select a source account', 'Error')
 
       return false
@@ -220,12 +220,12 @@ export default {
         return true
       }
 
-      this.displayToast('Please select a funding account', true)
+      this._displayToast('Please select a funding account', true)
       Helper.debugLog('Please select a funding account', 'Error')
 
       return false
     },
-    displayToast(message, error) {
+    _displayToast(message, error) {
       this.$emit('toast', message, error)
     }
   }
@@ -236,7 +236,8 @@ export default {
 .account-choice-box {
     padding: 8px;
     margin-bottom: 8px;
-    background: rgba(0,0,0,.06);
+    background: rgba(0,0,0,.05);
+    border-radius: 4px;
 
     .inset-choice-box {
         margin-left: 20px;
