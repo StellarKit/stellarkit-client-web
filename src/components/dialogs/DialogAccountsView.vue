@@ -18,13 +18,27 @@
     </div>
   </div>
 
+  <div v-if='showSigner' class='account-choice-box'>
+    <div>
+      <v-checkbox hide-details label='Add additional signer' v-model="additionalSigner"></v-checkbox>
+    </div>
+    <div v-if='additionalSigner' class='inset-choice-box'>
+      <div>
+        <v-checkbox hide-details label='Use Ledger Nano for signing account' v-model="useLedgerSigning"></v-checkbox>
+      </div>
+      <div v-if='!useLedgerSigning' class='inset-choice-box'>
+        <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Additional signing account" autocomplete return-object max-height="600"></v-select>
+      </div>
+    </div>
+  </div>
+
   <div v-if='showFunding' class='account-choice-box'>
     <div>
       <v-checkbox hide-details label='Use different funding account' v-model="differentFundingAccount"></v-checkbox>
     </div>
     <div v-if='differentFundingAccount' class='inset-choice-box'>
       <div>
-        <v-checkbox hide-details label='Use Ledger Nano for funding account' v-model="useLedgerFunding"></v-checkbox>
+        <v-checkbox hide-details label='Use Ledger Nano funding account' v-model="useLedgerFunding"></v-checkbox>
       </div>
       <div v-if='!useLedgerFunding' class='inset-choice-box'>
         <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedFunding" clearable label="Funding account" autocomplete return-object max-height="600"></v-select>
@@ -44,48 +58,150 @@ import {
 } from 'stellar-js-utils'
 
 export default {
-  props: ['showSource', 'showDest', 'showFunding'],
+  props: ['showSource', 'showDest', 'showFunding', 'showSigner'],
   mixins: [StellarCommonMixin],
   data() {
     return {
       useLedgerSrc: false,
       useLedgerDest: false,
       useLedgerFunding: false,
+      useLedgerSigning: false,
+
       selectedSource: null,
       selectedDest: null,
       selectedFunding: null,
-      differentFundingAccount: false
+      selectedSigner: null,
+
+      differentFundingAccount: false,
+      additionalSigner: false,
+      ledgerAPI: null
     }
   },
   watch: {
     useLedgerSrc: function() {
       if (this.useLedgerSrc) {
         this.useLedgerDest = false
+        this.useLedgerFunding = false
+        this.useLedgerSigning = false
       }
     },
     useLedgerDest: function() {
       if (this.useLedgerDest) {
         this.useLedgerSrc = false
+        this.useLedgerFunding = false
+        this.useLedgerSigning = false
+      }
+    },
+    useLedgerFunding: function() {
+      if (this.useLedgerFunding) {
+        this.useLedgerSrc = false
+        this.useLedgerDest = false
+        this.useLedgerSigning = false
+      }
+    },
+    useLedgerSigning: function() {
+      if (this.useLedgerSigning) {
+        this.useLedgerSrc = false
+        this.useLedgerFunding = false
+        this.useLedgerDest = false
       }
     }
   },
   methods: {
+    legerAPI() {
+      if (!this.ledgerAPI) {
+        this.ledgerAPI = new LedgerAPI()
+      }
+      return this.ledgerAPI
+    },
     sourceWallet() {
       let result = null
 
-      if (this.useLedger) {
-        result = StellarWallet.ledger(new LedgerAPI(), () => {
+      if (this.useLedgerSrc) {
+        result = StellarWallet.ledger(this.ledgerAPI(), () => {
           this.displayToast('Confirm on your Ledger Nano')
         })
       } else {
-        if (this.sourceValid()) {
+        if (this._sourceValid()) {
           result = StellarWallet.secret(this.selectedSource.secret)
         }
       }
 
       return result
     },
-    sourceValid() {
+    destWallet() {
+      let result = null
+
+      if (this.useLedgerDest) {
+        result = StellarWallet.ledger(this.ledgerAPI(), () => {
+          this.displayToast('Confirm on your Ledger Nano')
+        })
+      } else {
+        if (this._destValid()) {
+          result = StellarWallet.secret(this.selectedDest.secret)
+        }
+      }
+
+      return result
+    },
+    signerWallet() {
+      let result = null
+
+      if (this.useLedgerSigning) {
+        result = StellarWallet.ledger(this.ledgerAPI(), () => {
+          this.displayToast('Confirm on your Ledger Nano')
+        })
+      } else {
+        if (this._signerValid()) {
+          result = StellarWallet.secret(this.selectedDest.secret)
+        }
+      }
+
+      return result
+    },
+    fundingWallet() {
+      let result = null
+
+      if (this.useLedgerFunding) {
+        result = StellarWallet.ledger(this.ledgerAPI(), () => {
+          this.displayToast('Confirm on your Ledger Nano')
+        })
+      } else {
+        if (this._fundingValid()) {
+          result = StellarWallet.secret(this.selectedDest.secret)
+        }
+      }
+
+      return result
+    },
+    // ======================================================
+    // Private
+    // ======================================================
+    _destValid() {
+      const result = this.selectedDest ? this.selectedDest.publicKey : null
+
+      if (Helper.strOK(result)) {
+        return true
+      }
+
+      this.displayToast('Please select a destination account', true)
+      Helper.debugLog('Please select a destination account', 'Error')
+
+      return false
+    },
+    _signerValid() {
+      const result = this.selectedSigner ? this.selectedSigner.publicKey : null
+
+      if (Helper.strOK(result)) {
+        return true
+      }
+
+      this.displayToast('Please select a signing account', true)
+      Helper.debugLog('Please select a signing account', 'Error')
+
+      return false
+    },
+    _sourceValid() {
       const result = this.selectedSource ? this.selectedSource.publicKey : null
 
       if (Helper.strOK(result)) {
@@ -97,30 +213,15 @@ export default {
 
       return false
     },
-    destWallet() {
-      let result = null
-
-      if (this.useLedger) {
-        result = StellarWallet.ledger(new LedgerAPI(), () => {
-          this.displayToast('Confirm on your Ledger Nano')
-        })
-      } else {
-        if (this.sourceValid()) {
-          result = StellarWallet.secret(this.selectedDest.secret)
-        }
-      }
-
-      return result
-    },
-    destValid() {
-      const result = this.selectedDest ? this.selectedDest.publicKey : null
+    _fundingValid() {
+      const result = this.selectedFunding ? this.selectedFunding.publicKey : null
 
       if (Helper.strOK(result)) {
         return true
       }
 
-      this.displayToast('Please select a destination account', true)
-      Helper.debugLog('Please select a destination account', 'Error')
+      this.displayToast('Please select a funding account', true)
+      Helper.debugLog('Please select a funding account', 'Error')
 
       return false
     },
