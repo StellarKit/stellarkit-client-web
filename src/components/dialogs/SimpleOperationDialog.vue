@@ -38,7 +38,7 @@ import ToastComponent from '../ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')
 
 export default {
-  props: ['ping', 'secretKey', 'operation'],
+  props: ['ping', 'operation'],
   mixins: [StellarCommonMixin],
   components: {
     'dialog-titlebar': DialogTitleBar,

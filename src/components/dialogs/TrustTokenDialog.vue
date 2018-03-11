@@ -55,7 +55,6 @@ export default {
       title: 'Trust Token',
       symbol: '',
       address: '',
-      useLedger: true,
       trustLimit: 100000,
       loading: false
     }
@@ -64,7 +63,6 @@ export default {
     ping: function() {
       this.visible = true
       this.domain = ''
-      this.useLedger = true
 
       // default to our example token
       this.symbol = ''
