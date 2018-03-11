@@ -20,14 +20,23 @@
 
   <div v-if='showSigner' class='account-choice-box'>
     <div>
+      <v-checkbox hide-details label='Add Ledger Nano as a signer account' v-model="useLedgerSigning"></v-checkbox>
+    </div>
+    <div v-if='!useLedgerSigning' class='inset-choice-box'>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Add signer for account" autocomplete return-object max-height="600"></v-select>
+    </div>
+  </div>
+
+  <div v-if='showAdditionalSigner' class='account-choice-box'>
+    <div>
       <v-checkbox hide-details label='Add additional signer' v-model="additionalSigner"></v-checkbox>
     </div>
     <div v-if='additionalSigner' class='inset-choice-box'>
       <div>
-        <v-checkbox hide-details label='Use Ledger Nano for signing account' v-model="useLedgerSigning"></v-checkbox>
+        <v-checkbox hide-details label='Use Ledger Nano to signing account' v-model="useLedgerAdditionalSigner"></v-checkbox>
       </div>
-      <div v-if='!useLedgerSigning' class='inset-choice-box'>
-        <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Additional signing account" autocomplete return-object max-height="600"></v-select>
+      <div v-if='!useLedgerAdditionalSigner' class='inset-choice-box'>
+        <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedAdditionalSigner" clearable label="Additional signing account" autocomplete return-object max-height="600"></v-select>
       </div>
     </div>
   </div>
@@ -58,7 +67,7 @@ import {
 } from 'stellar-js-utils'
 
 export default {
-  props: ['showSource', 'showDest', 'showFunding', 'showSigner'],
+  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAdditionalSigner'],
   mixins: [StellarCommonMixin],
   data() {
     return {
@@ -66,11 +75,13 @@ export default {
       useLedgerDest: false,
       useLedgerFunding: false,
       useLedgerSigning: false,
+      useLedgerAdditionalSigner: false,
 
       selectedSource: null,
       selectedDest: null,
       selectedFunding: null,
       selectedSigner: null,
+      selectedAdditionalSigner: null,
 
       differentFundingAccount: false,
       additionalSigner: false,
@@ -153,7 +164,22 @@ export default {
         })
       } else {
         if (this._signerValid()) {
-          result = StellarWallet.secret(this.selectedDest.secret)
+          result = StellarWallet.secret(this.selectedSigner.secret)
+        }
+      }
+
+      return result
+    },
+    additionalSignerWallet() {
+      let result = null
+
+      if (this.useLedgerSigning) {
+        result = StellarWallet.ledger(this.ledgerAPI(), () => {
+          this._displayToast('Confirm on your Ledger Nano')
+        })
+      } else {
+        if (this._additionalSignerValid()) {
+          result = StellarWallet.secret(this.selectedAdditionalSigner.secret)
         }
       }
 
@@ -168,7 +194,7 @@ export default {
         })
       } else {
         if (this._fundingValid()) {
-          result = StellarWallet.secret(this.selectedDest.secret)
+          result = StellarWallet.secret(this.selectedFunding.secret)
         }
       }
 
@@ -198,6 +224,18 @@ export default {
 
       this._displayToast('Please select a signing account', true)
       Helper.debugLog('Please select a signing account', 'Error')
+
+      return false
+    },
+    _additionalSignerValid() {
+      const result = this.selectedAdditionalSigner ? this.selectedAdditionalSigner.publicKey : null
+
+      if (Helper.strOK(result)) {
+        return true
+      }
+
+      this._displayToast('Please select an additional signing account', true)
+      Helper.debugLog('Please select an additional signing account', 'Error')
 
       return false
     },

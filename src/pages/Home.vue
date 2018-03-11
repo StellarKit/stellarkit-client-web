@@ -15,9 +15,8 @@
     </div>
     <div class='button-group'>
       <v-btn round small @click="makeSelectedPayment()">Pay</v-btn>
-      <v-btn round small @click="addSignerForSelected()">Add Signer</v-btn>
+      <v-btn round small @click="addRemoveSigner()">Add/Remove Signer</v-btn>
       <v-btn round small @click="payWithSigners()">Pay with Signers</v-btn>
-      <v-btn round small @click="removeSignerForSelected()">Remove Signer</v-btn>
 
       <v-tooltip open-delay='800' bottom>
         <v-btn round small slot='activator' @click="mergeSelected()">Merge Accounts</v-btn>
@@ -49,6 +48,7 @@
   <simple-dialog :ping='setInflationPing' operation='inflation' />
   <simple-dialog :ping='lookupFederationPing' operation='federation' />
   <trust-token-dialog :ping='trustDialogPing' />
+  <add-remove-signer :ping='addRemoveSignerDialogPing' />
 </div>
 </template>
 
@@ -57,6 +57,7 @@ import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import AccountList from '../components/AccountList.vue'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
 import SimpleOperationDialog from '../components/dialogs/SimpleOperationDialog.vue'
+import AddRemoveSignerDialog from '../components/dialogs/AddRemoveSignerDialog.vue'
 import MergeDialog from '../components/dialogs/MergeDialog.vue'
 import ManageDataDialog from '../components/dialogs/ManageDataDialog.vue'
 import TrustTokenDialog from '../components/dialogs/TrustTokenDialog.vue'
@@ -78,7 +79,8 @@ export default {
     'instructions-header': InstructionsHeader,
     'save-secret-dialog': SavePrintSecretDialog,
     'trust-token-dialog': TrustTokenDialog,
-    'merge-dialog': MergeDialog
+    'merge-dialog': MergeDialog,
+    'add-remove-signer': AddRemoveSignerDialog
   },
   data() {
     return {
@@ -87,6 +89,7 @@ export default {
       setInflationPing: false,
       manageDataPing: false,
       saveSecretDialogPing: false,
+      addRemoveSignerDialogPing: false,
       mergeDialogPing: false,
       trustDialogPing: false,
       selectedSource: null,
@@ -171,35 +174,8 @@ export default {
         }
       }
     },
-    addSignerForSelected() {
-      Helper.debugLog('add signer...')
-
-      const sourceWallet = this.sourceWallet()
-      if (sourceWallet && this.signerValid()) {
-        StellarUtils.makeMultiSig(sourceWallet, this.selectedSigner.publicKey)
-          .then((result) => {
-            Helper.debugLog(result, 'Success')
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
-      }
-    },
-    removeSignerForSelected() {
-      Helper.debugLog('remove signer...')
-
-      const sourceWallet = this.sourceWallet()
-      if (sourceWallet && this.signerValid()) {
-        StellarUtils.removeMultiSig(sourceWallet, StellarWallet.secret(this.selectedSigner.secret))
-          .then((result) => {
-            Helper.debugLog(result, 'Success')
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
-      }
+    addRemoveSigner() {
+      this.addRemoveSignerDialogPing = !this.addRemoveSignerDialogPing
     },
     operationsForSelectedSource() {
       if (this.sourceValid()) {
