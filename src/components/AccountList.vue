@@ -210,7 +210,7 @@ export default {
         .account-item {
             position: relative;
             color: black;
-            font-size: 0.85em;
+            font-size: 0.8em;
             margin: 4px;
             padding: 10px 12px 20px;
             border-radius: 4px;
@@ -225,6 +225,7 @@ export default {
             .account-name {
                 font-weight: bold;
                 margin-bottom: 2px;
+                font-size: 1.1em;
             }
 
             .delete-button {

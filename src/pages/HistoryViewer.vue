@@ -5,8 +5,14 @@
   </instructions-header>
 
   <div class='top-controls'>
+    <div class='button-group'>
+      <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
+      <v-btn round small @click="paymentsForSelectedSource()">Payments</v-btn>
+      <v-btn round small @click="operationsForSelectedSource()">Operations</v-btn>
+    </div>
+
     <div class='address-box'>
-      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
       <v-menu offset-y :transition=false>
         <v-btn small :ripple=false slot="activator">
           {{buttonTitle}}
@@ -29,12 +35,6 @@
           </v-list-tile>
         </v-list>
       </v-menu>
-    </div>
-
-    <div class='button-group'>
-      <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
-      <v-btn round small @click="paymentsForSelectedSource()">Payments</v-btn>
-      <v-btn round small @click="operationsForSelectedSource()">Operations</v-btn>
     </div>
 
     <div class='button-row'>
