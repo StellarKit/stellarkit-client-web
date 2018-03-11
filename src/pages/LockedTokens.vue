@@ -161,7 +161,7 @@ export default {
 
             Helper.debugLog('adding distributor as signer...')
 
-            return StellarUtils.makeMultiSig(StellarWallet.secret(result.keypair.secret()), distributorAccount.publicKey)
+            return StellarUtils.makeMultiSig(StellarWallet.secret(result.keypair.secret()), StellarWallet.secret(distributorAccount.secret))
           })
           .then((result) => {
             Helper.debugLog('Account is ready', 'Success')

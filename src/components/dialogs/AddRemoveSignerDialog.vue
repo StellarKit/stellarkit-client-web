@@ -14,11 +14,11 @@
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round slot="activator" @click="addSigner(true)" :loading="loading">Remove Signer</v-btn>
+          <v-btn round slot="activator" @click="addSigner(true)" :loading="removing">Remove Signer</v-btn>
           <span>Remove a signer from account</span>
         </v-tooltip>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round color='primary' slot="activator" @click="addSigner()" :loading="loading">Add Signer</v-btn>
+          <v-btn round color='primary' slot="activator" @click="addSigner()" :loading="adding">Add Signer</v-btn>
           <span>Add a signer to account</span>
         </v-tooltip>
       </div>
@@ -50,7 +50,8 @@ export default {
     return {
       visible: false,
       title: 'Add/Remove Signer',
-      loading: false
+      removing: false,
+      adding: false
     }
   },
   watch: {
@@ -71,36 +72,40 @@ export default {
     },
     addSigner(removeSigner = false) {
       const sourceWallet = this.dialogAccounts().sourceWallet()
-      if (sourceWallet) {
+      const signingWallet = this.dialogAccounts().signingWallet()
+      if (sourceWallet && signingWallet) {
         Helper.debugLog(removeSigner ? 'Removing signer...' : 'Adding signer...')
-        this.loading = true
 
         if (removeSigner) {
-          StellarUtils.removeMultiSig(sourceWallet, StellarWallet.secret(this.selectedSigner.secret))
+          this.removing = true
+
+          StellarUtils.removeMultiSig(sourceWallet, signingWallet)
             .then((result) => {
               Helper.debugLog(result)
-              this.loading = false
+              this.removing = false
 
               this.displayToast('Success!')
               return null
             })
             .catch((error) => {
               Helper.debugLog(error, 'Error')
-              this.loading = false
+              this.removing = false
               this.displayToast('Error!', true)
             })
         } else {
-          StellarUtils.makeMultiSig(sourceWallet, this.selectedSigner.publicKey)
+          this.adding = true
+
+          StellarUtils.makeMultiSig(sourceWallet, signingWallet)
             .then((result) => {
               Helper.debugLog(result)
-              this.loading = false
+              this.adding = false
 
               this.displayToast('Success!')
               return null
             })
             .catch((error) => {
               Helper.debugLog(error, 'Error')
-              this.loading = false
+              this.adding = false
               this.displayToast('Error!', true)
             })
         }

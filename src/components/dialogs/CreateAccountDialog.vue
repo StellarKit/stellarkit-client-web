@@ -81,7 +81,7 @@ export default {
     }
   },
   watch: {
-    ping: function () {
+    ping: function() {
       this.visible = true
       this.domain = ''
       this.statusMessage = ''
@@ -115,10 +115,7 @@ export default {
             Helper.debugLog('adding funding account as signer...')
             const newWallet = StellarWallet.secret(result.keypair.secret())
 
-            return fundingWallet.publicKey()
-              .then((fundingPublicKey) => {
-                return StellarUtils.makeMultiSig(newWallet, fundingPublicKey)
-              })
+            StellarUtils.makeMultiSig(newWallet, fundingWallet)
               .then(() => {
                 return this.createUnlockTransaction(newWallet, fundingWallet)
               })

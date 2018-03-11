@@ -91,12 +91,8 @@ export default {
           .then((result) => {
             newAccount = result
 
-            Helper.debugLog('getting ledgers public key...')
-            return ledgerWallet.publicKey()
-          })
-          .then((ledgerPublicKey) => {
             Helper.debugLog('making multisig...')
-            return StellarUtils.makeMultiSig(newWallet, ledgerPublicKey, 1)
+            return StellarUtils.makeMultiSig(newWallet, ledgerWallet, 1)
           })
           .then((result) => {
             Helper.debugLog('locking account...')
