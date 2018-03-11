@@ -32,8 +32,7 @@
 <script>
 import Helper from '../../js/helper.js'
 import {
-  DialogTitleBar,
-  StellarWallet
+  DialogTitleBar
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
