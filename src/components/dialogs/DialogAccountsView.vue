@@ -2,18 +2,21 @@
 <div>
   <div v-if='showSource' class='account-choice-box'>
     <div>
-      <v-checkbox hide-details label='Use Ledger Nano for source account' v-model="useLedgerSrc"></v-checkbox>
+      <menu-button v-on:menu-selected='sourceMenuSelected' title='Source Account' :items='sourceMenuItems' />
     </div>
-    <div v-if='!useLedgerSrc' class='inset-choice-box'>
+    <div v-if='sourceType === "account"' class='inset-choice-box'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
 
   <div v-if='showDest' class='account-choice-box'>
     <div>
-      <v-checkbox hide-details label='Use Ledger Nano for destination account' v-model="useLedgerDest"></v-checkbox>
+      <menu-button v-on:menu-selected='destMenuSelected' title='Destination Account' :items='destMenuItems' />
     </div>
-    <div v-if='!useLedgerDest' class='inset-choice-box'>
+    <div v-if='destType === "publicKey"' class='inset-choice-box'>
+      <v-text-field hide-details label="Destination public key" v-model.trim="destPublicKey" ref='input'></v-text-field>
+    </div>
+    <div v-if='destType === "account"' class='inset-choice-box'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
@@ -23,8 +26,8 @@
       <v-checkbox hide-details label='Send XLM' v-model="sendXLM"></v-checkbox>
     </div>
     <div v-if='!sendXLM' class='inset-choice-box'>
-      <v-text-field label="Asset Code" v-model.trim="assetCode" ref='input'></v-text-field>
-      <v-text-field label="Asset Issuer" v-model.trim="assetIssuer" ref='input'></v-text-field>
+      <v-text-field hide-details label="Asset Code" v-model.trim="assetCode" ref='input'></v-text-field>
+      <v-text-field hide-details label="Asset Issuer" v-model.trim="assetIssuer" ref='input'></v-text-field>
     </div>
   </div>
 
@@ -43,15 +46,10 @@
 
   <div v-if='showAdditionalSigner' class='account-choice-box'>
     <div>
-      <v-checkbox hide-details label='Add additional signer' v-model="additionalSigner"></v-checkbox>
+      <menu-button v-on:menu-selected='additionalSignerMenuSelected' title='Additional signer account' :items='additionalSignerMenuItems' />
     </div>
-    <div v-if='additionalSigner' class='inset-choice-box'>
-      <div>
-        <v-checkbox hide-details label='Use Ledger Nano to signing account' v-model="useLedgerAdditionalSigner"></v-checkbox>
-      </div>
-      <div v-if='!useLedgerAdditionalSigner' class='inset-choice-box'>
-        <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedAdditionalSigner" clearable label="Additional signing account" autocomplete return-object max-height="600"></v-select>
-      </div>
+    <div v-if='additionalSignerType === "account"' class='inset-choice-box'>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedAdditionalSigner" clearable label="Additional signing account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
 
@@ -75,6 +73,7 @@
 <script>
 import Helper from '../../js/helper.js'
 import StellarCommonMixin from '../StellarCommonMixin.js'
+import MenuButton from '../MenuButton.vue'
 import {
   StellarWallet,
   LedgerAPI
@@ -84,10 +83,17 @@ const StellarSdk = require('stellar-sdk')
 export default {
   props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAdditionalSigner', 'showAmount', 'showAsset'],
   mixins: [StellarCommonMixin],
+  components: {
+    'menu-button': MenuButton
+  },
   data() {
     return {
-      useLedgerSrc: false,
-      useLedgerDest: false,
+      destType: 'publicKey',
+      destPublicKey: '',
+
+      sourceType: 'account',
+      additionalSignerType: 'none',
+
       useLedgerFunding: false,
       useLedgerSigning: false,
       useLedgerAdditionalSigner: false,
@@ -105,52 +111,115 @@ export default {
 
       assetCode: '',
       assetIssuer: '',
-      sendXLM: true
+      sendXLM: true,
+      destMenuItems: [{
+          id: 'publicKey',
+          title: 'Public Key'
+        },
+        {
+          id: 'account',
+          title: 'Account'
+        },
+        {
+          id: 'ledger',
+          title: 'Ledger Nano'
+        }
+      ],
+      sourceMenuItems: [{
+          id: 'account',
+          title: 'Account'
+        },
+        {
+          id: 'ledger',
+          title: 'Ledger Nano'
+        }
+      ],
+      additionalSignerMenuItems: [{
+          id: 'none',
+          title: 'None'
+        }, {
+          id: 'account',
+          title: 'Account'
+        },
+        {
+          id: 'ledger',
+          title: 'Ledger Nano'
+        }
+      ]
     }
   },
   watch: {
-    useLedgerSrc: function() {
-      if (this.useLedgerSrc) {
-        this.useLedgerDest = false
-        this.useLedgerFunding = false
-        this.useLedgerSigning = false
-        this.useLedgerAdditionalSigner = false
-      }
-    },
-    useLedgerDest: function() {
-      if (this.useLedgerDest) {
-        this.useLedgerSrc = false
-        this.useLedgerFunding = false
-        this.useLedgerSigning = false
-        this.useLedgerAdditionalSigner = false
-      }
-    },
     useLedgerFunding: function() {
-      if (this.useLedgerFunding) {
-        this.useLedgerSrc = false
-        // this.useLedgerDest = false
-        this.useLedgerSigning = false
-        this.useLedgerAdditionalSigner = false
-      }
+      this.adjustSetting('useLedgerFunding')
     },
     useLedgerSigning: function() {
-      if (this.useLedgerSigning) {
-        this.useLedgerSrc = false
-        this.useLedgerFunding = false
-        this.useLedgerDest = false
-        this.useLedgerAdditionalSigner = false
-      }
-    },
-    useLedgerAdditionalSigner: function() {
-      if (this.useLedgerSigning) {
-        this.useLedgerSrc = false
-        this.useLedgerFunding = false
-        this.useLedgerDest = false
-        this.useLedgerSigning = false
-      }
+      this.adjustSetting('useLedgerSigning')
     }
   },
   methods: {
+    adjustSetting(id) {
+      switch (id) {
+        case 'destType':
+          if (this.destType === 'ledger') {
+            // this.destType = 'publicKey'
+            this.sourceType = 'account'
+            this.useLedgerFunding = false
+            this.useLedgerSigning = false
+            this.additionalSignerType = 'account'
+          }
+          break
+        case 'sourceType':
+          if (this.sourceType === 'ledger') {
+            this.destType = 'publicKey'
+            // this.sourceType = 'account'
+            this.useLedgerFunding = false
+            this.useLedgerSigning = false
+            this.additionalSignerType = 'account'
+          }
+          break
+        case 'useLedgerFunding':
+          if (this.useLedgerFunding) {
+            this.destType = 'publicKey'
+            this.sourceType = 'account'
+            // this.useLedgerFunding = false
+            this.useLedgerSigning = false
+            this.additionalSignerType = 'account'
+          }
+          break
+        case 'useLedgerSigning':
+          if (this.useLedgerSigning) {
+            this.destType = 'publicKey'
+            this.sourceType = 'account'
+            this.useLedgerFunding = false
+            // this.useLedgerSigning = false
+            this.additionalSignerType = 'account'
+          }
+          break
+        case 'useLedgerAdditionalSigner':
+          if (this.additionalSignerType === 'ledger') {
+            // this.destType = 'publicKey'
+            // this.sourceType = 'account'
+            // this.useLedgerFunding = false
+            this.useLedgerSigning = false
+            // this.additionalSignerType = 'account'
+          }
+          break
+        default:
+          break
+      }
+    },
+    destMenuSelected(item) {
+      this.destType = item.id
+      this.adjustSetting('destType')
+    },
+    sourceMenuSelected(item) {
+      this.sourceType = item.id
+      this.adjustSetting('sourceType')
+    },
+    additionalSignerMenuSelected(item) {
+      this.additionalSignerType = item.id
+      this.adjustSetting('additionalSignerType')
+    },
     sharedLegerAPI() {
       if (!this.ledgerAPI) {
         this.ledgerAPI = new LedgerAPI()
@@ -160,14 +229,19 @@ export default {
     sourceWallet() {
       let result = null
 
-      if (this.useLedgerSrc) {
-        result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
-          this._displayToast('Confirm on your Ledger Nano')
-        })
-      } else {
-        if (this._sourceValid()) {
-          result = StellarWallet.secret(this.selectedSource.secret)
-        }
+      switch (this.destType) {
+        case 'ledger':
+          result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
+            this._displayToast('Confirm on your Ledger Nano')
+          })
+          break
+        case 'account':
+          if (this._sourceValid()) {
+            result = StellarWallet.secret(this.selectedSource.secret)
+          }
+          break
+        default:
+          break
       }
 
       return result
@@ -175,14 +249,26 @@ export default {
     destWallet() {
       let result = null
 
-      if (this.useLedgerDest) {
-        result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
-          this._displayToast('Confirm on your Ledger Nano')
-        })
-      } else {
-        if (this._destValid()) {
-          result = StellarWallet.secret(this.selectedDest.secret)
-        }
+      switch (this.destType) {
+        case 'ledger':
+          result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
+            this._displayToast('Confirm on your Ledger Nano')
+          })
+          break
+        case 'publicKey':
+          if (Helper.strOK(this.destPublicKey)) {
+            result = StellarWallet.secret(this.selectedDest.secret)
+          } else {
+            this._displayToast('Please paste in a destination public key', true)
+          }
+          break
+        case 'account':
+          if (this._destValid()) {
+            result = StellarWallet.secret(this.selectedDest.secret)
+          }
+          break
+        default:
+          break
       }
 
       return result
@@ -205,14 +291,19 @@ export default {
     additionalSignerWallet() {
       let result = null
 
-      if (this.useLedgerAdditionalSigner) {
-        result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
-          this._displayToast('Confirm on your Ledger Nano')
-        })
-      } else {
-        if (this._additionalSignerValid()) {
-          result = StellarWallet.secret(this.selectedAdditionalSigner.secret)
-        }
+      switch (this.destType) {
+        case 'ledger':
+          result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
+            this._displayToast('Confirm on your Ledger Nano')
+          })
+          break
+        case 'account':
+          if (this._additionalSignerValid()) {
+            result = StellarWallet.secret(this.selectedAdditionalSigner.secret)
+          }
+          break
+        default:
+          break
       }
 
       return result
@@ -265,7 +356,7 @@ export default {
       return false
     },
     _signerValid() {
-      const result = this.selectedSigner ? this.selectedSigner.publicKey : null
+      const result = this.selectedSigner ? this.selectedSigner.secret : null
 
       if (Helper.strOK(result)) {
         return true
@@ -278,7 +369,7 @@ export default {
     },
     _additionalSignerValid() {
       if (this.additionalSigner) {
-        const result = this.selectedAdditionalSigner ? this.selectedAdditionalSigner.publicKey : null
+        const result = this.selectedAdditionalSigner ? this.selectedAdditionalSigner.secret : null
 
         if (Helper.strOK(result)) {
           return true
@@ -291,7 +382,7 @@ export default {
       return false
     },
     _sourceValid() {
-      const result = this.selectedSource ? this.selectedSource.publicKey : null
+      const result = this.selectedSource ? this.selectedSource.secret : null
 
       if (Helper.strOK(result)) {
         return true
@@ -304,7 +395,7 @@ export default {
     },
     _fundingValid() {
       if (this.differentFundingAccount) {
-        const result = this.selectedFunding ? this.selectedFunding.publicKey : null
+        const result = this.selectedFunding ? this.selectedFunding.secret : null
 
         if (Helper.strOK(result)) {
           return true
