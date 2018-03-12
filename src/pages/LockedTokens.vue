@@ -23,10 +23,11 @@
   </instructions-header>
 
   <div class='top-controls'>
+    <div>First setup a Token on the Create Token Tutorial tab</div>
     <v-btn round small @click="createAccountWithLockedTokens()">Create Account with Locked Tokens</v-btn>
 
     <div class='address-box'>
-      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
     </div>
     <div class='button-group'>
       <v-btn round small @click="createUnlockTransaction()">Create Unlock Transaction</v-btn>
@@ -188,8 +189,10 @@ export default {
 .address-box {
     display: flex;
     align-items: center;
+    flex-direction: column;
     div.input-group {
-        margin-right: 16px;
+        max-width: 400px;
+        margin-bottom: 8px;
     }
 }
 

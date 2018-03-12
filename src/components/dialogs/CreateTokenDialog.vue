@@ -5,8 +5,7 @@
 
     <div class='help-contents'>
       <div class='help-text'>
-        <div>Create a token</div>
-        <div class='sub-header'>Give your asset a symbol and create the tokens. Symbol can be 1-12 characters long</div>
+        <div>Give your asset a symbol and create the tokens. Symbol can be 1-12 characters long</div>
       </div>
       <div class='help-email'>
         <v-text-field hide-details label='Symbol' v-model.trim="symbol" @keyup.enter="createToken()" ref='input'></v-text-field>

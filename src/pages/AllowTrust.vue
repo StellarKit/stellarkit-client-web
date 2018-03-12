@@ -10,7 +10,7 @@
       <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
     </div>
 
-    <div>1. First setup a Token on the previous tab</div>
+    <div>1. First setup a Token on the Create Token Tutorial tab</div>
     <div>2. Set Source account to Issuer, then set or clear flags to test AuthRequiredFlag</div>
     <v-btn round small @click="setAuthRequiredFlag()">Set AuthRequiredFlag</v-btn>
     <v-btn round small @click="setAuthRevocableFlag()">Set AuthRevocableFlag</v-btn>

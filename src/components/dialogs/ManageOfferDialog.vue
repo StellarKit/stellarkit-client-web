@@ -5,14 +5,12 @@
 
     <div class='help-contents'>
       <div class='help-text'>
-        <div>Post an offer</div>
-        <div class='sub-header'>Post an offer to sell your token</div>
+        <div>Post an offer to sell your token</div>
       </div>
       <div class='help-email'>
-        <strong>Price:</strong>
-        <v-text-field label="Buy XLM" type='number' v-model.number="offerPriceN" ref='input'></v-text-field>
-        <v-text-field :label="sellLabel" type='number' v-model.number="offerPriceD"></v-text-field>
-        <v-text-field label="Amount to sell" type='number' v-model.number="offerAmount" @keyup.enter="manageOffer()"></v-text-field>
+        <v-text-field hide-details label="Buy XLM" type='number' v-model.number="offerPriceN" ref='input'></v-text-field>
+        <v-text-field hide-details :label="sellLabel" type='number' v-model.number="offerPriceD"></v-text-field>
+        <v-text-field hide-details label="Amount to sell" type='number' v-model.number="offerAmount" @keyup.enter="manageOffer()"></v-text-field>
       </div>
       <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>
@@ -46,7 +44,7 @@ export default {
     'toast-component': ToastComponent
   },
   computed: {
-    sellLabel: function () {
+    sellLabel: function() {
       if (this.project) {
         return 'Sell ' + this.project.symbol
       }
@@ -65,7 +63,7 @@ export default {
     }
   },
   watch: {
-    ping: function () {
+    ping: function() {
       this.visible = true
       this.domain = ''
       this.statusMessage = ''

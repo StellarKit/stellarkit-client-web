@@ -377,13 +377,11 @@ export default {
 
 <style lang='scss' scoped>
 .account-choice-box {
-    padding: 8px;
+    padding: 8px 12px;
     margin-bottom: 8px;
     background: rgba(0,0,0,.05);
     border-radius: 4px;
 
-    .inset-choice-box {
-        margin-left: 20px;
-    }
+    .inset-choice-box {}
 }
 </style>
