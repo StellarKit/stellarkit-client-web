@@ -57,27 +57,29 @@ export default {
       loading: false,
       showSource: false,
       showDest: false,
-      showFunding: true
+      showFunding: false
     }
   },
   mounted() {
     switch (this.operation) {
       case 'domain':
         this.showSource = true
+        this.showFunding = true
         this.title = 'Set Home Domain'
         this.tooltip = 'Set the home domain'
         this.buttonTitle = 'Set Domain'
         this.inputLabel = 'Domain'
         this.hint = 'www.example-domain.com'
-        this.header = 'Adds a domain name to the source account chosen.  Funding account is optional.  Use a funding account to pay the transaction fee.'
+        this.header = 'Adds a domain name to the source account. Leave blank to remove. Funding account is optional.'
         break
       case 'inflation':
         this.showSource = true
+        this.showFunding = true
         this.title = 'Set Inflation Destination'
         this.tooltip = 'Set the inflation destination'
         this.buttonTitle = 'Set Inflation Destination'
         this.inputLabel = 'Inflation destination'
-        this.header = 'Enter the inflation destination'
+        this.header = 'Adds the inflation destination to the source account. Funding account is optional.'
         this.subHeader = 'ex: GCCD6AJOYZCUAQLX32ZJF2MKFFAUJ53PVCFQI3RHWKL3V47QYE2BNAUT'
         this.hint = 'visit: https://lumenaut.net/'
         break
@@ -132,50 +134,51 @@ export default {
       return this.$refs.dialogAccounts
     },
     setDomain() {
-      if (this.inputText.length === 0) {
-        this.displayToast('Domain is blank')
-      } else {
-        this.loading = true
+      const sourceWallet = this.dialogAccounts().sourceWallet()
+      const fundingWallet = this.dialogAccounts().fundingWallet()
 
+      if (sourceWallet) {
+        this.loading = true
         Helper.debugLog('Setting home domain...')
 
-        const sourceWallet = this.dialogAccounts().sourceWallet()
-        if (sourceWallet) {
-          StellarUtils.setDomain(sourceWallet, this.inputText)
-            .then((result) => {
-              Helper.debugLog(result)
-              this.loading = false
-              this.displayToast('Success')
-            })
-            .catch((error) => {
-              Helper.debugLog(error)
-              this.displayToast('Failed: see console', true)
-
-              this.loading = false
-            })
-        }
-      }
-    },
-    setInflationDestination() {
-      if (this.inputText.length === 0) {
-        this.displayToast('Inflation destination is blank', true)
-      } else {
-        this.loading = true
-
-        Helper.debugLog('Setting inflation destination...')
-
-        StellarUtils.setInflationDestination(this.dialogAccounts().sourceWallet(), this.inputText)
+        StellarUtils.setDomain(sourceWallet, this.inputText, fundingWallet)
           .then((result) => {
             Helper.debugLog(result)
             this.loading = false
             this.displayToast('Success')
           })
           .catch((error) => {
-            Helper.debugLog(error, 'Error')
+            Helper.debugLog(error)
             this.displayToast('Failed: see console', true)
 
             this.loading = false
           })
+      }
+    },
+    setInflationDestination() {
+      const sourceWallet = this.dialogAccounts().sourceWallet()
+      const fundingWallet = this.dialogAccounts().fundingWallet()
+
+      if (sourceWallet) {
+        this.loading = true
+        Helper.debugLog('Setting inflation destination...')
+
+        // sending in blank string or null just eats transaction fees and does nothing
+        // remove this if statement when fixed in stellar core
+        if (Helper.strOK(this.inputText)) {
+          StellarUtils.setInflationDestination(sourceWallet, this.inputText, fundingWallet)
+            .then((result) => {
+              Helper.debugLog(result)
+              this.loading = false
+              this.displayToast('Success')
+            })
+            .catch((error) => {
+              Helper.debugLog(error, 'Error')
+              this.displayToast('Failed: see console', true)
+
+              this.loading = false
+            })
+        }
       }
     },
     federationLookup() {

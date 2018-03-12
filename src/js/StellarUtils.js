@@ -79,8 +79,8 @@ class StellarUtils {
     return this.api().allowTrust(sourceWallet, trustor, asset, authorize)
   }
 
-  setDomain(sourceWallet, domain) {
-    return this.api().setDomain(sourceWallet, domain)
+  setDomain(sourceWallet, domain, fundingWallet = null) {
+    return this.api().setDomain(sourceWallet, domain, fundingWallet)
   }
 
   // pass 1 for threshold if either account can sign for med/high operations
@@ -110,28 +110,28 @@ class StellarUtils {
     return this.api().buyTokens(sourceWallet, sendAsset, destAsset, sendMax, destAmount)
   }
 
-  lockAccount(sourceWallet) {
-    return this.api().lockAccount(sourceWallet)
+  lockAccount(sourceWallet, fundingWallet = null) {
+    return this.api().lockAccount(sourceWallet, fundingWallet)
   }
 
   createAccount(sourceWallet, newWallet, startingBalance) {
     return this.api().createAccount(sourceWallet, newWallet, startingBalance)
   }
 
-  setOptions(sourceWallet, options) {
-    return this.api().setOptions(sourceWallet, options)
+  setOptions(sourceWallet, options, fundingWallet = null) {
+    return this.api().setOptions(sourceWallet, options, fundingWallet)
   }
 
   setFlags(sourceWallet, flags) {
     return this.api().setFlags(sourceWallet, flags)
   }
 
-  clearFlags(sourceWallet, flags) {
-    return this.api().clearFlags(sourceWallet, flags)
+  clearFlags(sourceWallet, flags, fundingWallet = null) {
+    return this.api().clearFlags(sourceWallet, flags, fundingWallet)
   }
 
-  setInflationDestination(sourceWallet, inflationDest) {
-    return this.api().setInflationDestination(sourceWallet, inflationDest)
+  setInflationDestination(sourceWallet, inflationDest, fundingWallet = null) {
+    return this.api().setInflationDestination(sourceWallet, inflationDest, fundingWallet)
   }
 
   // returns {account: newAccount, keypair: keypair}
