@@ -18,17 +18,8 @@
 
           <v-dialog v-model="modal" lazy full-width width="290px">
             <v-text-field hide-details :disabled='!timeLockEnabled' slot="activator" label="Time Lock Expiration Date" v-model="date" prepend-icon="event" readonly></v-text-field>
-            <v-date-picker v-model="date" scrollable actions>
-              <div slot-scope="{ save, cancel }">
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn flat color="primary" @click="cancel">Cancel</v-btn>
-                  <v-btn flat color="primary" @click="save">OK</v-btn>
-                </v-card-actions>
-              </div>
-            </v-date-picker>
+            <v-date-picker v-model="date" scrollable actions />
 
-            </v-date-picker>
           </v-dialog>
         </div>
       </div>
@@ -205,6 +196,7 @@ export default {
             .balance-fields {
                 display: flex;
                 align-items: center;
+                margin-bottom: 12px;
                 div.input-group {
                     flex: 1 0 200px;
                     margin-right: 16px;

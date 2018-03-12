@@ -283,7 +283,7 @@ export default {
 
       return result
     },
-    signerWallet() {
+    signerWallet(required = false) {
       let result = null
 
       switch (this.signerType) {
@@ -301,14 +301,14 @@ export default {
           break
       }
 
-      if (!result) {
+      if (!result && required) {
         this._displayToast('Please select a signing account', true)
         Helper.debugLog('Please select a signing account', 'Error')
       }
 
       return result
     },
-    fundingWallet() {
+    fundingWallet(required = false) {
       let result = null
 
       switch (this.fundingType) {
@@ -326,7 +326,7 @@ export default {
           break
       }
 
-      if (!result) {
+      if (!result && required) {
         this._displayToast('Please select a funding account', true)
         Helper.debugLog('Please select a funding account', 'Error')
       }
