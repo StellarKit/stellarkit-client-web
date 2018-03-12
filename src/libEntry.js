@@ -37,11 +37,11 @@ const router = new VueRouter({
     }, {
       path: '/trades',
       component: Trades,
-      name: 'Trades'
+      name: 'Live Stream'
     }, {
       path: '/token',
       component: CreateToken,
-      name: 'Create Token'
+      name: 'Create Token Tutorial'
     }, {
       path: '/ico',
       component: ICOManager,

@@ -64,7 +64,7 @@ export default {
         path: '/buytoken'
       }, {
         icon: String.fromCharCode('0xE8C9'),
-        tooltip: 'Live Trades',
+        tooltip: 'Live Stream',
         path: '/trades'
       }, {
         icon: String.fromCharCode('0xE3E7'),

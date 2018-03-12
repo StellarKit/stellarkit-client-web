@@ -194,6 +194,10 @@ class StellarUtils {
       .then((info) => {
         Helper.debugLog(info)
       })
+      .catch((error) => {
+        Helper.debugLog(error, 'Error')
+        Helper.toast('Error', true)
+      })
   }
 
   sendTestnetXLMToLedger() {
@@ -201,7 +205,10 @@ class StellarUtils {
 
     Helper.debugLog('refilling ledger...')
 
-    const fundingWallet = StellarWallet.ledger(new LedgerAPI())
+    const fundingWallet = StellarWallet.ledger(new LedgerAPI(), () => {
+      Helper.toast('Confirm transaction on Ledger Nano')
+    })
+
     fundingWallet.publicKey()
       .then((publicKey) => {
         const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + publicKey
@@ -212,9 +219,10 @@ class StellarUtils {
       })
       .then((info) => {
         Helper.debugLog(info)
+        Helper.toast('Testnet XLM added to your Ledger!')
       })
       .catch((error) => {
-        Helper.debugLog(error, 'Error')
+        Helper.debugLog(error, 'Account exists, will try a merge')
 
         // we get op_already_exists if this account already exists, so create new account and merge
         if (Helper.strOK(ledgerPublicKey)) {
@@ -226,7 +234,11 @@ class StellarUtils {
             .then((data) => {
               Helper.debugLog(data, 'Success')
 
-              return this.api().mergeAccount(StellarWallet.secret(keyPair.secret()), ledgerPublicKey)
+              return this.mergeAccount(StellarWallet.secret(keyPair.secret()), fundingWallet)
+            })
+            .catch((err) => {
+              Helper.debugLog(err, 'Error')
+              Helper.toast('Error!', true)
             })
         }
       })

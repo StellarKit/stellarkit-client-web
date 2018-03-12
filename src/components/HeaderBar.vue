@@ -33,7 +33,7 @@
 export default {
   props: ['items'],
   computed: {
-    pageTitle: function () {
+    pageTitle: function() {
       return this.$route.name
     }
   },
@@ -41,12 +41,12 @@ export default {
     return {
       tabs: [{
         icon: String.fromCharCode('0xE88A'),
-        tooltip: 'Make Payments',
+        tooltip: 'Common Actions',
         path: '/'
       }, {
-        icon: String.fromCharCode('0xE263'),
-        tooltip: 'Create Token',
-        path: '/token'
+        icon: String.fromCharCode('0xE3E7'),
+        tooltip: 'ICO Manager',
+        path: '/ico'
       }, {
         icon: String.fromCharCode('0xE86C'),
         tooltip: 'Allow Trust',
@@ -64,18 +64,18 @@ export default {
         tooltip: 'Live Trades',
         path: '/trades'
       }, {
-        icon: String.fromCharCode('0xE3E7'),
-        tooltip: 'ICO Manager',
-        path: '/ico'
+        icon: String.fromCharCode('0xE889'),
+        tooltip: 'History Viewer',
+        path: '/history'
+      }, {
+        icon: String.fromCharCode('0xE263'),
+        tooltip: 'Create Token Tutorial',
+        path: '/token'
       }, {
         icon: String.fromCharCode('0xE1E0'),
         tooltip: 'Ledger Nano',
         path: '/ledger',
         disabled: true
-      }, {
-        icon: String.fromCharCode('0xE889'),
-        tooltip: 'History Viewer',
-        path: '/history'
       }]
     }
   },

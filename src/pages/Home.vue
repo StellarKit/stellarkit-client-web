@@ -25,6 +25,22 @@
       <v-btn round small @click="setInflation()">Set Inflation Destination</v-btn>
       <v-btn round small @click="testFederation()">Federation Lookup</v-btn>
       <v-btn round small @click="manageDataPing = !manageDataPing">Manage Data</v-btn>
+
+      <v-menu offset-y :transition=false>
+        <v-btn round small :ripple=false slot="activator">
+          Ledger Nano
+          <v-icon>&#xE5C5;</v-icon>
+        </v-btn>
+        <v-list dense>
+          <v-list-tile @click="ledgerMenu('info')">
+            <v-list-tile-title>Display Ledger Info</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="ledgerMenu('refill')">
+            <v-list-tile-title>Boost Testnet Balance</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
+
       <v-btn round small @click="saveSecretDialogPing = !saveSecretDialogPing">Save/Print Keys</v-btn>
     </div>
   </div>
@@ -104,6 +120,18 @@ export default {
     },
     makeSelectedPayment() {
       this.sendAssetsDialogPing = !this.sendAssetsDialogPing
+    },
+    ledgerMenu(id) {
+      switch (id) {
+        case 'info':
+          StellarUtils.displayLedgerInfo()
+          break
+        case 'refill':
+          StellarUtils.sendTestnetXLMToLedger()
+          break
+        default:
+          break
+      }
     }
   }
 }

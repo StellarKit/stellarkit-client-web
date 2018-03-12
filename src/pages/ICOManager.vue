@@ -7,27 +7,6 @@
     <div>3. Launch Stellar App on Ledger.</div>
   </instructions-header>
 
-  <div class='page-title'>
-    <div class='page-subtitle'>
-      Only works with Ledger Nano. Under Construction
-    </div>
-    <div>
-      <v-menu offset-y :transition=false>
-        <v-btn small :ripple=false slot="activator">
-          Ledger Nano
-          <v-icon>&#xE5C5;</v-icon>
-        </v-btn>
-        <v-list dense>
-          <v-list-tile @click="ledgerMenu('info')">
-            <v-list-tile-title>Display Ledger Info</v-list-tile-title>
-          </v-list-tile>
-          <v-list-tile @click="ledgerMenu('refill')">
-            <v-list-tile-title>Refill Ledger Balance</v-list-tile-title>
-          </v-list-tile>
-        </v-list>
-      </v-menu>
-    </div>
-  </div>
   <div class='page-contents'>
     <v-menu offset-y :transition=false>
       <v-btn small color='primary' :ripple=false slot="activator">
@@ -182,18 +161,6 @@ export default {
       this.saveProjects()
 
       this.updateProjectIndex(0)
-    },
-    ledgerMenu(id) {
-      switch (id) {
-        case 'info':
-          StellarUtils.displayLedgerInfo()
-          break
-        case 'refill':
-          StellarUtils.sendTestnetXLMToLedger()
-          break
-        default:
-          break
-      }
     },
     deleteTokenProject() {
       this.confirmDialogPing = !this.confirmDialogPing
