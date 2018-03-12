@@ -150,7 +150,7 @@ export default {
 
       if (distributorAccount) {
         const distributorWallet = StellarWallet.secret(distributorAccount.secret)
-        StellarUtils.newAccountWithTokens(distributorWallet, distributorWallet, '3', StellarAccounts.lamboTokenAsset(), '12')
+        StellarUtils.newAccountWithTokens(null, distributorWallet, '3', StellarAccounts.lamboTokenAsset(), '12')
           .then((result) => {
             Helper.debugLog(result.account)
 
@@ -282,7 +282,7 @@ export default {
     setDistributorTrust(asset) {
       Helper.debugLog('Setting distributor trust...')
 
-      StellarUtils.changeTrust(StellarWallet.secret(this.distributorAcct.secret), asset, String(this.trustLimit))
+      StellarUtils.changeTrust(StellarWallet.secret(this.distributorAcct.secret), null, asset, String(this.trustLimit))
         .then((result) => {
           Helper.debugLog(result)
 
@@ -305,7 +305,7 @@ export default {
       Helper.debugLog('Setting buyer trust...')
 
       // buyer must trust the distributor
-      StellarUtils.changeTrust(StellarWallet.secret(this.tokenBuyerAcct.secret), StellarAccounts.lamboTokenAsset(), String(this.trustLimit))
+      StellarUtils.changeTrust(StellarWallet.secret(this.tokenBuyerAcct.secret), null, StellarAccounts.lamboTokenAsset(), String(this.trustLimit))
         .then((result) => {
           Helper.debugLog(result)
 

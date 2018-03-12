@@ -71,8 +71,8 @@ class StellarUtils {
     return this.api().manageOffer(sourceWallet, fundingWallet, buying, selling, amount, price, offerID)
   }
 
-  changeTrust(sourceWallet, asset, amount) {
-    return this.api().changeTrust(sourceWallet, asset, amount)
+  changeTrust(sourceWallet, fundingWallet, asset, amount) {
+    return this.api().changeTrust(sourceWallet, fundingWallet, asset, amount)
   }
 
   allowTrust(sourceWallet, trustor, asset, authorize) {
@@ -163,7 +163,13 @@ class StellarUtils {
   newAccountWithTokens(fundingWallet, distributorWallet, startingBalance, asset, amount, accountName = null, accountTag = null) {
     let info = null
 
-    return this.newAccount(fundingWallet, startingBalance, accountName, accountTag)
+    // problem if fundingWallet and distributorWallet is the same, fails for the sendAsset (too many signers)
+    let newAccountFundingWallet = fundingWallet
+    if (!newAccountFundingWallet) {
+      newAccountFundingWallet = distributorWallet
+    }
+
+    return this.newAccount(newAccountFundingWallet, startingBalance, accountName, accountTag)
       .then((result) => {
         info = result
 
@@ -171,7 +177,7 @@ class StellarUtils {
         const trustLimit = Math.max(amount * 2, 100000)
 
         Helper.debugLog('setting trust...')
-        return this.changeTrust(StellarWallet.secret(info.keypair.secret()), asset, String(trustLimit))
+        return this.changeTrust(StellarWallet.secret(info.keypair.secret()), fundingWallet, asset, String(trustLimit))
       })
       .then((result) => {
         Helper.debugLog('sending tokens...')

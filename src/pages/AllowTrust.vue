@@ -83,7 +83,7 @@ export default {
     },
     changeTrust() {
       if (this.sourceValid()) {
-        StellarUtils.changeTrust(StellarWallet.secret(this.selectedSource.secret), StellarAccounts.lamboTokenAsset(), '10000')
+        StellarUtils.changeTrust(StellarWallet.secret(this.selectedSource.secret), null, StellarAccounts.lamboTokenAsset(), '10000')
           .then((response) => {
             Helper.debugLog(response, 'Success')
           })

@@ -97,7 +97,7 @@ export default {
 
           const asset = new StellarSdk.Asset(this.symbol, this.address)
 
-          StellarUtils.changeTrust(sourceWallet, asset, String(this.trustLimit))
+          StellarUtils.changeTrust(sourceWallet, null, asset, String(this.trustLimit))
             .then((result) => {
               Helper.debugLog(result)
               this.loading = false

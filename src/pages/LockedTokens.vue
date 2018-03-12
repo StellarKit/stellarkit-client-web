@@ -152,7 +152,7 @@ export default {
 
       if (distributorAccount) {
         const distributorWallet = StellarWallet.secret(distributorAccount.secret)
-        StellarUtils.newAccountWithTokens(distributorWallet, distributorWallet, '3', StellarAccounts.lamboTokenAsset(), '12')
+        StellarUtils.newAccountWithTokens(null, distributorWallet, '3', StellarAccounts.lamboTokenAsset(), '12')
           .then((result) => {
             // result is {account: newAccount, keypair: keypair}
             Helper.debugLog(result.account)
