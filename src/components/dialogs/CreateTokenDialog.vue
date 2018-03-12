@@ -9,10 +9,9 @@
         <div class='sub-header'>Give your asset a symbol and create the tokens. Symbol can be 1-12 characters long</div>
       </div>
       <div class='help-email'>
-        <v-text-field label='Symbol' v-model.trim="symbol" @keyup.enter="createToken()" ref='input'></v-text-field>
-        <v-text-field label='Amount' v-model.number="amount" type='number' @keyup.enter="createToken()"></v-text-field>
+        <v-text-field hide-details label='Symbol' v-model.trim="symbol" @keyup.enter="createToken()" ref='input'></v-text-field>
+        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showAmount=true :showFunding=true />
       </div>
-      <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
           <v-btn round small color='primary' slot="activator" @click="createToken()" :loading="loading">Create Token</v-btn>
@@ -30,18 +29,19 @@
 import Helper from '../../js/helper.js'
 import {
   DialogTitleBar,
-  StellarWallet,
-  LedgerAPI
+  StellarWallet
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')
+import DialogAccountsView from './DialogAccountsView.vue'
 
 export default {
   props: ['ping'],
   components: {
     'dialog-titlebar': DialogTitleBar,
-    'toast-component': ToastComponent
+    'toast-component': ToastComponent,
+    'dialog-accounts': DialogAccountsView
   },
   data() {
     return {
@@ -49,7 +49,6 @@ export default {
       title: 'Create Token',
       statusMessage: '',
       symbol: '',
-      amount: 1000000,
       loading: false
     }
   },
@@ -59,7 +58,6 @@ export default {
       this.domain = ''
       this.statusMessage = ''
       this.symbol = ''
-      this.amount = 1000000
 
       // autofocus hack
       this.$nextTick(() => {
@@ -70,50 +68,55 @@ export default {
     }
   },
   methods: {
+    dialogAccounts() {
+      return this.$refs.dialogAccounts
+    },
     createToken() {
       let issuerKeypair = null
       let asset = null
 
-      if (this.amount < 1) {
-        this.statusMessage = 'Create token amount must be greater than 0'
+      const amount = this.dialogAccounts().amount()
+      const fundingWallet = this.dialogAccounts().fundingWallet()
+
+      if (amount < 1) {
+        this.displayToast('Create token amount must be greater than 0', true)
         return
       }
       if (!Helper.strOK(this.symbol)) {
-        this.statusMessage = 'Type in a symbol name'
+        this.displayToast('Type in a symbol name', true)
         return
       }
 
-      const fundingWallet = StellarWallet.ledger(new LedgerAPI(), () => {
-        this.statusMessage = 'Confirm transaction on Ledger Nano'
-        this.displayToast(this.statusMessage)
-      })
+      if (fundingWallet) {
+        this.loading = true
 
-      this.loading = true
+        // create issuer
+        StellarUtils.newAccount(fundingWallet, '2', 'Issuer: ' + this.symbol, this.symbol)
+          .then((accountInfo) => {
+            issuerKeypair = accountInfo.keypair
+            const issuerWallet = StellarWallet.secret(issuerKeypair.secret())
+            asset = new StellarSdk.Asset(this.symbol, issuerKeypair.publicKey())
 
-      // create issuer
-      StellarUtils.newAccount(fundingWallet, '2', 'Issuer: ' + this.symbol, this.symbol)
-        .then((accountInfo) => {
-          issuerKeypair = accountInfo.keypair
-          const issuerWallet = StellarWallet.secret(issuerKeypair.secret())
-          asset = new StellarSdk.Asset(this.symbol, issuerKeypair.publicKey())
+            // create distributor from issuer
+            return StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, '2', asset, String(amount), 'Distributor: ' + this.symbol, this.symbol)
+          })
+          .then((accountInfo) => {
+            // return results and close
+            this.$emit('token-created', issuerKeypair, accountInfo.keypair, asset)
+            this.visible = false
 
-          // create distributor from issuer
-          return StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, '2', asset, String(this.amount), 'Distributor: ' + this.symbol, this.symbol)
-        })
-        .then((accountInfo) => {
-          // return results and close
-          this.$emit('token-created', issuerKeypair, accountInfo.keypair, asset)
-          this.visible = false
+            this.displayToast('Success!')
 
-          return null
-        })
-        .catch((error) => {
-          this.statusMessage = 'Error: ' + error.message
-          Helper.debugLog(error)
-        })
-        .finally(() => {
-          this.loading = false
-        })
+            return null
+          })
+          .catch((error) => {
+            this.displayToast('Error: ' + error.message, true)
+            Helper.debugLog(error)
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      }
     },
     displayToast(message, error = false) {
       Helper.toast(message, error, 'create-token-dialog')
@@ -144,10 +147,6 @@ export default {
 
         .help-email {
             margin: 0 30px;
-        }
-
-        .status-message {
-            font-size: 0.8em;
         }
     }
 }

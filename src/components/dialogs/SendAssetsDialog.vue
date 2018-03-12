@@ -18,7 +18,7 @@
         </v-tooltip>
       </div>
 
-      <toast-component :absolute=true location='trust-token-dialog' :bottom=false :top=true />
+      <toast-component :absolute=true location='send-assets-dialog' :bottom=false :top=true />
     </div>
   </div>
 </v-dialog>
@@ -97,7 +97,7 @@ export default {
       }
     },
     displayToast(message, error = false) {
-      Helper.toast(message, error, 'trust-token-dialog')
+      Helper.toast(message, error, 'send-assets-dialog')
     }
   }
 }

@@ -114,8 +114,8 @@ class StellarUtils {
     return this.api().lockAccount(sourceWallet)
   }
 
-  createAccount(sourceWallet, destinationKey, startingBalance) {
-    return this.api().createAccount(sourceWallet, destinationKey, startingBalance)
+  createAccount(sourceWallet, newWallet, startingBalance) {
+    return this.api().createAccount(sourceWallet, newWallet, startingBalance)
   }
 
   setOptions(sourceWallet, options) {
@@ -144,7 +144,7 @@ class StellarUtils {
 
     const accountRec = StellarAccounts.addAccount(keypair, name, tag)
 
-    return this.createAccount(sourceWallet, keypair.publicKey(), startingBalance)
+    return this.createAccount(sourceWallet, StellarWallet.secret(keypair.secret()), startingBalance)
       .then((account) => {
         return {
           account: account,

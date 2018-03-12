@@ -87,7 +87,7 @@ export default {
         })
 
         Helper.debugLog('Confirm transaction on Nano...')
-        return StellarUtils.createAccount(ledgerWallet, keypair.publicKey(), '2') // .5 for multisig
+        return StellarUtils.createAccount(ledgerWallet, StellarWallet.secret(keypair.secret()), '2') // .5 for multisig
           .then((result) => {
             newAccount = result
 

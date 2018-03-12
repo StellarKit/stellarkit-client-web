@@ -13,6 +13,7 @@
           <v-text-field label='XLM Balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccount()"></v-text-field>
         </div>
         <v-text-field label='Account name' v-model.trim="accountName" @keyup.enter="createAccount()"></v-text-field>
+        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showFunding=true />
         <div class='time-lock-fields'>
           <v-checkbox small label="Time lock this account" v-model="timeLockEnabled"></v-checkbox>
 
@@ -32,7 +33,6 @@
           </v-dialog>
         </div>
       </div>
-      <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
           <v-btn round small color='primary' slot="activator" @click="createAccount()" :loading="loading">Create Account</v-btn>
@@ -50,25 +50,25 @@
 import Helper from '../../js/helper.js'
 import {
   DialogTitleBar,
-  StellarWallet,
-  LedgerAPI
+  StellarWallet
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')
 const generateName = require('sillyname')
+import DialogAccountsView from './DialogAccountsView.vue'
 
 export default {
   props: ['ping', 'project'],
   components: {
     'dialog-titlebar': DialogTitleBar,
-    'toast-component': ToastComponent
+    'toast-component': ToastComponent,
+    'dialog-accounts': DialogAccountsView
   },
   data() {
     return {
       visible: false,
       title: 'Create Account',
-      statusMessage: '',
       loading: false,
       tokenBalance: 10,
       xlmBalance: 2,
@@ -84,7 +84,6 @@ export default {
     ping: function() {
       this.visible = true
       this.domain = ''
-      this.statusMessage = ''
       this.accountName = generateName()
 
       // autofocus hack
@@ -94,48 +93,49 @@ export default {
     }
   },
   methods: {
+    dialogAccounts() {
+      return this.$refs.dialogAccounts
+    },
     createAccount() {
-      Helper.debugLog(this.project)
-      this.loading = true
+      const fundingWallet = this.dialogAccounts().fundingWallet()
 
-      const fundingWallet = StellarWallet.ledger(new LedgerAPI(), () => {
-        this.statusMessage = 'Confirm transaction on Ledger Nano'
-        this.displayToast(this.statusMessage)
-      })
+      if (fundingWallet) {
+        this.loading = true
 
-      const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
-      const distributorWallet = StellarWallet.secret(this.project.distributorSecret)
+        const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
+        const distributorWallet = StellarWallet.secret(this.project.distributorSecret)
 
-      StellarUtils.newAccountWithTokens(fundingWallet, distributorWallet, String(this.xlmBalance), asset, String(this.tokenBalance), this.accountName, this.project.symbol)
-        .then((result) => {
-          // result is {account: newAccount, keypair: keypair}
-          Helper.debugLog(result.account)
+        StellarUtils.newAccountWithTokens(fundingWallet, distributorWallet, String(this.xlmBalance), asset, String(this.tokenBalance), this.accountName, this.project.symbol)
+          .then((result) => {
+            // result is {account: newAccount, keypair: keypair}
+            Helper.debugLog(result.account)
 
-          if (this.timeLockEnabled) {
-            Helper.debugLog('adding funding account as signer...')
-            const newWallet = StellarWallet.secret(result.keypair.secret())
+            if (this.timeLockEnabled) {
+              Helper.debugLog('adding funding account as signer...')
+              const newWallet = StellarWallet.secret(result.keypair.secret())
 
-            StellarUtils.makeMultiSig(newWallet, fundingWallet)
-              .then(() => {
-                return this.createUnlockTransaction(newWallet, fundingWallet)
-              })
-          }
+              StellarUtils.makeMultiSig(newWallet, fundingWallet)
+                .then(() => {
+                  return this.createUnlockTransaction(newWallet, fundingWallet)
+                })
+            }
 
-          return null
-        })
-        .then(() => {
-          Helper.debugLog('Account is ready', 'Success')
-          Helper.toast('Account is ready')
+            return null
+          })
+          .then(() => {
+            Helper.debugLog('Account is ready', 'Success')
+            this.displayToast('Success!')
 
-          return null
-        })
-        .catch((error) => {
-          Helper.debugLog(error, 'Error')
-          this.statusMessage = 'Error'
-        })
-        .finally(() => {
-          this.loading = false
-        })
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
+            this.displayToast('Error!', true)
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      }
     },
     timeFromNow(secondsAhead = 0) {
       return secondsAhead + Math.round((new Date()).getTime() / 1000)
@@ -209,10 +209,6 @@ export default {
                     margin-right: 16px;
                 }
             }
-        }
-
-        .status-message {
-            font-size: 0.8em;
         }
 
         .time-lock-fields {

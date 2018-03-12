@@ -32,7 +32,7 @@
   </div>
 
   <div v-if='showAmount' class='account-choice-box'>
-    <v-text-field hide-details label="Amount" type='number' v-model.number="amountXLM"></v-text-field>
+    <v-text-field hide-details label="Amount" type='number' v-model.number="assetAmount"></v-text-field>
   </div>
 
   <div v-if='showSigner' class='account-choice-box'>
@@ -46,7 +46,7 @@
 
   <div v-if='showFunding' class='account-choice-box'>
     <div>
-      <menu-button v-on:menu-selected='fundingMenuSelected' title='Use different funding account' :items='fundingMenuItems' :selectedID='fundingType' />
+      <menu-button v-on:menu-selected='fundingMenuSelected' title='Use a funding account' :items='fundingMenuItems' :selectedID='fundingType' />
     </div>
     <div v-if='fundingType === "account"' class='inset-choice-box'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedFunding" clearable label="Funding account" autocomplete return-object max-height="600"></v-select>
@@ -86,7 +86,7 @@ export default {
       selectedFunding: null,
       selectedSigner: null,
 
-      amountXLM: 2,
+      assetAmount: 10,
       ledgerAPI: null,
 
       assetCode: '',
@@ -115,6 +115,18 @@ export default {
         }
       ],
       signerMenuItems: [{
+          id: 'none',
+          title: 'None'
+        }, {
+          id: 'account',
+          title: 'Account'
+        },
+        {
+          id: 'ledger',
+          title: 'Ledger Nano'
+        }
+      ],
+      fundingMenuItems: [{
           id: 'none',
           title: 'None'
         }, {
@@ -192,7 +204,7 @@ export default {
     sourceWallet() {
       let result = null
 
-      switch (this.destType) {
+      switch (this.sourceType) {
         case 'ledger':
           result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
             this._displayToast('Confirm on your Ledger Nano')
@@ -220,7 +232,7 @@ export default {
           break
         case 'publicKey':
           if (Helper.strOK(this.destPublicKey)) {
-            result = StellarWallet.secret(this.selectedDest.secret)
+            result = StellarWallet.public(this.destPublicKey)
           } else {
             this._displayToast('Please paste in a destination public key', true)
           }
@@ -239,7 +251,7 @@ export default {
     signerWallet() {
       let result = null
 
-      switch (this.destType) {
+      switch (this.signerType) {
         case 'ledger':
           result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
             this._displayToast('Confirm on your Ledger Nano')
@@ -259,7 +271,7 @@ export default {
     fundingWallet() {
       let result = null
 
-      switch (this.destType) {
+      switch (this.fundingType) {
         case 'ledger':
           result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
             this._displayToast('Confirm on your Ledger Nano')
@@ -274,10 +286,11 @@ export default {
           break
       }
 
+      Helper.debugLog(result)
       return result
     },
     amount() {
-      return this.amountXLM
+      return this.assetAmount
     },
     asset() {
       if (this.sendXLM) {

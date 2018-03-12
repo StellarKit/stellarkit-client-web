@@ -140,7 +140,9 @@ export default class Helper {
   }
 
   static toStr(object) {
-    if (object instanceof Error) {
+    if (!object) {
+      return 'null'
+    } else if (object instanceof Error) {
       const json = this.stringify(object)
 
       // returns {} when it fails - check number of keys
