@@ -4,14 +4,14 @@
     <dialog-titlebar :title=title v-on:close='visible = false' />
 
     <div class='help-contents'>
-      <div class='help-text'>
+      <div class='simple-header'>
         <div> {{header}} </div>
         <div class='sub-header'> {{subHeader}} </div>
       </div>
 
       <div class='help-email'>
         <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=showSource :showDest=showDest :showFunding=showFunding />
-        <v-text-field :label='inputLabel' v-model.trim="inputText" @keyup.enter="doOperation()" ref='input'></v-text-field>
+        <v-text-field :hint='hint' :label='inputLabel' v-model.trim="inputText" @keyup.enter="doOperation()" ref='input'></v-text-field>
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -52,11 +52,12 @@ export default {
       buttonTitle: '',
       inputLabel: '',
       header: '',
+      hint: '',
       subHeader: '',
       loading: false,
       showSource: false,
       showDest: false,
-      showFunding: false
+      showFunding: true
     }
   },
   mounted() {
@@ -67,23 +68,26 @@ export default {
         this.tooltip = 'Set the home domain'
         this.buttonTitle = 'Set Domain'
         this.inputLabel = 'Domain'
-        this.header = 'You can set a domain on your account. Choose the account and domain below.'
+        this.hint = 'www.example-domain.com'
+        this.header = 'Adds a domain name to the source account chosen.  Funding account is optional.  Use a funding account to pay the transaction fee.'
         break
       case 'inflation':
         this.showSource = true
         this.title = 'Set Inflation Destination'
         this.tooltip = 'Set the inflation destination'
         this.buttonTitle = 'Set Inflation Destination'
-        this.inputLabel = 'Inflation Destination'
+        this.inputLabel = 'Inflation destination'
         this.header = 'Enter the inflation destination'
         this.subHeader = 'ex: GCCD6AJOYZCUAQLX32ZJF2MKFFAUJ53PVCFQI3RHWKL3V47QYE2BNAUT'
+        this.hint = 'visit: https://lumenaut.net/'
         break
       case 'federation':
         this.title = 'Lookup Federation Address'
         this.tooltip = 'Lookup Federation Address'
         this.buttonTitle = 'Lookup'
-        this.inputLabel = 'Federation Address'
+        this.inputLabel = 'Federation address'
         this.header = 'Enter the federation address'
+        this.hint = 'example*domain.com'
         break
       default:
         console.log('switch case not handled')
@@ -221,15 +225,17 @@ export default {
 
     .help-contents {
         @include inner-dialog-contents();
+        font-weight: normal;
 
-        .help-text {
+        .simple-header {
             div {
-                margin-bottom: 10px;
+                margin-bottom: 2px;
             }
             margin-bottom: 20px;
 
             .sub-header {
                 font-size: 0.8em;
+                padding-left: 10px;
             }
         }
 

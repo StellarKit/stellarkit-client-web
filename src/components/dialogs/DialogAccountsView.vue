@@ -2,7 +2,7 @@
 <div>
   <div v-if='showSource' class='account-choice-box'>
     <div>
-      <menu-button v-on:menu-selected='sourceMenuSelected' title='Source Account' :items='sourceMenuItems' :selectedID='sourceType' />
+      <menu-button v-on:menu-selected='sourceMenuSelected' title='Source account' :items='sourceMenuItems' :selectedID='sourceType' />
     </div>
     <div v-if='sourceType === "account"' class='inset-choice-box'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
@@ -11,7 +11,7 @@
 
   <div v-if='showDest' class='account-choice-box'>
     <div>
-      <menu-button v-on:menu-selected='destMenuSelected' title='Destination Account' :items='destMenuItems' :selectedID='destType' />
+      <menu-button v-on:menu-selected='destMenuSelected' title='Destination account' :items='destMenuItems' :selectedID='destType' />
     </div>
     <div v-if='destType === "publicKey"' class='inset-choice-box'>
       <v-text-field hide-details label="Destination public key" v-model.trim="destPublicKey" ref='input' @keyup.enter="enterKeyDown"></v-text-field>
@@ -55,7 +55,7 @@
 
   <div v-if='showFunding' class='account-choice-box'>
     <div>
-      <menu-button v-on:menu-selected='fundingMenuSelected' title='Use a funding account' :items='fundingMenuItems' :selectedID='fundingType' />
+      <menu-button v-on:menu-selected='fundingMenuSelected' title='Funding account' :items='fundingMenuItems' :selectedID='fundingType' />
     </div>
     <div v-if='fundingType === "account"' class='inset-choice-box'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedFunding" clearable label="Funding account" autocomplete return-object max-height="600"></v-select>
