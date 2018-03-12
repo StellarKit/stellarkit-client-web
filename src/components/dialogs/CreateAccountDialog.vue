@@ -9,16 +9,16 @@
       </div>
       <div class='help-email'>
         <div class='balance-fields'>
-          <v-text-field label='Token Balance' v-model.trim="tokenBalance" ref='input'></v-text-field>
-          <v-text-field label='XLM Balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccount()"></v-text-field>
+          <v-text-field hide-details label='Token Balance' v-model.trim="tokenBalance" ref='input'></v-text-field>
+          <v-text-field hide-details label='XLM Balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccount()"></v-text-field>
         </div>
-        <v-text-field label='Account name' v-model.trim="accountName" @keyup.enter="createAccount()"></v-text-field>
+        <v-text-field hide-details label='Account name' v-model.trim="accountName" @keyup.enter="createAccount()"></v-text-field>
         <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showFunding=true />
         <div class='time-lock-fields'>
           <v-checkbox small label="Time lock this account" v-model="timeLockEnabled"></v-checkbox>
 
           <v-dialog v-model="modal" lazy full-width width="290px">
-            <v-text-field :disabled='!timeLockEnabled' slot="activator" label="Time Lock Expiration Date" v-model="date" prepend-icon="event" readonly></v-text-field>
+            <v-text-field hide-details :disabled='!timeLockEnabled' slot="activator" label="Time Lock Expiration Date" v-model="date" prepend-icon="event" readonly></v-text-field>
             <v-date-picker v-model="date" scrollable actions>
               <div slot-scope="{ save, cancel }">
                 <v-card-actions>

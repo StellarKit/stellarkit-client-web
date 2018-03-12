@@ -14,7 +14,7 @@
       <menu-button v-on:menu-selected='destMenuSelected' title='Destination Account' :items='destMenuItems' :selectedID='destType' />
     </div>
     <div v-if='destType === "publicKey"' class='inset-choice-box'>
-      <v-text-field hide-details label="Destination public key" v-model.trim="destPublicKey" ref='input'></v-text-field>
+      <v-text-field hide-details label="Destination public key" v-model.trim="destPublicKey" ref='input' @keyup.enter="enterKeyDown"></v-text-field>
     </div>
     <div v-if='destType === "account"' class='inset-choice-box'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination account" autocomplete return-object max-height="600"></v-select>
@@ -26,13 +26,13 @@
       <v-checkbox hide-details label='Send XLM' v-model="sendXLM"></v-checkbox>
     </div>
     <div v-if='!sendXLM' class='inset-choice-box'>
-      <v-text-field hide-details label="Asset Code" v-model.trim="assetCode" ref='input'></v-text-field>
-      <v-text-field hide-details label="Asset Issuer" v-model.trim="assetIssuer" ref='input'></v-text-field>
+      <v-text-field hide-details label="Asset Code" v-model.trim="assetCode" ref='input' @keyup.enter="enterKeyDown"></v-text-field>
+      <v-text-field hide-details label="Asset Issuer" v-model.trim="assetIssuer" ref='input' @keyup.enter="enterKeyDown"></v-text-field>
     </div>
   </div>
 
   <div v-if='showAmount' class='account-choice-box'>
-    <v-text-field hide-details label="Amount" type='number' v-model.number="assetAmount"></v-text-field>
+    <v-text-field hide-details label="Amount" type='number' v-model.number="assetAmount" @keyup.enter="enterKeyDown"></v-text-field>
   </div>
 
   <div v-if='showSigner' class='account-choice-box'>
@@ -141,6 +141,14 @@ export default {
     }
   },
   methods: {
+    // called when the dialog is reshown
+    resetState() {
+      this.destPublicKey = ''
+      this.assetAmount = 10
+      this.assetCode = ''
+      this.assetIssuer = ''
+      this.sendXLM = true
+    },
     adjustSetting(id) {
       switch (id) {
         case 'destType':
@@ -178,6 +186,9 @@ export default {
         default:
           break
       }
+    },
+    enterKeyDown() {
+      this.$emit('enter-key-down')
     },
     destMenuSelected(item) {
       this.destType = item.id
