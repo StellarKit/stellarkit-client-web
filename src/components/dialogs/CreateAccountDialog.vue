@@ -138,7 +138,7 @@ export default {
     createUnlockTransaction(newAccountWallet, fundingWallet) {
       // for debugging
       const seconds = 10
-      let minTime = this.timeFromNow(seconds).toString()
+      let minTime = this.timeFromNow(seconds)
 
       if (this.date) {
         minTime = this.date.getSeconds()
@@ -146,7 +146,7 @@ export default {
 
       const transactionOpts = {
         timebounds: {
-          minTime: minTime,
+          minTime: String(minTime),
           maxTime: '0' // crashes without this
         }
       }
@@ -155,10 +155,9 @@ export default {
       return StellarUtils.removeMultiSigTransaction(newAccountWallet, fundingWallet, transactionOpts)
         .then((transaction) => {
           this.unlockTransaction = transaction.toEnvelope().toXDR('base64')
-          Helper.debugLog(this.unlockTransaction, 'Success')
+          Helper.debugLog(this.unlockTransaction, 'Save this transaction to submit later')
 
-          Helper.debugLog('You can submit the transaction in ' + seconds + ' seconds')
-          Helper.toast('Transaction valid in ' + seconds + ' seconds')
+          Helper.toast('Transaction output to console.  Save this!')
 
           return transaction
         })

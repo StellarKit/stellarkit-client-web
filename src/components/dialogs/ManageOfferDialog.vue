@@ -11,8 +11,8 @@
         <v-text-field hide-details label="Buy XLM" type='number' v-model.number="offerPriceN" ref='input'></v-text-field>
         <v-text-field hide-details :label="sellLabel" type='number' v-model.number="offerPriceD"></v-text-field>
         <v-text-field hide-details label="Amount to sell" type='number' v-model.number="offerAmount" @keyup.enter="manageOffer()"></v-text-field>
+        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showFunding=true />
       </div>
-      <div class='status-message'>{{statusMessage}}</div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
           <v-btn round small color='primary' slot="activator" @click="manageOffer()" :loading="loading">Post Offer</v-btn>
@@ -30,18 +30,19 @@
 import Helper from '../../js/helper.js'
 import {
   DialogTitleBar,
-  StellarWallet,
-  LedgerAPI
+  StellarWallet
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')
+import DialogAccountsView from './DialogAccountsView.vue'
 
 export default {
   props: ['ping', 'project'],
   components: {
     'dialog-titlebar': DialogTitleBar,
-    'toast-component': ToastComponent
+    'toast-component': ToastComponent,
+    'dialog-accounts': DialogAccountsView
   },
   computed: {
     sellLabel: function() {
@@ -55,7 +56,6 @@ export default {
     return {
       visible: false,
       title: 'Manage Offer',
-      statusMessage: '',
       loading: false,
       offerPriceN: 10,
       offerPriceD: 1,
@@ -65,49 +65,54 @@ export default {
   watch: {
     ping: function() {
       this.visible = true
-      this.domain = ''
-      this.statusMessage = ''
+
+      if (this.dialogAccounts()) {
+        this.dialogAccounts().resetState()
+      }
 
       // autofocus hack
       this.$nextTick(() => {
-        this.$refs.input.focus()
+        if (this.$refs.input) {
+          this.$refs.input.focus()
+        }
       })
     }
   },
   methods: {
+    dialogAccounts() {
+      return this.$refs.dialogAccounts
+    },
     manageOffer() {
-      Helper.debugLog('Managing Offer...')
+      const fundingWallet = this.dialogAccounts().fundingWallet(true)
+      if (fundingWallet) {
+        Helper.debugLog('Managing Offer...')
 
-      const fundingWallet = StellarWallet.ledger(new LedgerAPI(), () => {
-        this.statusMessage = 'Confirm transaction on Ledger Nano'
-        this.displayToast(this.statusMessage)
-      })
+        if (this.project) {
+          const price = {
+            n: this.offerPriceN,
+            d: this.offerPriceD
+          }
 
-      if (this.project) {
-        const price = {
-          n: this.offerPriceN,
-          d: this.offerPriceD
+          const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
+
+          StellarUtils.manageOffer(StellarWallet.secret(this.project.distributorSecret), fundingWallet, StellarUtils.lumins(), asset, String(this.offerAmount), price)
+            .then((result) => {
+              Helper.debugLog(result, 'Success')
+              this.displayToast('Success')
+
+              return null
+            })
+            .catch((error) => {
+              Helper.debugLog(error, 'Error')
+
+              let message = error.message
+              if (message === 'connection failed') {
+                message = 'Ledger Nano not found'
+              }
+
+              this.displayToast(message, true)
+            })
         }
-
-        const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
-
-        StellarUtils.manageOffer(StellarWallet.secret(this.project.distributorSecret), fundingWallet, StellarUtils.lumins(), asset, String(this.offerAmount), price)
-          .then((result) => {
-            Helper.debugLog(result, 'Success')
-            this.displayToast('Success')
-
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-
-            let message = error.message
-            if (message === 'connection failed') {
-              message = 'Ledger Nano not found'
-            }
-
-            this.displayToast(message, true)
-          })
       }
     },
     displayToast(message, error = false) {
