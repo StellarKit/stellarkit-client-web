@@ -9,7 +9,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showDest=true :showAmount=true :showAdditionalSigner=true :showAsset=true />
+        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showDest=true :showAmount=true :showSigner=true :showAsset=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -72,9 +72,9 @@ export default {
         this.loading = true
 
         let additionalSigners = null
-        const additionalSignerWallet = this.dialogAccounts().additionalSignerWallet()
-        if (additionalSignerWallet) {
-          additionalSigners = [additionalSignerWallet]
+        const signerWallet = this.dialogAccounts().signerWallet()
+        if (signerWallet) {
+          additionalSigners = [signerWallet]
         }
 
         const asset = this.dialogAccounts().asset()

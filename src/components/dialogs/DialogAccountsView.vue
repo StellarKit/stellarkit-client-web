@@ -37,19 +37,10 @@
 
   <div v-if='showSigner' class='account-choice-box'>
     <div>
-      <v-checkbox hide-details label='Add Ledger Nano as a signer account' v-model="useLedgerSigning"></v-checkbox>
+      <menu-button v-on:menu-selected='signerMenuSelected' title='Add Signer account' :items='signerMenuItems' :selectedID='signerType' />
     </div>
-    <div v-if='!useLedgerSigning' class='inset-choice-box'>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Add signer for account" autocomplete return-object max-height="600"></v-select>
-    </div>
-  </div>
-
-  <div v-if='showAdditionalSigner' class='account-choice-box'>
-    <div>
-      <menu-button v-on:menu-selected='additionalSignerMenuSelected' title='Additional signer account' :items='additionalSignerMenuItems' :selectedID='additionalSignerType' />
-    </div>
-    <div v-if='additionalSignerType === "account"' class='inset-choice-box'>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedAdditionalSigner" clearable label="Additional signing account" autocomplete return-object max-height="600"></v-select>
+    <div v-if='signerType === "account"' class='inset-choice-box'>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Signing account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
 
@@ -76,7 +67,7 @@ import {
 const StellarSdk = require('stellar-sdk')
 
 export default {
-  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAdditionalSigner', 'showAmount', 'showAsset'],
+  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset'],
   mixins: [StellarCommonMixin],
   components: {
     'menu-button': MenuButton
@@ -87,17 +78,13 @@ export default {
       destPublicKey: '',
 
       sourceType: 'account',
-      additionalSignerType: 'none',
+      signerType: 'none',
       fundingType: 'none',
-
-      useLedgerSigning: false,
-      useLedgerAdditionalSigner: false,
 
       selectedSource: null,
       selectedDest: null,
       selectedFunding: null,
       selectedSigner: null,
-      selectedAdditionalSigner: null,
 
       amountXLM: 2,
       ledgerAPI: null,
@@ -127,7 +114,7 @@ export default {
           title: 'Ledger Nano'
         }
       ],
-      additionalSignerMenuItems: [{
+      signerMenuItems: [{
           id: 'none',
           title: 'None'
         }, {
@@ -141,11 +128,6 @@ export default {
       ]
     }
   },
-  watch: {
-    useLedgerSigning: function() {
-      this.adjustSetting('useLedgerSigning')
-    }
-  },
   methods: {
     adjustSetting(id) {
       switch (id) {
@@ -154,8 +136,7 @@ export default {
             // this.destType = 'publicKey'
             this.sourceType = 'account'
             this.fundingType = 'none'
-            this.useLedgerSigning = false
-            this.additionalSignerType = 'none'
+            this.signerType = 'none'
           }
           break
         case 'sourceType':
@@ -163,8 +144,7 @@ export default {
             this.destType = 'publicKey'
             // this.sourceType = 'account'
             this.fundingType = 'none'
-            this.useLedgerSigning = false
-            this.additionalSignerType = 'none'
+            this.signerType = 'none'
           }
           break
         case 'fundingType':
@@ -172,26 +152,15 @@ export default {
             this.destType = 'publicKey'
             this.sourceType = 'account'
             // this.fundingType = 'none'
-            this.useLedgerSigning = false
-            this.additionalSignerType = 'none'
+            this.signerType = 'none'
           }
           break
-        case 'useLedgerSigning':
-          if (this.useLedgerSigning) {
-            this.destType = 'publicKey'
-            this.sourceType = 'account'
-            this.fundingType = 'none'
-            // this.useLedgerSigning = false
-            this.additionalSignerType = 'none'
-          }
-          break
-        case 'useLedgerAdditionalSigner':
-          if (this.additionalSignerType === 'ledger') {
+        case 'signerType':
+          if (this.signerType === 'ledger') {
             // this.destType = 'publicKey'
             // this.sourceType = 'account'
-            // this.fundingType = 'none'
-            this.useLedgerSigning = false
-            // this.additionalSignerType = 'none'
+            this.fundingType = 'none'
+            // this.signerType = 'none'
           }
           break
         default:
@@ -206,9 +175,9 @@ export default {
       this.sourceType = item.id
       this.adjustSetting('sourceType')
     },
-    additionalSignerMenuSelected(item) {
-      this.additionalSignerType = item.id
-      this.adjustSetting('additionalSignerType')
+    signerMenuSelected(item) {
+      this.signerType = item.id
+      this.adjustSetting('signerType')
     },
     fundingMenuSelected(item) {
       this.fundingType = item.id
@@ -270,21 +239,6 @@ export default {
     signerWallet() {
       let result = null
 
-      if (this.useLedgerSigning) {
-        result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
-          this._displayToast('Confirm on your Ledger Nano')
-        })
-      } else {
-        if (this._signerValid()) {
-          result = StellarWallet.secret(this.selectedSigner.secret)
-        }
-      }
-
-      return result
-    },
-    additionalSignerWallet() {
-      let result = null
-
       switch (this.destType) {
         case 'ledger':
           result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
@@ -292,8 +246,8 @@ export default {
           })
           break
         case 'account':
-          if (this._additionalSignerValid()) {
-            result = StellarWallet.secret(this.selectedAdditionalSigner.secret)
+          if (this._signerValid()) {
+            result = StellarWallet.secret(this.selectedSigner.secret)
           }
           break
         default:
@@ -363,18 +317,6 @@ export default {
 
       this._displayToast('Please select a signing account', true)
       Helper.debugLog('Please select a signing account', 'Error')
-
-      return false
-    },
-    _additionalSignerValid() {
-      const result = this.selectedAdditionalSigner ? this.selectedAdditionalSigner.secret : null
-
-      if (Helper.strOK(result)) {
-        return true
-      }
-
-      this._displayToast('Please select an additional signing account', true)
-      Helper.debugLog('Please select an additional signing account', 'Error')
 
       return false
     },
