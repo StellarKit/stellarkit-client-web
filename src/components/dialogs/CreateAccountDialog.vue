@@ -16,10 +16,13 @@
         <div class='time-lock-fields'>
           <v-checkbox small label="Time lock this account" v-model="timeLockEnabled"></v-checkbox>
 
-          <v-dialog v-model="modal" lazy full-width width="290px">
+          <v-dialog v-model="modal" persistent lazy full-width width="290px" :return-value.sync="date" ref="dialog">
             <v-text-field hide-details :disabled='!timeLockEnabled' slot="activator" label="Time Lock Expiration Date" v-model="date" prepend-icon="event" readonly></v-text-field>
-            <v-date-picker v-model="date" scrollable actions />
-
+            <v-date-picker v-model="date" scrollable actions>
+              <v-spacer></v-spacer>
+              <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
+              <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
+            </v-date-picker>
           </v-dialog>
         </div>
       </div>
@@ -208,7 +211,6 @@ export default {
             padding: 10px;
             border-radius: 4px;
             display: flex;
-            align-items: center;
             background: rgba(0,10,30,.03);
         }
     }
