@@ -145,6 +145,7 @@ export default {
           .then((result) => {
             Helper.debugLog(result)
             this.loading = false
+            StellarUtils.updateBalances()
             this.displayToast('Success')
           })
           .catch((error) => {
@@ -170,6 +171,8 @@ export default {
             .then((result) => {
               Helper.debugLog(result)
               this.loading = false
+              StellarUtils.updateBalances()
+
               this.displayToast('Success')
             })
             .catch((error) => {

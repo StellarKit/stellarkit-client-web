@@ -10,7 +10,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showDest=false />
+        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showFunding=true />
 
         <v-text-field hide-details label='Name' v-model.trim="name" @keyup.enter="addData()" ref='input'></v-text-field>
         <v-text-field hide-details label='Value' v-model.trim="value" @keyup.enter="addData()"></v-text-field>
@@ -77,14 +77,17 @@ export default {
       // value can be empty to erase both key and value
       if (Helper.strOK(this.name)) {
         const sourceWallet = this.dialogAccounts().sourceWallet()
+        const fundingWallet = this.dialogAccounts().fundingWallet()
+
         if (sourceWallet) {
           Helper.debugLog('Setting key value data...')
           this.loading = true
 
-          StellarUtils.manageData(sourceWallet, null, this.name, this.value)
+          StellarUtils.manageData(sourceWallet, fundingWallet, this.name, this.value)
             .then((result) => {
               Helper.debugLog(result)
               this.loading = false
+              StellarUtils.updateBalances()
 
               this.displayToast('Success!')
             })
