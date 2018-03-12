@@ -9,7 +9,7 @@
       <v-icon>&#xE5C5;</v-icon>
     </v-btn>
     <v-list dense>
-      <v-list-tile v-for="(item, index) in items" :key="item.title" @click="menuSelected(item, index)">
+      <v-list-tile v-for="(item, index) in items" :key="item.title" @click="menuClick(item, index)">
         <div>{{item.title}}</div>
       </v-list-tile>
     </v-list>
@@ -19,23 +19,40 @@
 
 <script>
 export default {
-  props: ['title', 'items'],
+  props: ['title', 'items', 'selectedID'],
   data() {
     return {
       index: 0
     }
   },
+  watch: {
+    selectedID: function() {
+      this.selectItemWithID(this.selectedID)
+    }
+  },
   methods: {
     getTitle() {
-      if (this.items && this.items.length > 0) {
-        return this.items[this.index].title
-      }
-
-      return '--'
+      return this.getSelectedItem().title
     },
-    menuSelected(item, index) {
-      this.index = index
+    menuClick(item, index) {
       this.$emit('menu-selected', item)
+    },
+    selectItemWithID(id) {
+      for (const [index, item] of this.items.entries()) {
+        if (id === item.id) {
+          this.index = index
+          break
+        }
+      }
+    },
+    getSelectedItem() {
+      if (this.items && this.items.length > 0) {
+        return this.items[this.index]
+      }
+      return {
+        title: '--',
+        id: ''
+      }
     }
   }
 }
