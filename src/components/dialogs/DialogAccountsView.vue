@@ -31,6 +31,15 @@
     </div>
   </div>
 
+  <div v-if='showSecret' class='account-choice-box'>
+    <v-text-field hide-details spellcheck="false" autofocus label="Secret key" :counter="56" v-model.trim="secret" @keyup.enter="enterKeyDown" hint="Starts with an 'S'" :append-icon="showSecretText ? 'visibility_off' : 'visibility'" :append-icon-cb="() => (showSecretText = !showSecretText)"
+      :type="showSecretText ? 'text' : 'password'"></v-text-field>
+  </div>
+
+  <div v-if='showAccountName' class='account-choice-box'>
+    <v-text-field hide-details spellcheck="false" label="Account name" v-model.trim="name" @keyup.enter="enterKeyDown" hint="A unique name helps you keep track of multiple accounts"> </v-text-field>
+  </div>
+
   <div v-if='showAmount' class='account-choice-box'>
     <v-text-field hide-details label="Amount" type='number' v-model.number="assetAmount" @keyup.enter="enterKeyDown"></v-text-field>
   </div>
@@ -65,9 +74,10 @@ import {
   LedgerAPI
 } from 'stellar-js-utils'
 const StellarSdk = require('stellar-sdk')
+const generateName = require('sillyname')
 
 export default {
-  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset'],
+  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret'],
   mixins: [StellarCommonMixin],
   components: {
     'menu-button': MenuButton
@@ -85,8 +95,11 @@ export default {
       selectedDest: null,
       selectedFunding: null,
       selectedSigner: null,
+      secret: '',
+      showSecretText: false,
 
       assetAmount: 10,
+      name: generateName(),
       ledgerAPI: null,
 
       assetCode: '',
@@ -148,6 +161,7 @@ export default {
       this.assetCode = ''
       this.assetIssuer = ''
       this.sendXLM = true
+      this.name = generateName()
     },
     adjustSetting(id) {
       switch (id) {
@@ -302,6 +316,20 @@ export default {
     },
     amount() {
       return this.assetAmount
+    },
+    accountName() {
+      // ok for account name to be null or ''
+      return this.name
+    },
+    secretKey() {
+      if (Helper.strOK(this.secret)) {
+        return this.secret
+      }
+
+      this._displayToast('Please enter a secret key', true)
+      Helper.debugLog('Please enter a secret key', 'Error')
+
+      return ''
     },
     asset() {
       if (this.sendXLM) {

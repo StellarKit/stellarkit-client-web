@@ -13,51 +13,32 @@
           <v-btn color='primary' slot="activator" @click="buttonClick('create-account')" :loading="loading">Create New Account</v-btn>
           <span>Create a new account with a source account's secret key</span>
         </v-tooltip>
-        <v-tooltip open-delay='200' bottom>
-          <v-btn color='primary' slot="activator" @click="buttonClick('ledger-account')" :loading="loading">Create New Account with Ledger</v-btn>
-          <span>Create a new account using a Ledger Nano</span>
-        </v-tooltip>
       </div>
       <div v-else>
         <div v-if='mode === "add"' class='choice-box'>
           <div class='note-text'>Paste in the secret key of an existing account.</div>
 
-          <v-text-field spellcheck="false" autofocus label="Secret key" :counter="56" v-model.trim="secretKey" @keyup.enter="addExistingAccount()" hint="Starts with an 'S'" :append-icon="showSecret ? 'visibility_off' : 'visibility'" :append-icon-cb="() => (showSecret = !showSecret)"
-            :type="showSecret ? 'text' : 'password'"></v-text-field>
-          <v-text-field spellcheck="false" label="Account name" v-model.trim="name" @keyup.enter="addExistingAccount()" hint="A unique name helps you keep track of multiple accounts"> </v-text-field>
+          <dialog-accounts ref='dialogAccountsAdd' v-on:toast='displayToast' :showSecret=true :showAccountName=true />
 
-          <v-tooltip open-delay='200' bottom>
-            <v-btn round color='primary' slot="activator" @click="addExistingAccount()" :loading="loading">Add Account</v-btn>
-            <span>Add account with secret key</span>
-          </v-tooltip>
+          <div class='button-holder'>
+            <v-tooltip open-delay='200' bottom>
+              <v-btn round color='primary' slot="activator" @click="addExistingAccount()" :loading="loading">Add Account</v-btn>
+              <span>Add account with secret key</span>
+            </v-tooltip>
+          </div>
         </div>
 
         <div v-if='mode === "secret"' class='choice-box'>
           <div class='note-text'>Choose an account to fund the creating of a new account. <strong>Use either</strong> an account on Stellar Army, or paste in a secret key from another account. 1 XLM will be spent to fund the new account.</div>
-          <v-select :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Funding account" autocomplete return-object max-height="600"></v-select>
-          <div>or, enter secret key</div>
-          <v-text-field spellcheck="false" label="Funding account's secret key" :counter="56" v-model.trim="secretKey" @keyup.enter="createAccount()" hint="Starts with an 'S'" :append-icon="showSecret ? 'visibility_off' : 'visibility'" :append-icon-cb="() => (showSecret = !showSecret)"
-            :type="showSecret ? 'text' : 'password'"></v-text-field>
 
-          <v-text-field spellcheck="false" label="Account name" v-model.trim="name" @keyup.enter="createAccount()" hint="Name helps you keep track of multiple accounts."> </v-text-field>
-          <v-text-field label='Starting XLM Balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccount()"></v-text-field>
+          <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showFunding=true :showAccountName=true :showAmount=true />
 
-          <v-tooltip open-delay='200' bottom>
-            <v-btn round color='primary' slot="activator" @click="createAccount()" :loading="loading">Create Account</v-btn>
-            <span>Add account with secret key</span>
-          </v-tooltip>
-        </div>
-
-        <div v-if='mode === "ledger"' class='choice-box'>
-          <div class='note-text'>Have your Ledger plugged in with the Stellar app running. 1 XLM will be spent to fund the new account.</div>
-
-          <v-text-field spellcheck="false" autofocus label="Account name" v-model.trim="name" @keyup.enter="createAccountWithLedger()" hint="Name helps you keep track of multiple accounts."> </v-text-field>
-          <v-text-field label='Starting XLM Balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccountWithLedger()"></v-text-field>
-
-          <v-tooltip open-delay='200' bottom>
-            <v-btn round color='primary' slot="activator" @click="createAccountWithLedger()" :loading="loading">Create Account</v-btn>
-            <span>Create a new account with your Ledger Nano.</span>
-          </v-tooltip>
+          <div class='button-holder'>
+            <v-tooltip open-delay='200' bottom>
+              <v-btn round color='primary' slot="activator" @click="createAccount()" :loading="loading">Create Account</v-btn>
+              <span>Add account with secret key</span>
+            </v-tooltip>
+          </div>
         </div>
       </div>
 
@@ -72,17 +53,15 @@
 <script>
 import Helper from '../../js/helper.js'
 import {
-  DialogTitleBar,
-  StellarWallet,
-  LedgerAPI
+  DialogTitleBar
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import StellarAccounts from '../../js/StellarAccounts.js'
 import ToastComponent from '../ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')
-const generateName = require('sillyname')
 import StellarCommonMixin from '../StellarCommonMixin.js'
 import SavePrintSecretDialog from './SavePrintSecretDialog.vue'
+import DialogAccountsView from './DialogAccountsView.vue'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -90,7 +69,8 @@ export default {
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent,
-    'save-secret-dialog': SavePrintSecretDialog
+    'save-secret-dialog': SavePrintSecretDialog,
+    'dialog-accounts': DialogAccountsView
   },
   data() {
     return {
@@ -99,38 +79,38 @@ export default {
       loading: false,
       showSecret: false,
       secretKey: '',
-      name: generateName(),
       mode: 'start',
-      selectedSource: null,
       newAccountSecret: '',
       saveSecretDialogPing: false,
       xlmBalance: 1
     }
   },
   computed: {
-    showBack: function () {
+    showBack: function() {
       return this.mode !== 'start'
     }
   },
   watch: {
-    ping: function () {
+    ping: function() {
       this.visible = true
       this.secretKey = ''
-      this.name = generateName()
       this.mode = 'start'
       this.xlmBalance = 1
+
+      if (this.dialogAccounts()) {
+        this.dialogAccounts().resetState()
+      }
+      if (this.dialogAccountsAdd()) {
+        this.dialogAccountsAdd().resetState()
+      }
     }
   },
   methods: {
-    sourceValid() {
-      const result = this.selectedSource ? this.selectedSource.publicKey : null
-
-      if (Helper.strOK(result)) {
-        return true
-      }
-
-      Helper.debugLog('please select a source account', 'Error')
-      return false
+    dialogAccounts() {
+      return this.$refs.dialogAccounts
+    },
+    dialogAccountsAdd() {
+      return this.$refs.dialogAccountsAdd
     },
     buttonClick(id) {
       switch (id) {
@@ -148,45 +128,27 @@ export default {
       }
     },
     addExistingAccount() {
-      if (!Helper.strOK(this.secretKey)) {
-        this.displayToast('Select an account or enter a secret key', true)
-      } else {
-        const keypair = StellarSdk.Keypair.fromSecret(this.secretKey)
+      const accountName = this.dialogAccountsAdd().accountName()
+      const secretKey = this.dialogAccountsAdd().secretKey()
 
-        StellarAccounts.addAccount(keypair, this.name)
+      if (Helper.strOK(accountName) && Helper.strOK(secretKey)) {
+        const keypair = StellarSdk.Keypair.fromSecret(secretKey)
+
+        StellarAccounts.addAccount(keypair, accountName)
 
         this.displayToast('Account Added!')
         StellarUtils.updateBalances()
       }
     },
-    createAccountWithLedger() {
-      const fundingWallet = StellarWallet.ledger(new LedgerAPI(), () => {
-        this.displayToast('Confirm transaction on Ledger Nano')
-      })
-
-      this.loading = true
-
-      StellarUtils.newAccount(fundingWallet, String(this.xlmBalance), this.name)
-        .then((accountInfo) => {
-          this.accountCreated(accountInfo)
-        })
-    },
     createAccount() {
-      let secret = this.secretKey
-      if (!Helper.strOK(secret)) {
-        if (this.sourceValid()) {
-          secret = this.selectedSource.secret
-        }
-      }
-      if (!Helper.strOK(secret)) {
-        this.displayToast('Select an account or enter a secret key', true)
-      } else {
-        const fundingWallet = StellarWallet.secret(secret)
+      const fundingWallet = this.dialogAccounts().fundingWallet()
+      const accountName = this.dialogAccounts().accountName()
 
+      if (fundingWallet) {
         this.loading = true
 
         // create issuer
-        StellarUtils.newAccount(fundingWallet, String(this.xlmBalance), this.name)
+        StellarUtils.newAccount(fundingWallet, String(this.xlmBalance), accountName)
           .then((accountInfo) => {
             this.accountCreated(accountInfo)
           })
@@ -201,8 +163,6 @@ export default {
       StellarUtils.updateBalances()
 
       this.loading = false
-      this.name = ''
-      this.selectedSource = null
 
       Helper.debugLog('New Account')
       Helper.debugLog(accountInfo.keypair.publicKey())
@@ -250,10 +210,10 @@ export default {
         }
 
         .choice-box {
+            width: 100%;
             padding: 0 20px;
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
     }
 }
