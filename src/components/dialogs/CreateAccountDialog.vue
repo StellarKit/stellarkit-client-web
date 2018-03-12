@@ -12,8 +12,7 @@
           <v-text-field hide-details label='Token Balance' v-model.trim="tokenBalance" ref='input'></v-text-field>
           <v-text-field hide-details label='XLM Balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccount()"></v-text-field>
         </div>
-        <v-text-field hide-details label='Account name' v-model.trim="accountName" @keyup.enter="createAccount()"></v-text-field>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showFunding=true />
+        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showFunding=true :showAccountName=true />
         <div class='time-lock-fields'>
           <v-checkbox small label="Time lock this account" v-model="timeLockEnabled"></v-checkbox>
 
@@ -76,7 +75,6 @@ export default {
       timeLockSeconds: 10,
       modal: false,
       date: null,
-      accountName: null,
       unlockTransaction: null
     }
   },
@@ -84,7 +82,10 @@ export default {
     ping: function() {
       this.visible = true
       this.domain = ''
-      this.accountName = generateName()
+
+      if (this.dialogAccounts()) {
+        this.dialogAccounts().resetState()
+      }
 
       // autofocus hack
       this.$nextTick(() => {
@@ -98,6 +99,7 @@ export default {
     },
     createAccount() {
       const fundingWallet = this.dialogAccounts().fundingWallet()
+      const accountName = this.dialogAccounts().accountName()
 
       if (fundingWallet) {
         this.loading = true
@@ -105,7 +107,7 @@ export default {
         const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
         const distributorWallet = StellarWallet.secret(this.project.distributorSecret)
 
-        StellarUtils.newAccountWithTokens(fundingWallet, distributorWallet, String(this.xlmBalance), asset, String(this.tokenBalance), this.accountName, this.project.symbol)
+        StellarUtils.newAccountWithTokens(fundingWallet, distributorWallet, String(this.xlmBalance), asset, String(this.tokenBalance), accountName, this.project.symbol)
           .then((result) => {
             // result is {account: newAccount, keypair: keypair}
             Helper.debugLog(result.account)

@@ -72,6 +72,10 @@ export default {
         this.address = asset.getIssuer()
       }
 
+      if (this.dialogAccounts()) {
+        this.dialogAccounts().resetState()
+      }
+
       // autofocus hack
       this.$nextTick(() => {
         if (this.$refs.input) {

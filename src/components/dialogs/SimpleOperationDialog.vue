@@ -95,6 +95,10 @@ export default {
       this.visible = true
       this.inputText = ''
 
+      if (this.dialogAccounts()) {
+        this.dialogAccounts().resetState()
+      }
+
       // autofocus hack
       this.$nextTick(() => {
         if (this.$refs.input) {

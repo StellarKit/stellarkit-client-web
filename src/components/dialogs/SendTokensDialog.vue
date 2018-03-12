@@ -52,7 +52,10 @@ export default {
   watch: {
     ping: function() {
       this.visible = true
-      this.publicKey = ''
+
+      if (this.dialogAccounts()) {
+        this.dialogAccounts().resetState()
+      }
 
       // autofocus hack
       this.$nextTick(() => {

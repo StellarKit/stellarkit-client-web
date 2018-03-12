@@ -18,7 +18,7 @@
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
           <v-btn round color='primary' slot="activator" @click="addData()" :loading="loading">Add Data</v-btn>
-          <span>{{tooltip}}</span>
+          <span>Add data to an account</span>
         </v-tooltip>
       </div>
 
@@ -49,10 +49,8 @@ export default {
     return {
       visible: false,
       title: 'Edit Account Data',
-      selectedSource: null,
       name: '',
       value: '',
-      tooltip: '',
       loading: false
     }
   },
@@ -60,6 +58,10 @@ export default {
     ping: function() {
       this.visible = true
       this.domain = ''
+
+      if (this.dialogAccounts()) {
+        this.dialogAccounts().resetState()
+      }
 
       // autofocus hack
       this.$nextTick(() => {

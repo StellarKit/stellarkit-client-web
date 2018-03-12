@@ -53,6 +53,10 @@ export default {
     ping: function() {
       this.visible = true
 
+      if (this.dialogAccounts()) {
+        this.dialogAccounts().resetState()
+      }
+
       // autofocus hack
       this.$nextTick(() => {
         if (this.$refs.input) {
@@ -68,6 +72,7 @@ export default {
     mergeAccounts() {
       const sourceWallet = this.dialogAccounts().sourceWallet()
       const destWallet = this.dialogAccounts().destWallet()
+
       if (sourceWallet && destWallet) {
         Helper.debugLog('Merging...')
         this.loading = true

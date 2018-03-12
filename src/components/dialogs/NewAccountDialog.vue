@@ -77,12 +77,9 @@ export default {
       visible: false,
       title: 'Add/Create Account',
       loading: false,
-      showSecret: false,
-      secretKey: '',
       mode: 'start',
       newAccountSecret: '',
-      saveSecretDialogPing: false,
-      xlmBalance: 1
+      saveSecretDialogPing: false
     }
   },
   computed: {
@@ -93,9 +90,7 @@ export default {
   watch: {
     ping: function() {
       this.visible = true
-      this.secretKey = ''
       this.mode = 'start'
-      this.xlmBalance = 1
 
       if (this.dialogAccounts()) {
         this.dialogAccounts().resetState()
@@ -143,12 +138,13 @@ export default {
     createAccount() {
       const fundingWallet = this.dialogAccounts().fundingWallet()
       const accountName = this.dialogAccounts().accountName()
+      const amount = this.dialogAccounts().amount()
 
       if (fundingWallet) {
         this.loading = true
 
         // create issuer
-        StellarUtils.newAccount(fundingWallet, String(this.xlmBalance), accountName)
+        StellarUtils.newAccount(fundingWallet, String(amount), accountName)
           .then((accountInfo) => {
             this.accountCreated(accountInfo)
           })

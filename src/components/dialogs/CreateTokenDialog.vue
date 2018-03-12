@@ -46,7 +46,6 @@ export default {
     return {
       visible: false,
       title: 'Create Token',
-      statusMessage: '',
       symbol: '',
       loading: false
     }
@@ -54,9 +53,11 @@ export default {
   watch: {
     ping: function() {
       this.visible = true
-      this.domain = ''
-      this.statusMessage = ''
       this.symbol = ''
+
+      if (this.dialogAccounts()) {
+        this.dialogAccounts().resetState()
+      }
 
       // autofocus hack
       this.$nextTick(() => {
