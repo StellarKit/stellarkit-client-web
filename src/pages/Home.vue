@@ -38,6 +38,15 @@
           <v-list-tile @click="ledgerMenu('refill')">
             <v-list-tile-title>Boost Testnet Balance</v-list-tile-title>
           </v-list-tile>
+          <v-list-tile @click="ledgerMenu('payments')">
+            <v-list-tile-title>View Payments</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="ledgerMenu('operations')">
+            <v-list-tile-title>View Operations</v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="ledgerMenu('transactions')">
+            <v-list-tile-title>View Transactions</v-list-tile-title>
+          </v-list-tile>
         </v-list>
       </v-menu>
 
@@ -69,6 +78,11 @@ import ManageDataDialog from '../components/dialogs/ManageDataDialog.vue'
 import TrustTokenDialog from '../components/dialogs/TrustTokenDialog.vue'
 import StellarUtils from '../js/StellarUtils.js'
 import SavePrintSecretDialog from '../components/dialogs/SavePrintSecretDialog.vue'
+import Helper from '../js/helper.js'
+import {
+  StellarWallet,
+  LedgerAPI
+} from 'stellar-js-utils'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -121,6 +135,60 @@ export default {
     makeSelectedPayment() {
       this.sendAssetsDialogPing = !this.sendAssetsDialogPing
     },
+    operationsForSelectedSource() {
+      const ledgerWallet = StellarWallet.ledger(new LedgerAPI())
+
+      ledgerWallet.publicKey()
+        .then((publicKey) => {
+          StellarUtils.server().operations()
+            .forAccount(publicKey)
+            .order('desc')
+            .call()
+            .then((response) => {
+              Helper.debugLog(response)
+            })
+            .catch((error) => {
+              Helper.debugLog(error, 'Error')
+              Helper.toast('Error', true)
+            })
+        })
+    },
+    paymentsForSelectedSource() {
+      const ledgerWallet = StellarWallet.ledger(new LedgerAPI())
+
+      ledgerWallet.publicKey()
+        .then((publicKey) => {
+          StellarUtils.server().payments()
+            .forAccount(publicKey)
+            .order('desc')
+            .call()
+            .then((response) => {
+              Helper.debugLog(response)
+            })
+            .catch((error) => {
+              Helper.debugLog(error, 'Error')
+              Helper.toast('Error', true)
+            })
+        })
+    },
+    transactionsForSelectedSource() {
+      const ledgerWallet = StellarWallet.ledger(new LedgerAPI())
+
+      ledgerWallet.publicKey()
+        .then((publicKey) => {
+          StellarUtils.server().transactions()
+            .forAccount(publicKey)
+            .order('desc')
+            .call()
+            .then((response) => {
+              Helper.debugLog(response)
+            })
+            .catch((error) => {
+              Helper.debugLog(error, 'Error')
+              Helper.toast('Error', true)
+            })
+        })
+    },
     ledgerMenu(id) {
       switch (id) {
         case 'info':
@@ -128,6 +196,15 @@ export default {
           break
         case 'refill':
           StellarUtils.sendTestnetXLMToLedger()
+          break
+        case 'operations':
+          this.operationsForSelectedSource()
+          break
+        case 'payments':
+          this.paymentsForSelectedSource()
+          break
+        case 'transactions':
+          this.transactionsForSelectedSource()
           break
         default:
           break

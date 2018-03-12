@@ -143,9 +143,13 @@ export default {
       if (this.sourceValid()) {
         StellarUtils.server().operations()
           .forAccount(this.selectedSource.publicKey)
+          .order('desc')
           .call()
           .then((response) => {
             Helper.debugLog(response)
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
           })
       }
     },
@@ -153,10 +157,13 @@ export default {
       if (this.sourceValid()) {
         StellarUtils.server().payments()
           .forAccount(this.selectedSource.publicKey)
+          .order('desc')
           .call()
           .then((response) => {
             Helper.debugLog(response)
-            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
           })
       }
     },
@@ -164,13 +171,13 @@ export default {
       if (this.sourceValid()) {
         StellarUtils.server().transactions()
           .forAccount(this.selectedSource.publicKey)
-          .stream({
-            onmessage: (txResponse) => {
-              Helper.debugLog(txResponse)
-            },
-            onerror: (error) => {
-              Helper.debugLog(error)
-            }
+          .order('desc')
+          .call()
+          .then((response) => {
+            Helper.debugLog(response)
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
           })
       }
     },

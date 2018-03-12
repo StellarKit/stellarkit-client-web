@@ -182,14 +182,27 @@ export default class Helper {
     return typeof object
   }
 
-  static debugLog(result, tag = null) {
+  static debugLog(input, tag = null) {
     let newText = ''
 
     if (tag) {
       newText += tag + ': '
     }
 
-    newText += this.toStr(result)
+    let foundRecords = false
+    if (typeof input === 'object') {
+      if (Array.isArray(input.records)) {
+        for (const obj of input.records) {
+          newText += this.toStr(obj)
+          newText += '\n'
+          foundRecords = true
+        }
+      }
+    }
+
+    if (!foundRecords) {
+      newText += this.toStr(input)
+    }
 
     this.emit('console', newText)
   }
