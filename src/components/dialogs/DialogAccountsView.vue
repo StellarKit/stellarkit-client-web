@@ -55,15 +55,10 @@
 
   <div v-if='showFunding' class='account-choice-box'>
     <div>
-      <v-checkbox hide-details label='Use different funding account' v-model="differentFundingAccount"></v-checkbox>
+      <menu-button v-on:menu-selected='fundingMenuSelected' title='Use different funding account' :items='fundingMenuItems' />
     </div>
-    <div v-if='differentFundingAccount' class='inset-choice-box'>
-      <div>
-        <v-checkbox hide-details label='Use Ledger Nano funding account' v-model="useLedgerFunding"></v-checkbox>
-      </div>
-      <div v-if='!useLedgerFunding' class='inset-choice-box'>
-        <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedFunding" clearable label="Funding account" autocomplete return-object max-height="600"></v-select>
-      </div>
+    <div v-if='fundingType === "account"' class='inset-choice-box'>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedFunding" clearable label="Funding account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
 
@@ -93,8 +88,8 @@ export default {
 
       sourceType: 'account',
       additionalSignerType: 'none',
+      fundingType: 'none',
 
-      useLedgerFunding: false,
       useLedgerSigning: false,
       useLedgerAdditionalSigner: false,
 
@@ -104,8 +99,6 @@ export default {
       selectedSigner: null,
       selectedAdditionalSigner: null,
 
-      differentFundingAccount: false,
-      additionalSigner: false,
       amountXLM: 2,
       ledgerAPI: null,
 
@@ -149,9 +142,6 @@ export default {
     }
   },
   watch: {
-    useLedgerFunding: function() {
-      this.adjustSetting('useLedgerFunding')
-    },
     useLedgerSigning: function() {
       this.adjustSetting('useLedgerSigning')
     }
@@ -163,45 +153,45 @@ export default {
           if (this.destType === 'ledger') {
             // this.destType = 'publicKey'
             this.sourceType = 'account'
-            this.useLedgerFunding = false
+            this.fundingType = 'none'
             this.useLedgerSigning = false
-            this.additionalSignerType = 'account'
+            this.additionalSignerType = 'none'
           }
           break
         case 'sourceType':
           if (this.sourceType === 'ledger') {
             this.destType = 'publicKey'
             // this.sourceType = 'account'
-            this.useLedgerFunding = false
+            this.fundingType = 'none'
             this.useLedgerSigning = false
-            this.additionalSignerType = 'account'
+            this.additionalSignerType = 'none'
           }
           break
-        case 'useLedgerFunding':
-          if (this.useLedgerFunding) {
+        case 'fundingType':
+          if (this.fundingType === 'ledger') {
             this.destType = 'publicKey'
             this.sourceType = 'account'
-            // this.useLedgerFunding = false
+            // this.fundingType = 'none'
             this.useLedgerSigning = false
-            this.additionalSignerType = 'account'
+            this.additionalSignerType = 'none'
           }
           break
         case 'useLedgerSigning':
           if (this.useLedgerSigning) {
             this.destType = 'publicKey'
             this.sourceType = 'account'
-            this.useLedgerFunding = false
+            this.fundingType = 'none'
             // this.useLedgerSigning = false
-            this.additionalSignerType = 'account'
+            this.additionalSignerType = 'none'
           }
           break
         case 'useLedgerAdditionalSigner':
           if (this.additionalSignerType === 'ledger') {
             // this.destType = 'publicKey'
             // this.sourceType = 'account'
-            // this.useLedgerFunding = false
+            // this.fundingType = 'none'
             this.useLedgerSigning = false
-            // this.additionalSignerType = 'account'
+            // this.additionalSignerType = 'none'
           }
           break
         default:
@@ -219,6 +209,10 @@ export default {
     additionalSignerMenuSelected(item) {
       this.additionalSignerType = item.id
       this.adjustSetting('additionalSignerType')
+    },
+    fundingMenuSelected(item) {
+      this.fundingType = item.id
+      this.adjustSetting('fundingType')
     },
     sharedLegerAPI() {
       if (!this.ledgerAPI) {
@@ -311,14 +305,19 @@ export default {
     fundingWallet() {
       let result = null
 
-      if (this.useLedgerFunding) {
-        result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
-          this._displayToast('Confirm on your Ledger Nano')
-        })
-      } else {
-        if (this._fundingValid()) {
-          result = StellarWallet.secret(this.selectedFunding.secret)
-        }
+      switch (this.destType) {
+        case 'ledger':
+          result = StellarWallet.ledger(this.sharedLegerAPI(), () => {
+            this._displayToast('Confirm on your Ledger Nano')
+          })
+          break
+        case 'account':
+          if (this._fundingValid()) {
+            result = StellarWallet.secret(this.selectedFunding.secret)
+          }
+          break
+        default:
+          break
       }
 
       return result
@@ -368,16 +367,14 @@ export default {
       return false
     },
     _additionalSignerValid() {
-      if (this.additionalSigner) {
-        const result = this.selectedAdditionalSigner ? this.selectedAdditionalSigner.secret : null
+      const result = this.selectedAdditionalSigner ? this.selectedAdditionalSigner.secret : null
 
-        if (Helper.strOK(result)) {
-          return true
-        }
-
-        this._displayToast('Please select an additional signing account', true)
-        Helper.debugLog('Please select an additional signing account', 'Error')
+      if (Helper.strOK(result)) {
+        return true
       }
+
+      this._displayToast('Please select an additional signing account', true)
+      Helper.debugLog('Please select an additional signing account', 'Error')
 
       return false
     },
@@ -394,16 +391,14 @@ export default {
       return false
     },
     _fundingValid() {
-      if (this.differentFundingAccount) {
-        const result = this.selectedFunding ? this.selectedFunding.secret : null
+      const result = this.selectedFunding ? this.selectedFunding.secret : null
 
-        if (Helper.strOK(result)) {
-          return true
-        }
-
-        this._displayToast('Please select a funding account', true)
-        Helper.debugLog('Please select a funding account', 'Error')
+      if (Helper.strOK(result)) {
+        return true
       }
+
+      this._displayToast('Please select a funding account', true)
+      Helper.debugLog('Please select a funding account', 'Error')
 
       return false
     },
