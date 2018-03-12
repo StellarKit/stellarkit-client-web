@@ -76,7 +76,7 @@ export default {
       let asset = null
 
       const amount = this.dialogAccounts().amount()
-      const fundingWallet = this.dialogAccounts().fundingWallet()
+      const fundingWallet = this.dialogAccounts().fundingWallet(true)
 
       if (amount < 1) {
         this.displayToast('Create token amount must be greater than 0', true)
@@ -91,14 +91,14 @@ export default {
         this.loading = true
 
         // create issuer
-        StellarUtils.newAccount(fundingWallet, '2', 'Issuer: ' + this.symbol, this.symbol)
+        StellarUtils.newAccount(fundingWallet, '1', 'Issuer: ' + this.symbol, this.symbol)
           .then((accountInfo) => {
             issuerKeypair = accountInfo.keypair
             const issuerWallet = StellarWallet.secret(issuerKeypair.secret())
             asset = new StellarSdk.Asset(this.symbol, issuerKeypair.publicKey())
 
             // create distributor from issuer
-            return StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, '2', asset, String(amount), 'Distributor: ' + this.symbol, this.symbol)
+            return StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, '3', asset, String(amount), 'Distributor: ' + this.symbol, this.symbol)
           })
           .then((accountInfo) => {
             // return results and close

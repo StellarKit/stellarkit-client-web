@@ -160,10 +160,10 @@ class StellarUtils {
   }
 
   // returns {account: newAccount, keypair: keypair}
-  newAccountWithTokens(sourceWallet, distributorWallet, startingBalance, asset, amount, accountName = null, accountTag = null) {
+  newAccountWithTokens(fundingWallet, distributorWallet, startingBalance, asset, amount, accountName = null, accountTag = null) {
     let info = null
 
-    return this.newAccount(sourceWallet, startingBalance, accountName, accountTag)
+    return this.newAccount(fundingWallet, startingBalance, accountName, accountTag)
       .then((result) => {
         info = result
 
@@ -175,7 +175,7 @@ class StellarUtils {
       })
       .then((result) => {
         Helper.debugLog('sending tokens...')
-        return this.sendAsset(distributorWallet, null, StellarWallet.secret(info.keypair.secret()), amount, asset)
+        return this.sendAsset(distributorWallet, fundingWallet, StellarWallet.secret(info.keypair.secret()), amount, asset)
       })
       .then((result) => {
         Helper.debugLog(result, 'Success')

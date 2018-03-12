@@ -142,12 +142,22 @@ export default class Helper {
   static toStr(object) {
     if (!object) {
       return 'null'
-    } else if (object instanceof Error) {
+    }
+
+    const expandXDR = Helper.get('expandXDR')
+
+    if (object instanceof Error) {
       const json = this.stringify(object)
 
       // returns {} when it fails - check number of keys
       const obj = JSON.parse(json)
       if (Object.keys(obj).length > 0) {
+        if (expandXDR) {
+          if (obj.data && obj.data.extras && obj.data.extras.envelope_xdr) {
+            obj.data.extras.envelope_xdr = StellarSdk.xdr.TransactionEnvelope.fromXDR(obj.data.extras.envelope_xdr, 'base64')
+          }
+        }
+
         return this.stripBrackets(obj)
       }
 
@@ -155,7 +165,6 @@ export default class Helper {
     } else if (typeof object === 'string') {
       return object
     } else if (typeof object === 'object') {
-      const expandXDR = Helper.get('expandXDR')
       if (expandXDR) {
         if (object.envelope_xdr) {
           object.envelope_xdr = StellarSdk.xdr.TransactionEnvelope.fromXDR(object.envelope_xdr, 'base64')
