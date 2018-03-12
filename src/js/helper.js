@@ -190,7 +190,7 @@ export default class Helper {
     }
 
     let foundRecords = false
-    if (typeof input === 'object') {
+    if (input && typeof input === 'object') {
       if (Array.isArray(input.records)) {
         for (const obj of input.records) {
           newText += this.toStr(obj)

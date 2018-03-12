@@ -244,6 +244,11 @@ export default {
           break
       }
 
+      if (!result) {
+        this._displayToast('Please select a source account', true)
+        Helper.debugLog('Please select a source account', 'Error')
+      }
+
       return result
     },
     destWallet() {
@@ -271,6 +276,11 @@ export default {
           break
       }
 
+      if (!result) {
+        this._displayToast('Please select a destination account', true)
+        Helper.debugLog('Please select a destination account', 'Error')
+      }
+
       return result
     },
     signerWallet() {
@@ -289,6 +299,11 @@ export default {
           break
         default:
           break
+      }
+
+      if (!result) {
+        this._displayToast('Please select a signing account', true)
+        Helper.debugLog('Please select a signing account', 'Error')
       }
 
       return result
@@ -311,7 +326,11 @@ export default {
           break
       }
 
-      Helper.debugLog(result)
+      if (!result) {
+        this._displayToast('Please select a funding account', true)
+        Helper.debugLog('Please select a funding account', 'Error')
+      }
+
       return result
     },
     amount() {
@@ -355,9 +374,6 @@ export default {
         return true
       }
 
-      this._displayToast('Please select a destination account', true)
-      Helper.debugLog('Please select a destination account', 'Error')
-
       return false
     },
     _signerValid() {
@@ -366,9 +382,6 @@ export default {
       if (Helper.strOK(result)) {
         return true
       }
-
-      this._displayToast('Please select a signing account', true)
-      Helper.debugLog('Please select a signing account', 'Error')
 
       return false
     },
@@ -379,9 +392,6 @@ export default {
         return true
       }
 
-      this._displayToast('Please select a source account', true)
-      Helper.debugLog('Please select a source account', 'Error')
-
       return false
     },
     _fundingValid() {
@@ -390,9 +400,6 @@ export default {
       if (Helper.strOK(result)) {
         return true
       }
-
-      this._displayToast('Please select a funding account', true)
-      Helper.debugLog('Please select a funding account', 'Error')
 
       return false
     },

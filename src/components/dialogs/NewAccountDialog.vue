@@ -18,7 +18,7 @@
         <div v-if='mode === "add"' class='choice-box'>
           <div class='note-text'>Paste in the secret key of an existing account.</div>
 
-          <dialog-accounts ref='dialogAccountsAdd' v-on:toast='displayToast' :showSecret=true :showAccountName=true />
+          <dialog-accounts ref='dialogAccountsAdd' v-on:enter-key-down='addExistingAccount' v-on:toast='displayToast' :showSecret=true :showAccountName=true />
 
           <div class='button-holder'>
             <v-tooltip open-delay='200' bottom>
@@ -31,7 +31,7 @@
         <div v-if='mode === "secret"' class='choice-box'>
           <div class='note-text'>Choose an account to fund the creating of a new account. <strong>Use either</strong> an account on Stellar Army, or paste in a secret key from another account. 1 XLM will be spent to fund the new account.</div>
 
-          <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showFunding=true :showAccountName=true :showAmount=true />
+          <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createAccount' v-on:toast='displayToast' :showFunding=true :showAccountName=true :showAmount=true />
 
           <div class='button-holder'>
             <v-tooltip open-delay='200' bottom>
@@ -150,7 +150,7 @@ export default {
           })
           .catch((error) => {
             Helper.debugLog(error)
-            this.displayToast('Failed to connect to Ledger Nano', true)
+            this.displayToast('Error', true)
           })
       }
     },
