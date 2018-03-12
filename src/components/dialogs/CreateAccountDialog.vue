@@ -54,7 +54,6 @@ import {
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')
-const generateName = require('sillyname')
 import DialogAccountsView from './DialogAccountsView.vue'
 
 export default {
