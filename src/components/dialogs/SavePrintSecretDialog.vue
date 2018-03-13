@@ -1,6 +1,8 @@
 <template>
 <v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="480">
   <div class='main-container'>
+    <dialog-titlebar :title=title v-on:close='visible = false' />
+
     <div class='dialog-contents'>
       <div class='top-dialog-text'>Don't loose these keys! Print or save them to a secure USB or hard disk</div>
 
@@ -52,6 +54,7 @@ export default {
   data() {
     return {
       visible: false,
+      title: 'Save the Keys',
       summaryMap: [],
       selectedSource: null
     }
