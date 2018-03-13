@@ -21,8 +21,18 @@ class SharedAccounts {
   }
 
   delete(index) {
-    if (index !== -1) {
+    if (index >= 0 && index < this._accounts.length) {
       this._accounts.splice(index, 1)
+
+      this.save()
+    } else {
+      console.log('index not found')
+    }
+  }
+
+  replace(index, acct) {
+    if (index >= 0 && index < this._accounts.length) {
+      this._accounts[index] = acct
 
       this.save()
     } else {
@@ -114,26 +124,23 @@ class StellarAccounts {
     return null
   }
 
-  accounts() {
+  accountsForNetwork() {
+    const accounts = this.accounts()
     const isMainnet = !StellarUtils.isTestnet()
 
-    const result = this.shared().accounts().filter(value => {
+    const result = accounts.filter(value => {
       return isMainnet === Boolean(value.mainnet) // could be undefined
     })
 
     return result
   }
 
-  deleteAccount(publicKey) {
-    const accounts = this.shared().accounts()
+  accounts() {
+    return this.shared().accounts()
+  }
 
-    // must get real index from shared since we are deleting with an index
-    for (const [index, val] of accounts.entries()) {
-      if (publicKey === val.publicKey) {
-        this.shared().delete(index)
-        break
-      }
-    }
+  deleteAccount(publicKey) {
+    this.shared().delete(this._indexOfAccount(publicKey))
   }
 
   accountWithName(name) {
@@ -147,47 +154,36 @@ class StellarAccounts {
     return null
   }
 
-  accountWithPublicKey(publicKey) {
+  updateBalance(publicKey, symbol, balance, removeAll = false) {
+    const index = this._indexOfAccount(publicKey)
+    const accounts = this.accounts()
+    const acct = accounts[index]
+
+    if (acct) {
+      if (removeAll) {
+        acct.balances = {}
+      }
+
+      acct.balances[symbol] = Helper.stripZeros(balance)
+
+      this.shared().replace(index, acct)
+    }
+  }
+
+  // =============================================================
+  // Private
+  // =============================================================
+
+  _indexOfAccount(publicKey) {
     const accounts = this.accounts()
 
-    for (const val of accounts.entries()) {
+    for (const [index, val] of accounts.entries()) {
       if (publicKey === val.publicKey) {
-        return val
+        return index
       }
     }
-    return null
-  }
 
-  updateBalance(index, symbol, balance) {
-    const accounts = this.accounts()
-    const acct = accounts[index]
-
-    acct.balances[symbol] = Helper.stripZeros(balance)
-
-    this.shared().save()
-  }
-
-  secret(index) {
-    const accounts = this.accounts()
-
-    const acct = accounts[index]
-
-    return acct.secret
-  }
-
-  publicKey(index) {
-    const accounts = this.accounts()
-
-    const acct = accounts[index]
-
-    return acct.publicKey
-  }
-
-  keyPair(index) {
-    const accounts = this.accounts()
-
-    const acct = accounts[index]
-    return StellarSdk.Keypair.fromSecret(acct.secret)
+    return -1
   }
 }
 

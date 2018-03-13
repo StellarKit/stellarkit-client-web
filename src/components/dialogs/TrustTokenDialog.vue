@@ -10,7 +10,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true />
+        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showFunding=true />
 
         <v-text-field hide-details label='Symbol' v-model.trim="symbol" @keyup.enter="trustToken()" ref='input'></v-text-field>
         <v-text-field hide-details label='Issuer Address' v-model.trim="address" @keyup.enter="trustToken()"></v-text-field>
@@ -91,13 +91,15 @@ export default {
     trustToken() {
       if (Helper.strOK(this.symbol) && Helper.strOK(this.address)) {
         const sourceWallet = this.dialogAccounts().sourceWallet()
+        const fundingWallet = this.dialogAccounts().fundingWallet()
+
         if (sourceWallet) {
           Helper.debugLog('Setting trust...')
           this.loading = true
 
           const asset = new StellarSdk.Asset(this.symbol, this.address)
 
-          StellarUtils.changeTrust(sourceWallet, null, asset, String(this.trustLimit))
+          StellarUtils.changeTrust(sourceWallet, fundingWallet, asset, String(this.trustLimit))
             .then((result) => {
               Helper.debugLog(result)
               this.loading = false

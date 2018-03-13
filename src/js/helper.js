@@ -34,6 +34,11 @@ export default class Helper {
   }
 
   static stripZeros(floatString) {
+    // blank string return 0, not 'NaN'
+    if (!this.strOK(floatString)) {
+      return '0'
+    }
+
     const n = parseFloat(floatString)
     const noZeroes = n.toString() // "1.245"
 

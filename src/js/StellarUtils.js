@@ -319,13 +319,16 @@ class StellarUtils {
   }
 
   updateBalances(logSuccess = false) {
-    for (let i = 0; i < StellarAccounts.accounts().length; i++) {
-      const publicKey = StellarAccounts.publicKey(i)
+    for (const acct of StellarAccounts.accountsForNetwork()) {
+      const publicKey = acct.publicKey
 
       this.balances(publicKey)
         .then((balanceObject) => {
+          let removeAll = true
+
           for (const key in balanceObject) {
-            StellarAccounts.updateBalance(i, key, balanceObject[key])
+            StellarAccounts.updateBalance(publicKey, key, balanceObject[key], removeAll)
+            removeAll = false
           }
 
           if (logSuccess) {
@@ -335,7 +338,7 @@ class StellarUtils {
           return null
         })
         .catch((error) => {
-          StellarAccounts.updateBalance(i, 'XLM', 'ERROR')
+          StellarAccounts.updateBalance(publicKey, 'XLM', 'ERROR')
 
           Helper.debugLog(error, 'Error')
         })

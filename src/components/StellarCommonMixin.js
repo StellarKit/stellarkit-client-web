@@ -50,7 +50,7 @@
      },
      // private
      updateAccountsUI() {
-       this.accountsUI = StellarAccounts.accounts()
+       this.accountsUI = StellarAccounts.accountsForNetwork()
 
        if (this.accountsTag) {
          this.accountsUI = this.accountsUI.filter(value => {

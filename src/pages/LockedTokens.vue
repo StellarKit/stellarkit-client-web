@@ -157,9 +157,6 @@ export default {
             // result is {account: newAccount, keypair: keypair}
             Helper.debugLog(result.account)
 
-            // select account in UI
-            // this.selectedSource = StellarAccounts.accountWithPublicKey(result.keypair.publicKey())
-
             Helper.debugLog('adding distributor as signer...')
 
             return StellarUtils.makeMultiSig(StellarWallet.secret(result.keypair.secret()), StellarWallet.secret(distributorAccount.secret))
