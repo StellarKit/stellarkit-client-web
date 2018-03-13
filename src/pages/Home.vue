@@ -78,7 +78,6 @@ import ManageDataDialog from '../components/dialogs/ManageDataDialog.vue'
 import TrustTokenDialog from '../components/dialogs/TrustTokenDialog.vue'
 import StellarUtils from '../js/StellarUtils.js'
 import SavePrintSecretDialog from '../components/dialogs/SavePrintSecretDialog.vue'
-import Helper from '../js/helper.js'
 import {
   StellarWallet,
   LedgerAPI
@@ -135,60 +134,6 @@ export default {
     makeSelectedPayment() {
       this.sendAssetsDialogPing = !this.sendAssetsDialogPing
     },
-    operationsForLedger() {
-      const ledgerWallet = StellarWallet.ledger(new LedgerAPI())
-
-      ledgerWallet.publicKey()
-        .then((publicKey) => {
-          StellarUtils.server().operations()
-            .forAccount(publicKey)
-            .order('desc')
-            .call()
-            .then((response) => {
-              Helper.debugLog(response)
-            })
-        })
-        .catch((error) => {
-          Helper.debugLog(error, 'Error')
-          Helper.toast('Error', true)
-        })
-    },
-    paymentsForLedger() {
-      const ledgerWallet = StellarWallet.ledger(new LedgerAPI())
-
-      ledgerWallet.publicKey()
-        .then((publicKey) => {
-          StellarUtils.server().payments()
-            .forAccount(publicKey)
-            .order('desc')
-            .call()
-            .then((response) => {
-              Helper.debugLog(response)
-            })
-        })
-        .catch((error) => {
-          Helper.debugLog(error, 'Error')
-          Helper.toast('Error', true)
-        })
-    },
-    transactionsForLedger() {
-      const ledgerWallet = StellarWallet.ledger(new LedgerAPI())
-
-      ledgerWallet.publicKey()
-        .then((publicKey) => {
-          StellarUtils.server().transactions()
-            .forAccount(publicKey)
-            .order('desc')
-            .call()
-            .then((response) => {
-              Helper.debugLog(response)
-            })
-        })
-        .catch((error) => {
-          Helper.debugLog(error, 'Error')
-          Helper.toast('Error', true)
-        })
-    },
     ledgerMenu(id) {
       switch (id) {
         case 'info':
@@ -198,13 +143,13 @@ export default {
           StellarUtils.sendTestnetXLMToLedger()
           break
         case 'operations':
-          this.operationsForLedger()
+          StellarUtils.operationsForWallet(StellarWallet.ledger(new LedgerAPI()))
           break
         case 'payments':
-          this.paymentsForLedger()
+          StellarUtils.paymentsForWallet(StellarWallet.ledger(new LedgerAPI()))
           break
         case 'transactions':
-          this.transactionsForLedger()
+          StellarUtils.transactionsForWallet(StellarWallet.ledger(new LedgerAPI()))
           break
         default:
           break

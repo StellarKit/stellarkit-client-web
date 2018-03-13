@@ -207,46 +207,49 @@ class StellarUtils {
   }
 
   sendTestnetXLMToLedger() {
-    let ledgerPublicKey
-
     Helper.debugLog('refilling ledger...')
 
     const fundingWallet = StellarWallet.ledger(new LedgerAPI(), () => {
       Helper.toast('Confirm transaction on Ledger Nano')
     })
 
+    let ledgerPublicKey
+
     fundingWallet.publicKey()
       .then((publicKey) => {
-        const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + publicKey
-
         ledgerPublicKey = publicKey
 
+        return this.accountInfo(publicKey)
+      })
+      .then((account) => {
+        // account exists, so friendbot will just fail, do the merge
+        const keyPair = StellarSdk.Keypair.random()
+
+        const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + keyPair.publicKey()
+        return axios.get(url)
+          .then((data) => {
+            Helper.debugLog(data, 'Success')
+
+            return this.mergeAccount(StellarWallet.secret(keyPair.secret()), fundingWallet)
+          })
+          .then(() => {
+            Helper.toast('Testnet XLM added to your Ledger!')
+          })
+          .catch((err) => {
+            Helper.debugLog(err, 'Error')
+            Helper.toast('Error!', true)
+          })
+      })
+      .catch(() => {
+        Helper.debugLog('Account doesn\'t exist, asking friendbot for help.')
+
+        // account doesn't exist, so ask friendbot to create it
+        const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + ledgerPublicKey
         return axios.get(url)
       })
       .then((info) => {
         Helper.debugLog(info)
         Helper.toast('Testnet XLM added to your Ledger!')
-      })
-      .catch((error) => {
-        Helper.debugLog(error, 'Account exists, will try a merge')
-
-        // we get op_already_exists if this account already exists, so create new account and merge
-        if (Helper.strOK(ledgerPublicKey)) {
-          Helper.debugLog('creating new account and merging...')
-
-          const keyPair = StellarSdk.Keypair.random()
-          const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + keyPair.publicKey()
-          return axios.get(url)
-            .then((data) => {
-              Helper.debugLog(data, 'Success')
-
-              return this.mergeAccount(StellarWallet.secret(keyPair.secret()), fundingWallet)
-            })
-            .catch((err) => {
-              Helper.debugLog(err, 'Error')
-              Helper.toast('Error!', true)
-            })
-        }
       })
   }
 
@@ -297,14 +300,9 @@ class StellarUtils {
       .then((info) => {
         Helper.debugLog(info, 'Success')
 
-        // refresh balance on just this account
-        // asking same server as friendbot assuming our node might not be 100% synced?
-        this.friendBotServer().loadAccount(keyPair.publicKey())
-          .then((account) => {
-            this.updateBalances()
+        this.updateBalances()
 
-            return accountRec
-          })
+        return accountRec
       })
       .catch((error) => {
         Helper.debugLog(error, 'Error')
@@ -343,6 +341,57 @@ class StellarUtils {
           Helper.debugLog(error, 'Error')
         })
     }
+  }
+
+  operationsForWallet(wallet) {
+    wallet.publicKey()
+      .then((publicKey) => {
+        this.server().operations()
+          .forAccount(publicKey)
+          .order('desc')
+          .call()
+          .then((response) => {
+            Helper.debugLog(response)
+          })
+      })
+      .catch((error) => {
+        Helper.debugLog(error, 'Error')
+        Helper.toast('Error', true)
+      })
+  }
+
+  paymentsForWallet(wallet) {
+    wallet.publicKey()
+      .then((publicKey) => {
+        this.server().payments()
+          .forAccount(publicKey)
+          .order('desc')
+          .call()
+          .then((response) => {
+            Helper.debugLog(response)
+          })
+      })
+      .catch((error) => {
+        Helper.debugLog(error, 'Error')
+        Helper.toast('Error', true)
+      })
+  }
+
+  transactionsForWallet(wallet) {
+    wallet.publicKey()
+      .then((publicKey) => {
+        this.server().transactions()
+          .forAccount(publicKey)
+          .order('desc')
+          .call()
+          .then((response) => {
+            Helper.debugLog(response)
+          })
+      })
+      .catch((error) => {
+        Helper.debugLog(error, 'Error')
+        Helper.toast('Error', true)
+      })
   }
 }
 
