@@ -18,7 +18,7 @@
           {{buttonTitle}}
           <v-icon>&#xE5C5;</v-icon>
         </v-btn>
-        <v-list>
+        <v-list dense>
           <v-list-tile v-for="item in items" :key="item.title" @click="menuClick(item.menuID)">
             <v-list-tile-title>{{ item.title }}</v-list-tile-title>
           </v-list-tile>
@@ -29,7 +29,7 @@
           {{orderButtonTitle}}
           <v-icon>&#xE5C5;</v-icon>
         </v-btn>
-        <v-list>
+        <v-list dense>
           <v-list-tile v-for="item in orderItems" :key="item.title" @click="orderMenuClick(item.menuID)">
             <v-list-tile-title>{{ item.title }}</v-list-tile-title>
           </v-list-tile>
@@ -101,7 +101,7 @@ export default {
   },
   watch: {
     selectedSource: function() {
-      this.cache = null
+      this.clearUI()
       Helper.clearLog()
     }
   },

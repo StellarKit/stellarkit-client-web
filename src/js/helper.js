@@ -207,8 +207,9 @@ export default class Helper {
     if (input && typeof input === 'object') {
       if (Array.isArray(input.records)) {
         for (const obj of input.records) {
+          newText += '--------------------------------------\n'
           newText += this.toStr(obj)
-          newText += '\n'
+          newText += '\n\n'
           foundRecords = true
         }
       }
