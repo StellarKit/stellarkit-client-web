@@ -1,6 +1,6 @@
 <template>
 <div>
-  <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
+  <account-list :items="accountsUI" />
   <instructions-header>
     <div>1. Works with Ledger nano to fund creating accounts.</div>
     <div>2. Use the Ledger button on right to add testnet XLM.</div>

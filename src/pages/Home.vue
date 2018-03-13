@@ -1,6 +1,6 @@
 <template>
 <div>
-  <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
+  <account-list :items="accountsUI"  />
   <instructions-header>
     <div>1. Create accounts on the testnet</div>
     <div>2. Some buttons require setting source/destination accounts before clicking</div>

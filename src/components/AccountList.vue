@@ -68,6 +68,7 @@ import {
   Power3
 } from 'gsap'
 import $ from 'jquery'
+import StellarAccounts from '../js/StellarAccounts.js'
 
 export default {
   props: ['items'],
@@ -135,10 +136,25 @@ export default {
       }
     },
     clickItem(item) {
-      this.$emit('click-item', item)
+      StellarUtils.accountInfo(item.publicKey)
+        .then((response) => {
+          const bar = '========================================='
+          const shortBar = '===='
+          const header = bar + '\n' + shortBar + '  ' + item.name + '\n' + bar
+
+          Helper.debugLog(header)
+          // Helper.debugLog(item.secret)
+          Helper.debugLog(response)
+        })
+        .catch((error) => {
+          Helper.debugLog(error)
+        })
     },
     deleteItem(item) {
-      this.$emit('delete-item', item)
+      if (!StellarUtils.isTestnet()) {
+        console.log('main')
+      }
+      StellarAccounts.deleteAccount(item.publicKey)
     },
     refresh() {
       Helper.debugLog('refreshing...')

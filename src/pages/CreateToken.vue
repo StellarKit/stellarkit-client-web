@@ -1,6 +1,6 @@
 <template>
 <div>
-  <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
+  <account-list :items="accountsUI"  />
   <instructions-header>
     <div>1. Start with three accounts: Issuer, Distributor and Buyer</div>
     <div>2. Click each button in order, but wait for each to complete</div>

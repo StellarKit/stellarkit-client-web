@@ -86,8 +86,8 @@ export default class Helper {
 
       // remove excessive brackets
       const lines = rawString.split('\n')
-      let openIndex = -1
-      let closeIndex = -1
+      let openIndex = -10
+      let closeIndex = -100
 
       for (const [index, line] of lines.entries()) {
         const trimmed = line.trim()
@@ -218,7 +218,9 @@ export default class Helper {
       newText += this.toStr(input)
     }
 
-    this.emit('console', newText)
+    if (Helper.strOK(newText)) {
+      this.emit('console', newText)
+    }
   }
 
   static clearLog() {

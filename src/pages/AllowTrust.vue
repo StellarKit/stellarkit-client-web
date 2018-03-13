@@ -1,6 +1,6 @@
 <template>
 <div>
-  <account-list :items="accountsUI" v-on:click-item="clickAccount" v-on:delete-item="deleteAccount" />
+  <account-list :items="accountsUI" />
   <instructions-header>
     <div>Content coming soon...</div>
   </instructions-header>
