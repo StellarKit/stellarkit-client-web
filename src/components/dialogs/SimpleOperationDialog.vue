@@ -10,7 +10,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=showSource :showDest=showDest :showFunding=showFunding />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='doOperation' v-on:toast='displayToast' :showSource=showSource :showDest=showDest :showFunding=showFunding />
         <v-text-field :hint='hint' :label='inputLabel' v-model.trim="inputText" @keyup.enter="doOperation()" ref='input'></v-text-field>
       </div>
       <div class='button-holder'>

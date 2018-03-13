@@ -11,7 +11,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showDest=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='mergeAccounts' v-on:toast='displayToast' :showSource=true :showDest=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>

@@ -9,10 +9,10 @@
       </div>
       <div class='help-email'>
         <div class='balance-fields'>
-          <v-text-field hide-details label='Token Balance' v-model.trim="tokenBalance" ref='input'></v-text-field>
+          <v-text-field hide-details label='Token Balance' v-model.trim="tokenBalance" @keyup.enter="createAccount()" ref='input'></v-text-field>
           <v-text-field hide-details label='XLM Balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccount()"></v-text-field>
         </div>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showFunding=true :showAccountName=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createAccount' v-on:toast='displayToast' :showFunding=true :showAccountName=true />
         <div class='time-lock-fields'>
           <v-checkbox small label="Time lock this account" v-model="timeLockEnabled"></v-checkbox>
 

@@ -8,10 +8,10 @@
         <div>Post an offer to sell your token</div>
       </div>
       <div class='help-email'>
-        <v-text-field hide-details label="Buy XLM" type='number' v-model.number="offerPriceN" ref='input'></v-text-field>
-        <v-text-field hide-details :label="sellLabel" type='number' v-model.number="offerPriceD"></v-text-field>
-        <v-text-field hide-details label="Amount to sell" type='number' v-model.number="offerAmount" @keyup.enter="manageOffer()"></v-text-field>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showFunding=true />
+        <v-text-field hide-details label="Buy XLM" @keyup.enter="manageOffer()" type='number' v-model.number="offerPriceN" ref='input'></v-text-field>
+        <v-text-field hide-details :label="sellLabel" @keyup.enter="manageOffer()" type='number' v-model.number="offerPriceD"></v-text-field>
+        <v-text-field hide-details label="Amount to sell" @keyup.enter="manageOffer()" type='number' v-model.number="offerAmount"></v-text-field>
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='manageOffer' v-on:toast='displayToast' :showFunding=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>

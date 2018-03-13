@@ -9,7 +9,7 @@
         <div class='sub-header'>Account must have already set trust on the asset</div>
       </div>
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showDest=true :showAmount=true :showFunding=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='sendTokens' v-on:toast='displayToast' :showDest=true :showAmount=true :showFunding=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>

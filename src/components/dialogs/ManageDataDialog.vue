@@ -10,7 +10,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showFunding=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='addData' v-on:toast='displayToast' :showSource=true :showFunding=true />
 
         <v-text-field hide-details label='Name' v-model.trim="name" @keyup.enter="addData()" ref='input'></v-text-field>
         <v-text-field hide-details label='Value' v-model.trim="value" @keyup.enter="addData()"></v-text-field>

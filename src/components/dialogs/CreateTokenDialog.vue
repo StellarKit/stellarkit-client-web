@@ -9,7 +9,7 @@
       </div>
       <div class='help-email'>
         <v-text-field hide-details label='Symbol' v-model.trim="symbol" @keyup.enter="createToken()" ref='input'></v-text-field>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showAmount=true :showFunding=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createToken' v-on:toast='displayToast' :showAmount=true :showFunding=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
