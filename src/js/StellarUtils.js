@@ -343,12 +343,12 @@ class StellarUtils {
     }
   }
 
-  operationsForWallet(wallet) {
+  operationsForWallet(wallet, order = 'desc') {
     wallet.publicKey()
       .then((publicKey) => {
         this.server().operations()
           .forAccount(publicKey)
-          .order('desc')
+          .order(order)
           .call()
           .then((response) => {
             Helper.debugLog(response)
@@ -360,12 +360,12 @@ class StellarUtils {
       })
   }
 
-  paymentsForWallet(wallet) {
+  paymentsForWallet(wallet, order = 'desc') {
     wallet.publicKey()
       .then((publicKey) => {
         this.server().payments()
           .forAccount(publicKey)
-          .order('desc')
+          .order(order)
           .call()
           .then((response) => {
             Helper.debugLog(response)
@@ -377,12 +377,12 @@ class StellarUtils {
       })
   }
 
-  transactionsForWallet(wallet) {
+  transactionsForWallet(wallet, order = 'desc') {
     wallet.publicKey()
       .then((publicKey) => {
         this.server().transactions()
           .forAccount(publicKey)
-          .order('desc')
+          .order(order)
           .call()
           .then((response) => {
             Helper.debugLog(response)

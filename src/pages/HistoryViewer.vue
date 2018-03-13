@@ -62,6 +62,9 @@ import StellarUtils from '../js/StellarUtils.js'
 import Helper from '../js/helper.js'
 import StreamingCache from '../js/StreamingCache.js'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
+import {
+  StellarWallet
+} from 'stellar-js-utils'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -140,45 +143,24 @@ export default {
   },
   methods: {
     operationsForSelectedSource() {
-      if (this.sourceValid()) {
-        StellarUtils.server().operations()
-          .forAccount(this.selectedSource.publicKey)
-          .order('desc')
-          .call()
-          .then((response) => {
-            Helper.debugLog(response)
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
+      const wallet = this.sourceWallet()
+
+      if (wallet) {
+        StellarUtils.operationsForWallet(wallet, this.order)
       }
     },
     paymentsForSelectedSource() {
-      if (this.sourceValid()) {
-        StellarUtils.server().payments()
-          .forAccount(this.selectedSource.publicKey)
-          .order('desc')
-          .call()
-          .then((response) => {
-            Helper.debugLog(response)
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
+      const wallet = this.sourceWallet()
+
+      if (wallet) {
+        StellarUtils.paymentsForWallet(wallet, this.order)
       }
     },
     transactionsForSelectedSource() {
-      if (this.sourceValid()) {
-        StellarUtils.server().transactions()
-          .forAccount(this.selectedSource.publicKey)
-          .order('desc')
-          .call()
-          .then((response) => {
-            Helper.debugLog(response)
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-          })
+      const wallet = this.sourceWallet()
+
+      if (wallet) {
+        StellarUtils.transactionsForWallet(wallet, this.order)
       }
     },
     clearUI() {
@@ -194,6 +176,13 @@ export default {
       this.order = menuID
       this.clearUI()
     },
+    sourceWallet() {
+      if (this.sourceValid()) {
+        return StellarWallet.public(this.selectedSource.publicKey)
+      }
+
+      return null
+    },
     sourceValid() {
       const result = this.selectedSource ? this.selectedSource.publicKey : null
 
@@ -202,6 +191,7 @@ export default {
       }
 
       Helper.debugLog('please select a source account', 'Error')
+      Helper.toast('Please select a source account', true)
 
       return false
     },
