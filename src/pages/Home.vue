@@ -1,6 +1,6 @@
 <template>
 <div>
-  <account-list :items="accountsUI"  />
+  <account-list :items="accountsUI" />
   <instructions-header>
     <div>1. Create accounts on the testnet</div>
     <div>2. Some buttons require setting source/destination accounts before clicking</div>
@@ -147,10 +147,10 @@ export default {
             .then((response) => {
               Helper.debugLog(response)
             })
-            .catch((error) => {
-              Helper.debugLog(error, 'Error')
-              Helper.toast('Error', true)
-            })
+        })
+        .catch((error) => {
+          Helper.debugLog(error, 'Error')
+          Helper.toast('Error', true)
         })
     },
     paymentsForSelectedSource() {
@@ -165,10 +165,10 @@ export default {
             .then((response) => {
               Helper.debugLog(response)
             })
-            .catch((error) => {
-              Helper.debugLog(error, 'Error')
-              Helper.toast('Error', true)
-            })
+        })
+        .catch((error) => {
+          Helper.debugLog(error, 'Error')
+          Helper.toast('Error', true)
         })
     },
     transactionsForSelectedSource() {
@@ -183,10 +183,10 @@ export default {
             .then((response) => {
               Helper.debugLog(response)
             })
-            .catch((error) => {
-              Helper.debugLog(error, 'Error')
-              Helper.toast('Error', true)
-            })
+        })
+        .catch((error) => {
+          Helper.debugLog(error, 'Error')
+          Helper.toast('Error', true)
         })
     },
     ledgerMenu(id) {
