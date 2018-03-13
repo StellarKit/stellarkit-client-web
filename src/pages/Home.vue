@@ -135,7 +135,7 @@ export default {
     makeSelectedPayment() {
       this.sendAssetsDialogPing = !this.sendAssetsDialogPing
     },
-    operationsForSelectedSource() {
+    operationsForLedger() {
       const ledgerWallet = StellarWallet.ledger(new LedgerAPI())
 
       ledgerWallet.publicKey()
@@ -153,7 +153,7 @@ export default {
           Helper.toast('Error', true)
         })
     },
-    paymentsForSelectedSource() {
+    paymentsForLedger() {
       const ledgerWallet = StellarWallet.ledger(new LedgerAPI())
 
       ledgerWallet.publicKey()
@@ -171,7 +171,7 @@ export default {
           Helper.toast('Error', true)
         })
     },
-    transactionsForSelectedSource() {
+    transactionsForLedger() {
       const ledgerWallet = StellarWallet.ledger(new LedgerAPI())
 
       ledgerWallet.publicKey()
@@ -198,13 +198,13 @@ export default {
           StellarUtils.sendTestnetXLMToLedger()
           break
         case 'operations':
-          this.operationsForSelectedSource()
+          this.operationsForLedger()
           break
         case 'payments':
-          this.paymentsForSelectedSource()
+          this.paymentsForLedger()
           break
         case 'transactions':
-          this.transactionsForSelectedSource()
+          this.transactionsForLedger()
           break
         default:
           break
