@@ -5,14 +5,8 @@
   </instructions-header>
 
   <div class='top-controls'>
-    <div class='button-group'>
-      <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
-      <v-btn round small @click="paymentsForSelectedSource()">Payments</v-btn>
-      <v-btn round small @click="operationsForSelectedSource()">Operations</v-btn>
-    </div>
-
+    <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
     <div class='address-box'>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
       <v-menu offset-y :transition=false>
         <v-btn small :ripple=false slot="activator">
           {{buttonTitle}}
@@ -35,22 +29,25 @@
           </v-list-tile>
         </v-list>
       </v-menu>
+      <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
+      <v-btn round small @click="paymentsForSelectedSource()">Payments</v-btn>
+      <v-btn round small @click="operationsForSelectedSource()">Operations</v-btn>
     </div>
 
     <div class='button-row'>
-      <v-btn icon color='secondary' @click="previous()">
+      <v-btn icon small color='secondary' @click="previous()">
         <v-tooltip open-delay='800' bottom>
           <v-icon slot='activator'>&#xE5CB;</v-icon>
           <span>Previous</span>
         </v-tooltip>
       </v-btn>
-      <v-btn icon color='secondary' @click="next()">
+      <v-btn icon small color='secondary' @click="next()">
         <v-tooltip open-delay='800' bottom>
           <v-icon slot='activator'>&#xE5CC;</v-icon>
           <span>Next</span>
         </v-tooltip>
       </v-btn>
-      <div v-if="displayIndex >= 0" class='display-index'>Index: {{displayIndex}}</div>
+      <div v-if="displayIndex >= 0" class='display-index'>Index {{displayIndex}}</div>
     </div>
   </div>
 </div>
@@ -245,7 +242,26 @@ export default {
 @import '../scss/styles.scss';
 
 .top-controls {
+    display: flex;
+    flex-direction: column;
     padding: 10px 20px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    .display-index {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        margin: 0 10px;
+        font-size: 1em;
+    }
+
+    div.input-group {
+        max-width: 350px;
+        min-width: 140px;
+        margin-bottom: 6px;
+    }
 
     .button-row {
         display: flex;
@@ -256,11 +272,6 @@ export default {
         button {
             margin: 0 12px;
         }
-
-        .display-index {
-            margin: 0 10px;
-            font-size: 1.2em;
-        }
     }
 }
 
@@ -269,12 +280,6 @@ export default {
     align-items: center;
     flex-wrap: wrap;
     justify-content: center;
-
-    div.input-group {
-        max-width: 250px;
-        min-width: 140px;
-        margin-right: 6px;
-    }
 
     button {
         margin: 4px;
