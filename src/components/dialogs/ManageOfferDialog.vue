@@ -83,36 +83,44 @@ export default {
       return this.$refs.dialogAccounts
     },
     manageOffer() {
-      const fundingWallet = this.dialogAccounts().fundingWallet(true)
-      if (fundingWallet) {
-        Helper.debugLog('Managing Offer...')
+      let fundingWallet = this.dialogAccounts().fundingWallet()
+      const distributorWallet = StellarWallet.secret(this.project.distributorSecret)
 
-        if (this.project) {
-          const price = {
-            n: this.offerPriceN,
-            d: this.offerPriceD
-          }
+      // funding wallet is optional, but make sure it's not equal to the distributor
+      if (fundingWallet && fundingWallet.equalTo(distributorWallet)) {
+        fundingWallet = null
+      }
 
-          const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
+      Helper.debugLog('Managing Offer...')
 
-          StellarUtils.manageOffer(StellarWallet.secret(this.project.distributorSecret), fundingWallet, StellarUtils.lumins(), asset, String(this.offerAmount), price)
-            .then((result) => {
-              Helper.debugLog(result, 'Success')
-              this.displayToast('Success')
-
-              return null
-            })
-            .catch((error) => {
-              Helper.debugLog(error, 'Error')
-
-              let message = error.message
-              if (message === 'connection failed') {
-                message = 'Ledger Nano not found'
-              }
-
-              this.displayToast(message, true)
-            })
+      if (this.project) {
+        const price = {
+          n: this.offerPriceN,
+          d: this.offerPriceD
         }
+
+        const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
+        this.loading = true
+
+        StellarUtils.manageOffer(distributorWallet, fundingWallet, StellarUtils.lumins(), asset, String(this.offerAmount), price)
+          .then((result) => {
+            Helper.debugLog(result, 'Success')
+            this.displayToast('Success')
+            this.loading = false
+
+            StellarUtils.updateBalances()
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
+            this.loading = false
+
+            let message = error.message
+            if (message === 'connection failed') {
+              message = 'Ledger Nano not found'
+            }
+
+            this.displayToast(message, true)
+          })
       }
     },
     displayToast(message, error = false) {

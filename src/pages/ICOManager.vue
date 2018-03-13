@@ -291,6 +291,8 @@ export default {
           })
           .then((result) => {
             Helper.debugLog('Deleted all offers', 'Success')
+            StellarUtils.updateBalances()
+
             return result
           })
           .catch((error) => {
