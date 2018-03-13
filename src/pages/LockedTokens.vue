@@ -1,6 +1,6 @@
 <template>
 <div>
-  <account-list :items="accountsUI"  />
+  <account-list :items="accountsUI" />
   <instructions-header>
     <div class='instructions'>
       <div>
@@ -89,6 +89,8 @@ export default {
         StellarUtils.submitTransaction(transaction)
           .then((response) => {
             Helper.debugLog(response)
+            StellarUtils.updateBalances()
+            Helper.toast('Success!')
 
             return null
           })
@@ -139,6 +141,7 @@ export default {
 
             Helper.debugLog('You can submit the transaction in ' + seconds + ' seconds')
             Helper.toast('Transaction valid in ' + seconds + ' seconds')
+            StellarUtils.updateBalances()
 
             return transaction
           })
@@ -164,6 +167,7 @@ export default {
           .then((result) => {
             Helper.debugLog('Account is ready', 'Success')
             Helper.toast('Account is ready')
+            StellarUtils.updateBalances()
 
             return result
           })

@@ -1,6 +1,6 @@
 <template>
 <div>
-  <account-list :items="accountsUI"  />
+  <account-list :items="accountsUI" />
   <instructions-header>
     <div>1. Start with three accounts: Issuer, Distributor and Buyer</div>
     <div>2. Click each button in order, but wait for each to complete</div>
@@ -22,7 +22,7 @@
           1. Distributor needs to trust the Issuer of asset
         </div>
         <div class='expansion-message'>
-          <v-text-field class='number-field' label="Asset trust limit" type='number' v-model.trim="trustLimit"></v-text-field>
+          <v-text-field hide-details class='number-field' label="Asset trust limit" type='number' v-model.number="trustLimit"></v-text-field>
 
           <v-btn round small @click="setDistributorTrustToken()">Set Distributor Trust Token</v-btn>
           <div class='message-comment'>Only needed for Bifrost</div>
@@ -35,7 +35,7 @@
           2. Create tokens by sending assets from Issuer to Distributor
         </div>
         <div class='expansion-message'>
-          <v-text-field class='number-field' label="Amount to create" type='number' v-model.trim="createAmount" @keyup.enter="buttonClick('createTokens')"></v-text-field>
+          <v-text-field hide-details class='number-field' label="Amount to create" type='number' v-model.number="createAmount" @keyup.enter="buttonClick('createTokens')"></v-text-field>
           <v-btn round small @click="createTokens()">Create Tokens</v-btn>
         </div>
       </v-expansion-panel-content>
@@ -55,9 +55,9 @@
         <div class='expansion-message'>
           <strong>Price:</strong>
           <div class='offer-price-fields'>
-            <v-text-field class='number-field' label="Buy XLM" type='number' v-model="offerPriceN"></v-text-field>
-            <v-text-field class='number-field' label="Sell LMB" type='number' v-model="offerPriceD"></v-text-field>
-            <v-text-field class='number-field' label="Amount to sell" type='number' v-model="offerAmount"></v-text-field>
+            <v-text-field hide-details class='number-field' label="Buy XLM" type='number' v-model.number="offerPriceN"></v-text-field>
+            <v-text-field hide-details class='number-field' label="Sell LMB" type='number' v-model.number="offerPriceD"></v-text-field>
+            <v-text-field hide-details class='number-field' label="Amount to sell" type='number' v-model.number="offerAmount"></v-text-field>
           </div>
 
           <v-btn round small @click="manageOffer()">Manage Offer</v-btn>
@@ -78,7 +78,7 @@
           6. Buyer needs to trust the Distributor
         </div>
         <div class='expansion-message'>
-          <v-text-field class='number-field' label="Asset trust limit" type='number' v-model.trim="trustLimit"></v-text-field>
+          <v-text-field hide-details class='number-field' label="Asset trust limit" type='number' v-model.number="trustLimit"></v-text-field>
 
           <v-btn round small @click="setBuyerTrust()">Set Buyer Trust</v-btn>
         </div>
@@ -88,7 +88,7 @@
           7. Buy tokens
         </div>
         <div class='expansion-message'>
-          <v-text-field class='number-field' label="Amount to buy" type='number' v-model.trim="amountToBuy"></v-text-field>
+          <v-text-field hide-details class='number-field' label="Amount to buy" type='number' v-model.number="amountToBuy"></v-text-field>
 
           <v-btn round small @click="buyLamboTokens()">Buy Tokens</v-btn>
         </div>
@@ -162,135 +162,156 @@ export default {
       }
     },
     buyLamboTokens() {
-      Helper.debugLog('Buying tokens..')
+      const asset = StellarAccounts.lamboTokenAsset()
+      if (!asset) {
+        Helper.toast('Create a token first')
+      } else {
+        Helper.debugLog('Buying tokens..')
 
-      StellarUtils.buyTokens(StellarWallet.secret(this.tokenBuyerAcct.secret), StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), '5000', String(this.amountToBuy))
-        .then((response) => {
-          Helper.debugLog(response)
+        StellarUtils.buyTokens(StellarWallet.secret(this.tokenBuyerAcct.secret), StellarUtils.lumins(), asset, '5000', String(this.amountToBuy))
+          .then((response) => {
+            Helper.debugLog(response)
 
-          StellarUtils.updateBalances()
+            StellarUtils.updateBalances()
 
-          return null
-        })
-        .catch((error) => {
-          Helper.debugLog(error)
-        })
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error)
+          })
+      }
     },
     paymentPaths() {
-      Helper.debugLog('payment paths..')
+      const asset = StellarAccounts.lamboTokenAsset()
+      if (!asset) {
+        Helper.toast('Create a token first')
+      } else {
+        Helper.debugLog('payment paths..')
 
-      StellarUtils.paths(this.distributorAccount.publicKey, this.tokenBuyerAcct.publicKey, StellarAccounts.lamboTokenAsset(), '1')
-        .then((response) => {
-          Helper.debugLog(response, 'Success')
+        StellarUtils.paths(this.distributorAccount.publicKey, this.tokenBuyerAcct.publicKey, asset, '1')
+          .then((response) => {
+            Helper.debugLog(response, 'Success')
 
-          return null
-        })
-        .catch((error) => {
-          Helper.debugLog(error, 'Error')
-        })
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
+          })
+      }
     },
     manageOffer() {
-      Helper.debugLog('Managing Offer...')
+      if (this.distributorAcct) {
+        Helper.debugLog('Managing Offer...')
 
-      // parseInt shouldn't be necessary, but if you edit the textfields, it changes to a string
-      const price = {
-        n: parseInt(this.offerPriceN),
-        d: parseInt(this.offerPriceD)
+        const price = {
+          n: this.offerPriceN,
+          d: this.offerPriceD
+        }
+
+        StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), null, StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), String(this.offerAmount), price)
+          .then((result) => {
+            Helper.debugLog(result, 'Success')
+
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
+          })
       }
-
-      StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), null, StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), String(this.offerAmount), price)
-        .then((result) => {
-          Helper.debugLog(result, 'Success')
-
-          return null
-        })
-        .catch((error) => {
-          Helper.debugLog(error, 'Error')
-        })
     },
     manageOfferETH() {
-      Helper.debugLog('Managing offer Ethereum...')
+      if (this.distributorAcct) {
+        Helper.debugLog('Managing offer Ethereum...')
 
-      const price = {
-        n: 1,
-        d: 10
+        const price = {
+          n: 1,
+          d: 10
+        }
+
+        StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), null, StellarAccounts.ethereumAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
+          .then((result) => {
+            Helper.debugLog(result, 'Success')
+
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
+          })
       }
-
-      StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), null, StellarAccounts.ethereumAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
-        .then((result) => {
-          Helper.debugLog(result, 'Success')
-
-          return null
-        })
-        .catch((error) => {
-          Helper.debugLog(error, 'Error')
-        })
     },
     manageOfferBTC() {
-      Helper.debugLog('Managing offer Bitcoin...')
+      if (this.distributorAcct) {
+        Helper.debugLog('Managing offer Bitcoin...')
 
-      const price = {
-        n: 1,
-        d: 10
+        const price = {
+          n: 1,
+          d: 10
+        }
+
+        StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), null, StellarAccounts.bitcoinAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
+          .then((result) => {
+            Helper.debugLog(result, 'Success')
+
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
+          })
       }
-
-      StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), null, StellarAccounts.bitcoinAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
-        .then((result) => {
-          Helper.debugLog(result, 'Success')
-
-          return null
-        })
-        .catch((error) => {
-          Helper.debugLog(error, 'Error')
-        })
     },
     lockIssuer() {
-      Helper.debugLog('Locking issuer...')
+      if (this.issuerAcct) {
+        Helper.debugLog('Locking issuer...')
 
-      StellarUtils.lockAccount(StellarWallet.secret(this.issuerAcct.secret))
-        .then((result) => {
-          Helper.debugLog('locked!')
-          Helper.debugLog(result)
+        StellarUtils.lockAccount(StellarWallet.secret(this.issuerAcct.secret))
+          .then((result) => {
+            Helper.debugLog('locked!')
+            Helper.debugLog(result)
 
-          return null
-        })
-        .catch((error) => {
-          Helper.debugLog(error)
-        })
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error)
+          })
+      }
     },
     createTokens() {
-      Helper.debugLog('Creating tokens...')
+      if (this.issuerAcct) {
+        Helper.debugLog('Creating tokens...')
 
-      const amount = this.createAmount
-      if (amount < 1) {
-        Helper.debugLog('Create token amount must be greater than 0', 'Error')
-        return
+        const amount = this.createAmount
+        if (amount < 1) {
+          Helper.debugLog('Create token amount must be greater than 0', 'Error')
+          return
+        }
+
+        StellarUtils.sendAsset(StellarWallet.secret(this.issuerAcct.secret), null, StellarWallet.secret(this.distributorAcct.secret), String(amount), StellarAccounts.lamboTokenAsset(), 'Created Tokens')
+          .then((response) => {
+            Helper.debugLog(response, 'Success')
+
+            StellarUtils.updateBalances()
+
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
+          })
       }
-
-      StellarUtils.sendAsset(StellarWallet.secret(this.issuerAcct.secret), null, StellarWallet.secret(this.distributorAcct.secret), String(amount), StellarAccounts.lamboTokenAsset(), 'Created Tokens')
-        .then((response) => {
-          Helper.debugLog(response, 'Success')
-
-          StellarUtils.updateBalances()
-
-          return null
-        })
-        .catch((error) => {
-          Helper.debugLog(error, 'Error')
-        })
     },
     setDistributorTrust(asset) {
-      Helper.debugLog('Setting distributor trust...')
+      if (this.distributorAcct) {
+        Helper.debugLog('Setting distributor trust...')
 
-      StellarUtils.changeTrust(StellarWallet.secret(this.distributorAcct.secret), null, asset, String(this.trustLimit))
-        .then((result) => {
-          Helper.debugLog(result)
+        StellarUtils.changeTrust(StellarWallet.secret(this.distributorAcct.secret), null, asset, String(this.trustLimit))
+          .then((result) => {
+            Helper.debugLog(result)
 
-          return null
-        })
-        .catch((error) => {
-          Helper.debugLog(error)
-        })
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error)
+          })
+      }
     },
     setDistributorTrustToken() {
       this.setDistributorTrust(StellarAccounts.lamboTokenAsset())
@@ -302,33 +323,40 @@ export default {
       this.setDistributorTrust(StellarAccounts.bitcoinAsset())
     },
     setBuyerTrust() {
-      Helper.debugLog('Setting buyer trust...')
+      const asset = StellarAccounts.lamboTokenAsset()
+      if (!asset) {
+        Helper.toast('Create a token first')
+      } else {
+        Helper.debugLog('Setting buyer trust...')
 
-      // buyer must trust the distributor
-      StellarUtils.changeTrust(StellarWallet.secret(this.tokenBuyerAcct.secret), null, StellarAccounts.lamboTokenAsset(), String(this.trustLimit))
-        .then((result) => {
-          Helper.debugLog(result)
+        // buyer must trust the distributor
+        StellarUtils.changeTrust(StellarWallet.secret(this.tokenBuyerAcct.secret), null, asset, String(this.trustLimit))
+          .then((result) => {
+            Helper.debugLog(result)
 
-          return null
-        })
-        .catch((error) => {
-          Helper.debugLog(error)
-        })
+            return null
+          })
+          .catch((error) => {
+            Helper.debugLog(error)
+          })
+      }
     },
     showOffers() {
-      Helper.debugLog('Offers...')
+      if (this.distributorAcct) {
+        Helper.debugLog('Offers...')
 
-      StellarUtils.server().offers('accounts', this.distributorAcct.publicKey)
-        .call()
-        .then((response) => {
-          response.records.forEach((offer) => {
-            Helper.debugLog(offer)
+        StellarUtils.server().offers('accounts', this.distributorAcct.publicKey)
+          .call()
+          .then((response) => {
+            response.records.forEach((offer) => {
+              Helper.debugLog(offer)
+            })
+
+            Helper.debugLog('Offers done')
+
+            return null
           })
-
-          Helper.debugLog('Offers done')
-
-          return null
-        })
+      }
     },
     deleteOffersFromArray(offers) {
       return new Promise((resolve, reject) => {
@@ -354,22 +382,24 @@ export default {
       })
     },
     deleteOffers() {
-      Helper.debugLog('Deleting Offers...')
+      if (this.distributorAcct) {
+        Helper.debugLog('Deleting Offers...')
 
-      StellarUtils.server().offers('accounts', this.distributorAcct.publicKey)
-        .call()
-        .then((response) => {
-          // Helper.debugLog(response)
-          return this.deleteOffersFromArray(response.records)
-        })
-        .then((result) => {
-          Helper.debugLog('Deleted all offers', 'Success')
-          return result
-        })
-        .catch((error) => {
-          Helper.debugLog(error, 'Error')
-          return false
-        })
+        StellarUtils.server().offers('accounts', this.distributorAcct.publicKey)
+          .call()
+          .then((response) => {
+            // Helper.debugLog(response)
+            return this.deleteOffersFromArray(response.records)
+          })
+          .then((result) => {
+            Helper.debugLog('Deleted all offers', 'Success')
+            return result
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
+            return false
+          })
+      }
     },
     createStandardAccounts() {
       this.issuerAcct = StellarAccounts.accountWithName('Issuer')
@@ -418,22 +448,27 @@ export default {
       }
     },
     orderbook() {
-      Helper.debugLog('Orderbook...')
+      const asset = StellarAccounts.lamboTokenAsset()
+      if (!asset) {
+        Helper.toast('Create a token first')
+      } else {
+        Helper.debugLog('Orderbook...')
 
-      // const selling = StellarUtils.lumins()
-      // const buying = StellarAccounts.lamboTokenAsset()
+        // const selling = StellarUtils.lumins()
+        // const buying = StellarAccounts.lamboTokenAsset()
 
-      const selling = StellarAccounts.lamboTokenAsset()
-      const buying = StellarUtils.lumins()
+        const selling = asset
+        const buying = StellarUtils.lumins()
 
-      StellarUtils.server().orderbook(selling, buying)
-        .call()
-        .then((response) => {
-          Helper.debugLog(response)
-        })
-        .catch((error) => {
-          Helper.debugLog(error)
-        })
+        StellarUtils.server().orderbook(selling, buying)
+          .call()
+          .then((response) => {
+            Helper.debugLog(response)
+          })
+          .catch((error) => {
+            Helper.debugLog(error)
+          })
+      }
     }
   }
 }

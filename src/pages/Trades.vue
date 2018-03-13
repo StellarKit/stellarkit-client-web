@@ -175,6 +175,7 @@ export default {
         this.paymentStopper = null
       } else {
         Helper.debugLog('listening for payments')
+        this.operations = []
 
         const builder = StellarUtils.server().payments()
           .cursor('now')
@@ -201,6 +202,7 @@ export default {
         this.operationStopper = null
       } else {
         Helper.debugLog('listening for operations')
+        this.operations = []
 
         const builder = StellarUtils.server().operations()
           .cursor('now')
@@ -227,6 +229,7 @@ export default {
         this.tradeStopper = null
       } else {
         Helper.debugLog('listening for trades')
+        this.operations = []
 
         const builder = StellarUtils.server().trades()
           .cursor('now')
