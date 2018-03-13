@@ -176,8 +176,6 @@ export default {
         this.showSummary = true
 
         this.summaryMap.set('Symbol', project.symbol)
-        this.summaryMap.set('Amount', project.tokenAmount)
-
         this.summaryMap.set('Issuer', project.issuer)
         this.summaryMap.set('Issuer Secret', project.issuerSecret)
         this.summaryMap.set('Distributor', project.distributor)
@@ -356,6 +354,10 @@ export default {
         align-items: center;
         justify-content: center;
         margin-bottom: 10px;
+
+        button {
+            margin: 0;
+        }
     }
 
     .operations-item {

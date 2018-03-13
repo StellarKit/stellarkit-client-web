@@ -9,7 +9,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' :showSource=true :showDest=true :showAmount=true :showSigner=true :showAsset=true />
+        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' v-on:enter-key-down='sendXLM' :showSource=true :showDest=true :showAmount=true :showSigner=true :showAsset=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
