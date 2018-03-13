@@ -32,8 +32,16 @@
   </div>
 
   <div v-if='showSecret' class='account-choice-box'>
-    <v-text-field hide-details spellcheck="false" autofocus label="Secret key" :counter="56" v-model.trim="secret" @keyup.enter="enterKeyDown" hint="Starts with an 'S'" :append-icon="showSecretText ? 'visibility_off' : 'visibility'" :append-icon-cb="() => (showSecretText = !showSecretText)"
-      :type="showSecretText ? 'text' : 'password'"></v-text-field>
+    <div>
+      <menu-button v-on:menu-selected='secretMenuSelected' title='Enter an account key' :items='secretMenuItems' :selectedID='secretType' />
+    </div>
+    <div v-if='secretType === "secret"' class='inset-choice-box'>
+      <v-text-field hide-details spellcheck="false" autofocus label="Secret key" :counter="56" v-model.trim="secretKeyText" @keyup.enter="enterKeyDown" hint="Starts with an 'S'" :append-icon="showSecretText ? 'visibility_off' : 'visibility'" :append-icon-cb="() => (showSecretText = !showSecretText)"
+        :type="showSecretText ? 'text' : 'password'"></v-text-field>
+    </div>
+    <div v-if='secretType === "public"' class='inset-choice-box'>
+      <v-text-field hide-details spellcheck="false" autofocus label="Public key" :counter="56" v-model.trim="publicKeyText" @keyup.enter="enterKeyDown" hint="Starts with an 'G'"></v-text-field>
+    </div>
   </div>
 
   <div v-if='showAccountName' class='account-choice-box'>
@@ -90,13 +98,16 @@ export default {
       sourceType: 'account',
       signerType: 'none',
       fundingType: 'none',
+      secretType: 'secret',
 
       selectedSource: null,
       selectedDest: null,
       selectedFunding: null,
       selectedSigner: null,
-      secret: '',
       showSecretText: false,
+
+      secretKeyText: '',
+      publicKeyText: '',
 
       assetAmount: 10,
       name: generateName(),
@@ -107,7 +118,7 @@ export default {
       sendXLM: true,
       destMenuItems: [{
           id: 'publicKey',
-          title: 'Public Key'
+          title: 'Public key'
         },
         {
           id: 'account',
@@ -125,6 +136,15 @@ export default {
         {
           id: 'ledger',
           title: 'Ledger Nano'
+        }
+      ],
+      secretMenuItems: [{
+          id: 'secret',
+          title: 'Secret key'
+        },
+        {
+          id: 'public',
+          title: 'Public key'
         }
       ],
       signerMenuItems: [{
@@ -160,6 +180,8 @@ export default {
       this.assetAmount = 10
       this.assetCode = ''
       this.assetIssuer = ''
+      this.secretKeyText = ''
+      this.publicKeyText = ''
       this.sendXLM = true
       this.name = generateName()
     },
@@ -216,6 +238,9 @@ export default {
       this.signerType = item.id
       this.adjustSetting('signerType')
     },
+    secretMenuSelected(item) {
+      this.secretType = item.id
+    },
     fundingMenuSelected(item) {
       this.fundingType = item.id
       this.adjustSetting('fundingType')
@@ -238,6 +263,8 @@ export default {
         case 'account':
           if (this._sourceValid()) {
             result = StellarWallet.secret(this.selectedSource.secret)
+          } else if (this._sourceValid(false)) {
+            result = StellarWallet.public(this.selectedSource.publicKey)
           }
           break
         default:
@@ -270,6 +297,8 @@ export default {
         case 'account':
           if (this._destValid()) {
             result = StellarWallet.secret(this.selectedDest.secret)
+          } else if (this._destValid(false)) {
+            result = StellarWallet.public(this.selectedDest.publicKey)
           }
           break
         default:
@@ -341,12 +370,26 @@ export default {
       return this.name
     },
     secretKey() {
-      if (Helper.strOK(this.secret)) {
-        return this.secret
+      if (this.secretType === 'secret') {
+        if (Helper.strOK(this.secretKeyText)) {
+          return this.secretKeyText
+        }
+
+        this._displayToast('Please enter a secret key', true)
+        Helper.debugLog('Please enter a secret key', 'Error')
       }
 
-      this._displayToast('Please enter a secret key', true)
-      Helper.debugLog('Please enter a secret key', 'Error')
+      return ''
+    },
+    publicKey() {
+      if (this.secretType === 'public') {
+        if (Helper.strOK(this.publicKeyText)) {
+          return this.publicKeyText
+        }
+
+        this._displayToast('Please enter a public key', true)
+        Helper.debugLog('Please enter a public key', 'Error')
+      }
 
       return ''
     },
@@ -367,10 +410,16 @@ export default {
     // ======================================================
     // Private
     // ======================================================
-    _destValid() {
-      const result = this.selectedDest ? this.selectedDest.publicKey : null
+    _destValid(validForSigning = true) {
+      let key = null
 
-      if (Helper.strOK(result)) {
+      if (validForSigning) {
+        key = this.selectedDest ? this.selectedDest.secret : null
+      } else {
+        key = this.selectedDest ? this.selectedDest.publicKey : null
+      }
+
+      if (Helper.strOK(key)) {
         return true
       }
 
@@ -385,10 +434,16 @@ export default {
 
       return false
     },
-    _sourceValid() {
-      const result = this.selectedSource ? this.selectedSource.secret : null
+    _sourceValid(validForSigning = true) {
+      let key = null
 
-      if (Helper.strOK(result)) {
+      if (validForSigning) {
+        key = this.selectedSource ? this.selectedSource.secret : null
+      } else {
+        key = this.selectedSource ? this.selectedSource.publicKey : null
+      }
+
+      if (Helper.strOK(key)) {
         return true
       }
 

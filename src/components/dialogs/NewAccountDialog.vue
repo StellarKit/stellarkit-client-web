@@ -125,14 +125,25 @@ export default {
     addExistingAccount() {
       const accountName = this.dialogAccountsAdd().accountName()
       const secretKey = this.dialogAccountsAdd().secretKey()
+      const publicKey = this.dialogAccountsAdd().publicKey()
 
-      if (Helper.strOK(accountName) && Helper.strOK(secretKey)) {
-        const keypair = StellarSdk.Keypair.fromSecret(secretKey)
+      if (Helper.strOK(accountName)) {
+        let keypair = null
 
-        StellarAccounts.addAccount(keypair, accountName)
+        if (Helper.strOK(secretKey)) {
+          keypair = StellarSdk.Keypair.fromSecret(secretKey)
+        }
 
-        this.displayToast('Account Added!')
-        StellarUtils.updateBalances()
+        if (Helper.strOK(publicKey)) {
+          keypair = StellarSdk.Keypair.fromPublicKey(publicKey)
+        }
+
+        if (keypair) {
+          StellarAccounts.addAccount(keypair, accountName)
+
+          this.displayToast('Account Added!')
+          StellarUtils.updateBalances()
+        }
       }
     },
     createAccount() {

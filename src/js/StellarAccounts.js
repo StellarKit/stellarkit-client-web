@@ -81,12 +81,19 @@ class StellarAccounts {
   }
 
   addAccount(keyPair, name = null, tag = null) {
+    let secretKey = ''
+
+    // throws an error if you try to call secret() when it doesn't exist
+    if (keyPair.canSign()) {
+      secretKey = keyPair.secret()
+    }
+
     const acct = {
       name: Helper.strOK(name) ? name : generateName(),
       balances: {
         XLM: 'refreshing...'
       },
-      secret: keyPair.secret(),
+      secret: secretKey,
       publicKey: keyPair.publicKey(),
       tag: tag,
       mainnet: !StellarUtils.isTestnet()
