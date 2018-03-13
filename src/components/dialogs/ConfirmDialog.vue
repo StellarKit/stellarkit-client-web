@@ -70,7 +70,7 @@ export default {
         @include inner-dialog-contents();
 
         .main-message {
-            font-size: 1em;
+            font-size: 0.9em;
             margin-bottom: 10px;
         }
     }

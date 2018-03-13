@@ -50,12 +50,18 @@
         <span>{{item.publicKey}}</span>
       </v-tooltip>
       <v-btn class='delete-button' icon small @click.stop='deleteItem(item)'>
-        <v-icon>&#xE15C;</v-icon>
+        <v-tooltip open-delay='200' bottom>
+          <v-icon slot="activator">&#xE15C;</v-icon>
+          <span>Remove account</span>
+        </v-tooltip>
       </v-btn>
     </div>
   </transition-group>
 
   <new-account-dialog :ping='newAccountDialogPing' />
+
+  <confirm-dialog v-on:confirm-dialog-ok='removeAccountConfirmed' :ping='confirmRemoveDialogPing' title='Remove Account?' message='Make sure you saved the secret key! You can later add this account back using the secret key.' okTitle='Remove Account' />
+
 </div>
 </template>
 
@@ -69,17 +75,21 @@ import {
 } from 'gsap'
 import $ from 'jquery'
 import StellarAccounts from '../js/StellarAccounts.js'
+import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue'
 
 export default {
   props: ['items'],
   data() {
     return {
       timeline: null,
-      newAccountDialogPing: false
+      newAccountDialogPing: false,
+      confirmRemoveDialogPing: false,
+      itemToRemove: null
     }
   },
   components: {
-    'new-account-dialog': NewAccountDialog
+    'new-account-dialog': NewAccountDialog,
+    'confirm-dialog': ConfirmDialog
   },
   mounted() {
     setInterval(() => {
@@ -150,11 +160,20 @@ export default {
           Helper.debugLog(error)
         })
     },
-    deleteItem(item) {
-      if (!StellarUtils.isTestnet()) {
-        console.log('main')
+    removeAccountConfirmed() {
+      if (this.itemToRemove) {
+        StellarAccounts.deleteAccount(this.itemToRemove.publicKey)
       }
-      StellarAccounts.deleteAccount(item.publicKey)
+    },
+    deleteItem(item) {
+      this.itemToRemove = null
+
+      if (!StellarUtils.isTestnet()) {
+        this.itemToRemove = item
+        this.confirmRemoveDialogPing = !this.confirmRemoveDialogPing
+      } else {
+        StellarAccounts.deleteAccount(item.publicKey)
+      }
     },
     refresh() {
       Helper.debugLog('refreshing...')
