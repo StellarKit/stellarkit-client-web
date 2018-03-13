@@ -4,7 +4,7 @@
     <div>
       <menu-button v-on:menu-selected='sourceMenuSelected' title='Source account' :items='sourceMenuItems' :selectedID='sourceType' />
     </div>
-    <div v-if='sourceType === "account"' class='inset-choice-box'>
+    <div v-if='sourceType === "account"'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
@@ -13,10 +13,10 @@
     <div>
       <menu-button v-on:menu-selected='destMenuSelected' title='Destination account' :items='destMenuItems' :selectedID='destType' />
     </div>
-    <div v-if='destType === "publicKey"' class='inset-choice-box'>
+    <div v-if='destType === "publicKey"'>
       <v-text-field hide-details label="Destination public key" v-model.trim="destPublicKey" ref='input' @keyup.enter="enterKeyDown"></v-text-field>
     </div>
-    <div v-if='destType === "account"' class='inset-choice-box'>
+    <div v-if='destType === "account"'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
@@ -25,7 +25,7 @@
     <div>
       <v-checkbox hide-details label='Send XLM' v-model="sendXLM"></v-checkbox>
     </div>
-    <div v-if='!sendXLM' class='inset-choice-box'>
+    <div v-if='!sendXLM'>
       <v-text-field hide-details label="Asset Code" v-model.trim="assetCode" ref='input' @keyup.enter="enterKeyDown"></v-text-field>
       <v-text-field hide-details label="Asset Issuer" v-model.trim="assetIssuer" ref='input' @keyup.enter="enterKeyDown"></v-text-field>
     </div>
@@ -35,11 +35,11 @@
     <div>
       <menu-button v-on:menu-selected='secretMenuSelected' title='Enter an account key' :items='secretMenuItems' :selectedID='secretType' />
     </div>
-    <div v-if='secretType === "secret"' class='inset-choice-box'>
+    <div v-if='secretType === "secret"'>
       <v-text-field hide-details spellcheck="false" autofocus label="Secret key" :counter="56" v-model.trim="secretKeyText" @keyup.enter="enterKeyDown" hint="Starts with an 'S'" :append-icon="showSecretText ? 'visibility_off' : 'visibility'" :append-icon-cb="() => (showSecretText = !showSecretText)"
         :type="showSecretText ? 'text' : 'password'"></v-text-field>
     </div>
-    <div v-if='secretType === "public"' class='inset-choice-box'>
+    <div v-if='secretType === "public"'>
       <v-text-field hide-details spellcheck="false" autofocus label="Public key" :counter="56" v-model.trim="publicKeyText" @keyup.enter="enterKeyDown" hint="Starts with an 'G'"></v-text-field>
     </div>
   </div>
@@ -56,7 +56,7 @@
     <div>
       <menu-button v-on:menu-selected='signerMenuSelected' title='Add Signer account' :items='signerMenuItems' :selectedID='signerType' />
     </div>
-    <div v-if='signerType === "account"' class='inset-choice-box'>
+    <div v-if='signerType === "account"'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Signing account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
@@ -65,8 +65,11 @@
     <div>
       <menu-button v-on:menu-selected='fundingMenuSelected' title='Funding account' :items='fundingMenuItems' :selectedID='fundingType' />
     </div>
-    <div v-if='fundingType === "account"' class='inset-choice-box'>
+    <div v-if='fundingType === "account"'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedFunding" clearable label="Funding account" autocomplete return-object max-height="600"></v-select>
+    </div>
+    <div v-if='fundingType === "none"'>
+      <div class='accounts-small-text'>The source accout will pay the fee.</div>
     </div>
   </div>
 
@@ -472,6 +475,9 @@ export default {
     background: rgba(0,0,0,.05);
     border-radius: 4px;
 
-    .inset-choice-box {}
+    .accounts-small-text {
+        font-size: 0.85em;
+        color: rgba(0,0,0,.5);
+    }
 }
 </style>
