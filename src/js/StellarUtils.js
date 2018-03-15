@@ -23,10 +23,6 @@ class StellarUtils {
     return this.s.isTestnet()
   }
 
-  friendBotServer() {
-    return this.s.friendBotServer()
-  }
-
   lumins() {
     return StellarSdk.Asset.native()
   }
@@ -225,7 +221,7 @@ class StellarUtils {
         // account exists, so friendbot will just fail, do the merge
         const keyPair = StellarSdk.Keypair.random()
 
-        const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + keyPair.publicKey()
+        const url = 'https://friendbot.stellar.org' + '?addr=' + keyPair.publicKey()
         return axios.get(url)
           .then((data) => {
             Helper.debugLog(data, 'Success')
@@ -244,7 +240,7 @@ class StellarUtils {
         Helper.debugLog('Account doesn\'t exist, asking friendbot for help.')
 
         // account doesn't exist, so ask friendbot to create it
-        const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + ledgerPublicKey
+        const url = 'https://friendbot.stellar.org' + '?addr=' + ledgerPublicKey
         return axios.get(url)
       })
       .then((info) => {
@@ -295,7 +291,7 @@ class StellarUtils {
     const keyPair = StellarSdk.Keypair.random()
     const accountRec = StellarAccounts.addAccount(keyPair, name)
 
-    const url = 'https://horizon-testnet.stellar.org/friendbot' + '?addr=' + keyPair.publicKey()
+    const url = 'https://friendbot.stellar.org' + '?addr=' + keyPair.publicKey()
     return axios.get(url)
       .then((info) => {
         Helper.debugLog(info, 'Success')

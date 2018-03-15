@@ -28,14 +28,6 @@
      return this._serverAPI
    }
 
-   friendBotServer() {
-     if (!this._friendBotServer) {
-       this._friendBotServer = this._createHorizonServer('testnet')
-     }
-
-     return this._friendBotServer.server()
-   }
-
    serverURL() {
      this._setupServer()
      return this._horizon.serverURL()
