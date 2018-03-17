@@ -17,7 +17,7 @@
 
   <div class='header-tab-bar'>
     <div class='header-tab-bar-inner'>
-      <v-btn icon small v-if='!tab.disabled' v-for='tab in tabs' :to='tab.path' exact :key='tab.path' class="bar-item" active-class="btn--active header-active-tab">
+      <v-btn icon small v-if='!tab.disabled' v-for='tab in tabs' :to='tab.path' exact :key='tab.path' class="bar-item" active-class="header-active-tab">
         <v-tooltip open-delay='800' bottom>
           <v-icon slot='activator' v-html='tab.icon'></v-icon>
           <span>{{tab.tooltip}}</span>
@@ -140,6 +140,12 @@ export default {
 
         .header-tab-bar-inner {
             pointer-events: all;
+
+            a {
+                &:hover {
+                    background: rgba(255,255,255,.3);
+                }
+            }
 
             .header-active-tab {
                 color: white;
