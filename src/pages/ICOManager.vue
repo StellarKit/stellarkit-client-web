@@ -2,9 +2,7 @@
 <div>
   <account-list :items="accountsUI" />
   <instructions-header>
-    <div>1. Works with Ledger nano to fund creating accounts.</div>
-    <div>2. Use the Ledger button on right to add testnet XLM.</div>
-    <div>3. Launch Stellar App on Ledger.</div>
+    <div>1. Coming soon....</div>
   </instructions-header>
 
   <div class='page-contents'>
