@@ -1,22 +1,20 @@
 <template>
-<v-navigation-drawer absolute clipped temporary v-model="drawer">
+<v-navigation-drawer class='navigation-drawer' absolute clipped temporary v-model="drawer">
   <div>
-    <v-list dense>
-      <v-list-tile @click="clickItem()">
-        <v-list-tile-title class="title">
-          {{applicationName}}
-        </v-list-tile-title>
-      </v-list-tile>
-    </v-list>
+    <div class='list-header-item' @click="clickItem()">
+      <div class="title">
+        {{applicationName}}
+      </div>
+    </div>
   </div>
   <v-divider></v-divider>
-  <v-list dense>
+  <v-list>
     <v-list-tile v-for="item in items" :key="item.title" @click="clickItem(item)">
-      <v-list-tile-action>
-        <v-icon>{{ item.icon }}</v-icon>
-      </v-list-tile-action>
+      <div class='list-item-icon'>
+        <v-icon>{{item.icon}}</v-icon>
+      </div>
       <v-list-tile-content>
-        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+        <div class='list-item-text'>{{item.title}}</div>
       </v-list-tile-content>
     </v-list-tile>
   </v-list>
@@ -42,12 +40,12 @@ export default {
     'about-dialog': AboutDialog
   },
   watch: {
-    ping: function () {
+    ping: function() {
       this.drawer = true
     }
   },
   computed: {
-    applicationName: function () {
+    applicationName: function() {
       return Helper.applicationName()
     }
   },
@@ -74,9 +72,9 @@ export default {
           icon: 'help'
         },
         {
-          id: 'settings',
-          title: 'Settings',
-          icon: 'settings'
+          id: 'github',
+          title: 'Source on Github',
+          icon: 'fa-github'
         }
       ]
     }
@@ -94,6 +92,9 @@ export default {
           case 'about':
             this.showAboutPing = !this.showAboutPing
             break
+          case 'github':
+            Helper.openBrowser('https://github.com/StellarKit/stellar-client-web')
+            break
           default:
             break
         }
@@ -105,3 +106,24 @@ export default {
   }
 }
 </script>
+
+<style lang='scss' scoped>
+.list-header-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    color: white;
+    background: steelblue;
+}
+
+.navigation-drawer {
+    background: rgb(245,245,245);
+}
+.list-item-text {
+    font-size: 1.3em;
+    color: rgba(0,0,0,.6);
+}
+.list-item-icon {
+    margin-right: 16px;
+}
+</style>

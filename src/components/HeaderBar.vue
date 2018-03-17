@@ -34,6 +34,9 @@ export default {
   props: ['items'],
   computed: {
     pageTitle: function() {
+      if (this.$route.path === '/') {
+        return 'Stellar Army'
+      }
       return this.$route.name
     }
   },
