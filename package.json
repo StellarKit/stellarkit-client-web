@@ -12,8 +12,8 @@
   "main": "dist/distLib.js",
   "scripts": {
     "dist": "cross-env NODE_ENV=production webpack --progress --hide-modules && node ./build/createIndexHTML.js",
-    "dev": "cross-env NODE_ENV=development webpack-dev-server  --open --hot --content-base src/dev/",
-    "devHTTPS": "cross-env NODE_ENV=development webpack-dev-server --https --open --hot --content-base src/dev/",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --https --open --hot --content-base src/dev/",
+    "devHTTP": "cross-env NODE_ENV=development webpack-dev-server --open --hot --content-base src/dev/",
     "distLib": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "devDependencies": {

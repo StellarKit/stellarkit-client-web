@@ -13,7 +13,7 @@
       </v-btn>
       <v-list dense>
         <v-list-tile v-for="(item, index) in tokenMenuItems" :key="item.title" @click="projectsMenuClick(index, item.action)">
-          <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+          <v-list-tile-title>{{item.title}}</v-list-tile-title>
         </v-list-tile>
       </v-list>
     </v-menu>
@@ -29,12 +29,15 @@
         </v-btn>
       </div>
       <div class='summary-list'>
-        <div class='operations-item' v-for="key in Array.from(summaryMap.keys())" :key=key>
+        <div class='operations-item' v-for="item in summaryMap" :key=item.content>
           <div class='item-name'>
-            {{key}}:
+            {{item.title}}:
           </div>
-          <div class='item-value'>
-            {{summaryMap.get(key)}}
+          <div v-if='item.secret && !printing' class='item-value' @click='item.secret = false'>
+            Click to reveal
+          </div>
+          <div v-else class='item-value'>
+            {{item.content}}
           </div>
         </div>
       </div>
@@ -127,7 +130,8 @@ export default {
       accountDialogPing: false,
       showSummary: false,
       confirmDialogPing: false,
-      confirmLockDialogPing: false
+      confirmLockDialogPing: false,
+      printing: false
     }
   },
   mounted() {
@@ -166,18 +170,31 @@ export default {
     updateProjectIndex(index) {
       this.projectIndex = index
 
-      this.summaryMap = new Map()
+      this.summaryMap = []
 
       const project = this.currentProject()
       if (project) {
         this.setAccountsTag(project.symbol)
         this.showSummary = true
 
-        this.summaryMap.set('Symbol', project.symbol)
-        this.summaryMap.set('Issuer', project.issuer)
-        this.summaryMap.set('Issuer Secret', project.issuerSecret)
-        this.summaryMap.set('Distributor', project.distributor)
-        this.summaryMap.set('Distributor Secret', project.distributorSecret)
+        this.summaryMap.push({
+          'title': 'Symbol',
+          'content': project.symbol
+        }, {
+          'title': 'Issuer',
+          'content': project.issuer
+        }, {
+          'title': 'Issuer Secret',
+          'content': project.issuerSecret,
+          'secret': true
+        }, {
+          'title': 'Distributor',
+          'content': project.distributor
+        }, {
+          'title': 'Distributor Secret',
+          'content': project.distributorSecret,
+          'secret': true
+        })
       } else {
         this.setAccountsTag(null)
         this.showSummary = false
@@ -195,7 +212,12 @@ export default {
       return null
     },
     printInfo() {
-      this.printTokenInfo($('.summary-list'))
+      this.printing = true
+
+      this.$nextTick(() => {
+        this.printTokenInfo($('.summary-list'))
+        this.printing = false
+      })
     },
     createToken() {
       Helper.debugLog('creating token')
