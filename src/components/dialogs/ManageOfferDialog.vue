@@ -10,7 +10,7 @@
       <div class='help-email'>
         <v-text-field hide-details label="Buy XLM" @keyup.enter="manageOffer()" type='number' v-model.number="offerPriceN" ref='input'></v-text-field>
         <v-text-field hide-details :label="sellLabel" @keyup.enter="manageOffer()" type='number' v-model.number="offerPriceD"></v-text-field>
-        <v-text-field hide-details label="Amount to sell" @keyup.enter="manageOffer()" type='number' v-model.number="offerAmount"></v-text-field>
+        <v-text-field hide-details :label="amountSellLabel" @keyup.enter="manageOffer()" type='number' v-model.number="offerAmount"></v-text-field>
         <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='manageOffer' v-on:toast='displayToast' :showFunding=true />
       </div>
       <div class='button-holder'>
@@ -48,6 +48,12 @@ export default {
     sellLabel: function() {
       if (this.project) {
         return 'Sell ' + this.project.symbol
+      }
+      return 'Sell Token'
+    },
+    amountSellLabel: function() {
+      if (this.project) {
+        return 'Amount of ' + this.project.symbol + ' to sell'
       }
       return 'Sell Token'
     }
