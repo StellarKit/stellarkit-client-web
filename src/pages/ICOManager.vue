@@ -2,7 +2,7 @@
 <div>
   <account-list :items="accountsUI" />
   <instructions-header>
-    <div>1. Coming soon....</div>
+    <div>Content coming soon....</div>
   </instructions-header>
 
   <div class='page-contents'>
