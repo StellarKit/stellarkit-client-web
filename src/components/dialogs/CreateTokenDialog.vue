@@ -91,7 +91,7 @@ export default {
         this.loading = true
 
         // create issuer
-        StellarUtils.newAccount(fundingWallet, '1', 'Issuer: ' + this.symbol, this.symbol)
+        StellarUtils.newAccount(fundingWallet, '1.5', 'Issuer: ' + this.symbol, this.symbol)
           .then((accountInfo) => {
             issuerKeypair = accountInfo.keypair
             const issuerWallet = StellarWallet.secret(issuerKeypair.secret())
