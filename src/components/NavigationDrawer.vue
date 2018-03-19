@@ -55,7 +55,7 @@ export default {
       showAboutPing: false,
       showDonatePing: false,
       drawer: false,
-      donationPublicKey: 'GCYQSB3UQDSISB5LKAL2OEVLAYJNIR7LFVYDNKRMLWQKDCBX4PU3Z6JP',
+      donationPublicKey: 'GBJC6AF4I5FUTYMG4CXC3V2NYMIQANBRB4UQYY3M2RRZCXCNLFR7TN7J',
       items: [{
           id: 'about',
           title: 'About',
