@@ -7,13 +7,15 @@
       <div class='main-message'>
         {{message}}
       </div>
+      <v-checkbox label="I understand" v-model="confirmed"></v-checkbox>
+
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
           <v-btn round small slot="activator" @click="visible = false">Cancel</v-btn>
           <span>Cancel</span>
         </v-tooltip>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round small color='error' slot="activator" @click="buttonClick('ok')">{{okTitle}}</v-btn>
+          <v-btn round small color='error' slot="activator" @click="buttonClick('ok')" :disabled="!confirmed">{{okTitle}}</v-btn>
           <span>Confirm</span>
         </v-tooltip>
       </div>
@@ -34,12 +36,14 @@ export default {
   },
   data() {
     return {
-      visible: false
+      visible: false,
+      confirmed: false
     }
   },
   watch: {
     ping: function() {
       this.visible = true
+      this.confirmed = false
     }
   },
   methods: {
