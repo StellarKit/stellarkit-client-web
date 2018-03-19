@@ -58,7 +58,7 @@
   <create-token-dialog v-on:token-created='createDialogResult' :ping='createDialogPing' />
   <confirm-dialog v-on:confirm-dialog-ok='deleteTokenProjectConfirmed' :ping='confirmDialogPing' title='Delete Token Project?' message='Do you want to delete this token project? Tokens will remain on the network, but make sure you have your keys.' okTitle='Delete Project'
   />
-  <confirm-dialog v-on:confirm-dialog-ok='lockIssuerConfirmed' :ping='confirmLockDialogPing' title='Lock Issuer?' message='Any tokens or currency on this account will be locked for good. This feature is great to ensure no more tokens can ever be created.'
+  <confirm-dialog v-on:confirm-dialog-ok='lockIssuerConfirmed' :ping='confirmLockDialogPing' title='Lock Issuer?' message='Any tokens or currency on this account will be locked forever. This feature is great to ensure no more tokens can ever be created. But make sure everything on this account is set, for example the home domain.'
     okTitle='Lock Issuer' />
 </div>
 </template>
