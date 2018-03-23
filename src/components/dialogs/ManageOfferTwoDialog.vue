@@ -5,7 +5,7 @@
 
     <div class='help-contents'>
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='manageOffer' v-on:toast='displayToast' :showManageOffer=true :showFunding=true :showSource=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='manageOffer' v-on:toast='displayToast' :showManageOffer=true :showFunding=true :showSource=true :showBuyingAsset=true :showSellingAsset=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>

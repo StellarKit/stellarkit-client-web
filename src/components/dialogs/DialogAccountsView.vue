@@ -31,6 +31,26 @@
     </div>
   </div>
 
+  <div v-if='showBuyingAsset' class='account-choice-box'>
+    <div>
+      <menu-button v-on:menu-selected='buyingMenuSelected' title='Buying asset' :items='assetMenuItems' :selectedID='buyingAssetType' />
+    </div>
+    <div v-if='buyingAssetType === "custom"' class='asset-pair'>
+      <v-text-field hide-details label="Asset code" class='asset-code' @keyup.enter="enterKeyDown" v-model.trim="buyingAssetCode" ref='input'></v-text-field>
+      <v-text-field hide-details label="Asset issuer" @keyup.enter="enterKeyDown" v-model.number="buyingAssetIssuer"></v-text-field>
+    </div>
+  </div>
+
+  <div v-if='showSellingAsset' class='account-choice-box'>
+    <div>
+      <menu-button v-on:menu-selected='sellingMenuSelected' title='Selling asset' :items='assetMenuItems' :selectedID='sellingAssetType' />
+    </div>
+    <div v-if='sellingAssetType === "custom"' class='asset-pair'>
+      <v-text-field hide-details label="Asset code" class='asset-code' @keyup.enter="enterKeyDown" v-model.number="sellingAssetCode"></v-text-field>
+      <v-text-field hide-details label="Asset issuer" @keyup.enter="enterKeyDown" v-model.number="sellingAssetIssuer"></v-text-field>
+    </div>
+  </div>
+
   <div v-if='showSecret' class='account-choice-box'>
     <div>
       <menu-button v-on:menu-selected='secretMenuSelected' title='Enter an account key' :items='secretMenuItems' :selectedID='secretType' />
@@ -62,22 +82,6 @@
   </div>
 
   <div v-if='showManageOffer' class='account-choice-box'>
-    <div>
-      <menu-button v-on:menu-selected='buyingMenuSelected' title='Buying asset' :items='assetMenuItems' :selectedID='buyingAssetType' />
-    </div>
-    <div v-if='buyingAssetType === "custom"' class='asset-pair'>
-      <v-text-field hide-details label="Asset code" class='asset-code' @keyup.enter="enterKeyDown" v-model.trim="buyingAssetCode" ref='input'></v-text-field>
-      <v-text-field hide-details label="Asset issuer" @keyup.enter="enterKeyDown" v-model.number="buyingAssetIssuer"></v-text-field>
-    </div>
-
-    <div>
-      <menu-button v-on:menu-selected='sellingMenuSelected' title='Selling asset' :items='assetMenuItems' :selectedID='sellingAssetType' />
-    </div>
-    <div v-if='sellingAssetType === "custom"' class='asset-pair'>
-      <v-text-field hide-details label="Asset code" class='asset-code' @keyup.enter="enterKeyDown" v-model.number="sellingAssetCode"></v-text-field>
-      <v-text-field hide-details label="Asset issuer" @keyup.enter="enterKeyDown" v-model.number="sellingAssetIssuer"></v-text-field>
-    </div>
-
     <v-text-field hide-details label="Sell amount" @keyup.enter="enterKeyDown" type='number' v-model.number="sellingAmount"></v-text-field>
 
     <div>Price:</div>
@@ -115,7 +119,7 @@ const StellarSdk = require('stellar-sdk')
 const generateName = require('sillyname')
 
 export default {
-  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer'],
+  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset'],
   mixins: [StellarCommonMixin],
   components: {
     'menu-button': MenuButton
