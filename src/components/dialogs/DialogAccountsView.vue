@@ -27,7 +27,7 @@
     </div>
     <div v-if='!sendXLM'>
       <v-text-field hide-details label="Asset Code" v-model.trim="assetCode" ref='input' @keyup.enter="enterKeyDown"></v-text-field>
-      <v-text-field hide-details label="Asset Issuer" v-model.trim="assetIssuer" ref='input' @keyup.enter="enterKeyDown"></v-text-field>
+      <v-text-field hide-details label="Asset Issuer" v-model.trim="assetIssuer" @keyup.enter="enterKeyDown"></v-text-field>
     </div>
   </div>
 
@@ -61,6 +61,33 @@
     </div>
   </div>
 
+  <div v-if='showManageOffer' class='account-choice-box'>
+    <div>
+      <menu-button v-on:menu-selected='buyingMenuSelected' title='Buying asset' :items='assetMenuItems' :selectedID='buyingAssetType' />
+    </div>
+    <div v-if='buyingAssetType === "custom"' class='asset-pair'>
+      <v-text-field hide-details label="Asset code" class='asset-code' @keyup.enter="enterKeyDown" v-model.trim="buyingAssetCode" ref='input'></v-text-field>
+      <v-text-field hide-details label="Asset issuer" @keyup.enter="enterKeyDown" v-model.number="buyingAssetIssuer"></v-text-field>
+    </div>
+
+    <div>
+      <menu-button v-on:menu-selected='sellingMenuSelected' title='Selling asset' :items='assetMenuItems' :selectedID='sellingAssetType' />
+    </div>
+    <div v-if='sellingAssetType === "custom"' class='asset-pair'>
+      <v-text-field hide-details label="Asset code" class='asset-code' @keyup.enter="enterKeyDown" v-model.number="sellingAssetCode"></v-text-field>
+      <v-text-field hide-details label="Asset issuer" @keyup.enter="enterKeyDown" v-model.number="sellingAssetIssuer"></v-text-field>
+    </div>
+
+    <v-text-field hide-details label="Sell amount" @keyup.enter="enterKeyDown" type='number' v-model.number="sellingAmount"></v-text-field>
+
+    <div>Price:</div>
+    <div class='accounts-small-text'>For example, you want buy 1000 XLM for 1 MyToken.</div>
+    <div class='price-pair'>
+      <v-text-field class='buy-price' hide-details label="Buy unit" @keyup.enter="enterKeyDown" type='number' v-model.number="buyUnit"></v-text-field>
+      <v-text-field hide-details label="Sell unit" @keyup.enter="enterKeyDown" type='number' v-model.number="sellUnit"></v-text-field>
+    </div>
+  </div>
+
   <div v-if='showFunding' class='account-choice-box'>
     <div>
       <menu-button v-on:menu-selected='fundingMenuSelected' title='Funding account' :items='fundingMenuItems' :selectedID='fundingType' />
@@ -88,7 +115,7 @@ const StellarSdk = require('stellar-sdk')
 const generateName = require('sillyname')
 
 export default {
-  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret'],
+  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer'],
   mixins: [StellarCommonMixin],
   components: {
     'menu-button': MenuButton
@@ -119,6 +146,18 @@ export default {
       assetCode: '',
       assetIssuer: '',
       sendXLM: true,
+
+      // manage  offer fields
+      buyingAssetCode: '',
+      buyingAssetIssuer: '',
+      sellingAssetCode: '',
+      sellingAssetIssuer: '',
+      sellingAmount: 100,
+      buyUnit: 100,
+      sellUnit: 1,
+      buyingAssetType: 'xlm',
+      sellingAssetType: 'custom',
+
       destMenuItems: [{
           id: 'publicKey',
           title: 'Public key'
@@ -148,6 +187,15 @@ export default {
         {
           id: 'public',
           title: 'Public key'
+        }
+      ],
+      assetMenuItems: [{
+          id: 'xlm',
+          title: 'XLM'
+        },
+        {
+          id: 'custom',
+          title: 'Custom asset'
         }
       ],
       signerMenuItems: [{
@@ -236,6 +284,14 @@ export default {
     sourceMenuSelected(item) {
       this.sourceType = item.id
       this.adjustSetting('sourceType')
+    },
+    buyingMenuSelected(item) {
+      this.buyingAssetType = item.id
+      this.adjustSetting('buyingAssetType')
+    },
+    sellingMenuSelected(item) {
+      this.sellingAssetType = item.id
+      this.adjustSetting('sellingAssetType')
     },
     signerMenuSelected(item) {
       this.signerType = item.id
@@ -410,6 +466,50 @@ export default {
 
       return null
     },
+    manageOffer() {
+      let good = false
+
+      if ((this.sellingAmount > 0) &&
+        (this.buyUnit > 0) &&
+        (this.sellUnit > 0)) {
+        good = true
+      }
+
+      if (good && this.buyingAssetType === 'custom') {
+        good = false
+        if (Helper.strOK(this.buyingAssetCode) &&
+          Helper.strOK(this.buyingAssetIssuer)) {
+          good = true
+        }
+      }
+
+      if (good && this.sellingAssetType === 'custom') {
+        good = false
+        if (Helper.strOK(this.sellingAssetCode) &&
+          Helper.strOK(this.sellingAssetIssuer)) {
+          good = true
+        }
+      }
+
+      if (good) {
+        return {
+          buyingAssetCode: this.buyingAssetCode,
+          buyingAssetIssuer: this.buyingAssetIssuer,
+          sellingAssetCode: this.sellingAssetCode,
+          sellingAssetIssuer: this.sellingAssetIssuer,
+          sellingAmount: this.sellingAmount,
+          buyUnit: this.buyUnit,
+          sellUnit: this.sellUnit,
+          buyXLM: this.buyingAssetType === 'xlm',
+          sellXLM: this.sellingAssetType === 'xlm'
+        }
+      }
+
+      this._displayToast('Please fill in all the fields', true)
+      Helper.debugLog('Please fill in all the fields', 'Error')
+
+      return null
+    },
     // ======================================================
     // Private
     // ======================================================
@@ -478,6 +578,23 @@ export default {
     .accounts-small-text {
         font-size: 0.85em;
         color: rgba(0,0,0,.5);
+    }
+
+    .price-pair {
+        display: flex;
+
+        .buy-price {
+            margin-right: 8px;
+        }
+    }
+
+    .asset-pair {
+        display: flex;
+
+        .asset-code {
+            flex: 0 0 100px;
+            margin-right: 8px;
+        }
     }
 }
 </style>

@@ -51,8 +51,8 @@ class StellarUtils {
     return this.api().paths(sourcePublic, destinationPublic, destinationAsset, destinationAmount).call()
   }
 
-  balances(publicKey) {
-    return this.api().balances(publicKey)
+  balances(sourceWallet) {
+    return this.api().balances(sourceWallet)
   }
 
   manageData(sourceWallet, fundingWallet, name, value) {
@@ -316,7 +316,7 @@ class StellarUtils {
     for (const acct of StellarAccounts.accountsForNetwork()) {
       const publicKey = acct.publicKey
 
-      this.balances(publicKey)
+      this.balances(StellarWallet.public(publicKey))
         .then((balanceObject) => {
           let removeAll = true
 

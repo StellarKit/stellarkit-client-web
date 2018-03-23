@@ -19,6 +19,8 @@
         <span>Account must trust token before it can receive</span>
       </v-tooltip>
 
+      <v-btn round small @click="manageOfferDialogPing = !manageOfferDialogPing">Manage Offer</v-btn>
+
       <v-btn round small @click="setDomain()">Set Domain</v-btn>
       <v-btn round small @click="setInflation()">Set Inflation Destination</v-btn>
       <v-btn round small @click="testFederation()">Federation Lookup</v-btn>
@@ -61,6 +63,7 @@
   <trust-token-dialog :ping='trustDialogPing' />
   <add-remove-signer :ping='addRemoveSignerDialogPing' />
   <send-assets-dialog :ping='sendAssetsDialogPing' />
+  <manage-offer-dialog :ping='manageOfferDialogPing' />
 </div>
 </template>
 
@@ -74,6 +77,7 @@ import SendAssetsDialog from '../components/dialogs/SendAssetsDialog.vue'
 import MergeDialog from '../components/dialogs/MergeDialog.vue'
 import ManageDataDialog from '../components/dialogs/ManageDataDialog.vue'
 import TrustTokenDialog from '../components/dialogs/TrustTokenDialog.vue'
+import ManageOfferTwoDialog from '../components/dialogs/ManageOfferTwoDialog.vue'
 import StellarUtils from '../js/StellarUtils.js'
 import SavePrintSecretDialog from '../components/dialogs/SavePrintSecretDialog.vue'
 import {
@@ -92,7 +96,8 @@ export default {
     'trust-token-dialog': TrustTokenDialog,
     'merge-dialog': MergeDialog,
     'add-remove-signer': AddRemoveSignerDialog,
-    'send-assets-dialog': SendAssetsDialog
+    'send-assets-dialog': SendAssetsDialog,
+    'manage-offer-dialog': ManageOfferTwoDialog
   },
   data() {
     return {
@@ -104,7 +109,8 @@ export default {
       addRemoveSignerDialogPing: false,
       sendAssetsDialogPing: false,
       mergeDialogPing: false,
-      trustDialogPing: false
+      trustDialogPing: false,
+      manageOfferDialogPing: false
     }
   },
   mounted() {

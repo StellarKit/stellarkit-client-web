@@ -30,6 +30,9 @@ export default {
       this.selectItemWithID(this.selectedID)
     }
   },
+  mounted() {
+    this.selectItemWithID(this.selectedID)
+  },
   methods: {
     getTitle() {
       return this.getSelectedItem().title

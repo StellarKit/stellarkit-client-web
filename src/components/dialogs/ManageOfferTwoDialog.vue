@@ -4,14 +4,8 @@
     <dialog-titlebar :title=title v-on:close='visible = false' />
 
     <div class='help-contents'>
-      <div class='help-text'>
-        <div>Post an offer to sell your token</div>
-      </div>
       <div class='help-email'>
-        <v-text-field hide-details label="Buy XLM" @keyup.enter="manageOffer()" type='number' v-model.number="offerPriceN" ref='input'></v-text-field>
-        <v-text-field hide-details :label="sellLabel" @keyup.enter="manageOffer()" type='number' v-model.number="offerPriceD"></v-text-field>
-        <v-text-field hide-details :label="amountSellLabel" @keyup.enter="manageOffer()" type='number' v-model.number="offerAmount"></v-text-field>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='manageOffer' v-on:toast='displayToast' :showFunding=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='manageOffer' v-on:toast='displayToast' :showManageOffer=true :showFunding=true :showSource=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -29,8 +23,7 @@
 <script>
 import Helper from '../../js/helper.js'
 import {
-  DialogTitleBar,
-  StellarWallet
+  DialogTitleBar
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
@@ -38,34 +31,17 @@ const StellarSdk = require('stellar-sdk')
 import DialogAccountsView from './DialogAccountsView.vue'
 
 export default {
-  props: ['ping', 'project'],
+  props: ['ping'],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent,
     'dialog-accounts': DialogAccountsView
   },
-  computed: {
-    sellLabel: function() {
-      if (this.project) {
-        return 'Sell ' + this.project.symbol
-      }
-      return 'Sell Token'
-    },
-    amountSellLabel: function() {
-      if (this.project) {
-        return 'Amount of ' + this.project.symbol + ' to sell'
-      }
-      return 'Sell Token'
-    }
-  },
   data() {
     return {
       visible: false,
       title: 'Manage Offer',
-      loading: false,
-      offerPriceN: 10,
-      offerPriceD: 1,
-      offerAmount: 2500
+      loading: false
     }
   },
   watch: {
@@ -90,7 +66,8 @@ export default {
     },
     manageOffer() {
       let fundingWallet = this.dialogAccounts().fundingWallet()
-      const distributorWallet = StellarWallet.secret(this.project.distributorSecret)
+      const distributorWallet = this.dialogAccounts().sourceWallet()
+      const offer = this.dialogAccounts().manageOffer()
 
       // funding wallet is optional, but make sure it's not equal to the distributor
       if (fundingWallet && fundingWallet.equalTo(distributorWallet)) {
@@ -99,16 +76,18 @@ export default {
 
       Helper.debugLog('Managing Offer...')
 
-      if (this.project) {
+      if (offer) {
         const price = {
-          n: this.offerPriceN,
-          d: this.offerPriceD
+          n: offer.buyUnit,
+          d: offer.sellUnit
         }
 
-        const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
+        const buyAsset = new StellarSdk.Asset(offer.buyingAssetCode, offer.buyingAssetIssuer)
+        const sellAsset = new StellarSdk.Asset(offer.sellingAssetCode, offer.sellingAssetIssuer)
+
         this.loading = true
 
-        StellarUtils.manageOffer(distributorWallet, fundingWallet, StellarUtils.lumins(), asset, String(this.offerAmount), price)
+        StellarUtils.manageOffer(distributorWallet, fundingWallet, buyAsset, sellAsset, String(offer.sellingAmount), price)
           .then((result) => {
             Helper.debugLog(result, 'Success')
             this.displayToast('Success')
@@ -144,17 +123,6 @@ export default {
 
     .help-contents {
         @include inner-dialog-contents();
-
-        .help-text {
-            div {
-                margin-bottom: 10px;
-            }
-            margin-bottom: 20px;
-
-            .sub-header {
-                font-size: 0.8em;
-            }
-        }
 
         .help-email {
             margin: 0 30px;
