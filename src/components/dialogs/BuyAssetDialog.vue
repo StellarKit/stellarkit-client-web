@@ -5,11 +5,11 @@
 
     <div class='help-contents'>
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='manageOffer' v-on:toast='displayToast' :showManageOffer=true :showFunding=true :showSource=true :showBuyingAsset=true :showSellingAsset=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='buyAsset' v-on:toast='displayToast' :showBuyOffer=true :showFunding=true :showSource=true :showBuyingAsset=true :showSellingAsset=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round small color='primary' slot="activator" @click="manageOffer()" :loading="loading">Post Offer</v-btn>
+          <v-btn round small color='primary' slot="activator" @click="buyAsset()" :loading="loading">Post Offer</v-btn>
           <span>Post an offer to Stellar</span>
         </v-tooltip>
       </div>
@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       visible: false,
-      title: 'Manage Offer',
+      title: 'Buy Asset',
       loading: false
     }
   },
@@ -64,24 +64,19 @@ export default {
     dialogAccounts() {
       return this.$refs.dialogAccounts
     },
-    manageOffer() {
-      let fundingWallet = this.dialogAccounts().fundingWallet()
-      const distributorWallet = this.dialogAccounts().sourceWallet()
-      const offer = this.dialogAccounts().manageOffer()
+    buyAsset() {
+      const sourceWallet = this.dialogAccounts().sourceWallet()
+      const offer = this.dialogAccounts().buyOffer()
 
       // funding wallet is optional, but make sure it's not equal to the distributor
-      if (fundingWallet && fundingWallet.equalTo(distributorWallet)) {
-        fundingWallet = null
-      }
+      //  let fundingWallet = this.dialogAccounts().fundingWallet()
+      //  if (fundingWallet && fundingWallet.equalTo(distributorWallet)) {
+      //    fundingWallet = null
+      //  }
 
-      Helper.debugLog('Managing Offer...')
+      Helper.debugLog('Buying asset...')
 
       if (offer) {
-        const price = {
-          n: offer.buyUnit,
-          d: offer.sellUnit
-        }
-
         let buyAsset = new StellarUtils.lumins()
         let sellAsset = new StellarUtils.lumins()
 
@@ -95,7 +90,7 @@ export default {
 
         this.loading = true
 
-        StellarUtils.manageOffer(distributorWallet, fundingWallet, buyAsset, sellAsset, String(offer.sellingAmount), price)
+        StellarUtils.buyTokens(sourceWallet, sellAsset, buyAsset, String(offer.buySendMax), String(offer.buyAmount))
           .then((result) => {
             Helper.debugLog(result, 'Success')
             this.displayToast('Success')

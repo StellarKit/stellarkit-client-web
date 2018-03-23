@@ -87,8 +87,15 @@
     <div>Price:</div>
     <div class='accounts-small-text'>For example, you want buy 1000 XLM for 1 MyToken.</div>
     <div class='price-pair'>
-      <v-text-field class='buy-price' hide-details label="Buy unit" @keyup.enter="enterKeyDown" type='number' v-model.number="buyUnit"></v-text-field>
+      <v-text-field hide-details class='buy-price' label="Buy unit" @keyup.enter="enterKeyDown" type='number' v-model.number="buyUnit"></v-text-field>
       <v-text-field hide-details label="Sell unit" @keyup.enter="enterKeyDown" type='number' v-model.number="sellUnit"></v-text-field>
+    </div>
+  </div>
+
+  <div v-if='showBuyOffer' class='account-choice-box'>
+    <div class='price-pair'>
+      <v-text-field hide-details class='buy-price' label="Buy amount" @keyup.enter="enterKeyDown" type='number' v-model.number="buyAmount"></v-text-field>
+      <v-text-field hide-details label="Send maximum" @keyup.enter="enterKeyDown" type='number' v-model.number="buySendMax"></v-text-field>
     </div>
   </div>
 
@@ -119,7 +126,7 @@ const StellarSdk = require('stellar-sdk')
 const generateName = require('sillyname')
 
 export default {
-  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset'],
+  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer'],
   mixins: [StellarCommonMixin],
   components: {
     'menu-button': MenuButton
@@ -151,11 +158,16 @@ export default {
       assetIssuer: '',
       sendXLM: true,
 
-      // manage  offer fields
       buyingAssetCode: '',
       buyingAssetIssuer: '',
       sellingAssetCode: '',
       sellingAssetIssuer: '',
+
+      // buy  offer fields
+      buySendMax: 0,
+      buyAmount: 0,
+
+      // manage  offer fields
       sellingAmount: 100,
       buyUnit: 100,
       sellUnit: 1,
@@ -504,6 +516,48 @@ export default {
           sellingAmount: this.sellingAmount,
           buyUnit: this.buyUnit,
           sellUnit: this.sellUnit,
+          buyXLM: this.buyingAssetType === 'xlm',
+          sellXLM: this.sellingAssetType === 'xlm'
+        }
+      }
+
+      this._displayToast('Please fill in all the fields', true)
+      Helper.debugLog('Please fill in all the fields', 'Error')
+
+      return null
+    },
+    buyOffer() {
+      let good = false
+
+      if ((this.buySendMax > 0) &&
+        (this.buyAmount > 0)) {
+        good = true
+      }
+
+      if (good && this.buyingAssetType === 'custom') {
+        good = false
+        if (Helper.strOK(this.buyingAssetCode) &&
+          Helper.strOK(this.buyingAssetIssuer)) {
+          good = true
+        }
+      }
+
+      if (good && this.sellingAssetType === 'custom') {
+        good = false
+        if (Helper.strOK(this.sellingAssetCode) &&
+          Helper.strOK(this.sellingAssetIssuer)) {
+          good = true
+        }
+      }
+
+      if (good) {
+        return {
+          buyingAssetCode: this.buyingAssetCode,
+          buyingAssetIssuer: this.buyingAssetIssuer,
+          sellingAssetCode: this.sellingAssetCode,
+          sellingAssetIssuer: this.sellingAssetIssuer,
+          buySendMax: this.buySendMax,
+          buyAmount: this.buyAmount,
           buyXLM: this.buyingAssetType === 'xlm',
           sellXLM: this.sellingAssetType === 'xlm'
         }

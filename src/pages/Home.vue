@@ -20,6 +20,7 @@
       </v-tooltip>
 
       <v-btn round small @click="manageOfferDialogPing = !manageOfferDialogPing">Manage Offer</v-btn>
+      <v-btn round small @click="buyAssetDialogPing = !buyAssetDialogPing">Buy Asset</v-btn>
 
       <v-btn round small @click="setDomain()">Set Domain</v-btn>
       <v-btn round small @click="setInflation()">Set Inflation Destination</v-btn>
@@ -64,6 +65,7 @@
   <add-remove-signer :ping='addRemoveSignerDialogPing' />
   <send-assets-dialog :ping='sendAssetsDialogPing' />
   <manage-offer-dialog :ping='manageOfferDialogPing' />
+  <buy-asset-dialog :ping='buyAssetDialogPing' />
 </div>
 </template>
 
@@ -78,6 +80,7 @@ import MergeDialog from '../components/dialogs/MergeDialog.vue'
 import ManageDataDialog from '../components/dialogs/ManageDataDialog.vue'
 import TrustTokenDialog from '../components/dialogs/TrustTokenDialog.vue'
 import ManageOfferTwoDialog from '../components/dialogs/ManageOfferTwoDialog.vue'
+import BuyAssetDialog from '../components/dialogs/BuyAssetDialog.vue'
 import StellarUtils from '../js/StellarUtils.js'
 import SavePrintSecretDialog from '../components/dialogs/SavePrintSecretDialog.vue'
 import {
@@ -97,7 +100,8 @@ export default {
     'merge-dialog': MergeDialog,
     'add-remove-signer': AddRemoveSignerDialog,
     'send-assets-dialog': SendAssetsDialog,
-    'manage-offer-dialog': ManageOfferTwoDialog
+    'manage-offer-dialog': ManageOfferTwoDialog,
+    'buy-asset-dialog': BuyAssetDialog
   },
   data() {
     return {
@@ -110,7 +114,8 @@ export default {
       sendAssetsDialogPing: false,
       mergeDialogPing: false,
       trustDialogPing: false,
-      manageOfferDialogPing: false
+      manageOfferDialogPing: false,
+      buyAssetDialogPing: false
     }
   },
   mounted() {
