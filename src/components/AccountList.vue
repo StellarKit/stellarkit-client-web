@@ -153,7 +153,7 @@ export default {
           const header = bar + '\n' + shortBar + '  ' + item.name + '\n' + bar
 
           Helper.debugLog(header)
-          // Helper.debugLog(item.secret)
+          Helper.debugLog(item.secret)
           Helper.debugLog(response)
         })
         .catch((error) => {
