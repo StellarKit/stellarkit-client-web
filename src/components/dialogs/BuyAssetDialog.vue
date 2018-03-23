@@ -9,8 +9,8 @@
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round small color='primary' slot="activator" @click="buyAsset()" :loading="loading">Post Offer</v-btn>
-          <span>Post an offer to Stellar</span>
+          <v-btn round small color='primary' slot="activator" @click="buyAsset()" :loading="loading">Buy Asset</v-btn>
+          <span>Buy an asset</span>
         </v-tooltip>
       </div>
 
