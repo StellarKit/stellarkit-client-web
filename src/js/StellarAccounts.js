@@ -80,6 +80,7 @@ class StellarAccounts {
     return StellarAccounts.sharedAccounts()
   }
 
+  // returns null if account already exists
   addAccount(keyPair, name = null, tag = null) {
     let secretKey = ''
 
@@ -88,20 +89,26 @@ class StellarAccounts {
       secretKey = keyPair.secret()
     }
 
-    const acct = {
-      name: Helper.strOK(name) ? name : generateName(),
-      balances: {
-        XLM: 'refreshing...'
-      },
-      secret: secretKey,
-      publicKey: keyPair.publicKey(),
-      tag: tag,
-      mainnet: !StellarUtils.isTestnet()
+    // check to see if this account already exists to avoid duplicates
+    const index = this._indexOfAccount(keyPair.publicKey())
+    if (index === -1) {
+      const acct = {
+        name: Helper.strOK(name) ? name : generateName(),
+        balances: {
+          XLM: 'refreshing...'
+        },
+        secret: secretKey,
+        publicKey: keyPair.publicKey(),
+        tag: tag,
+        mainnet: !StellarUtils.isTestnet()
+      }
+
+      this.shared().add(acct)
+
+      return acct
     }
 
-    this.shared().add(acct)
-
-    return acct
+    return null
   }
 
   ethereumAsset() {

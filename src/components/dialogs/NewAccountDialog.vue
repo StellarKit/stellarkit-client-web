@@ -145,10 +145,14 @@ export default {
         }
 
         if (keypair) {
-          StellarAccounts.addAccount(keypair, accountName)
+          const acct = StellarAccounts.addAccount(keypair, accountName)
 
-          this.displayToast('Account Added!')
-          StellarUtils.updateBalances()
+          if (acct) {
+            this.displayToast('Account Added!')
+            StellarUtils.updateBalances()
+          } else {
+            this.displayToast('Account already exists!', true)
+          }
         }
       }
     },
