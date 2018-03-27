@@ -43,8 +43,8 @@
       <v-tooltip open-delay='200' bottom>
         <div slot="activator">
           <div class='account-name'>{{item.name}}</div>
-          <div v-for="(value, key) in item.balances" :key='key'>
-            {{key}}: {{value}}
+          <div v-for="balance of balancesForItem(item)" :key='balance[0]'>
+            {{balance[0]}}: {{balance[1]}}
           </div>
         </div>
         <span>{{item.publicKey}}</span>
@@ -106,6 +106,40 @@ export default {
   methods: {
     isTestnet() {
       return StellarUtils.isTestnet()
+    },
+    balancesForItem(item) {
+      // don't want so many balances that the view gets huge vertically
+      const max = 5
+
+      const keyValues = Object.entries(item.balances)
+      const sortFunct = (a, b) => {
+        if (a[0].toUpperCase() === 'XLM') {
+          return -1
+        }
+        if (b[0].toUpperCase() === 'XLM') {
+          return 1
+        }
+
+        if (a[1].toUpperCase() === '0') {
+          return 1
+        }
+        if (b[1].toUpperCase() === '0') {
+          return -1
+        }
+
+        if (a[0] < b[0]) {
+          return -1
+        }
+        if (a[0] > b[0]) {
+          return 1
+        }
+
+        return 0
+      }
+
+      const sorted = keyValues.sort(sortFunct)
+
+      return sorted.slice(0, max)
     },
     animateCreateButton() {
       if (!this.timeline) {
