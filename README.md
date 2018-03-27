@@ -1,6 +1,6 @@
 # Stellar Client Web
 
-Code for [`https://stellar.army`](https://stellar.army).
+See it live at [`https://stellar.army`](https://stellar.army).
 
 Also provides the contents of the [`stellar-client electron`](https://github.com/StellarKit/stellar-client) app
 
