@@ -2,7 +2,7 @@
 <div class='menu-button-container'>
   <v-menu offset-y>
     <v-btn small outline class='tiny-button' color='primary' slot="activator">
-      Network
+      {{buttonTitle()}}
       <v-icon>&#xE5C5;</v-icon>
     </v-btn>
     <v-list dense>
@@ -10,7 +10,7 @@
         <div class='network-menu-item'>
           <div class='menu-tile-title'>{{item.title}}</div>
 
-          <div v-if='item.main' class='network-main'>MAIN</div>
+          <div v-if='item.main' class='network-main'>PUBLIC</div>
           <div v-else class='network-test'>TEST</div>
         </div>
       </v-list-tile>
@@ -57,6 +57,13 @@ export default {
     this.server = new StellarServer()
   },
   methods: {
+    buttonTitle() {
+      if (StellarUtils.isTestnet()) {
+        return 'Test Net'
+      }
+
+      return 'Public Net'
+    },
     horizonMetrics() {
       Helper.debugLog('horizon metrics...')
 
@@ -78,14 +85,6 @@ export default {
       Helper.emit('stellar-network-updated')
 
       this.$forceUpdate()
-    },
-    clickItem(item) {
-      switch (item.id) {
-        case 'donate':
-          break
-        default:
-          break
-      }
     }
   }
 }
