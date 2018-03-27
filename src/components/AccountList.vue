@@ -43,8 +43,8 @@
       <v-tooltip open-delay='200' bottom>
         <div slot="activator">
           <div class='account-name'>{{item.name}}</div>
-          <div v-for="balance of balancesForItem(item)" :key='balance[0]'>
-            {{balance[0]}}: {{balance[1]}}
+          <div v-for="balance in balancesForItem(item)" :key='balance.issuer + balance.symbol'>
+            {{balance.symbol}}: {{balance.amount}}
           </div>
         </div>
         <span>{{item.publicKey}}</span>
@@ -108,38 +108,42 @@ export default {
       return StellarUtils.isTestnet()
     },
     balancesForItem(item) {
-      // don't want so many balances that the view gets huge vertically
+      // don 't want so many balances that the view gets huge vertically
       const max = 5
 
-      const keyValues = Object.entries(item.balances)
       const sortFunct = (a, b) => {
-        if (a[0].toUpperCase() === 'XLM') {
-          return -1
-        }
-        if (b[0].toUpperCase() === 'XLM') {
-          return 1
+        let result = 0
+
+        if (a.symbol === b.symbol) {
+          result = 0
+        } else if (a.symbol.toUpperCase() === 'XLM') {
+          result = -1
+        } else if (b.symbol.toUpperCase() === 'XLM') {
+          result = 1
+        } else if (a.symbol < b.symbol) {
+          result = -1
+        } else if (a.symbol > b.symbol) {
+          result = 1
         }
 
-        if (a[1].toUpperCase() === '0') {
-          return 1
-        }
-        if (b[1].toUpperCase() === '0') {
-          return -1
-        }
-
-        if (a[0] < b[0]) {
-          return -1
-        }
-        if (a[0] > b[0]) {
-          return 1
+        if (a.amount === '0' && b.amount !== '0') {
+          result = 1
+        } else if (b.amount === '0' && a.amount !== '0') {
+          result = -1
         }
 
-        return 0
+        return result
       }
 
-      const sorted = keyValues.sort(sortFunct)
+      if (item.assetBalances) {
+        const balanceCopy = item.assetBalances.slice()
 
-      return sorted.slice(0, max)
+        balanceCopy.sort(sortFunct)
+
+        return balanceCopy.slice(0, max)
+      }
+
+      return []
     },
     animateCreateButton() {
       if (!this.timeline) {

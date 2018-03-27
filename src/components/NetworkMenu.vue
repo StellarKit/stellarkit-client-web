@@ -59,10 +59,10 @@ export default {
   methods: {
     buttonTitle() {
       if (StellarUtils.isTestnet()) {
-        return 'Test Net'
+        return 'Test'
       }
 
-      return 'Public Net'
+      return 'Public'
     },
     horizonMetrics() {
       Helper.debugLog('horizon metrics...')

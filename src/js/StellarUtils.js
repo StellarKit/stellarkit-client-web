@@ -317,11 +317,11 @@ class StellarUtils {
       const publicKey = acct.publicKey
 
       this.balances(StellarWallet.public(publicKey))
-        .then((balanceObject) => {
+        .then((balanceArray) => {
           let removeAll = true
 
-          for (const key in balanceObject) {
-            StellarAccounts.updateBalance(publicKey, key, balanceObject[key], removeAll)
+          for (const balance of balanceArray) {
+            StellarAccounts.updateBalance(publicKey, balance, removeAll)
             removeAll = false
           }
 
@@ -332,7 +332,7 @@ class StellarUtils {
           return null
         })
         .catch((error) => {
-          StellarAccounts.updateBalance(publicKey, 'XLM', 'ERROR')
+          StellarAccounts.updateBalance(publicKey, null, true)
 
           Helper.debugLog(error, 'Error')
         })

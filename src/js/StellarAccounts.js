@@ -94,9 +94,11 @@ class StellarAccounts {
     if (index === -1) {
       const acct = {
         name: Helper.strOK(name) ? name : generateName(),
-        balances: {
-          XLM: 'refreshing...'
-        },
+        assetBalances: [{
+          symbol: 'XLM',
+          amount: 'refreshing...',
+          issuer: ''
+        }],
         secret: secretKey,
         publicKey: keyPair.publicKey(),
         tag: tag,
@@ -168,17 +170,32 @@ class StellarAccounts {
     return null
   }
 
-  updateBalance(publicKey, symbol, balance, removeAll = false) {
+  updateBalance(publicKey, balance, removeAll = false) {
     const index = this._indexOfAccount(publicKey)
     const accounts = this.accounts()
     const acct = accounts[index]
 
     if (acct) {
       if (removeAll) {
-        acct.balances = {}
+        acct.assetBalances = []
       }
 
-      acct.balances[symbol] = Helper.stripZeros(balance)
+      let bal = balance
+
+      // null passed in on error
+      if (!bal) {
+        bal = {
+          symbol: 'XLM',
+          amount: 'Error',
+          issuer: ''
+        }
+      }
+
+      acct.assetBalances.push({
+        symbol: bal.symbol,
+        amount: Helper.stripZeros(bal.amount),
+        issuer: bal.issuer
+      })
 
       this.shared().replace(index, acct)
     }
