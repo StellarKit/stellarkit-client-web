@@ -19,6 +19,9 @@
     <div v-if='destType === "account"'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination account" autocomplete return-object max-height="600"></v-select>
     </div>
+    <div v-if='destType === "publicKeyList"'>
+      <textarea v-model='destPublicKeyList' placeholder='Paste in a list of public keys separated by returns, spaces or commas.' class='public-key-text'></textarea>
+    </div>
   </div>
 
   <div v-if='showAsset' class='account-choice-box'>
@@ -174,6 +177,8 @@ export default {
       buyingAssetType: 'xlm',
       sellingAssetType: 'custom',
 
+      destPublicKeyList: '',
+
       destMenuItems: [{
           id: 'publicKey',
           title: 'Public key'
@@ -185,6 +190,10 @@ export default {
         {
           id: 'ledger',
           title: 'Ledger Nano'
+        },
+        {
+          id: 'publicKeyList',
+          title: 'Public key list'
         }
       ],
       sourceMenuItems: [{
@@ -376,6 +385,20 @@ export default {
             result = StellarWallet.public(this.selectedDest.publicKey)
           }
           break
+        case 'publicKeyList':
+          {
+            // see destPublicKeys(), but we'll just use the first public key to avoid toast or errors
+            const keyList = this.parseDestKeys()
+
+            if (keyList.length > 0) {
+              const publicKey = keyList[0]
+
+              if (Helper.strOK(publicKey)) {
+                result = StellarWallet.public(publicKey)
+              }
+            }
+          }
+          break
         default:
           break
       }
@@ -386,6 +409,31 @@ export default {
       }
 
       return result
+    },
+    parseDestKeys() {
+      if (Helper.strOK(this.destPublicKeyList)) {
+        const result = this.destPublicKeyList.split(/\s*[\s,]\s*/).filter((word) => {
+          // filter Boolean removes blank lines - a double comma or ending comma can produce a blank math
+          return word.trim().length > 0
+        })
+
+        return result
+      }
+
+      return []
+    },
+    destPublicKeys() {
+      if (this.destType === 'publicKeyList') {
+        if (Helper.strOK(this.destPublicKeyList)) {
+          // parse the list
+          const result = this.parseDestKeys()
+
+          Helper.debugLog(result)
+          return result
+        }
+      }
+
+      return []
     },
     signerWallet(required = false) {
       let result = null
@@ -653,6 +701,12 @@ export default {
             flex: 0 0 100px;
             margin-right: 8px;
         }
+    }
+
+    .public-key-text {
+        width: 100%;
+        height: 150px;
+        background: white;
     }
 }
 </style>

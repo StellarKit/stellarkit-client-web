@@ -27,7 +27,8 @@
 <script>
 import Helper from '../../js/helper.js'
 import {
-  DialogTitleBar
+  DialogTitleBar,
+  StellarWallet
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
@@ -69,36 +70,67 @@ export default {
     },
     sendXLM() {
       const sourceWallet = this.dialogAccounts().sourceWallet()
-      const destWallet = this.dialogAccounts().destWallet()
       const amount = this.dialogAccounts().amount()
+      const asset = this.dialogAccounts().asset()
+      const signerWallet = this.dialogAccounts().signerWallet()
+      const fundingWallet = this.dialogAccounts().fundingWallet()
 
-      if (sourceWallet && destWallet && amount > 0) {
-        Helper.debugLog('Sending XLM...')
-        this.loading = true
-
+      if (sourceWallet && amount > 0 && asset) {
         let additionalSigners = null
-        const signerWallet = this.dialogAccounts().signerWallet()
         if (signerWallet) {
           additionalSigners = [signerWallet]
         }
 
-        const asset = this.dialogAccounts().asset()
+        const destPublicKeys = this.dialogAccounts().destPublicKeys()
+        if (destPublicKeys.length > 0) {
+          let nextPromise = Promise.resolve()
+          this.loading = true
 
-        StellarUtils.sendAsset(sourceWallet, null, destWallet, String(amount), asset, null, additionalSigners)
-          .then((result) => {
-            Helper.debugLog(result)
-            this.loading = false
+          for (const publicKey of destPublicKeys) {
+            const destWallet = StellarWallet.public(publicKey)
 
+            nextPromise = nextPromise.then(() => {
+              return StellarUtils.sendAsset(sourceWallet, fundingWallet, destWallet, String(amount), asset, null, additionalSigners)
+                .then((result) => {
+                  Helper.debugLog('success: ' + publicKey)
+                  return null
+                })
+                .catch((error) => {
+                  Helper.debugLog('failed: ' + publicKey, 'Error')
+                  Helper.debugLog(error, 'Error')
+                })
+            })
+          }
+
+          nextPromise.then(() => {
+            this.displayToast('Done')
             StellarUtils.updateBalances()
-
-            this.displayToast('Success!')
-            return null
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
             this.loading = false
-            this.displayToast('Error!', true)
           })
+        } else {
+          const destWallet = this.dialogAccounts().destWallet()
+
+          if (destWallet) {
+            Helper.debugLog('Sending XLM...')
+            this.loading = true
+
+            return StellarUtils.sendAsset(sourceWallet, fundingWallet, destWallet, String(amount), asset, null, additionalSigners)
+              .then((result) => {
+                Helper.debugLog(result)
+
+                StellarUtils.updateBalances()
+                this.loading = false
+                this.displayToast('Success!')
+
+                return null
+              })
+              .catch((error) => {
+                Helper.debugLog(error, 'Error')
+                this.loading = false
+                this.displayToast('Error!', true)
+              })
+          }
+        }
       }
     },
     displayToast(message, error = false) {
