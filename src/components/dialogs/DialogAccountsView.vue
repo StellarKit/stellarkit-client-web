@@ -735,6 +735,7 @@ export default {
         width: 100%;
         height: 120px;
         background: white;
+        font-size: 0.8em;
     }
 }
 </style>
