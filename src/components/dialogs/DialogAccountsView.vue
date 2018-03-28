@@ -21,6 +21,7 @@
     </div>
     <div v-if='destType === "publicKeyList"'>
       <textarea v-model='destPublicKeyList' placeholder='Paste in a list of public keys separated by returns, spaces or commas.' class='public-key-text'></textarea>
+      <menu-button v-on:menu-selected='destPaymentsMenuSelected' title='Payments per transaction' :items='destPaymentsMenuItems' :selectedID='destPaymentsType' />
     </div>
   </div>
 
@@ -178,7 +179,29 @@ export default {
       sellingAssetType: 'custom',
 
       destPublicKeyList: '',
+      destPaymentsType: '10',
 
+      destPaymentsMenuItems: [{
+          id: '1',
+          title: '1'
+        },
+        {
+          id: '2',
+          title: '2'
+        },
+        {
+          id: '3',
+          title: '3'
+        },
+        {
+          id: '10',
+          title: '10'
+        },
+        {
+          id: '50',
+          title: '50'
+        }
+      ],
       destMenuItems: [{
           id: 'publicKey',
           title: 'Public key'
@@ -306,6 +329,9 @@ export default {
       this.destType = item.id
       this.adjustSetting('destType')
     },
+    destPaymentsMenuSelected(item) {
+      this.destPaymentsType = item.id
+    },
     sourceMenuSelected(item) {
       this.sourceType = item.id
       this.adjustSetting('sourceType')
@@ -409,6 +435,9 @@ export default {
       }
 
       return result
+    },
+    destPaymentsBatchSize() {
+      return parseInt(this.destPaymentsType)
     },
     parseDestKeys() {
       if (Helper.strOK(this.destPublicKeyList)) {
@@ -704,7 +733,7 @@ export default {
 
     .public-key-text {
         width: 100%;
-        height: 150px;
+        height: 120px;
         background: white;
     }
 }

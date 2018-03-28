@@ -52,9 +52,10 @@ export default {
     ping: function() {
       this.visible = true
 
-      if (this.dialogAccounts()) {
-        this.dialogAccounts().resetState()
-      }
+      // pain in the ass when testing, so disabled for now
+      // if (this.dialogAccounts()) {
+      //  this.dialogAccounts().resetState()
+      // }
 
       // autofocus hack
       this.$nextTick(() => {
@@ -107,7 +108,9 @@ export default {
           let nextPromise = Promise.resolve()
           this.loading = true
 
-          const destWalletBatches = this.batchedDestWallets(2, destPublicKeys)
+          const batchSize = this.dialogAccounts().destPaymentsBatchSize()
+
+          const destWalletBatches = this.batchedDestWallets(batchSize, destPublicKeys)
 
           for (const destWallets of destWalletBatches) {
             nextPromise = nextPromise.then(() => {
