@@ -6,7 +6,7 @@
   </instructions-header>
   <div class='top-controls'>
     <div class='button-group'>
-      <v-btn round small @click="makeSelectedPayment()">Pay</v-btn>
+      <v-btn round small @click="makeSelectedPayment()">Send Asset</v-btn>
       <v-btn round small @click="addRemoveSigner()">Add/Remove Signer</v-btn>
 
       <v-tooltip open-delay='800' bottom>
