@@ -110,7 +110,7 @@
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedFunding" clearable label="Funding account" autocomplete return-object max-height="600"></v-select>
     </div>
     <div v-if='fundingType === "none"'>
-      <div class='accounts-small-text'>The source accout will pay the fee.</div>
+      <div class='accounts-small-text'>The source account will pay the fee.</div>
     </div>
   </div>
 
@@ -428,7 +428,6 @@ export default {
           // parse the list
           const result = this.parseDestKeys()
 
-          Helper.debugLog(result)
           return result
         }
       }

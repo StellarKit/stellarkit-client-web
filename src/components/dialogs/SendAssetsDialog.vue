@@ -68,6 +68,27 @@ export default {
     dialogAccounts() {
       return this.$refs.dialogAccounts
     },
+    batchedDestWallets(batchSize, publicKeys) {
+      const result = []
+      let batch = []
+
+      for (const publicKey of publicKeys) {
+        const destWallet = StellarWallet.public(publicKey)
+
+        batch.push(destWallet)
+
+        if (batch.length >= batchSize) {
+          result.push(batch)
+          batch = []
+        }
+      }
+
+      if (batch.length > 0) {
+        result.push(batch)
+      }
+
+      return result
+    },
     sendXLM() {
       const sourceWallet = this.dialogAccounts().sourceWallet()
       const amount = this.dialogAccounts().amount()
@@ -86,17 +107,17 @@ export default {
           let nextPromise = Promise.resolve()
           this.loading = true
 
-          for (const publicKey of destPublicKeys) {
-            const destWallet = StellarWallet.public(publicKey)
+          const destWalletBatches = this.batchedDestWallets(2, destPublicKeys)
 
+          for (const destWallets of destWalletBatches) {
             nextPromise = nextPromise.then(() => {
-              return StellarUtils.sendAsset(sourceWallet, fundingWallet, destWallet, String(amount), asset, null, additionalSigners)
+              return StellarUtils.sendAssetBatch(sourceWallet, fundingWallet, destWallets, String(amount), asset, null, additionalSigners)
                 .then((result) => {
-                  Helper.debugLog('success: ' + publicKey)
+                  Helper.debugLog('success: ' + JSON.stringify(destWallets))
                   return null
                 })
                 .catch((error) => {
-                  Helper.debugLog('failed: ' + publicKey, 'Error')
+                  Helper.debugLog('failed: ' + JSON.stringify(destWallets), 'Error')
                   Helper.debugLog(error, 'Error')
                 })
             })

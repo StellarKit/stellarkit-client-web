@@ -102,6 +102,10 @@ class StellarUtils {
     return this.api().sendAsset(sourceWallet, fundingWallet, destWallet, amount, asset, memo, additionalSigners)
   }
 
+  sendAssetBatch(sourceWallet, fundingWallet, destWallets, amount, asset = null, memo = null, additionalSigners = null) {
+    return this.api().sendAssetBatch(sourceWallet, fundingWallet, destWallets, amount, asset, memo, additionalSigners)
+  }
+
   buyTokens(sourceWallet, sendAsset, destAsset, sendMax, destAmount) {
     return this.api().buyTokens(sourceWallet, sendAsset, destAsset, sendMax, destAmount)
   }
