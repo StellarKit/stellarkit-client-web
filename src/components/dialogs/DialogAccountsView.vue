@@ -518,7 +518,7 @@ export default {
     },
     asset() {
       if (this.sendXLM) {
-        return null
+        return StellarSdk.Asset.native()
       }
 
       if (Helper.strOK(this.assetCode) && Helper.strOK(this.assetIssuer)) {
