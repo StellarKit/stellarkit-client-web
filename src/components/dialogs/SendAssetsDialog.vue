@@ -121,7 +121,7 @@ export default {
                 })
                 .catch((error) => {
                   Helper.debugLog('failed: ' + JSON.stringify(destWallets), 'Error')
-                  Helper.debugLog(error, 'Error')
+                  Helper.debugLog(error)
                 })
             })
           }
@@ -149,7 +149,7 @@ export default {
                 return null
               })
               .catch((error) => {
-                Helper.debugLog(error, 'Error')
+                Helper.debugLog(error)
                 this.loading = false
                 this.displayToast('Error!', true)
               })
