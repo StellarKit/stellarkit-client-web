@@ -49,6 +49,12 @@
         </v-card>
       </v-menu>
     </div>
+    <v-btn icon dark @click.stop='saveConsoleToFile()'>
+      <v-tooltip open-delay='800' bottom>
+        <v-icon slot='activator'>&#xE161;</v-icon>
+        <span>Save console output to file</span>
+      </v-tooltip>
+    </v-btn>
   </div>
 
   <textarea readonly="readonly" wrap="off" class='output-container' v-model='consoleOutput'></textarea>
@@ -58,6 +64,7 @@
 <script>
 import Helper from '../js/helper.js'
 import $ from 'jquery'
+const SaveFile = require('save-file')
 
 export default {
   props: ['publicKey'],
@@ -89,6 +96,15 @@ export default {
       appconsole.toggleClass('fullscreen-console')
 
       this.fullscreenMode = appconsole.hasClass('fullscreen-console')
+    },
+    saveConsoleToFile() {
+      SaveFile(this.consoleOutput, 'console-output.txt', (err, data) => {
+        if (err) {
+          Helper.debugLog('save failed')
+        }
+
+        Helper.debugLog('file saved')
+      })
     },
     log(output) {
       this.consoleOutput += output + '\n\n'
