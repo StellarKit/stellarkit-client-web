@@ -124,13 +124,15 @@ export default {
       if (this.selectedSource) {
         const isMainnet = !StellarUtils.isTestnet()
 
-        const network = isMainnet ? '(mainnet)' : '(testnet)'
+        const network = isMainnet ? '(public net)' : '(test net)'
         let newLines = '\n\n'
         if (html) {
           newLines = '<br><br>'
         }
         result += newLines
         result += 'Stellar account keys: ' + network
+        result += newLines
+        result += 'Account name: ' + this.selectedSource.name
         result += newLines
         result += 'Public: ' + this.selectedSource.publicKey
         result += newLines
