@@ -528,10 +528,8 @@ export default {
 
       if (good && buyingAsset && sellingAsset) {
         return {
-          buyingAssetCode: buyingAsset.symbol,
-          buyingAssetIssuer: buyingAsset.issuer,
-          sellingAssetCode: sellingAsset.symbol,
-          sellingAssetIssuer: sellingAsset.issuer,
+          buyingAsset: buyingAsset,
+          sellingAsset: sellingAsset,
           sellingAmount: this.sellingAmount,
           buyUnit: this.buyUnit,
           sellUnit: this.sellUnit
@@ -564,10 +562,8 @@ export default {
 
       if (good && buyingAsset && sellingAsset) {
         return {
-          buyingAssetCode: buyingAsset.symbol,
-          buyingAssetIssuer: buyingAsset.issuer,
-          sellingAssetCode: sellingAsset.symbol,
-          sellingAssetIssuer: sellingAsset.issuer,
+          buyingAsset: buyingAsset,
+          sellingAsset: sellingAsset,
           buySendMax: this.buySendMax,
           buyAmount: this.buyAmount
         }

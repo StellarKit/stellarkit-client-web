@@ -27,7 +27,6 @@ import {
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
-const StellarSdk = require('stellar-sdk')
 import DialogAccountsView from './DialogAccountsView.vue'
 
 export default {
@@ -77,16 +76,8 @@ export default {
       Helper.debugLog('Buying asset...')
 
       if (offer) {
-        let buyAsset = new StellarUtils.lumins()
-        let sellAsset = new StellarUtils.lumins()
-
-        if (Helper.strOK(offer.buyingAssetIssuer)) {
-          buyAsset = new StellarSdk.Asset(offer.buyingAssetCode, offer.buyingAssetIssuer)
-        }
-
-        if (Helper.strOK(offer.sellingAssetIssuer)) {
-          sellAsset = new StellarSdk.Asset(offer.sellingAssetCode, offer.sellingAssetIssuer)
-        }
+        const buyAsset = offer.buyingAsset
+        const sellAsset = offer.sellingAsset
 
         this.loading = true
 
