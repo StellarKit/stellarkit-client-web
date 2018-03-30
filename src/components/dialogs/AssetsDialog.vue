@@ -9,7 +9,7 @@
       </div>
 
       <div class='asset-contents-inner'>
-        <v-select hide-details :items="assets()" item-value='symbol' item-text='symbol' v-on:input='typingSymbol' return-object combobox clearable label="Symbol" autocomplete max-height="600"></v-select>
+        <v-select hide-details :items="assets" item-value='symbol' item-text='symbol' v-model='selectedAssetModel' v-on:input='typingSymbol' return-object combobox clearable label="Symbol" autocomplete max-height="600"></v-select>
         <v-text-field hide-details label='Issuer' v-model.trim="issuer" @keyup.enter="addAsset()"></v-text-field>
       </div>
 
@@ -43,15 +43,31 @@ export default {
       visible: false,
       title: 'Edit Assets',
       issuer: '',
-      symbol: ''
+      symbol: '',
+      assets: [],
+      selectedAssetModel: null
     }
   },
   watch: {
     ping() {
       this.visible = true
+
+      this.clearValues()
     }
   },
+  mounted() {
+    this.assets = AssetManager.assets()
+
+    Helper.vue().$on('assets-updated', () => {
+      this.assets = AssetManager.assets()
+    })
+  },
   methods: {
+    clearValues() {
+      this.issuer = ''
+      this.symbol = ''
+      this.selectedAssetModel = null
+    },
     typingSymbol(val) {
       if (val && typeof val === 'object') {
         this.symbol = val.symbol
@@ -59,9 +75,6 @@ export default {
       } else {
         this.symbol = val
       }
-    },
-    assets() {
-      return AssetManager.assets()
     },
     deleteAsset() {
       const success = AssetManager.deleteAsset({
@@ -71,13 +84,13 @@ export default {
 
       if (success) {
         this.displayToast('Deleted')
-        this.issuer = ''
-        this.selectedObject = null
+        this.clearValues()
       } else {
         this.displayToast('Failed', true)
       }
     },
     addAsset() {
+      Helper.debugLog(this.symbol)
       const success = AssetManager.addAsset({
         symbol: this.symbol,
         issuer: this.issuer
@@ -85,6 +98,7 @@ export default {
 
       if (success) {
         this.displayToast('Added')
+        this.clearValues()
       } else {
         this.displayToast('Failed', true)
       }

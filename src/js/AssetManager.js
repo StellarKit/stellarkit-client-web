@@ -7,7 +7,8 @@ class AssetManager {
       this._assets = this.load()
     }
 
-    return this._assets
+    // return a copy, the UI might try and modify this array
+    return this._assets.slice()
   }
 
   addAsset(asset) {
@@ -47,19 +48,10 @@ class AssetManager {
   }
 
   load() {
-    let result = Helper.get('assets')
+    const result = Helper.get('assets')
 
-    if (!result || result.length < 1) {
-      result = [{
-        symbol: 'XLM',
-        issuer: ''
-      }, {
-        symbol: 'REPO',
-        issuer: 'GASDFASDFDASFASDFADSFADFASDFDFADSFADFAFAFDSDFADF'
-      }, {
-        symbol: 'DODE',
-        issuer: 'GASDFASDFDASFASDFADSFADFASDFDFADSFADFAFAFDSDFADF'
-      }]
+    if (!result) {
+      return []
     }
 
     return result
