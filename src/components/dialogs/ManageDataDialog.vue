@@ -57,7 +57,6 @@ export default {
   watch: {
     ping: function() {
       this.visible = true
-      this.domain = ''
 
       if (this.dialogAccounts()) {
         this.dialogAccounts().resetState()

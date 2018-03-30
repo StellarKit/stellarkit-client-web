@@ -26,6 +26,7 @@
   </div>
 
   <div v-if='showAsset' class='account-choice-box'>
+    <!-- <asset-popup /> -->
     <div>
       <v-checkbox hide-details label='Send XLM' v-model="sendXLM"></v-checkbox>
     </div>
@@ -122,6 +123,7 @@
 import Helper from '../../js/helper.js'
 import StellarCommonMixin from '../StellarCommonMixin.js'
 import MenuButton from '../MenuButton.vue'
+import AssetPopup from '../AssetPopup.vue'
 import {
   StellarWallet,
   LedgerAPI
@@ -133,7 +135,8 @@ export default {
   props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer'],
   mixins: [StellarCommonMixin],
   components: {
-    'menu-button': MenuButton
+    'menu-button': MenuButton,
+    'asset-popup': AssetPopup
   },
   data() {
     return {

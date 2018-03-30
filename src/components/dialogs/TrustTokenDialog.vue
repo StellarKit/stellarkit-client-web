@@ -60,7 +60,6 @@ export default {
   watch: {
     ping: function() {
       this.visible = true
-      this.domain = ''
 
       // default to our example token
       this.symbol = ''
