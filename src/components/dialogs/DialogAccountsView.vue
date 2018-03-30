@@ -26,27 +26,15 @@
   </div>
 
   <div v-if='showAsset' class='account-choice-box'>
-    <asset-popup ref='showAssetPopup' />
+    <asset-popup title='Send asset' ref='showAssetPopup' />
   </div>
 
   <div v-if='showBuyingAsset' class='account-choice-box'>
-    <div>
-      <menu-button v-on:menu-selected='buyingMenuSelected' title='Buying asset' :items='assetMenuItems' :selectedID='buyingAssetType' />
-    </div>
-    <div v-if='buyingAssetType === "custom"' class='asset-pair'>
-      <v-text-field hide-details label="Asset code" class='asset-code' @keyup.enter="enterKeyDown" v-model.trim="buyingAssetCode" ref='input'></v-text-field>
-      <v-text-field hide-details label="Asset issuer" @keyup.enter="enterKeyDown" v-model.number="buyingAssetIssuer"></v-text-field>
-    </div>
+    <asset-popup title='Buying asset' ref='buyingAssetPopup' />
   </div>
 
   <div v-if='showSellingAsset' class='account-choice-box'>
-    <div>
-      <menu-button v-on:menu-selected='sellingMenuSelected' title='Selling asset' :items='assetMenuItems' :selectedID='sellingAssetType' />
-    </div>
-    <div v-if='sellingAssetType === "custom"' class='asset-pair'>
-      <v-text-field hide-details label="Asset code" class='asset-code' @keyup.enter="enterKeyDown" v-model.number="sellingAssetCode"></v-text-field>
-      <v-text-field hide-details label="Asset issuer" @keyup.enter="enterKeyDown" v-model.number="sellingAssetIssuer"></v-text-field>
-    </div>
+    <asset-popup title='Selling asset' ref='sellingAssetPopup' />
   </div>
 
   <div v-if='showSecret' class='account-choice-box'>
@@ -153,11 +141,6 @@ export default {
       name: generateName(),
       ledgerAPI: null,
 
-      buyingAssetCode: '',
-      buyingAssetIssuer: '',
-      sellingAssetCode: '',
-      sellingAssetIssuer: '',
-
       // buy  offer fields
       buySendMax: 0,
       buyAmount: 0,
@@ -166,8 +149,6 @@ export default {
       sellingAmount: 100,
       buyUnit: 100,
       sellUnit: 1,
-      buyingAssetType: 'xlm',
-      sellingAssetType: 'custom',
 
       destPublicKeyList: '',
       destPaymentsType: '10',
@@ -226,15 +207,6 @@ export default {
         {
           id: 'public',
           title: 'Public key'
-        }
-      ],
-      assetMenuItems: [{
-          id: 'xlm',
-          title: 'XLM'
-        },
-        {
-          id: 'custom',
-          title: 'Custom asset'
         }
       ],
       signerMenuItems: [{
@@ -323,14 +295,6 @@ export default {
     sourceMenuSelected(item) {
       this.sourceType = item.id
       this.adjustSetting('sourceType')
-    },
-    buyingMenuSelected(item) {
-      this.buyingAssetType = item.id
-      this.adjustSetting('buyingAssetType')
-    },
-    sellingMenuSelected(item) {
-      this.sellingAssetType = item.id
-      this.adjustSetting('sellingAssetType')
     },
     signerMenuSelected(item) {
       this.signerType = item.id
@@ -551,33 +515,26 @@ export default {
         good = true
       }
 
-      if (good && this.buyingAssetType === 'custom') {
-        good = false
-        if (Helper.strOK(this.buyingAssetCode) &&
-          Helper.strOK(this.buyingAssetIssuer)) {
-          good = true
-        }
+      let buyingAsset = null
+      let sellingAsset = null
+
+      if (this.$refs.buyingAssetPopup) {
+        buyingAsset = this.$refs.buyingAssetPopup.getSelectedAsset()
       }
 
-      if (good && this.sellingAssetType === 'custom') {
-        good = false
-        if (Helper.strOK(this.sellingAssetCode) &&
-          Helper.strOK(this.sellingAssetIssuer)) {
-          good = true
-        }
+      if (this.$refs.sellingAssetPopup) {
+        sellingAsset = this.$refs.sellingAssetPopup.getSelectedAsset()
       }
 
-      if (good) {
+      if (good && buyingAsset && sellingAsset) {
         return {
-          buyingAssetCode: this.buyingAssetCode,
-          buyingAssetIssuer: this.buyingAssetIssuer,
-          sellingAssetCode: this.sellingAssetCode,
-          sellingAssetIssuer: this.sellingAssetIssuer,
+          buyingAssetCode: buyingAsset.symbol,
+          buyingAssetIssuer: buyingAsset.issuer,
+          sellingAssetCode: sellingAsset.symbol,
+          sellingAssetIssuer: sellingAsset.issuer,
           sellingAmount: this.sellingAmount,
           buyUnit: this.buyUnit,
-          sellUnit: this.sellUnit,
-          buyXLM: this.buyingAssetType === 'xlm',
-          sellXLM: this.sellingAssetType === 'xlm'
+          sellUnit: this.sellUnit
         }
       }
 
@@ -594,32 +551,25 @@ export default {
         good = true
       }
 
-      if (good && this.buyingAssetType === 'custom') {
-        good = false
-        if (Helper.strOK(this.buyingAssetCode) &&
-          Helper.strOK(this.buyingAssetIssuer)) {
-          good = true
-        }
+      let buyingAsset = null
+      let sellingAsset = null
+
+      if (this.$refs.buyingAssetPopup) {
+        buyingAsset = this.$refs.buyingAssetPopup.getSelectedAsset()
       }
 
-      if (good && this.sellingAssetType === 'custom') {
-        good = false
-        if (Helper.strOK(this.sellingAssetCode) &&
-          Helper.strOK(this.sellingAssetIssuer)) {
-          good = true
-        }
+      if (this.$refs.sellingAssetPopup) {
+        sellingAsset = this.$refs.sellingAssetPopup.getSelectedAsset()
       }
 
-      if (good) {
+      if (good && buyingAsset && sellingAsset) {
         return {
-          buyingAssetCode: this.buyingAssetCode,
-          buyingAssetIssuer: this.buyingAssetIssuer,
-          sellingAssetCode: this.sellingAssetCode,
-          sellingAssetIssuer: this.sellingAssetIssuer,
+          buyingAssetCode: buyingAsset.symbol,
+          buyingAssetIssuer: buyingAsset.issuer,
+          sellingAssetCode: sellingAsset.symbol,
+          sellingAssetIssuer: sellingAsset.issuer,
           buySendMax: this.buySendMax,
-          buyAmount: this.buyAmount,
-          buyXLM: this.buyingAssetType === 'xlm',
-          sellXLM: this.sellingAssetType === 'xlm'
+          buyAmount: this.buyAmount
         }
       }
 

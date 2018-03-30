@@ -85,11 +85,11 @@ export default {
         let buyAsset = new StellarUtils.lumins()
         let sellAsset = new StellarUtils.lumins()
 
-        if (!offer.buyXLM) {
+        if (Helper.strOK(offer.buyingAssetIssuer)) {
           buyAsset = new StellarSdk.Asset(offer.buyingAssetCode, offer.buyingAssetIssuer)
         }
 
-        if (!offer.sellXLM) {
+        if (Helper.strOK(offer.sellingAssetIssuer)) {
           sellAsset = new StellarSdk.Asset(offer.sellingAssetCode, offer.sellingAssetIssuer)
         }
 

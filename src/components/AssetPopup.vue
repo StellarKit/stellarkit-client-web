@@ -34,11 +34,11 @@ const XMLItem = {
 }
 
 export default {
+  props: ['title'],
   data() {
     return {
       selectedItem: XMLItem,
       assetDialogPing: false,
-      title: 'Asset',
       assets: []
     }
   },
