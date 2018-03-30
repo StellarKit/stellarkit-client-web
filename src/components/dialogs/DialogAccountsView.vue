@@ -26,14 +26,7 @@
   </div>
 
   <div v-if='showAsset' class='account-choice-box'>
-    <!-- <asset-popup /> -->
-    <div>
-      <v-checkbox hide-details label='Send XLM' v-model="sendXLM"></v-checkbox>
-    </div>
-    <div v-if='!sendXLM'>
-      <v-text-field hide-details label="Asset Code" v-model.trim="assetCode" ref='input' @keyup.enter="enterKeyDown"></v-text-field>
-      <v-text-field hide-details label="Asset Issuer" v-model.trim="assetIssuer" @keyup.enter="enterKeyDown"></v-text-field>
-    </div>
+    <asset-popup ref='showAssetPopup' />
   </div>
 
   <div v-if='showBuyingAsset' class='account-choice-box'>
@@ -128,7 +121,6 @@ import {
   StellarWallet,
   LedgerAPI
 } from 'stellar-js-utils'
-const StellarSdk = require('stellar-sdk')
 const generateName = require('sillyname')
 
 export default {
@@ -160,10 +152,6 @@ export default {
       assetAmount: 10,
       name: generateName(),
       ledgerAPI: null,
-
-      assetCode: '',
-      assetIssuer: '',
-      sendXLM: true,
 
       buyingAssetCode: '',
       buyingAssetIssuer: '',
@@ -280,11 +268,8 @@ export default {
     resetState() {
       this.destPublicKey = ''
       this.assetAmount = 10
-      this.assetCode = ''
-      this.assetIssuer = ''
       this.secretKeyText = ''
       this.publicKeyText = ''
-      this.sendXLM = true
       this.name = generateName()
     },
     adjustSetting(id) {
@@ -548,12 +533,8 @@ export default {
       return ''
     },
     asset() {
-      if (this.sendXLM) {
-        return StellarSdk.Asset.native()
-      }
-
-      if (Helper.strOK(this.assetCode) && Helper.strOK(this.assetIssuer)) {
-        return new StellarSdk.Asset(this.assetCode, this.assetIssuer)
+      if (this.$refs.showAssetPopup) {
+        return this.$refs.showAssetPopup.getSelectedAsset()
       }
 
       this._displayToast('Please enter an asset code and issuer', true)

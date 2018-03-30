@@ -9,7 +9,7 @@
       <v-icon>&#xE5C5;</v-icon>
     </v-btn>
     <v-list dense>
-      <v-list-tile v-for="asset of assets()" :key="asset.symbol" @click="menuClick(asset, index)">
+      <v-list-tile v-for="asset of assets()" :key="asset.symbol" @click="menuClick(asset)">
         <div>{{asset.symbol}}</div>
       </v-list-tile>
       <v-list-tile @click="assetDialogPing = !assetDialogPing">
@@ -26,11 +26,15 @@
 import AssetManager from '../js/AssetManager.js'
 import AssetsDialog from './dialogs/AssetsDialog.vue'
 import Helper from '../js/helper.js'
+const StellarSdk = require('stellar-sdk')
 
 export default {
   data() {
     return {
-      index: 0,
+      selectedItem: {
+        symbol: 'XLM',
+        issuer: ''
+      },
       assetDialogPing: false,
       title: 'Asset'
     }
@@ -49,29 +53,25 @@ export default {
       return AssetManager.assets()
     },
     getTitle() {
-      return this.getSelectedItem().symbol
-    },
-    menuClick(item, index) {
-      this.index = index
-    },
-    selectItemWith(id) {
-      for (const [index, item] of this.items.entries()) {
-        if (id === item.id) {
-          this.index = index
-          break
-        }
+      if (this.selectedItem) {
+        return this.selectedItem.symbol
       }
-    },
-    getSelectedItem() {
-      const a = this.assets()
 
-      if (a && a.length > 0) {
-        return a[this.index]
+      return ''
+    },
+    menuClick(item) {
+      this.selectedItem = item
+      this.$forceUpdate()
+    },
+    getSelectedAsset() {
+      if (this.selectedItem) {
+        if (Helper.strOK(this.selectedItem.issuer)) {
+          return new StellarSdk.Asset(this.selectedItem.symbol, this.selectedItem.issuer)
+        }
+        return StellarSdk.Asset.native()
       }
-      return {
-        symbol: '--',
-        issuer: ''
-      }
+
+      return null
     }
   }
 }
