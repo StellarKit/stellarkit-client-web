@@ -85,6 +85,10 @@
     </div>
   </div>
 
+  <div v-if='showHomeDomain' class='account-choice-box'>
+    <v-text-field hide-details label="Home domain (Optional)" @keyup.enter="enterKeyDown" v-model.trim="issuerHomeDomain" hint='www.example-domain.com'></v-text-field>
+  </div>
+
   <div v-if='showFunding' class='account-choice-box'>
     <div>
       <menu-button v-on:menu-selected='fundingMenuSelected' title='Funding account' :items='fundingMenuItems' :selectedID='fundingType' />
@@ -112,7 +116,7 @@ import {
 const generateName = require('sillyname')
 
 export default {
-  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer'],
+  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer', 'showHomeDomain'],
   mixins: [StellarCommonMixin],
   components: {
     'menu-button': MenuButton,
@@ -152,6 +156,8 @@ export default {
 
       destPublicKeyList: '',
       destPaymentsType: '10',
+
+      issuerHomeDomain: '',
 
       destPaymentsMenuItems: [{
           id: '1',
@@ -464,6 +470,9 @@ export default {
       }
 
       return result
+    },
+    homeDomain() {
+      return this.issuerHomeDomain
     },
     amount() {
       return this.assetAmount
