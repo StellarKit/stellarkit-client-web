@@ -10,7 +10,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='doOperation' v-on:toast='displayToast' :showSource=showSource :showDest=showDest :showFunding=showFunding />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='doOperation' v-on:toast='displayToast' :showSource=showSource :showDest=showDest :showFunding=showFunding :showSigner=true />
         <v-text-field :hint='hint' :label='inputLabel' v-model.trim="inputText" @keyup.enter="doOperation()" ref='input'></v-text-field>
       </div>
       <div class='button-holder'>
@@ -137,11 +137,18 @@ export default {
       const sourceWallet = this.dialogAccounts().sourceWallet()
       const fundingWallet = this.dialogAccounts().fundingWallet()
 
+      // additional signers optional
+      const signerWallet = this.dialogAccounts().signerWallet()
+      let additionalSigners = null
+      if (signerWallet) {
+        additionalSigners = [signerWallet]
+      }
+
       if (sourceWallet) {
         this.loading = true
         Helper.debugLog('Setting home domain...')
 
-        StellarUtils.setDomain(sourceWallet, this.inputText, fundingWallet)
+        StellarUtils.setDomain(sourceWallet, this.inputText, fundingWallet, additionalSigners)
           .then((result) => {
             Helper.debugLog(result)
             this.loading = false
@@ -160,6 +167,13 @@ export default {
       const sourceWallet = this.dialogAccounts().sourceWallet()
       const fundingWallet = this.dialogAccounts().fundingWallet()
 
+      // additional signers optional
+      const signerWallet = this.dialogAccounts().signerWallet()
+      let additionalSigners = null
+      if (signerWallet) {
+        additionalSigners = [signerWallet]
+      }
+
       if (sourceWallet) {
         this.loading = true
         Helper.debugLog('Setting inflation destination...')
@@ -167,7 +181,7 @@ export default {
         // sending in blank string or null just eats transaction fees and does nothing
         // remove this if statement when fixed in stellar core
         if (Helper.strOK(this.inputText)) {
-          StellarUtils.setInflationDestination(sourceWallet, this.inputText, fundingWallet)
+          StellarUtils.setInflationDestination(sourceWallet, this.inputText, fundingWallet, additionalSigners)
             .then((result) => {
               Helper.debugLog(result)
               this.loading = false

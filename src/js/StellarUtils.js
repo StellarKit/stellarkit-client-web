@@ -84,8 +84,8 @@ class StellarUtils {
     return this.api().allowTrust(sourceWallet, trustor, asset, authorize)
   }
 
-  setDomain(sourceWallet, domain, fundingWallet = null) {
-    return this.api().setDomain(sourceWallet, domain, fundingWallet)
+  setDomain(sourceWallet, domain, fundingWallet = null, additionalSigners = null) {
+    return this.api().setDomain(sourceWallet, domain, fundingWallet, additionalSigners)
   }
 
   // pass 1 for threshold if either account can sign for med/high operations
@@ -119,28 +119,28 @@ class StellarUtils {
     return this.api().buyTokens(sourceWallet, sendAsset, destAsset, sendMax, destAmount, fundingWallet, additionalSigners)
   }
 
-  lockAccount(sourceWallet, fundingWallet = null) {
-    return this.api().lockAccount(sourceWallet, fundingWallet)
+  lockAccount(sourceWallet, fundingWallet = null, additionalSigners = null) {
+    return this.api().lockAccount(sourceWallet, fundingWallet, additionalSigners)
   }
 
   createAccount(sourceWallet, newWallet, startingBalance) {
     return this.api().createAccount(sourceWallet, newWallet, startingBalance)
   }
 
-  setOptions(sourceWallet, options, fundingWallet = null) {
-    return this.api().setOptions(sourceWallet, options, fundingWallet)
+  setOptions(sourceWallet, options, fundingWallet = null, additionalSigners = null) {
+    return this.api().setOptions(sourceWallet, options, fundingWallet, additionalSigners)
   }
 
-  setFlags(sourceWallet, flags) {
-    return this.api().setFlags(sourceWallet, flags)
+  setFlags(sourceWallet, flags, fundingWallet = null, additionalSigners = null) {
+    return this.api().setFlags(sourceWallet, flags, fundingWallet, additionalSigners)
   }
 
-  clearFlags(sourceWallet, flags, fundingWallet = null) {
-    return this.api().clearFlags(sourceWallet, flags, fundingWallet)
+  clearFlags(sourceWallet, flags, fundingWallet = null, additionalSigners = null) {
+    return this.api().clearFlags(sourceWallet, flags, fundingWallet, additionalSigners)
   }
 
-  setInflationDestination(sourceWallet, inflationDest, fundingWallet = null) {
-    return this.api().setInflationDestination(sourceWallet, inflationDest, fundingWallet)
+  setInflationDestination(sourceWallet, inflationDest, fundingWallet = null, additionalSigners = null) {
+    return this.api().setInflationDestination(sourceWallet, inflationDest, fundingWallet, additionalSigners)
   }
 
   // returns {account: newAccount, keypair: keypair}
