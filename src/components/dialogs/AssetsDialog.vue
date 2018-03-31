@@ -90,7 +90,6 @@ export default {
       }
     },
     addAsset() {
-      Helper.debugLog(this.symbol)
       const success = AssetManager.addAsset({
         symbol: this.symbol,
         issuer: this.issuer

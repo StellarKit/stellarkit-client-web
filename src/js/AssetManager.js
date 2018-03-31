@@ -1,14 +1,17 @@
 import Helper from '../js/helper.js'
+import StellarUtils from './StellarUtils.js'
 
-class AssetManager {
+class AssetManagerImp {
+  constructor(prefKey) {
+    this.prefKey = prefKey
+  }
+
   assets() {
     // return a copy, the UI might try and modify this array
     return this._lazyAssets().slice()
   }
 
   addAsset(asset) {
-    Helper.debugLog(asset)
-
     if (asset && Helper.strOK(asset.symbol) && Helper.strOK(asset.issuer)) {
       const index = this._indexOfAsset(asset)
 
@@ -16,7 +19,7 @@ class AssetManager {
       if (index === -1) {
         this._lazyAssets().push(asset)
 
-        this.save()
+        this._save()
 
         return true
       }
@@ -31,13 +34,17 @@ class AssetManager {
     if (index !== -1) {
       this._lazyAssets().splice(index, 1)
 
-      this.save()
+      this._save()
 
       return true
     }
 
     return false
   }
+
+  // ===============================================================
+  // Private
+  // ===============================================================
 
   _indexOfAsset(asset) {
     for (const [index, val] of this._lazyAssets().entries()) {
@@ -52,14 +59,14 @@ class AssetManager {
   _lazyAssets() {
     // we have to load lazy since the prefs will not be loaded at constructor
     if (!this._assets) {
-      this._assets = this.load()
+      this._assets = this._load()
     }
 
     return this._assets
   }
 
-  load() {
-    const result = Helper.get('assets')
+  _load() {
+    const result = Helper.get(this.prefKey)
 
     if (!result) {
       return []
@@ -68,7 +75,7 @@ class AssetManager {
     return result
   }
 
-  save() {
+  _save() {
     // alert ui to update
     Helper.emit('assets-updated')
 
@@ -79,9 +86,45 @@ class AssetManager {
       setTimeout(() => {
         this._saving = false
 
-        Helper.set('assets', this._lazyAssets())
+        Helper.set(this.prefKey, this._lazyAssets())
       }, 500)
     }
+  }
+}
+
+class AssetManager {
+  constructor() {
+    this.publicNet = new AssetManagerImp('public')
+    this.testNet = new AssetManagerImp('test')
+
+    // if network updates, we need to signal any popups to refresh
+    Helper.vue().$on('stellar-network-updated', () => {
+      Helper.emit('assets-updated')
+    })
+  }
+
+  assets() {
+    if (StellarUtils.isTestnet()) {
+      return this.testNet.assets()
+    }
+
+    return this.publicNet.assets()
+  }
+
+  addAsset(asset) {
+    if (StellarUtils.isTestnet()) {
+      return this.testNet.addAsset(asset)
+    }
+
+    return this.publicNet.addAsset(asset)
+  }
+
+  deleteAsset(asset) {
+    if (StellarUtils.isTestnet()) {
+      return this.testNet.deleteAsset(asset)
+    }
+
+    return this.publicNet.deleteAsset(asset)
   }
 }
 
