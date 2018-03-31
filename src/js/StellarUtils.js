@@ -89,8 +89,8 @@ class StellarUtils {
   }
 
   // pass 1 for threshold if either account can sign for med/high operations
-  makeMultiSig(sourceWallet, secondWallet, threshold) {
-    return this.api().makeMultiSig(sourceWallet, secondWallet, threshold)
+  makeMultiSig(sourceWallet, secondWallet, fundingWallet, threshold) {
+    return this.api().makeMultiSig(sourceWallet, secondWallet, fundingWallet, threshold)
   }
 
   removeMultiSig(sourceWallet, secondWallet, transactionOpts) {

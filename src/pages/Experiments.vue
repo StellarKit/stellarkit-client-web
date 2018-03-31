@@ -95,7 +95,7 @@ export default {
           })
           .then((result) => {
             Helper.debugLog('adding multi sig...')
-            return StellarUtils.makeMultiSig(userWallet, signerWallet)
+            return StellarUtils.makeMultiSig(userWallet, signerWallet, fundingWallet)
           })
           .then((result) => {
             Helper.debugLog(result)
