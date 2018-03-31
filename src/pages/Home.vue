@@ -6,16 +6,16 @@
   </instructions-header>
   <div class='top-controls'>
     <div class='button-group'>
-      <v-btn round small @click="makeSelectedPayment()">Send Asset</v-btn>
-      <v-btn round small @click="addRemoveSigner()">Add/Remove Signer</v-btn>
+      <v-btn round small @click="sendAssetsDialogPing = !sendAssetsDialogPing">Send Asset</v-btn>
+      <v-btn round small @click="addRemoveSignerDialogPing = !addRemoveSignerDialogPing">Add/Remove Signer</v-btn>
 
       <v-tooltip open-delay='800' bottom>
-        <v-btn round small slot='activator' @click="mergeSelected()">Merge Accounts</v-btn>
+        <v-btn round small slot='activator' @click="mergeDialogPing = !mergeDialogPing">Merge Accounts</v-btn>
         <span>Merges source into destination</span>
       </v-tooltip>
 
       <v-tooltip open-delay='800' bottom>
-        <v-btn round small slot='activator' @click="trustToken()">Trust Token</v-btn>
+        <v-btn round small slot='activator' @click="trustDialogPing = !trustDialogPing">Trust Token</v-btn>
         <span>Account must trust token before it can receive</span>
       </v-tooltip>
 
@@ -23,9 +23,9 @@
       <v-btn round small @click="buyAssetDialogPing = !buyAssetDialogPing">Buy Asset</v-btn>
       <v-btn round small @click="showOffersDialogPing = !showOffersDialogPing">Show Offers</v-btn>
 
-      <v-btn round small @click="setDomain()">Set Domain</v-btn>
-      <v-btn round small @click="setInflation()">Set Inflation Destination</v-btn>
-      <v-btn round small @click="testFederation()">Federation Lookup</v-btn>
+      <v-btn round small @click="setDomainPing = !setDomainPing">Set Domain</v-btn>
+      <v-btn round small @click="setInflationPing = !setInflationPing">Set Inflation Destination</v-btn>
+      <v-btn round small @click="lookupFederationPing = !lookupFederationPing">Federation Lookup</v-btn>
       <v-btn round small @click="manageDataPing = !manageDataPing">Manage Data</v-btn>
 
       <v-menu offset-y :transition=false>
@@ -124,27 +124,6 @@ export default {
     }
   },
   methods: {
-    testFederation() {
-      this.lookupFederationPing = !this.lookupFederationPing
-    },
-    setDomain() {
-      this.setDomainPing = !this.setDomainPing
-    },
-    setInflation() {
-      this.setInflationPing = !this.setInflationPing
-    },
-    mergeSelected() {
-      this.mergeDialogPing = !this.mergeDialogPing
-    },
-    addRemoveSigner() {
-      this.addRemoveSignerDialogPing = !this.addRemoveSignerDialogPing
-    },
-    trustToken() {
-      this.trustDialogPing = !this.trustDialogPing
-    },
-    makeSelectedPayment() {
-      this.sendAssetsDialogPing = !this.sendAssetsDialogPing
-    },
     ledgerMenu(id) {
       switch (id) {
         case 'info':
