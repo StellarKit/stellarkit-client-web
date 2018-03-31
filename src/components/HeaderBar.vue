@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import Helper from '../js/helper.js'
+
 export default {
   props: ['items'],
   computed: {
@@ -76,11 +78,20 @@ export default {
         path: '/buytoken'
       }, {
         icon: String.fromCharCode('0xE1E0'),
-        tooltip: 'Ledger Nano',
-        path: '/ledger',
+        tooltip: 'Experiments',
+        path: '/experiments',
         disabled: true
       }]
     }
+  },
+  mounted() {
+    Helper.vue().$on('enable-experiments', () => {
+      for (const tab of this.tabs) {
+        if (tab.disabled === true) {
+          tab.disabled = false
+        }
+      }
+    })
   },
   methods: {
     clickButton(id) {
