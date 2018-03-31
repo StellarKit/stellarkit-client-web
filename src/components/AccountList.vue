@@ -76,6 +76,7 @@ import {
 import $ from 'jquery'
 import StellarAccounts from '../js/StellarAccounts.js'
 import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue'
+import AssetManager from '../js/AssetManager.js'
 
 export default {
   props: ['items'],
@@ -191,12 +192,23 @@ export default {
           const header = bar + '\n' + shortBar + '  ' + item.name + '\n' + bar
 
           Helper.debugLog(header)
-          Helper.debugLog(item.secret)
+          Helper.debugLog('Secret: ' + item.secret)
           Helper.debugLog(response)
+          this.extractAssets(response)
         })
         .catch((error) => {
           Helper.debugLog(error)
         })
+    },
+    extractAssets(response) {
+      if (response && response.balances) {
+        for (const balance of response.balances) {
+          AssetManager.addAsset({
+            symbol: balance.asset_code,
+            issuer: balance.asset_issuer
+          })
+        }
+      }
     },
     removeAccountConfirmed() {
       if (this.itemToRemove) {
