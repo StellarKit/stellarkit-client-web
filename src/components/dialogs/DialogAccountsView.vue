@@ -58,15 +58,6 @@
     <v-text-field hide-details label="Amount" type='number' v-model.number="assetAmount" @keyup.enter="enterKeyDown"></v-text-field>
   </div>
 
-  <div v-if='showSigner' class='account-choice-box'>
-    <div>
-      <menu-button v-on:menu-selected='signerMenuSelected' title='Add Signer account' :items='signerMenuItems' :selectedID='signerType' />
-    </div>
-    <div v-if='signerType === "account"'>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Signing account" autocomplete return-object max-height="600"></v-select>
-    </div>
-  </div>
-
   <div v-if='showManageOffer' class='account-choice-box'>
     <v-text-field hide-details label="Sell amount" @keyup.enter="enterKeyDown" type='number' v-model.number="sellingAmount"></v-text-field>
 
@@ -98,6 +89,15 @@
     </div>
     <div v-if='fundingType === "none"'>
       <div class='accounts-small-text'>The source account will pay the fee.</div>
+    </div>
+  </div>
+
+  <div v-if='showSigner' class='account-choice-box'>
+    <div>
+      <menu-button v-on:menu-selected='signerMenuSelected' title='Add Signer account' :items='signerMenuItems' :selectedID='signerType' />
+    </div>
+    <div v-if='signerType === "account"'>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Signing account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
 

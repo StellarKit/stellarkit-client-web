@@ -5,7 +5,7 @@
 
     <div class='help-contents'>
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='buyAsset' v-on:toast='displayToast' :showBuyOffer=true :showFunding=true :showSource=true :showBuyingAsset=true :showSellingAsset=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='buyAsset' v-on:toast='displayToast' :showBuyOffer=true :showFunding=true :showSigner=true :showSource=true :showBuyingAsset=true :showSellingAsset=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -65,13 +65,9 @@ export default {
     },
     buyAsset() {
       const sourceWallet = this.dialogAccounts().sourceWallet()
+      const signerWallet = this.dialogAccounts().signerWallet()
       const offer = this.dialogAccounts().buyOffer()
-
-      // funding wallet is optional, but make sure it's not equal to the distributor
-      //  let fundingWallet = this.dialogAccounts().fundingWallet()
-      //  if (fundingWallet && fundingWallet.equalTo(distributorWallet)) {
-      //    fundingWallet = null
-      //  }
+      const fundingWallet = this.dialogAccounts().fundingWallet()
 
       Helper.debugLog('Buying asset...')
 
@@ -81,7 +77,7 @@ export default {
 
         this.loading = true
 
-        StellarUtils.buyTokens(sourceWallet, sellAsset, buyAsset, String(offer.buySendMax), String(offer.buyAmount))
+        StellarUtils.buyTokens(sourceWallet, sellAsset, buyAsset, String(offer.buySendMax), String(offer.buyAmount), fundingWallet, [signerWallet])
           .then((result) => {
             Helper.debugLog(result, 'Success')
             this.displayToast('Success')

@@ -115,8 +115,8 @@ class StellarUtils {
     return this.api().sendAssetBatch(sourceWallet, fundingWallet, destWallets, amount, asset, memo, additionalSigners)
   }
 
-  buyTokens(sourceWallet, sendAsset, destAsset, sendMax, destAmount) {
-    return this.api().buyTokens(sourceWallet, sendAsset, destAsset, sendMax, destAmount)
+  buyTokens(sourceWallet, sendAsset, destAsset, sendMax, destAmount, fundingWallet = null, additionalSigners = null) {
+    return this.api().buyTokens(sourceWallet, sendAsset, destAsset, sendMax, destAmount, fundingWallet, additionalSigners)
   }
 
   lockAccount(sourceWallet, fundingWallet = null) {
