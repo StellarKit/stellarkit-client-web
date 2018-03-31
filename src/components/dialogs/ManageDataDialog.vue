@@ -10,7 +10,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='addData' v-on:toast='displayToast' :showSource=true :showFunding=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='addData' v-on:toast='displayToast' :showSource=true :showFunding=true :showSigner=true />
 
         <v-text-field hide-details label='Name' v-model.trim="name" @keyup.enter="addData()" ref='input'></v-text-field>
         <v-text-field hide-details label='Value' v-model.trim="value" @keyup.enter="addData()"></v-text-field>
@@ -78,11 +78,18 @@ export default {
         const sourceWallet = this.dialogAccounts().sourceWallet()
         const fundingWallet = this.dialogAccounts().fundingWallet()
 
+        // additional signers optional
+        const signerWallet = this.dialogAccounts().signerWallet()
+        let additionalSigners = null
+        if (signerWallet) {
+          additionalSigners = [signerWallet]
+        }
+
         if (sourceWallet) {
           Helper.debugLog('Setting key value data...')
           this.loading = true
 
-          StellarUtils.manageData(sourceWallet, fundingWallet, this.name, this.value)
+          StellarUtils.manageData(sourceWallet, fundingWallet, this.name, this.value, additionalSigners)
             .then((result) => {
               Helper.debugLog(result)
               this.loading = false
