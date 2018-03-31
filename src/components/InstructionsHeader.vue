@@ -7,6 +7,7 @@
     <div class='centered-title'>
       {{pageTitle}}
     </div>
+    <div class='experiments-button' @click='showExperiments'></div>
   </div>
   <div v-if='slotVisible' class='slot-hider'>
     <slot></slot>
@@ -15,6 +16,8 @@
 </template>
 
 <script>
+import Helper from '../js/helper.js'
+
 export default {
   data() {
     return {
@@ -22,13 +25,13 @@ export default {
     }
   },
   computed: {
-    pageTitle: function () {
+    pageTitle: function() {
       return this.$route.name
     }
   },
   methods: {
-    horizonMetrics() {
-      // sdfsdf
+    showExperiments() {
+      Helper.emit('enable-experiments')
     }
   }
 }
@@ -38,6 +41,7 @@ export default {
 .instructions-header {
     position: relative;
     background: darken(steelblue, 4%);
+    display: flex;
 
     button {
         height: 30px;
@@ -57,6 +61,15 @@ export default {
         right: 0;
         bottom: 0;
         left: 0;
+    }
+
+    .experiments-button {
+        width: 30px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        flex: 0 0 auto;
     }
 }
 
