@@ -10,10 +10,8 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='trustToken' v-on:toast='displayToast' :showSource=true :showFunding=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='trustToken' v-on:toast='displayToast' :showSource=true :showFunding=true :showAsset=true />
 
-        <v-text-field hide-details label='Symbol' v-model.trim="symbol" @keyup.enter="trustToken()" ref='input'></v-text-field>
-        <v-text-field hide-details label='Issuer Address' v-model.trim="address" @keyup.enter="trustToken()"></v-text-field>
         <v-text-field persistent-hint label='Trust Limit' v-model.number="trustLimit" @keyup.enter="trustToken()" hint="Set Trust Limit to zero to remove the trust line"></v-text-field>
       </div>
       <div class='button-holder'>
@@ -36,8 +34,6 @@ import {
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
-const StellarSdk = require('stellar-sdk')
-import StellarAccounts from '../../js/StellarAccounts.js'
 import DialogAccountsView from './DialogAccountsView.vue'
 
 export default {
@@ -51,8 +47,6 @@ export default {
     return {
       visible: false,
       title: 'Trust Token',
-      symbol: '',
-      address: '',
       trustLimit: 100000,
       loading: false
     }
@@ -60,16 +54,6 @@ export default {
   watch: {
     ping: function() {
       this.visible = true
-
-      // default to our example token
-      this.symbol = ''
-      this.address = ''
-
-      const asset = StellarAccounts.lamboTokenAsset()
-      if (asset) {
-        this.symbol = asset.getCode()
-        this.address = asset.getIssuer()
-      }
 
       if (this.dialogAccounts()) {
         this.dialogAccounts().resetState()
@@ -88,15 +72,15 @@ export default {
       return this.$refs.dialogAccounts
     },
     trustToken() {
-      if (Helper.strOK(this.symbol) && Helper.strOK(this.address)) {
+      const asset = this.dialogAccounts().asset()
+
+      if (asset && !asset.isNative()) {
         const sourceWallet = this.dialogAccounts().sourceWallet()
         const fundingWallet = this.dialogAccounts().fundingWallet()
 
         if (sourceWallet) {
           Helper.debugLog('Setting trust...')
           this.loading = true
-
-          const asset = new StellarSdk.Asset(this.symbol, this.address)
 
           StellarUtils.changeTrust(sourceWallet, fundingWallet, asset, String(this.trustLimit))
             .then((result) => {
@@ -114,7 +98,7 @@ export default {
             })
         }
       } else {
-        this.displayToast('Type in a symbol and issuer key!', true)
+        this.displayToast('Choose another asset. XLM doesn\'t need trust', true)
       }
     },
     displayToast(message, error = false) {

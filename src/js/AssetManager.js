@@ -2,22 +2,24 @@ import Helper from '../js/helper.js'
 
 class AssetManager {
   assets() {
-    // we have to load lazy since the prefs will not be loaded at constructor
-    if (!this._assets) {
-      this._assets = this.load()
-    }
-
     // return a copy, the UI might try and modify this array
-    return this._assets.slice()
+    return this._lazyAssets().slice()
   }
 
   addAsset(asset) {
+    Helper.debugLog(asset)
+
     if (asset && Helper.strOK(asset.symbol) && Helper.strOK(asset.issuer)) {
-      this._assets.push(asset)
+      const index = this._indexOfAsset(asset)
 
-      this.save()
+      // don't add same one twice
+      if (index === -1) {
+        this._lazyAssets().push(asset)
 
-      return true
+        this.save()
+
+        return true
+      }
     }
 
     return false
@@ -27,7 +29,7 @@ class AssetManager {
     const index = this._indexOfAsset(asset)
 
     if (index !== -1) {
-      this._assets.splice(index, 1)
+      this._lazyAssets().splice(index, 1)
 
       this.save()
 
@@ -38,13 +40,22 @@ class AssetManager {
   }
 
   _indexOfAsset(asset) {
-    for (const [index, val] of this._assets.entries()) {
+    for (const [index, val] of this._lazyAssets().entries()) {
       if (asset.issuer === val.issuer && asset.symbol === val.symbol) {
         return index
       }
     }
 
     return -1
+  }
+
+  _lazyAssets() {
+    // we have to load lazy since the prefs will not be loaded at constructor
+    if (!this._assets) {
+      this._assets = this.load()
+    }
+
+    return this._assets
   }
 
   load() {
@@ -68,7 +79,7 @@ class AssetManager {
       setTimeout(() => {
         this._saving = false
 
-        Helper.set('assets', this._assets)
+        Helper.set('assets', this._lazyAssets())
       }, 500)
     }
   }

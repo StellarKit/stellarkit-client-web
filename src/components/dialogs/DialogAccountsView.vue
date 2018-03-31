@@ -26,7 +26,7 @@
   </div>
 
   <div v-if='showAsset' class='account-choice-box'>
-    <asset-popup title='Send asset' ref='showAssetPopup' />
+    <asset-popup title='Asset' ref='showAssetPopup' />
   </div>
 
   <div v-if='showBuyingAsset' class='account-choice-box'>

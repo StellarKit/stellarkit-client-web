@@ -31,6 +31,7 @@ import {
   StellarWallet
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
+import AssetManager from '../../js/AssetManager.js'
 import ToastComponent from '../ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')
 import DialogAccountsView from './DialogAccountsView.vue'
@@ -106,6 +107,11 @@ export default {
             this.visible = false
 
             this.displayToast('Success!')
+
+            AssetManager.addAsset({
+              symbol: asset.getCode(),
+              issuer: asset.getIssuer()
+            })
 
             return null
           })

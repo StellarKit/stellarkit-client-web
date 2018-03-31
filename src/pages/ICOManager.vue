@@ -220,7 +220,6 @@ export default {
       })
     },
     createToken() {
-      Helper.debugLog('creating token')
       this.createDialogPing = !this.createDialogPing
     },
     createDialogResult(issuerKeypair, distributorKeypair, asset) {
