@@ -1,5 +1,7 @@
 <template>
 <div>
+  <account-list :items="accountsUI" />
+
   <instructions-header>
     <div>Content coming soon...</div>
   </instructions-header>
@@ -14,6 +16,7 @@
 import Helper from '../js/helper.js'
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
+import AccountList from '../components/AccountList.vue'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -23,6 +26,7 @@ export default {
     }
   },
   components: {
+    'account-list': AccountList,
     'instructions-header': InstructionsHeader
   },
   methods: {
