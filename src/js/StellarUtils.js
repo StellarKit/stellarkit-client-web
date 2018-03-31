@@ -12,6 +12,15 @@ class StellarUtils {
   constructor() {
     this.s = new StellarServer()
 
+    Helper.vue().$on('stellar-network-updated', () => {
+      this.updateBalances()
+    })
+
+    // AccountManger isn't ready, so delay a bit for first call
+    setTimeout(() => {
+      this.updateBalances()
+    }, 500)
+
     this.vars = {}
   }
 

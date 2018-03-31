@@ -123,9 +123,6 @@ export default {
       showOffersDialogPing: false
     }
   },
-  mounted() {
-    StellarUtils.updateBalances()
-  },
   methods: {
     testFederation() {
       this.lookupFederationPing = !this.lookupFederationPing
