@@ -9,7 +9,7 @@
       </div>
       <div class='help-email'>
         <v-text-field hide-details label='Symbol' v-model.trim="symbol" @keyup.enter="createToken()" ref='input'></v-text-field>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createToken' v-on:toast='displayToast' :showAmount=true :showFunding=true :showHomeDomain=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createToken' v-on:toast='displayToast' :showAmount=true :showFunding=true :showHomeDomain=true :showAuthFlags=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -73,9 +73,6 @@ export default {
       return this.$refs.dialogAccounts
     },
     createToken() {
-      let issuerKeypair = null
-      let asset = null
-
       const amount = this.dialogAccounts().amount()
       const fundingWallet = this.dialogAccounts().fundingWallet(true)
 
@@ -90,8 +87,13 @@ export default {
 
       if (fundingWallet) {
         this.loading = true
+
+        let issuerKeypair = null
+        let distributorKeypair = null
+        let asset = null
         let issuerWallet = null
         const homeDomain = this.dialogAccounts().homeDomain()
+        const authFlags = this.dialogAccounts().authFlags()
 
         // create issuer
         StellarUtils.newAccount(fundingWallet, '1.5', 'Issuer: ' + this.symbol, this.symbol)
@@ -103,16 +105,25 @@ export default {
             return StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, '3', asset, String(amount), 'Distributor: ' + this.symbol, this.symbol)
           })
           .then((accountInfo) => {
+            distributorKeypair = accountInfo.keypair
+
             // optional
             if (Helper.strOK(homeDomain)) {
-              StellarUtils.setDomain(issuerWallet, homeDomain, fundingWallet)
+              return StellarUtils.setDomain(issuerWallet, homeDomain, fundingWallet)
             }
 
-            return accountInfo
+            return null
           })
-          .then((accountInfo) => {
+          .then(() => {
+            if (authFlags !== 0) {
+              return StellarUtils.setFlags(issuerWallet, authFlags)
+            }
+
+            return null
+          })
+          .then(() => {
             // return results and close
-            this.$emit('token-created', issuerKeypair, accountInfo.keypair, asset)
+            this.$emit('token-created', issuerKeypair, distributorKeypair, asset)
             this.visible = false
 
             this.displayToast('Success!')

@@ -97,21 +97,19 @@ export default {
               throw new Error('userWallet null')
             }
 
-            return StellarUtils.allowTrust(issuerWallet, userWallet, asset, true)
+            Helper.debugLog('setting trust...')
+            const trustLimit = 1000000
+            return StellarUtils.changeTrust(userWallet, fundingWallet, asset, String(trustLimit))
           })
           .then(() => {
-            const trustLimit = 1000000
-
-            Helper.debugLog('setting trust...')
-            return StellarUtils.changeTrust(userWallet, fundingWallet, asset, String(trustLimit))
+            Helper.debugLog('allowing trust...')
+            return StellarUtils.allowTrust(issuerWallet, userWallet, asset, true)
           })
           .then((result) => {
             Helper.debugLog('adding multi sig...')
             return StellarUtils.makeMultiSig(userWallet, signerWallet, fundingWallet)
           })
           .then((result) => {
-            Helper.debugLog(result)
-
             this.displayToast('Success!')
             return null
           })

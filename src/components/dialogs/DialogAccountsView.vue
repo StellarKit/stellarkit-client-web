@@ -69,6 +69,13 @@
     </div>
   </div>
 
+  <div v-if='showAuthFlags' class='account-choice-box'>
+    <div class='price-pair'>
+      <v-checkbox hide-details small class='buy-price' label="Auth required" v-model="authRequired"></v-checkbox>
+      <v-checkbox hide-details small label="Auth revocable" v-model="authRevocable"></v-checkbox>
+    </div>
+  </div>
+
   <div v-if='showBuyOffer' class='account-choice-box'>
     <div class='price-pair'>
       <v-text-field hide-details class='buy-price' label="Buy amount" @keyup.enter="enterKeyDown" type='number' v-model.number="buyAmount"></v-text-field>
@@ -114,9 +121,10 @@ import {
   LedgerAPI
 } from 'stellar-js-utils'
 const generateName = require('sillyname')
+const StellarSdk = require('stellar-sdk')
 
 export default {
-  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer', 'showHomeDomain'],
+  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer', 'showHomeDomain', 'showAuthFlags'],
   mixins: [StellarCommonMixin],
   components: {
     'menu-button': MenuButton,
@@ -158,6 +166,9 @@ export default {
       destPaymentsType: '10',
 
       issuerHomeDomain: '',
+
+      authRequired: false,
+      authRevocable: false,
 
       destPaymentsMenuItems: [{
           id: '1',
@@ -480,6 +491,17 @@ export default {
     accountName() {
       // ok for account name to be null or ''
       return this.name
+    },
+    authFlags() {
+      let result = 0
+      if (this.authRequired) {
+        result |= StellarSdk.AuthRequiredFlag
+      }
+      if (this.authRevocable) {
+        result |= StellarSdk.AuthRevocableFlag
+      }
+
+      return result
     },
     secretKey() {
       if (this.secretType === 'secret') {
