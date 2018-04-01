@@ -67,7 +67,7 @@ export default {
       if (this.sourceValid()) {
         const issuerAcct = StellarAccounts.accountWithName('Issuer')
         if (issuerAcct) {
-          StellarUtils.allowTrust(StellarWallet.secret(issuerAcct.secret), this.selectedSource.publicKey, StellarAccounts.lamboTokenAsset(), authorize)
+          StellarUtils.allowTrust(StellarWallet.secret(issuerAcct.secret), StellarWallet.public(this.selectedSource.publicKey), StellarAccounts.lamboTokenAsset(), authorize)
             .then((response) => {
               Helper.debugLog(response, 'Success')
             })
@@ -86,6 +86,8 @@ export default {
         StellarUtils.changeTrust(StellarWallet.secret(this.selectedSource.secret), null, StellarAccounts.lamboTokenAsset(), '10000')
           .then((response) => {
             Helper.debugLog(response, 'Success')
+
+            StellarUtils.updateBalances()
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')

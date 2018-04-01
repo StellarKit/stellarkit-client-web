@@ -35,6 +35,7 @@ import InstructionsHeader from '../components/InstructionsHeader.vue'
 import AccountList from '../components/AccountList.vue'
 import DialogAccountsView from '../components/dialogs/DialogAccountsView.vue'
 import StellarUtils from '../js/StellarUtils.js'
+import StellarAccounts from '../js/StellarAccounts.js'
 import {
   StellarWallet
 } from 'stellar-js-utils'
@@ -80,14 +81,25 @@ export default {
       if (signerWallet && asset) {
         this.loading = true
 
+        const acct = StellarAccounts.accountWithPublicKey(asset.getIssuer())
+        const issuerWallet = StellarWallet.secret(acct.secret)
+
+        if (!issuerWallet) {
+          throw new Error('issuer account not found for asset')
+        }
+
         // create issuer
         StellarUtils.newAccount(fundingWallet, String(startingBalance))
           .then((accountInfo) => {
             userWallet = StellarWallet.secret(accountInfo.keypair.secret())
+
             if (!userWallet) {
               throw new Error('userWallet null')
             }
 
+            return StellarUtils.allowTrust(issuerWallet, userWallet, asset, true)
+          })
+          .then(() => {
             const trustLimit = 1000000
 
             Helper.debugLog('setting trust...')

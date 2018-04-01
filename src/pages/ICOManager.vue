@@ -146,7 +146,7 @@ export default {
       Helper.debugLog('Locking issuer...')
       const project = this.currentProject()
       if (project) {
-        StellarUtils.lockAccount(StellarWallet.secret(project.issuerSecret))
+        StellarUtils.lockAccount(StellarWallet.secret(project.issuerSecret), 'low')
           .then((result) => {
             Helper.debugLog('locked!')
             Helper.debugLog(result)

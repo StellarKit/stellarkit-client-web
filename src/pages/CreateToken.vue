@@ -123,6 +123,7 @@ import {
   StellarWallet
 } from 'stellar-js-utils'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
+import AssetManager from '../js/AssetManager.js'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -262,7 +263,7 @@ export default {
       if (this.issuerAcct) {
         Helper.debugLog('Locking issuer...')
 
-        StellarUtils.lockAccount(StellarWallet.secret(this.issuerAcct.secret))
+        StellarUtils.lockAccount(StellarWallet.secret(this.issuerAcct.secret), 'lock')
           .then((result) => {
             Helper.debugLog('locked!')
             Helper.debugLog(result)
@@ -283,12 +284,18 @@ export default {
           Helper.debugLog('Create token amount must be greater than 0', 'Error')
           return
         }
+        const asset = StellarAccounts.lamboTokenAsset()
 
-        StellarUtils.sendAsset(StellarWallet.secret(this.issuerAcct.secret), null, StellarWallet.secret(this.distributorAcct.secret), String(amount), StellarAccounts.lamboTokenAsset(), 'Created Tokens')
+        StellarUtils.sendAsset(StellarWallet.secret(this.issuerAcct.secret), null, StellarWallet.secret(this.distributorAcct.secret), String(amount), asset, 'Created Tokens')
           .then((response) => {
             Helper.debugLog(response, 'Success')
 
             StellarUtils.updateBalances()
+
+            AssetManager.addAsset({
+              symbol: asset.getCode(),
+              issuer: asset.getIssuer()
+            })
 
             return null
           })

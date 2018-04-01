@@ -154,6 +154,9 @@ export default class Helper {
     if (object instanceof Error) {
       const json = this.stringify(object)
 
+      // console.log the stack trace so we have more info when debugging
+      console.log(object.stack)
+
       // returns {} when it fails - check number of keys
       const obj = JSON.parse(json)
       if (Object.keys(obj).length > 0) {

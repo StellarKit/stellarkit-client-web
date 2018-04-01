@@ -80,8 +80,8 @@ class StellarUtils {
     return this.api().changeTrust(sourceWallet, fundingWallet, asset, amount)
   }
 
-  allowTrust(sourceWallet, trustor, asset, authorize) {
-    return this.api().allowTrust(sourceWallet, trustor, asset, authorize)
+  allowTrust(sourceWallet, trustWallet, asset, authorize) {
+    return this.api().allowTrust(sourceWallet, trustWallet, asset, authorize)
   }
 
   setDomain(sourceWallet, domain, fundingWallet = null, additionalSigners = null) {
@@ -119,8 +119,9 @@ class StellarUtils {
     return this.api().buyTokens(sourceWallet, sendAsset, destAsset, sendMax, destAmount, fundingWallet, additionalSigners)
   }
 
-  lockAccount(sourceWallet, fundingWallet = null, additionalSigners = null) {
-    return this.api().lockAccount(sourceWallet, fundingWallet, additionalSigners)
+  // preset is 'lock' or 'low' - low allows allowTrust, lock locks everything
+  lockAccount(sourceWallet, preset, fundingWallet = null, additionalSigners = null) {
+    return this.api().lockAccount(sourceWallet, preset, fundingWallet, additionalSigners)
   }
 
   createAccount(sourceWallet, newWallet, startingBalance) {

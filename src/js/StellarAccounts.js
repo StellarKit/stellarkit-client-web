@@ -170,6 +170,15 @@ class StellarAccounts {
     return null
   }
 
+  accountWithPublicKey(publicKey) {
+    const index = this._indexOfAccount(publicKey)
+    if (index !== -1) {
+      return this.accounts()[index]
+    }
+
+    return {}
+  }
+
   updateBalance(publicKey, balance, removeAll = false) {
     const index = this._indexOfAccount(publicKey)
     const accounts = this.accounts()
