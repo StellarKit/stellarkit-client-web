@@ -133,6 +133,10 @@ class StellarAccountsImp {
       return acct
     }
 
+    Helper.debugLog(this.network)
+    Helper.debugLog(this.accounts())
+    Helper.debugLog(String(index))
+
     return null
   }
 
