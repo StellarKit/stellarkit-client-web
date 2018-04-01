@@ -2,9 +2,11 @@ const StellarSdk = require('stellar-sdk')
 const generateName = require('sillyname')
 import Helper from '../js/helper.js'
 import StellarUtils from './StellarUtils.js'
+
 class SharedAccounts {
-  constructor() {
+  constructor(network) {
     this._accounts = []
+    this.network = network
 
     this.load()
   }
@@ -41,16 +43,36 @@ class SharedAccounts {
   }
 
   load() {
-    const accounts = Helper.get('accounts')
+    const accounts = Helper.get(this.network + 'accounts')
 
     if (accounts && accounts.length > 0) {
       this._accounts = accounts
     }
+
+    // converting from old format
+    // april 1, delete after a few weeks
+    if (this._accounts.length < 1) {
+      const oldAccounts = Helper.get('accounts')
+
+      const isMainnet = this.network === 'public'
+
+      const result = oldAccounts.filter(value => {
+        return isMainnet === Boolean(value.mainnet) // could be undefined
+      })
+
+      if (result && result.length > 0) {
+        this._accounts = result
+
+        this.save(false)
+      }
+    }
   }
 
-  save() {
+  save(alert = true) {
     // alert ui to update
-    Helper.emit('stellar-accounts-updated')
+    if (alert) {
+      Helper.emit('stellar-accounts-updated')
+    }
 
     // save throttle, probably not necessary, but couldn't hurt
     if (!this._saving) {
@@ -59,7 +81,7 @@ class SharedAccounts {
       setTimeout(() => {
         this._saving = false
 
-        Helper.set('accounts', this._accounts)
+        Helper.set(this.network + 'accounts', this._accounts)
       }, 500)
     }
   }
@@ -68,16 +90,18 @@ class SharedAccounts {
 // =============================================================
 // =============================================================
 
-class StellarAccounts {
-  static sharedAccounts() {
-    if (!this.shared) {
-      this.shared = new SharedAccounts()
-    }
-    return this.shared
+class StellarAccountsImp {
+  constructor(network) {
+    this.network = network
   }
 
   shared() {
-    return StellarAccounts.sharedAccounts()
+    // lazy loading so prefs are ready to read
+    if (!this.sharedAccounts) {
+      this.sharedAccounts = new SharedAccounts(this.network)
+    }
+
+    return this.sharedAccounts
   }
 
   // returns null if account already exists
@@ -101,8 +125,7 @@ class StellarAccounts {
         }],
         secret: secretKey,
         publicKey: keyPair.publicKey(),
-        tag: tag,
-        mainnet: !StellarUtils.isTestnet()
+        tag: tag
       }
 
       this.shared().add(acct)
@@ -138,17 +161,6 @@ class StellarAccounts {
     }
 
     return null
-  }
-
-  accountsForNetwork() {
-    const accounts = this.accounts()
-    const isMainnet = !StellarUtils.isTestnet()
-
-    const result = accounts.filter(value => {
-      return isMainnet === Boolean(value.mainnet) // could be undefined
-    })
-
-    return result
   }
 
   accounts() {
@@ -224,6 +236,62 @@ class StellarAccounts {
     }
 
     return -1
+  }
+}
+
+// =============================================================
+// StellarAccounts
+// =============================================================
+
+class StellarAccounts {
+  constructor() {
+    this.publicNet = new StellarAccountsImp('public')
+    this.testNet = new StellarAccountsImp('test')
+  }
+
+  // returns null if account already exists
+  addAccount(keyPair, name = null, tag = null) {
+    return this.imp().addAccount(keyPair, name, tag)
+  }
+
+  ethereumAsset() {
+    return this.imp().ethereumAsset()
+  }
+
+  bitcoinAsset() {
+    return this.imp().bitcoinAsset()
+  }
+
+  lamboTokenAsset() {
+    return this.imp().lamboTokenAsset()
+  }
+
+  accounts() {
+    return this.imp().accounts()
+  }
+
+  deleteAccount(publicKey) {
+    return this.imp().deleteAccount(publicKey)
+  }
+
+  accountWithName(name) {
+    return this.imp().accountWithName(name)
+  }
+
+  accountWithPublicKey(publicKey) {
+    return this.imp().accountWithPublicKey(publicKey)
+  }
+
+  updateBalance(publicKey, balance, removeAll = false) {
+    return this.imp().updateBalance(publicKey, balance, removeAll)
+  }
+
+  imp() {
+    if (StellarUtils.isTestnet()) {
+      return this.testNet
+    }
+
+    return this.publicNet
   }
 }
 

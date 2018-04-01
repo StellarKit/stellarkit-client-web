@@ -327,7 +327,7 @@ class StellarUtils {
   }
 
   updateBalances(logSuccess = false) {
-    for (const acct of StellarAccounts.accountsForNetwork()) {
+    for (const acct of StellarAccounts.accounts()) {
       const publicKey = acct.publicKey
 
       this.balances(StellarWallet.public(publicKey))
