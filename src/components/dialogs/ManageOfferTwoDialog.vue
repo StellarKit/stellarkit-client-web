@@ -64,14 +64,9 @@ export default {
       return this.$refs.dialogAccounts
     },
     manageOffer() {
-      let fundingWallet = this.dialogAccounts().fundingWallet()
+      const fundingWallet = this.dialogAccounts().fundingWallet()
       const distributorWallet = this.dialogAccounts().sourceWallet()
       const offer = this.dialogAccounts().manageOffer()
-
-      // funding wallet is optional, but make sure it's not equal to the distributor
-      if (fundingWallet && fundingWallet.equalTo(distributorWallet)) {
-        fundingWallet = null
-      }
 
       Helper.debugLog('Managing Offer...')
 

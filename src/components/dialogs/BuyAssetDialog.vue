@@ -69,6 +69,11 @@ export default {
       const offer = this.dialogAccounts().buyOffer()
       const fundingWallet = this.dialogAccounts().fundingWallet()
 
+      let additionalSigners = null
+      if (signerWallet) {
+        additionalSigners = [signerWallet]
+      }
+
       Helper.debugLog('Buying asset...')
 
       if (offer) {
@@ -77,7 +82,7 @@ export default {
 
         this.loading = true
 
-        StellarUtils.buyTokens(sourceWallet, sellAsset, buyAsset, String(offer.buySendMax), String(offer.buyAmount), fundingWallet, [signerWallet])
+        StellarUtils.buyTokens(sourceWallet, sellAsset, buyAsset, String(offer.buySendMax), String(offer.buyAmount), fundingWallet, additionalSigners)
           .then((result) => {
             Helper.debugLog(result, 'Success')
             this.displayToast('Success')
