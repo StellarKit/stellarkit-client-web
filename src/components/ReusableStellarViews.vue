@@ -83,8 +83,8 @@
     </div>
   </div>
 
-  <div v-if='showHomeDomain' class='account-choice-box'>
-    <v-text-field hide-details label="Home domain (optional)" @keyup.enter="enterKeyDown" v-model.trim="model.homeDomain" hint='www.example-domain.com'></v-text-field>
+  <div v-if='showTextField' class='account-choice-box'>
+    <v-text-field :label="model.textValueLabel" @keyup.enter="enterKeyDown" v-model.trim="model.textValue" :hint='model.textValueHint'></v-text-field>
   </div>
 
   <div v-if='showTimeLock' class='account-choice-box'>
@@ -138,7 +138,7 @@ import {
 const StellarSdk = require('stellar-sdk')
 
 export default {
-  props: ['model', 'showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer', 'showHomeDomain', 'showAuthFlags',
+  props: ['model', 'showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer', 'showTextField', 'showAuthFlags',
     'showTimeLock'
   ],
   mixins: [StellarCommonMixin],
@@ -492,8 +492,8 @@ export default {
 
       return result
     },
-    homeDomain() {
-      return this.model.homeDomain
+    textValue() {
+      return this.model.textValue
     },
     amount() {
       return this.model.assetAmount

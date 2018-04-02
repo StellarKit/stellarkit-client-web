@@ -231,6 +231,8 @@ export default {
       this.model = new ReusableStellarViewsModel()
 
       this.model.fundingMessage = 'Choose an account to pay the transaction fee'
+      this.model.textValueLabel = 'Home domain (optional)'
+      this.model.textValueHint = 'www.example-site.com'
 
       this.createDialogPing = !this.createDialogPing
     },

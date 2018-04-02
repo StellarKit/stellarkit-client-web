@@ -9,7 +9,7 @@
       </div>
       <div class='help-email'>
         <v-text-field hide-details label='Symbol' v-model.trim="symbol" @keyup.enter="createToken()" ref='input'></v-text-field>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createToken' :model="model" v-on:toast='displayToast' :showAmount=true :showFunding=true :showHomeDomain=true :showAuthFlags=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createToken' :model="model" v-on:toast='displayToast' :showAmount=true :showFunding=true :showTextField=true :showAuthFlags=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -88,7 +88,7 @@ export default {
         let distributorKeypair = null
         let asset = null
         let issuerWallet = null
-        const homeDomain = this.dialogAccounts().homeDomain()
+        const homeDomain = this.dialogAccounts().textValue()
         const authFlags = this.dialogAccounts().authFlags()
 
         // create issuer

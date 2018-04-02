@@ -7,8 +7,9 @@ export default class ReusableStellarViewsModel {
   }
 
   reset() {
-    this.homeDomainTitle = 'Home Domain'
-    this.homeDomain = ''
+    this.textValue = ''
+    this.textValueLabel = 'Label'
+    this.textValueHint = 'Hint'
 
     this.sellAmount = 1000000
 
