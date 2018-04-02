@@ -19,11 +19,11 @@
 
       <div class='buttons-area'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn color='primary' slot="activator" @click="buttonClick('save-keys')">Save Keys...</v-btn>
+          <v-btn color='primary' round slot="activator" @click="buttonClick('save-keys')">Save Keys...</v-btn>
           <span>Save the keys to a file on a USB or disk</span>
         </v-tooltip>
         <v-tooltip open-delay='200' bottom>
-          <v-btn color='primary' slot="activator" @click="buttonClick('print-keys')">Print Keys...</v-btn>
+          <v-btn color='primary' round slot="activator" @click="buttonClick('print-keys')">Print Keys...</v-btn>
           <span>Print the keys for safety</span>
         </v-tooltip>
       </div>
@@ -203,6 +203,7 @@ export default {
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                font-family: monospace;
                 width: 0;
             }
         }
