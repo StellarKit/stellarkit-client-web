@@ -137,7 +137,7 @@ class StellarAccountsImp {
   }
 
   ethereumAsset() {
-    const acct = this.accountWithName('Issuer')
+    const acct = this.accountWithName('Issuer: LMB')
     if (acct) {
       return new StellarSdk.Asset('ETH', acct.publicKey)
     }
@@ -146,7 +146,7 @@ class StellarAccountsImp {
   }
 
   bitcoinAsset() {
-    const acct = this.accountWithName('Issuer')
+    const acct = this.accountWithName('Issuer: LMB')
     if (acct) {
       return new StellarSdk.Asset('BTC', acct.publicKey)
     }
@@ -155,7 +155,7 @@ class StellarAccountsImp {
   }
 
   lamboTokenAsset() {
-    const acct = this.accountWithName('Issuer')
+    const acct = this.accountWithName('Issuer: LMB')
     if (acct) {
       return new StellarSdk.Asset('LMB', acct.publicKey)
     }

@@ -15,7 +15,7 @@
    },
    methods: {
      distributor() {
-       const result = StellarAccounts.accountWithName('Distributor')
+       const result = StellarAccounts.accountWithName('Distributor: LMB')
        if (result) {
          return result
        }
@@ -24,7 +24,7 @@
        return null
      },
      issuer() {
-       const result = StellarAccounts.accountWithName('Issuer')
+       const result = StellarAccounts.accountWithName('Issuer: LMB')
        if (result) {
          return result
        }
@@ -33,7 +33,7 @@
        return null
      },
      tokenBuyer() {
-       const result = StellarAccounts.accountWithName('Token buyer')
+       const result = StellarAccounts.accountWithName('Buyer: LMB')
        if (result) {
          return result
        }

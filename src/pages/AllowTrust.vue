@@ -65,7 +65,7 @@ export default {
     },
     allowTrust(authorize) {
       if (this.sourceValid()) {
-        const issuerAcct = StellarAccounts.accountWithName('Issuer')
+        const issuerAcct = this.issuer()
         if (issuerAcct) {
           StellarUtils.allowTrust(StellarWallet.secret(issuerAcct.secret), StellarWallet.public(this.selectedSource.publicKey), StellarAccounts.lamboTokenAsset(), authorize)
             .then((response) => {

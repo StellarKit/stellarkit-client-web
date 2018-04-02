@@ -368,11 +368,11 @@ export default {
       }
     },
     createStandardAccounts() {
-      let acct = StellarAccounts.accountWithName('Issuer')
+      let acct = StellarAccounts.accountWithName('Issuer: LMB')
       if (!acct) {
         Helper.debugLog('Creating Issuer...')
 
-        StellarUtils.createTestAccount('Issuer')
+        StellarUtils.createTestAccount('Issuer: LMB')
           .then((result) => {
             return null
           })
@@ -381,11 +381,11 @@ export default {
           })
       }
 
-      acct = StellarAccounts.accountWithName('Distributor')
+      acct = StellarAccounts.accountWithName('Distributor: LMB')
       if (!acct) {
         Helper.debugLog('Creating Distributor...')
 
-        StellarUtils.createTestAccount('Distributor')
+        StellarUtils.createTestAccount('Distributor: LMB')
           .then((result) => {
             return null
           })
@@ -394,11 +394,11 @@ export default {
           })
       }
 
-      acct = StellarAccounts.accountWithName('Token buyer')
+      acct = StellarAccounts.accountWithName('Buyer: LMB')
       if (!acct) {
         Helper.debugLog('Creating Token buyer...')
 
-        StellarUtils.createTestAccount('Token buyer')
+        StellarUtils.createTestAccount('Buyer: LMB')
           .then((result) => {
             return null
           })

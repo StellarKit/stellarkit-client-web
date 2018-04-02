@@ -32,7 +32,6 @@ import Helper from '../js/helper.js'
 import {
   BuyTokenDialog
 } from 'stellar-js-utils'
-import StellarAccounts from '../js/StellarAccounts.js'
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
 
@@ -60,7 +59,7 @@ export default {
     'instructions-header': InstructionsHeader
   },
   mounted() {
-    const issuerAcct = StellarAccounts.accountWithName('Issuer')
+    const issuerAcct = this.issuer()
     if (issuerAcct) {
       this.assetIssuer = issuerAcct.publicKey
     }
@@ -69,7 +68,7 @@ export default {
     showDialog() {
       const protocol = window.location.protocol
 
-      const issuerAcct = StellarAccounts.accountWithName('Issuer')
+      const issuerAcct = this.issuer()
       if (issuerAcct) {
         this.params = {
           network: this.network,
@@ -77,7 +76,7 @@ export default {
           bifrostURL: protocol + '//' + this.biforstIP,
           assetCode: this.assetCode,
           price: String(this.price),
-          issuingPublicKey: this.assetIssuer,
+          issuingPublicKey: issuerAcct.publicKey,
           preSaleMode: false
         }
 
