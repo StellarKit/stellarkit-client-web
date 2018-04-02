@@ -112,10 +112,10 @@
 </template>
 
 <script>
-import Helper from '../../js/helper.js'
-import StellarCommonMixin from '../StellarCommonMixin.js'
-import MenuButton from '../MenuButton.vue'
-import AssetPopup from '../AssetPopup.vue'
+import Helper from '../js/helper.js'
+import StellarCommonMixin from './StellarCommonMixin.js'
+import MenuButton from './MenuButton.vue'
+import AssetPopup from './AssetPopup.vue'
 import {
   StellarWallet,
   LedgerAPI

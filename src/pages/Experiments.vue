@@ -33,7 +33,7 @@ import Helper from '../js/helper.js'
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
 import AccountList from '../components/AccountList.vue'
-import ReusableStellarViews from '../components/dialogs/ReusableStellarViews.vue'
+import ReusableStellarViews from '../components/ReusableStellarViews.vue'
 import StellarUtils from '../js/StellarUtils.js'
 import StellarAccounts from '../js/StellarAccounts.js'
 import {

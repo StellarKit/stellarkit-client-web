@@ -31,7 +31,7 @@ import Helper from '../../js/helper.js'
 import {
   DialogTitleBar
 } from 'stellar-js-utils'
-import ReusableStellarViews from './ReusableStellarViews.vue'
+import ReusableStellarViews from '../ReusableStellarViews.vue'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')

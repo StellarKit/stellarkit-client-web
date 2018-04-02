@@ -57,7 +57,7 @@ import ToastComponent from '../ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')
 import StellarCommonMixin from '../StellarCommonMixin.js'
 import SavePrintSecretDialog from './SavePrintSecretDialog.vue'
-import ReusableStellarViews from './ReusableStellarViews.vue'
+import ReusableStellarViews from '../ReusableStellarViews.vue'
 
 export default {
   mixins: [StellarCommonMixin],

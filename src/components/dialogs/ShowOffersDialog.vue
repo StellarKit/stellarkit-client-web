@@ -31,7 +31,7 @@ import {
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
-import ReusableStellarViews from './ReusableStellarViews.vue'
+import ReusableStellarViews from '../ReusableStellarViews.vue'
 
 export default {
   props: ['ping'],

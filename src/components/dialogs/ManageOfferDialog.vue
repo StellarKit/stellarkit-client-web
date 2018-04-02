@@ -35,7 +35,7 @@ import {
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')
-import ReusableStellarViews from './ReusableStellarViews.vue'
+import ReusableStellarViews from '../ReusableStellarViews.vue'
 
 export default {
   props: ['ping', 'project'],
