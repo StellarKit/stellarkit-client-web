@@ -165,6 +165,7 @@ export default {
         additionalSigners = [signerWallet]
       }
 
+      // inflationdest can't be unset, so blank textValue not valid
       if (sourceWallet && Helper.strOK(textValue)) {
         this.loading = true
         Helper.debugLog('Setting inflation destination...')
