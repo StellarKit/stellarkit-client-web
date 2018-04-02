@@ -88,7 +88,7 @@ export default {
           throw new Error('issuer account not found for asset')
         }
 
-        throw new Error('creating users wallet')
+        Helper.debugLog('creating users wallet...')
         StellarUtils.newAccount(fundingWallet, String(startingBalance))
           .then((accountInfo) => {
             userWallet = StellarWallet.secret(accountInfo.keypair.secret())
