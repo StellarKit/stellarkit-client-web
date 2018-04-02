@@ -57,17 +57,17 @@
   </div>
 
   <save-secret-dialog :ping='saveSecretDialogPing' />
-  <manage-data-dialog :ping='manageDataPing' />
-  <merge-dialog :ping='mergeDialogPing' />
-  <simple-dialog :ping='setDomainPing' operation='domain' />
-  <simple-dialog :ping='setInflationPing' operation='inflation' />
-  <simple-dialog :ping='lookupFederationPing' operation='federation' />
-  <trust-token-dialog :ping='trustDialogPing' />
-  <add-remove-signer :ping='addRemoveSignerDialogPing' />
-  <send-assets-dialog :ping='sendAssetsDialogPing' />
-  <manage-offer-dialog :ping='manageOfferDialogPing' />
-  <buy-asset-dialog :ping='buyAssetDialogPing' />
-  <show-offers-dialog :ping='showOffersDialogPing' />
+  <manage-data-dialog :ping='manageDataPing' :model="model" />
+  <merge-dialog :ping='mergeDialogPing' :model="model" />
+  <simple-dialog :ping='setDomainPing' operation='domain' :model="model" />
+  <simple-dialog :ping='setInflationPing' operation='inflation' :model="model" />
+  <simple-dialog :ping='lookupFederationPing' operation='federation' :model="model" />
+  <trust-token-dialog :ping='trustDialogPing' :model="model" />
+  <add-remove-signer :ping='addRemoveSignerDialogPing' :model="model" />
+  <send-assets-dialog :ping='sendAssetsDialogPing' :model="model" />
+  <manage-offer-dialog :ping='manageOfferDialogPing' :model="model" />
+  <buy-asset-dialog :ping='buyAssetDialogPing' :model="model" />
+  <show-offers-dialog :ping='showOffersDialogPing' :model="model" />
 </div>
 </template>
 
@@ -81,7 +81,7 @@ import SendAssetsDialog from '../components/dialogs/SendAssetsDialog.vue'
 import MergeDialog from '../components/dialogs/MergeDialog.vue'
 import ManageDataDialog from '../components/dialogs/ManageDataDialog.vue'
 import TrustTokenDialog from '../components/dialogs/TrustTokenDialog.vue'
-import ManageOfferTwoDialog from '../components/dialogs/ManageOfferTwoDialog.vue'
+import ManageOfferDialog from '../components/dialogs/ManageOfferDialog.vue'
 import ShowOffersDialog from '../components/dialogs/ShowOffersDialog.vue'
 import BuyAssetDialog from '../components/dialogs/BuyAssetDialog.vue'
 import StellarUtils from '../js/StellarUtils.js'
@@ -90,6 +90,7 @@ import {
   StellarWallet,
   LedgerAPI
 } from 'stellar-js-utils'
+import ReusableStellarViewsModel from '../components/ReusableStellarViewsModel.js'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -103,12 +104,13 @@ export default {
     'merge-dialog': MergeDialog,
     'add-remove-signer': AddRemoveSignerDialog,
     'send-assets-dialog': SendAssetsDialog,
-    'manage-offer-dialog': ManageOfferTwoDialog,
+    'manage-offer-dialog': ManageOfferDialog,
     'buy-asset-dialog': BuyAssetDialog,
     'show-offers-dialog': ShowOffersDialog
   },
   data() {
     return {
+      model: new ReusableStellarViewsModel(),
       lookupFederationPing: false,
       setDomainPing: false,
       setInflationPing: false,

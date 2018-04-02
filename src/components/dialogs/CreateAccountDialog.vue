@@ -12,7 +12,7 @@
           <v-text-field hide-details label='Token Balance' v-model.trim="tokenBalance" @keyup.enter="createAccount()" ref='input'></v-text-field>
           <v-text-field hide-details label='XLM Balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccount()"></v-text-field>
         </div>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createAccount' v-on:toast='displayToast' :showFunding=true :showAccountName=true :showTimeLock=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createAccount' :model="model" v-on:toast='displayToast' :showFunding=true :showAccountName=true :showTimeLock=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -39,7 +39,7 @@ const StellarSdk = require('stellar-sdk')
 import ReusableStellarViews from '../ReusableStellarViews.vue'
 
 export default {
-  props: ['ping', 'project'],
+  props: ['ping', 'model', 'project'],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent,
@@ -58,11 +58,6 @@ export default {
   watch: {
     ping: function() {
       this.visible = true
-      this.domain = ''
-
-      if (this.dialogAccounts()) {
-        this.dialogAccounts().resetState()
-      }
 
       // autofocus hack
       this.$nextTick(() => {
@@ -76,7 +71,7 @@ export default {
     },
     createAccount() {
       const fundingWallet = this.dialogAccounts().fundingWallet()
-      const accountName = this.dialogAccounts().accountName()
+      const accountName = this.accountName()
       const timeLockDate = this.dialogAccounts().timeLock()
 
       if (fundingWallet) {

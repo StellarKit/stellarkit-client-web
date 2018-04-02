@@ -5,7 +5,7 @@
       <menu-button v-on:menu-selected='sourceMenuSelected' title='Source account' :items='sourceMenuItems' :selectedID='sourceType' />
     </div>
     <div v-if='sourceType === "account"'>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model='model.sourceAccount' clearable label="Source account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
 
@@ -17,7 +17,7 @@
       <v-text-field hide-details label="Destination public key" v-model.trim="destPublicKey" ref='input' @keyup.enter="enterKeyDown"></v-text-field>
     </div>
     <div v-if='destType === "account"'>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedDest" clearable label="Destination account" autocomplete return-object max-height="600"></v-select>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="model.destAccount" clearable label="Destination account" autocomplete return-object max-height="600"></v-select>
     </div>
     <div v-if='destType === "publicKeyList"'>
       <textarea v-model='destPublicKeyList' placeholder='Paste in a list of public keys separated by returns, spaces or commas.' class='public-key-text'></textarea>
@@ -26,15 +26,15 @@
   </div>
 
   <div v-if='showAsset' class='account-choice-box'>
-    <asset-popup title='Asset' ref='showAssetPopup' />
+    <asset-popup title='Asset' :model='model.assetModel' />
   </div>
 
   <div v-if='showBuyingAsset' class='account-choice-box'>
-    <asset-popup title='Buying asset' ref='buyingAssetPopup' />
+    <asset-popup title='Buying asset' :model='model.buyingAssetModel' />
   </div>
 
   <div v-if='showSellingAsset' class='account-choice-box'>
-    <asset-popup title='Selling asset' ref='sellingAssetPopup' />
+    <asset-popup title='Selling asset' :model='model.sellingAssetModel' />
   </div>
 
   <div v-if='showSecret' class='account-choice-box'>
@@ -42,16 +42,16 @@
       <menu-button v-on:menu-selected='secretMenuSelected' title='Enter an account key' :items='secretMenuItems' :selectedID='secretType' />
     </div>
     <div v-if='secretType === "secret"'>
-      <v-text-field hide-details spellcheck="false" autofocus label="Secret key" :counter="56" v-model.trim="secretKeyText" @keyup.enter="enterKeyDown" hint="Starts with an 'S'" :append-icon="showSecretText ? 'visibility_off' : 'visibility'" :append-icon-cb="() => (showSecretText = !showSecretText)"
+      <v-text-field hide-details spellcheck="false" autofocus label="Secret key" :counter="56" v-model.trim="model.secretKey" @keyup.enter="enterKeyDown" hint="Starts with an 'S'" :append-icon="showSecretText ? 'visibility_off' : 'visibility'" :append-icon-cb="() => (showSecretText = !showSecretText)"
         :type="showSecretText ? 'text' : 'password'"></v-text-field>
     </div>
     <div v-if='secretType === "public"'>
-      <v-text-field hide-details spellcheck="false" autofocus label="Public key" :counter="56" v-model.trim="publicKeyText" @keyup.enter="enterKeyDown" hint="Starts with an 'G'"></v-text-field>
+      <v-text-field hide-details spellcheck="false" autofocus label="Public key" :counter="56" v-model.trim="model.publicKey" @keyup.enter="enterKeyDown" hint="Starts with an 'G'"></v-text-field>
     </div>
   </div>
 
   <div v-if='showAccountName' class='account-choice-box'>
-    <v-text-field hide-details spellcheck="false" label="Account name" v-model.trim="name" @keyup.enter="enterKeyDown" hint="A unique name helps you keep track of multiple accounts"> </v-text-field>
+    <v-text-field hide-details spellcheck="false" label="Account name" v-model.trim="model.accountName" @keyup.enter="enterKeyDown" hint="A unique name helps you keep track of multiple accounts"> </v-text-field>
   </div>
 
   <div v-if='showAmount' class='account-choice-box'>
@@ -59,7 +59,7 @@
   </div>
 
   <div v-if='showManageOffer' class='account-choice-box'>
-    <v-text-field hide-details label="Sell amount" @keyup.enter="enterKeyDown" type='number' v-model.number="sellingAmount"></v-text-field>
+    <v-text-field hide-details label="Sell amount" @keyup.enter="enterKeyDown" type='number' v-model.number='model.sellAmount'></v-text-field>
 
     <div>Price:</div>
     <div class='accounts-small-text'>For example, you want buy 1000 XLM for 1 MyToken.</div>
@@ -107,7 +107,7 @@
       <menu-button v-on:menu-selected='fundingMenuSelected' title='Funding account' :items='fundingMenuItems' :selectedID='fundingType' />
     </div>
     <div v-if='fundingType === "account"'>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedFunding" clearable label="Funding account" autocomplete return-object max-height="600"></v-select>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="model.fundingAccount" clearable label="Funding account" autocomplete return-object max-height="600"></v-select>
     </div>
     <div v-if='fundingType === "none"'>
       <div class='accounts-small-text'>The source account will pay the fee.</div>
@@ -119,7 +119,7 @@
       <menu-button v-on:menu-selected='signerMenuSelected' title='Add Signer account' :items='signerMenuItems' :selectedID='signerType' />
     </div>
     <div v-if='signerType === "account"'>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSigner" clearable label="Signing account" autocomplete return-object max-height="600"></v-select>
+      <v-select hide-details :items="accountsUI" item-text='name' v-model="model.signerAccount" clearable label="Signing account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
 
@@ -135,11 +135,12 @@ import {
   StellarWallet,
   LedgerAPI
 } from 'stellar-js-utils'
-const generateName = require('sillyname')
 const StellarSdk = require('stellar-sdk')
 
 export default {
-  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer', 'showHomeDomain', 'showAuthFlags', 'showTimeLock'],
+  props: ['model', 'showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer', 'showHomeDomain', 'showAuthFlags',
+    'showTimeLock'
+  ],
   mixins: [StellarCommonMixin],
   components: {
     'menu-button': MenuButton,
@@ -155,17 +156,9 @@ export default {
       fundingType: 'none',
       secretType: 'secret',
 
-      selectedSource: null,
-      selectedDest: null,
-      selectedFunding: null,
-      selectedSigner: null,
       showSecretText: false,
 
-      secretKeyText: '',
-      publicKeyText: '',
-
       assetAmount: 10,
-      name: generateName(),
       ledgerAPI: null,
 
       // buy  offer fields
@@ -173,7 +166,6 @@ export default {
       buyAmount: 0,
 
       // manage  offer fields
-      sellingAmount: 100,
       buyUnit: 100,
       sellUnit: 1,
 
@@ -272,14 +264,6 @@ export default {
     }
   },
   methods: {
-    // called when the dialog is reshown
-    resetState() {
-      this.destPublicKey = ''
-      this.assetAmount = 10
-      this.secretKeyText = ''
-      this.publicKeyText = ''
-      this.name = generateName()
-    },
     adjustSetting(id) {
       switch (id) {
         case 'destType':
@@ -349,6 +333,16 @@ export default {
       }
       return this.ledgerAPI
     },
+    accountName() {
+      if (Helper.strOK(this.model.accountName)) {
+        return this.model.accountName
+      }
+
+      this._displayToast('Please enter an account name.', true)
+      Helper.debugLog('Please enter an account name', 'Error')
+
+      return ''
+    },
     sourceWallet() {
       let result = null
 
@@ -360,9 +354,9 @@ export default {
           break
         case 'account':
           if (this._sourceValid()) {
-            result = StellarWallet.secret(this.selectedSource.secret)
+            result = StellarWallet.secret(this.model.sourceAccount.secret)
           } else if (this._sourceValid(false)) {
-            result = StellarWallet.public(this.selectedSource.publicKey)
+            result = StellarWallet.public(this.model.sourceAccount.publicKey)
           }
           break
         default:
@@ -394,9 +388,9 @@ export default {
           break
         case 'account':
           if (this._destValid()) {
-            result = StellarWallet.secret(this.selectedDest.secret)
+            result = StellarWallet.secret(this.model.destAccount.secret)
           } else if (this._destValid(false)) {
-            result = StellarWallet.public(this.selectedDest.publicKey)
+            result = StellarWallet.public(this.model.destAccount.publicKey)
           }
           break
         case 'publicKeyList':
@@ -462,7 +456,7 @@ export default {
           break
         case 'account':
           if (this._signerValid()) {
-            result = StellarWallet.secret(this.selectedSigner.secret)
+            result = StellarWallet.secret(this.model.signerAccount.secret)
           }
           break
         default:
@@ -487,7 +481,7 @@ export default {
           break
         case 'account':
           if (this._fundingValid()) {
-            result = StellarWallet.secret(this.selectedFunding.secret)
+            result = StellarWallet.secret(this.model.fundingAccount.secret)
           }
           break
         default:
@@ -506,10 +500,6 @@ export default {
     },
     amount() {
       return this.assetAmount
-    },
-    accountName() {
-      // ok for account name to be null or ''
-      return this.name
     },
     timeLock() {
       if (this.timeLockEnabled) {
@@ -531,8 +521,8 @@ export default {
     },
     secretKey() {
       if (this.secretType === 'secret') {
-        if (Helper.strOK(this.secretKeyText)) {
-          return this.secretKeyText
+        if (Helper.strOK(this.model.secretKey)) {
+          return this.model.secretKey
         }
 
         this._displayToast('Please enter a secret key', true)
@@ -543,8 +533,8 @@ export default {
     },
     publicKey() {
       if (this.secretType === 'public') {
-        if (Helper.strOK(this.publicKeyText)) {
-          return this.publicKeyText
+        if (Helper.strOK(this.model.publicKey)) {
+          return this.model.publicKey
         }
 
         this._displayToast('Please enter a public key', true)
@@ -554,40 +544,22 @@ export default {
       return ''
     },
     asset() {
-      if (this.$refs.showAssetPopup) {
-        return this.$refs.showAssetPopup.getSelectedAsset()
-      }
-
-      this._displayToast('Please enter an asset code and issuer', true)
-      Helper.debugLog('Please enter an asset code and issuer', 'Error')
-
-      return null
+      return this.model.getAsset()
     },
     manageOffer() {
       let good = false
 
-      if ((this.sellingAmount > 0) &&
+      if ((this.model.sellAmount > 0) &&
         (this.buyUnit > 0) &&
         (this.sellUnit > 0)) {
         good = true
       }
 
-      let buyingAsset = null
-      let sellingAsset = null
-
-      if (this.$refs.buyingAssetPopup) {
-        buyingAsset = this.$refs.buyingAssetPopup.getSelectedAsset()
-      }
-
-      if (this.$refs.sellingAssetPopup) {
-        sellingAsset = this.$refs.sellingAssetPopup.getSelectedAsset()
-      }
-
-      if (good && buyingAsset && sellingAsset) {
+      if (good) {
         return {
-          buyingAsset: buyingAsset,
-          sellingAsset: sellingAsset,
-          sellingAmount: this.sellingAmount,
+          buyingAsset: this.model.getBuyingAsset(),
+          sellingAsset: this.model.getSellingAsset(),
+          sellingAmount: this.model.sellAmount,
           buyUnit: this.buyUnit,
           sellUnit: this.sellUnit
         }
@@ -606,21 +578,10 @@ export default {
         good = true
       }
 
-      let buyingAsset = null
-      let sellingAsset = null
-
-      if (this.$refs.buyingAssetPopup) {
-        buyingAsset = this.$refs.buyingAssetPopup.getSelectedAsset()
-      }
-
-      if (this.$refs.sellingAssetPopup) {
-        sellingAsset = this.$refs.sellingAssetPopup.getSelectedAsset()
-      }
-
-      if (good && buyingAsset && sellingAsset) {
+      if (good) {
         return {
-          buyingAsset: buyingAsset,
-          sellingAsset: sellingAsset,
+          buyingAsset: this.model.getBuyingAsset(),
+          sellingAsset: this.model.getSellingAsset(),
           buySendMax: this.buySendMax,
           buyAmount: this.buyAmount
         }
@@ -638,9 +599,9 @@ export default {
       let key = null
 
       if (validForSigning) {
-        key = this.selectedDest ? this.selectedDest.secret : null
+        key = this.model.destAccount ? this.model.destAccount.secret : null
       } else {
-        key = this.selectedDest ? this.selectedDest.publicKey : null
+        key = this.model.destAccount ? this.model.destAccount.publicKey : null
       }
 
       if (Helper.strOK(key)) {
@@ -650,7 +611,7 @@ export default {
       return false
     },
     _signerValid() {
-      const result = this.selectedSigner ? this.selectedSigner.secret : null
+      const result = this.model.signerAccount ? this.model.signerAccount.secret : null
 
       if (Helper.strOK(result)) {
         return true
@@ -662,9 +623,9 @@ export default {
       let key = null
 
       if (validForSigning) {
-        key = this.selectedSource ? this.selectedSource.secret : null
+        key = this.model.sourceAccount ? this.model.sourceAccount.secret : null
       } else {
-        key = this.selectedSource ? this.selectedSource.publicKey : null
+        key = this.model.sourceAccount ? this.model.sourceAccount.publicKey : null
       }
 
       if (Helper.strOK(key)) {
@@ -674,7 +635,7 @@ export default {
       return false
     },
     _fundingValid() {
-      const result = this.selectedFunding ? this.selectedFunding.secret : null
+      const result = this.model.fundingAccount ? this.model.fundingAccount.secret : null
 
       if (Helper.strOK(result)) {
         return true

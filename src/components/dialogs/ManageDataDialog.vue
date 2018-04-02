@@ -10,7 +10,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='addData' v-on:toast='displayToast' :showSource=true :showFunding=true :showSigner=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='addData' :model="model" v-on:toast='displayToast' :showSource=true :showFunding=true :showSigner=true />
 
         <v-text-field hide-details label='Name' v-model.trim="name" @keyup.enter="addData()" ref='input'></v-text-field>
         <v-text-field hide-details label='Value' v-model.trim="value" @keyup.enter="addData()"></v-text-field>
@@ -39,7 +39,7 @@ import ToastComponent from '../ToastComponent.vue'
 import ReusableStellarViews from '../ReusableStellarViews.vue'
 
 export default {
-  props: ['ping'],
+  props: ['ping', 'model'],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent,
@@ -57,10 +57,6 @@ export default {
   watch: {
     ping: function() {
       this.visible = true
-
-      if (this.dialogAccounts()) {
-        this.dialogAccounts().resetState()
-      }
 
       // autofocus hack
       this.$nextTick(() => {

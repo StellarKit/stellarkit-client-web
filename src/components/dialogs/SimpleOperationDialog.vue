@@ -10,7 +10,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='doOperation' v-on:toast='displayToast' :showSource=showSource :showDest=showDest :showFunding=showFunding :showSigner=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='doOperation' :model="model" v-on:toast='displayToast' :showSource=showSource :showDest=showDest :showFunding=showFunding :showSigner=true />
         <v-text-field :hint='hint' :label='inputLabel' v-model.trim="inputText" @keyup.enter="doOperation()" ref='input'></v-text-field>
       </div>
       <div class='button-holder'>
@@ -37,7 +37,7 @@ import ToastComponent from '../ToastComponent.vue'
 const StellarSdk = require('stellar-sdk')
 
 export default {
-  props: ['ping', 'operation'],
+  props: ['ping', 'operation', 'model'],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent,
@@ -100,10 +100,6 @@ export default {
     ping: function() {
       this.visible = true
       this.inputText = ''
-
-      if (this.dialogAccounts()) {
-        this.dialogAccounts().resetState()
-      }
 
       // autofocus hack
       this.$nextTick(() => {

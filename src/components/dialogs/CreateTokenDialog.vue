@@ -9,7 +9,7 @@
       </div>
       <div class='help-email'>
         <v-text-field hide-details label='Symbol' v-model.trim="symbol" @keyup.enter="createToken()" ref='input'></v-text-field>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createToken' v-on:toast='displayToast' :showAmount=true :showFunding=true :showHomeDomain=true :showAuthFlags=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createToken' :model="model" v-on:toast='displayToast' :showAmount=true :showFunding=true :showHomeDomain=true :showAuthFlags=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -37,7 +37,7 @@ const StellarSdk = require('stellar-sdk')
 import ReusableStellarViews from '../ReusableStellarViews.vue'
 
 export default {
-  props: ['ping'],
+  props: ['ping', 'model'],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent,
@@ -55,10 +55,6 @@ export default {
     ping: function() {
       this.visible = true
       this.symbol = ''
-
-      if (this.dialogAccounts()) {
-        this.dialogAccounts().resetState()
-      }
 
       // autofocus hack
       this.$nextTick(() => {

@@ -9,7 +9,7 @@
         <div class='sub-header'>Account must have already set trust on the asset</div>
       </div>
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='sendTokens' v-on:toast='displayToast' :showDest=true :showAmount=true :showFunding=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='sendTokens' :model="model" v-on:toast='displayToast' :showDest=true :showAmount=true :showFunding=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -36,7 +36,7 @@ const StellarSdk = require('stellar-sdk')
 import ReusableStellarViews from '../ReusableStellarViews.vue'
 
 export default {
-  props: ['ping', 'project'],
+  props: ['ping', 'project', 'model'],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent,
@@ -52,10 +52,6 @@ export default {
   watch: {
     ping: function() {
       this.visible = true
-
-      if (this.dialogAccounts()) {
-        this.dialogAccounts().resetState()
-      }
 
       // autofocus hack
       this.$nextTick(() => {

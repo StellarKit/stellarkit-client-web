@@ -10,7 +10,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='trustToken' v-on:toast='displayToast' :showSource=true :showFunding=true :showAsset=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='trustToken' :model="model" v-on:toast='displayToast' :showSource=true :showFunding=true :showAsset=true />
 
         <v-text-field persistent-hint label='Trust Limit' v-model.number="trustLimit" @keyup.enter="trustToken()" hint="Set Trust Limit to zero to remove the trust line"></v-text-field>
       </div>
@@ -37,7 +37,7 @@ import ToastComponent from '../ToastComponent.vue'
 import ReusableStellarViews from '../ReusableStellarViews.vue'
 
 export default {
-  props: ['ping'],
+  props: ['ping', 'model'],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent,
@@ -54,10 +54,6 @@ export default {
   watch: {
     ping: function() {
       this.visible = true
-
-      if (this.dialogAccounts()) {
-        this.dialogAccounts().resetState()
-      }
 
       // autofocus hack
       this.$nextTick(() => {

@@ -35,7 +35,7 @@ const XMLItem = {
 }
 
 export default {
-  props: ['title'],
+  props: ['title', 'model'],
   data() {
     return {
       selectedItem: XMLItem,
@@ -59,31 +59,25 @@ export default {
       this.assets.unshift(XMLItem)
     },
     getTitle() {
-      if (this.selectedItem) {
-        return this.selectedItem.symbol
+      if (this.model.asset) {
+        return this.model.asset.getCode()
       }
 
       return ''
     },
     getIssuer() {
-      if (this.selectedItem) {
-        return this.selectedItem.issuer
+      if (this.model.asset) {
+        return this.model.asset.getIssuer()
       }
 
       return ''
     },
     menuClick(item) {
-      this.selectedItem = item
-    },
-    getSelectedAsset() {
-      if (this.selectedItem) {
-        if (Helper.strOK(this.selectedItem.issuer)) {
-          return new StellarSdk.Asset(this.selectedItem.symbol, this.selectedItem.issuer)
-        }
-        return StellarSdk.Asset.native()
+      if (Helper.strOK(this.item.issuer)) {
+        this.model.asset = new StellarSdk.Asset(this.item.symbol, this.item.issuer)
+      } else {
+        this.model.asset = StellarSdk.Asset.native()
       }
-
-      return null
     }
   }
 }

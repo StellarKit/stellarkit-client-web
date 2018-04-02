@@ -5,7 +5,7 @@
 
     <div class='help-contents'>
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='showOffers' v-on:toast='displayToast' :showSource=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='showOffers' :model="model" v-on:toast='displayToast' :showSource=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -34,7 +34,7 @@ import ToastComponent from '../ToastComponent.vue'
 import ReusableStellarViews from '../ReusableStellarViews.vue'
 
 export default {
-  props: ['ping'],
+  props: ['ping', 'model'],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent,
@@ -50,10 +50,6 @@ export default {
   watch: {
     ping: function() {
       this.visible = true
-
-      if (this.dialogAccounts()) {
-        this.dialogAccounts().resetState()
-      }
 
       // autofocus hack
       this.$nextTick(() => {

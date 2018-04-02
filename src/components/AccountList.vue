@@ -58,7 +58,7 @@
     </div>
   </transition-group>
 
-  <new-account-dialog :ping='newAccountDialogPing' />
+  <new-account-dialog :model='model' :ping='newAccountDialogPing' />
 
   <confirm-dialog v-on:confirm-dialog-ok='removeAccountConfirmed' :ping='confirmRemoveDialogPing' title='Remove Account?' message='Make sure you saved the secret key! You can later add this account back using the secret key.' okTitle='Remove Account' />
 
@@ -77,11 +77,13 @@ import $ from 'jquery'
 import StellarAccounts from '../js/StellarAccounts.js'
 import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue'
 import AssetManager from '../js/AssetManager.js'
+import ReusableStellarViewsModel from '../components/ReusableStellarViewsModel.js'
 
 export default {
   props: ['items'],
   data() {
     return {
+      model: new ReusableStellarViewsModel(),
       timeline: null,
       newAccountDialogPing: false,
       confirmRemoveDialogPing: false,

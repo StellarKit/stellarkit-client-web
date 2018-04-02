@@ -17,7 +17,7 @@
       <div v-else>
         <div v-if='mode === "add"' class='choice-box'>
           <div class='note-text'>Paste in the secret key of an existing account.</div>
-          <dialog-accounts ref='dialogAccountsAdd' v-on:enter-key-down='addExistingAccount' v-on:toast='displayToast' :showSecret=true :showAccountName=true />
+          <dialog-accounts ref='dialogAccountsAdd' v-on:enter-key-down='addExistingAccount' v-on:toast='displayToast' :model="model" :showSecret=true :showAccountName=true />
           <div class='button-holder'>
             <v-tooltip open-delay='200' bottom>
               <v-btn round color='primary' slot="activator" @click="addExistingAccount()" :loading="loading">Add Account</v-btn>
@@ -28,7 +28,7 @@
 
         <div v-if='mode === "secret"' class='choice-box'>
           <div class='note-text'>Choose an account to fund the creating of a new account. <strong>Use either</strong> an account on Stellar Army, or paste in a secret key from another account. 1 XLM will be spent to fund the new account.</div>
-          <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createAccount' v-on:toast='displayToast' :showFunding=true :showAccountName=true :showAmount=true />
+          <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createAccount' v-on:toast='displayToast' :model="model" :showFunding=true :showAccountName=true :showAmount=true />
           <div class='button-holder'>
             <v-tooltip open-delay='200' bottom>
               <v-btn round color='primary' slot="activator" @click="createAccount()" :loading="loading">Create Account</v-btn>
@@ -61,7 +61,7 @@ import ReusableStellarViews from '../ReusableStellarViews.vue'
 
 export default {
   mixins: [StellarCommonMixin],
-  props: ['ping'],
+  props: ['ping', 'model'],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent,
@@ -87,13 +87,6 @@ export default {
     ping: function() {
       this.visible = true
       this.mode = 'start'
-
-      if (this.dialogAccounts()) {
-        this.dialogAccounts().resetState()
-      }
-      if (this.dialogAccountsAdd()) {
-        this.dialogAccountsAdd().resetState()
-      }
     }
   },
   methods: {

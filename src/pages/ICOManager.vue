@@ -52,10 +52,10 @@
     </div>
   </div>
 
-  <manage-offer-dialog :ping='offerDialogPing' :project='dialogProject' />
-  <send-tokens-dialog :ping='sendTokensDialogPing' :project='dialogProject' />
-  <create-account-dialog :ping='accountDialogPing' :project='dialogProject' />
-  <create-token-dialog v-on:token-created='createDialogResult' :ping='createDialogPing' />
+  <manage-offer-dialog :ping='offerDialogPing' :model='model' :project='dialogProject' />
+  <send-tokens-dialog :ping='sendTokensDialogPing' :model='model' :project='dialogProject' />
+  <create-account-dialog :ping='accountDialogPing' :model='model' :project='dialogProject' />
+  <create-token-dialog v-on:token-created='createDialogResult' :model='model' :ping='createDialogPing' />
   <confirm-dialog v-on:confirm-dialog-ok='deleteTokenProjectConfirmed' :ping='confirmDialogPing' title='Delete Token Project?' message='Do you want to delete this token project? Tokens will remain on the network, but make sure you have your keys.' okTitle='Delete Project'
   />
   <confirm-dialog v-on:confirm-dialog-ok='lockIssuerConfirmed' :ping='confirmLockDialogPing' title='Lock Issuer?' message='Any tokens or currency on this account will be locked forever. This feature is great to ensure no more tokens can ever be created, but make sure everything on this account is set, for example the home domain. Be ABSOLUTELY CERTAIN you know what your are doing. This is not reversible.'
@@ -66,6 +66,7 @@
 <script>
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import Helper from '../js/helper.js'
+import StellarAccounts from '../js/StellarAccounts.js'
 import AccountList from '../components/AccountList.vue'
 import CreateTokenDialog from '../components/dialogs/CreateTokenDialog.vue'
 import CreateAccountDialog from '../components/dialogs/CreateAccountDialog.vue'
@@ -73,6 +74,9 @@ import ManageOfferDialog from '../components/dialogs/ManageOfferDialog.vue'
 import SendTokensDialog from '../components/dialogs/SendTokensDialog.vue'
 import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue'
 import StyleExtractionMixin from '../components/StyleExtractionMixin.js'
+import ReusableStellarViewsModel from '../components/ReusableStellarViewsModel.js'
+
+const StellarSdk = require('stellar-sdk')
 const $ = require('jquery')
 import StellarUtils from '../js/StellarUtils.js'
 import {
@@ -120,6 +124,7 @@ export default {
   },
   data() {
     return {
+      model: new ReusableStellarViewsModel(),
       tokenProjects: [],
       summaryMap: [],
       projectIndex: 0,
@@ -244,6 +249,11 @@ export default {
       this.updateProjectIndex(index)
     },
     manageOffer() {
+      this.model = new ReusableStellarViewsModel()
+
+      this.model.sourceAccount = StellarAccounts.accountWithPublicKey(this.currentProject().distributor)
+      this.model.setSellingAsset(new StellarSdk.Asset(this.currentProject().symbol, this.currentProject().issuer))
+
       this.dialogProject = this.currentProject()
       this.offerDialogPing = !this.offerDialogPing
     },

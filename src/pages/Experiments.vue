@@ -18,7 +18,7 @@
 
     <div class='admin-area'>
       <div>Admin</div>
-      <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='adminEnterKey' :showSource=true :showFunding=true :showAsset=true />
+      <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='adminEnterKey' :model="model" :showSource=true :showFunding=true :showAsset=true />
     </div>
 
   </div>
