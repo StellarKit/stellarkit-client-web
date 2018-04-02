@@ -4,6 +4,10 @@
     <v-text-field label="Symbol" @keyup.enter="enterKeyDown" v-model.trim="model.symbol" hint='Symbol can be 1-12 characters long' autofocus></v-text-field>
   </div>
 
+  <div v-if='showAccountName' class='account-choice-box'>
+    <v-text-field hide-details spellcheck="false" label="Account name" v-model.trim="model.accountName" @keyup.enter="enterKeyDown" hint="A unique name helps you keep track of multiple accounts"> </v-text-field>
+  </div>
+
   <div v-if='showSource' class='account-choice-box'>
     <div>
       <menu-button v-on:menu-selected='sourceMenuSelected' title='Source account' :items='sourceMenuItems' :selectedID='sourceType' />
@@ -54,12 +58,8 @@
     </div>
   </div>
 
-  <div v-if='showAccountName' class='account-choice-box'>
-    <v-text-field hide-details spellcheck="false" label="Account name" v-model.trim="model.accountName" @keyup.enter="enterKeyDown" hint="A unique name helps you keep track of multiple accounts"> </v-text-field>
-  </div>
-
   <div v-if='showAmount' class='account-choice-box'>
-    <v-text-field hide-details label="Amount" type='number' v-model.number="model.assetAmount" @keyup.enter="enterKeyDown"></v-text-field>
+    <v-text-field hide-details :label="model.amountLabel" type='number' v-model.number="model.assetAmount" @keyup.enter="enterKeyDown"></v-text-field>
   </div>
 
   <div v-if='showNumberValue' class='account-choice-box'>

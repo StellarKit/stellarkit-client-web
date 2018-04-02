@@ -25,6 +25,7 @@ export default class ReusableStellarViewsModel {
     this.fundingMessage = 'Optional: The source account will pay the fee.'
 
     this.assetAmount = 10
+    this.amountLabel = 'Amount'
 
     this.nameValueOneLabel = 'Name'
     this.nameValueTwoLabel = 'Value'

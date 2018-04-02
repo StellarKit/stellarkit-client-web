@@ -27,7 +27,6 @@
         </div>
 
         <div v-if='mode === "secret"' class='choice-box'>
-          <div class='note-text'>Choose an account to fund the creating of a new account. <strong>Use either</strong> an account on Stellar Army, or paste in a secret key from another account.</div>
           <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createAccount' v-on:toast='displayToast' :model="model" :showFunding=true :showAccountName=true :showAmount=true />
           <div class='button-holder'>
             <v-tooltip open-delay='200' bottom>
@@ -86,6 +85,7 @@ export default {
   watch: {
     ping: function() {
       this.visible = true
+      this.model.amountLabel = 'Starting balance in XLM'
       this.mode = 'start'
     }
   },
