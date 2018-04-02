@@ -5,7 +5,7 @@
 
     <div class='help-contents'>
       <div class='help-text'>
-        <div>Create a wallet for a buyer. Adding a timelock is optional</div>
+        <div>Create a wallet for a user.</div>
       </div>
       <div class='help-email'>
         <div class='balance-fields'>
