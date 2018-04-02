@@ -228,6 +228,10 @@ export default {
       })
     },
     createToken() {
+      this.model = new ReusableStellarViewsModel()
+
+      this.model.fundingMessage = 'Choose an account to pay the transaction fee'
+
       this.createDialogPing = !this.createDialogPing
     },
     createDialogResult(issuerKeypair, distributorKeypair, asset) {
@@ -268,6 +272,10 @@ export default {
       this.sendAssetsDialogPing = !this.sendAssetsDialogPing
     },
     createUserAccount() {
+      this.model = new ReusableStellarViewsModel()
+
+      this.model.fundingMessage = 'Choose an account to pay the transaction fee'
+
       this.dialogProject = this.currentProject()
       this.accountDialogPing = !this.accountDialogPing
     },

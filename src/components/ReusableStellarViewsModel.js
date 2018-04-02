@@ -19,6 +19,7 @@ export default class ReusableStellarViewsModel {
 
     this.secretKey = ''
     this.publicKey = ''
+    this.fundingMessage = 'Optional: The source account will pay the fee.'
 
     this.assetAmount = 10
 

@@ -61,7 +61,6 @@
   <new-account-dialog :model='model' :ping='newAccountDialogPing' />
 
   <confirm-dialog v-on:confirm-dialog-ok='removeAccountConfirmed' :ping='confirmRemoveDialogPing' title='Remove Account?' message='Make sure you saved the secret key! You can later add this account back using the secret key.' okTitle='Remove Account' />
-
 </div>
 </template>
 
@@ -180,6 +179,9 @@ export default {
             })
           break
         case 'other':
+          this.model = new ReusableStellarViewsModel()
+          this.model.fundingMessage = 'Choose an account to pay the transaction fee'
+
           this.newAccountDialogPing = !this.newAccountDialogPing
           break
         default:
