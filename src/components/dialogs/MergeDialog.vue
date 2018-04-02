@@ -33,14 +33,14 @@ import {
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
-import DialogAccountsView from './DialogAccountsView.vue'
+import ReusableStellarViews from './ReusableStellarViews.vue'
 
 export default {
   props: ['ping'],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent,
-    'dialog-accounts': DialogAccountsView
+    'dialog-accounts': ReusableStellarViews
   },
   data() {
     return {

@@ -33,7 +33,7 @@ import Helper from '../js/helper.js'
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
 import AccountList from '../components/AccountList.vue'
-import DialogAccountsView from '../components/dialogs/DialogAccountsView.vue'
+import ReusableStellarViews from '../components/dialogs/ReusableStellarViews.vue'
 import StellarUtils from '../js/StellarUtils.js'
 import StellarAccounts from '../js/StellarAccounts.js'
 import {
@@ -56,7 +56,7 @@ export default {
   components: {
     'account-list': AccountList,
     'instructions-header': InstructionsHeader,
-    'dialog-accounts': DialogAccountsView,
+    'dialog-accounts': ReusableStellarViews,
     'buy-asset-dialog': BuyAssetDialog,
     'send-assets-dialog': SendAssetsDialog
   },
