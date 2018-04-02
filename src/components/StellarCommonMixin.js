@@ -14,8 +14,26 @@
      Helper.vue().$on('stellar-network-updated', this.updateAccountsUI)
    },
    methods: {
-     distributorAccount() {
+     distributor() {
        const result = StellarAccounts.accountWithName('Distributor')
+       if (result) {
+         return result
+       }
+
+       Helper.debugLog('Go to the Tokens tab and create a token first.', 'Error')
+       return null
+     },
+     issuer() {
+       const result = StellarAccounts.accountWithName('Issuer')
+       if (result) {
+         return result
+       }
+
+       Helper.debugLog('Go to the Tokens tab and create a token first.', 'Error')
+       return null
+     },
+     tokenBuyer() {
+       const result = StellarAccounts.accountWithName('Token buyer')
        if (result) {
          return result
        }

@@ -129,9 +129,6 @@ export default {
   mixins: [StellarCommonMixin],
   data() {
     return {
-      issuerAcct: null,
-      distributorAcct: null,
-      tokenBuyerAcct: null,
       createAmount: 10000,
       trustLimit: 10000,
       amountToBuy: 12.4,
@@ -146,7 +143,7 @@ export default {
   },
   methods: {
     newAccountWithTokens() {
-      const distributorAccount = this.distributorAccount()
+      const distributorAccount = this.distributor()
 
       if (distributorAccount) {
         const distributorWallet = StellarWallet.secret(distributorAccount.secret)
@@ -168,7 +165,7 @@ export default {
       } else {
         Helper.debugLog('Buying tokens..')
 
-        StellarUtils.buyTokens(StellarWallet.secret(this.tokenBuyerAcct.secret), StellarUtils.lumins(), asset, '5000', String(this.amountToBuy))
+        StellarUtils.buyTokens(StellarWallet.secret(this.tokenBuyer().secret), StellarUtils.lumins(), asset, '5000', String(this.amountToBuy))
           .then((response) => {
             Helper.debugLog(response)
 
@@ -188,7 +185,7 @@ export default {
       } else {
         Helper.debugLog('payment paths..')
 
-        StellarUtils.paths(this.distributorAccount.publicKey, this.tokenBuyerAcct.publicKey, asset, '1')
+        StellarUtils.paths(this.distributor().publicKey, this.tokenBuyer().publicKey, asset, '1')
           .then((response) => {
             Helper.debugLog(response, 'Success')
 
@@ -200,7 +197,7 @@ export default {
       }
     },
     manageOffer() {
-      if (this.distributorAcct) {
+      if (this.distributor()) {
         Helper.debugLog('Managing Offer...')
 
         const price = {
@@ -208,7 +205,7 @@ export default {
           d: this.offerPriceD
         }
 
-        StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), null, StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), String(this.offerAmount), price)
+        StellarUtils.manageOffer(StellarWallet.secret(this.distributor().secret), null, StellarUtils.lumins(), StellarAccounts.lamboTokenAsset(), String(this.offerAmount), price)
           .then((result) => {
             Helper.debugLog(result, 'Success')
 
@@ -220,7 +217,7 @@ export default {
       }
     },
     manageOfferETH() {
-      if (this.distributorAcct) {
+      if (this.distributor()) {
         Helper.debugLog('Managing offer Ethereum...')
 
         const price = {
@@ -228,7 +225,7 @@ export default {
           d: 10
         }
 
-        StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), null, StellarAccounts.ethereumAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
+        StellarUtils.manageOffer(StellarWallet.secret(this.distributor().secret), null, StellarAccounts.ethereumAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
           .then((result) => {
             Helper.debugLog(result, 'Success')
 
@@ -240,7 +237,7 @@ export default {
       }
     },
     manageOfferBTC() {
-      if (this.distributorAcct) {
+      if (this.distributor()) {
         Helper.debugLog('Managing offer Bitcoin...')
 
         const price = {
@@ -248,7 +245,7 @@ export default {
           d: 10
         }
 
-        StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), null, StellarAccounts.bitcoinAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
+        StellarUtils.manageOffer(StellarWallet.secret(this.distributor().secret), null, StellarAccounts.bitcoinAsset(), StellarAccounts.lamboTokenAsset(), '5000', price)
           .then((result) => {
             Helper.debugLog(result, 'Success')
 
@@ -260,10 +257,10 @@ export default {
       }
     },
     lockIssuer() {
-      if (this.issuerAcct) {
+      if (this.issuer()) {
         Helper.debugLog('Locking issuer...')
 
-        StellarUtils.lockAccount(StellarWallet.secret(this.issuerAcct.secret), 'lock')
+        StellarUtils.lockAccount(StellarWallet.secret(this.issuer().secret), 'lock')
           .then((result) => {
             Helper.debugLog('locked!')
             Helper.debugLog(result)
@@ -276,7 +273,7 @@ export default {
       }
     },
     createTokens() {
-      if (this.issuerAcct) {
+      if (this.issuer()) {
         Helper.debugLog('Creating tokens...')
 
         const amount = this.createAmount
@@ -286,7 +283,7 @@ export default {
         }
         const asset = StellarAccounts.lamboTokenAsset()
 
-        StellarUtils.sendAsset(StellarWallet.secret(this.issuerAcct.secret), null, StellarWallet.secret(this.distributorAcct.secret), String(amount), asset, 'Created Tokens')
+        StellarUtils.sendAsset(StellarWallet.secret(this.issuer().secret), null, StellarWallet.secret(this.distributor().secret), String(amount), asset, 'Created Tokens')
           .then((response) => {
             Helper.debugLog(response, 'Success')
 
@@ -305,10 +302,10 @@ export default {
       }
     },
     setDistributorTrust(asset) {
-      if (this.distributorAcct) {
+      if (this.distributor()) {
         Helper.debugLog('Setting distributor trust...')
 
-        StellarUtils.changeTrust(StellarWallet.secret(this.distributorAcct.secret), null, asset, String(this.trustLimit))
+        StellarUtils.changeTrust(StellarWallet.secret(this.distributor().secret), null, asset, String(this.trustLimit))
           .then((result) => {
             Helper.debugLog(result)
 
@@ -336,9 +333,10 @@ export default {
         Helper.debugLog('Setting buyer trust...')
 
         // buyer must trust the distributor
-        StellarUtils.changeTrust(StellarWallet.secret(this.tokenBuyerAcct.secret), null, asset, String(this.trustLimit))
+        StellarUtils.changeTrust(StellarWallet.secret(this.tokenBuyer().secret), null, asset, String(this.trustLimit))
           .then((result) => {
             Helper.debugLog(result)
+            StellarUtils.updateBalances()
 
             return null
           })
@@ -348,10 +346,10 @@ export default {
       }
     },
     showOffers() {
-      if (this.distributorAcct) {
+      if (this.distributor()) {
         Helper.debugLog('Offers...')
 
-        StellarUtils.server().offers('accounts', this.distributorAcct.publicKey)
+        StellarUtils.server().offers('accounts', this.distributor().publicKey)
           .call()
           .then((response) => {
             response.records.forEach((offer) => {
@@ -364,58 +362,18 @@ export default {
           })
       }
     },
-    deleteOffersFromArray(offers) {
-      return new Promise((resolve, reject) => {
-        const offer = offers.pop()
-        if (offer) {
-          const buying = StellarUtils.assetFromObject(offer.buying)
-          const selling = StellarUtils.assetFromObject(offer.selling)
-
-          StellarUtils.manageOffer(StellarWallet.secret(this.distributorAcct.secret), null, buying, selling, '0', offer.price_r, offer.id)
-            .then((result) => {
-              Helper.debugLog(result, 'Success')
-
-              resolve(this.deleteOffersFromArray(offers))
-            })
-            .catch((error) => {
-              Helper.debugLog(error, 'Error')
-
-              reject(error)
-            })
-        } else {
-          resolve(true)
-        }
-      })
-    },
     deleteOffers() {
-      if (this.distributorAcct) {
-        Helper.debugLog('Deleting Offers...')
-
-        StellarUtils.server().offers('accounts', this.distributorAcct.publicKey)
-          .call()
-          .then((response) => {
-            // Helper.debugLog(response)
-            return this.deleteOffersFromArray(response.records)
-          })
-          .then((result) => {
-            Helper.debugLog('Deleted all offers', 'Success')
-            return result
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-            return false
-          })
+      if (this.distributor()) {
+        StellarUtils.deleteOffers(StellarWallet.secret(this.distributor().secret))
       }
     },
     createStandardAccounts() {
-      this.issuerAcct = StellarAccounts.accountWithName('Issuer')
-      if (!this.issuerAcct) {
+      let acct = StellarAccounts.accountWithName('Issuer')
+      if (!acct) {
         Helper.debugLog('Creating Issuer...')
 
         StellarUtils.createTestAccount('Issuer')
           .then((result) => {
-            this.issuerAcct = result
-
             return null
           })
           .catch((error) => {
@@ -423,14 +381,12 @@ export default {
           })
       }
 
-      this.distributorAcct = StellarAccounts.accountWithName('Distributor')
-      if (!this.distributorAcct) {
+      acct = StellarAccounts.accountWithName('Distributor')
+      if (!acct) {
         Helper.debugLog('Creating Distributor...')
 
         StellarUtils.createTestAccount('Distributor')
           .then((result) => {
-            this.distributorAcct = result
-
             return null
           })
           .catch((error) => {
@@ -438,14 +394,12 @@ export default {
           })
       }
 
-      this.tokenBuyerAcct = StellarAccounts.accountWithName('Token buyer')
-      if (!this.tokenBuyerAcct) {
+      acct = StellarAccounts.accountWithName('Token buyer')
+      if (!acct) {
         Helper.debugLog('Creating Token buyer...')
 
         StellarUtils.createTestAccount('Token buyer')
           .then((result) => {
-            this.tokenBuyerAcct = result
-
             return null
           })
           .catch((error) => {

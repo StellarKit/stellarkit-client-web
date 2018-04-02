@@ -169,6 +169,38 @@ class StellarUtils {
       })
   }
 
+  deleteOffers(sourceWallet) {
+    if (sourceWallet) {
+      Helper.debugLog('Deleting Offers...')
+
+      sourceWallet.publicKey()
+        .then((pubicKey) => {
+          this.server().offers('accounts', pubicKey)
+            .call()
+            .then((response) => {
+              let nextPromise = Promise.resolve()
+
+              for (const offer of response.records) {
+                nextPromise = nextPromise.then(() => {
+                  const buying = this.assetFromObject(offer.buying)
+                  const selling = this.assetFromObject(offer.selling)
+
+                  return this.manageOffer(sourceWallet, null, buying, selling, '0', offer.price_r, offer.id)
+                })
+              }
+
+              return nextPromise
+            })
+            .then((result) => {
+              Helper.debugLog('Deleted all offers', 'Success')
+              this.updateBalances()
+
+              return null
+            })
+        })
+    }
+  }
+
   // returns {account: newAccount, keypair: keypair}
   newAccountWithTokens(fundingWallet, distributorWallet, startingBalance, asset, amount, accountName = null, accountTag = null) {
     let info = null

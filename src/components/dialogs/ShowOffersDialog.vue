@@ -84,37 +84,12 @@ export default {
       const sourceWallet = this.dialogAccounts().sourceWallet()
 
       if (sourceWallet) {
-        Helper.debugLog('Deleting Offers...')
-
-        sourceWallet.publicKey()
-          .then((pubicKey) => {
-            StellarUtils.server().offers('accounts', pubicKey)
-              .call()
-              .then((response) => {
-                let nextPromise = Promise.resolve()
-
-                for (const offer of response.records) {
-                  nextPromise = nextPromise.then(() => {
-                    const buying = StellarUtils.assetFromObject(offer.buying)
-                    const selling = StellarUtils.assetFromObject(offer.selling)
-
-                    return StellarUtils.manageOffer(sourceWallet, null, buying, selling, '0', offer.price_r, offer.id)
-                  })
-                }
-
-                return nextPromise
-              })
-              .then((result) => {
-                Helper.debugLog('Deleted all offers', 'Success')
-                StellarUtils.updateBalances()
-                this.visible = false
-
-                return result
-              })
-              .catch((error) => {
-                Helper.debugLog(error, 'Error')
-                return false
-              })
+        StellarUtils.deleteOffers(sourceWallet)
+          .then(() => {
+            this.visible = false
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
           })
       }
     },

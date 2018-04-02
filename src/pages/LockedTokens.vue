@@ -121,7 +121,7 @@ export default {
       Helper.debugLog(convertUNIXTimestampToTime(this.timeFromNow()))
     },
     createUnlockTransaction() {
-      const distributorAccount = this.distributorAccount()
+      const distributorAccount = this.distributor()
 
       if (distributorAccount && this.sourceValid()) {
         const seconds = 10
@@ -151,7 +151,7 @@ export default {
       }
     },
     createAccountWithLockedTokens() {
-      const distributorAccount = this.distributorAccount()
+      const distributorAccount = this.distributor()
 
       if (distributorAccount) {
         const distributorWallet = StellarWallet.secret(distributorAccount.secret)
