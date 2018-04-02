@@ -150,7 +150,7 @@ export default {
       }
     },
     createAccount() {
-      const fundingWallet = this.dialogAccounts().fundingWallet()
+      const fundingWallet = this.dialogAccounts().fundingWallet(true)
       const accountName = this.dialogAccounts().accountName()
       const amount = this.dialogAccounts().amount()
 

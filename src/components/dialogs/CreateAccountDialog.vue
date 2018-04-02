@@ -70,7 +70,7 @@ export default {
       return this.$refs.dialogAccounts
     },
     createAccount() {
-      const fundingWallet = this.dialogAccounts().fundingWallet()
+      const fundingWallet = this.dialogAccounts().fundingWallet(true)
       const accountName = this.accountName()
       const timeLockDate = this.dialogAccounts().timeLock()
 
