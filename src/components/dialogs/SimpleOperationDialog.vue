@@ -10,8 +10,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='doOperation' :model="model" v-on:toast='displayToast' :showSource=showSource :showDest=showDest :showFunding=showFunding :showSigner=true />
-        <v-text-field :hint='hint' :label='inputLabel' v-model.trim="inputText" @keyup.enter="doOperation()" ref='input'></v-text-field>
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='doOperation' :model="model" v-on:toast='displayToast' :showSource=showSource :showFunding=showFunding :showSigner=showSigner :showTextValue=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -46,60 +45,22 @@ export default {
   data() {
     return {
       visible: false,
-      title: 'Set Home Domain',
-      inputText: '',
+      title: '',
       tooltip: '',
       buttonTitle: '',
-      inputLabel: '',
       header: '',
       hint: '',
       subHeader: '',
       loading: false,
       showSource: false,
-      showDest: false,
+      showSigner: false,
       showFunding: false
-    }
-  },
-  mounted() {
-    switch (this.operation) {
-      case 'domain':
-        this.showSource = true
-        this.showFunding = true
-        this.title = 'Set Home Domain'
-        this.tooltip = 'Set the home domain'
-        this.buttonTitle = 'Set Domain'
-        this.inputLabel = 'Domain'
-        this.hint = 'www.example-domain.com'
-        this.header = 'Adds a domain name to the source account. Leave blank to remove. Funding account is optional.'
-        break
-      case 'inflation':
-        this.showSource = true
-        this.showFunding = true
-        this.title = 'Set Inflation Destination'
-        this.tooltip = 'Set the inflation destination'
-        this.buttonTitle = 'Set Inflation Destination'
-        this.inputLabel = 'Inflation destination'
-        this.header = 'Adds the inflation destination to the source account. Funding account is optional.'
-        this.subHeader = 'ex: GCCD6AJOYZCUAQLX32ZJF2MKFFAUJ53PVCFQI3RHWKL3V47QYE2BNAUT'
-        this.hint = 'visit: https://lumenaut.net/'
-        break
-      case 'federation':
-        this.title = 'Lookup Federation Address'
-        this.tooltip = 'Lookup Federation Address'
-        this.buttonTitle = 'Lookup'
-        this.inputLabel = 'Federation address'
-        this.header = 'Enter the federation address'
-        this.hint = 'example*domain.com'
-        break
-      default:
-        console.log('switch case not handled')
-        break
     }
   },
   watch: {
     ping: function() {
       this.visible = true
-      this.inputText = ''
+      this.updateForOperation()
 
       // autofocus hack
       this.$nextTick(() => {
@@ -110,6 +71,44 @@ export default {
     }
   },
   methods: {
+    updateForOperation() {
+      switch (this.operation) {
+        case 'domain':
+          this.showSource = true
+          this.showFunding = true
+          this.showSigner = true
+          this.title = 'Set Home Domain'
+          this.tooltip = 'Set the home domain'
+          this.buttonTitle = 'Set Domain'
+          this.model.textValueLabel = 'Home domain'
+          this.model.textValueHint = 'www.example-domain.com'
+          this.header = 'Adds a domain name to the source account. Leave blank to remove. Funding account is optional.'
+          break
+        case 'inflation':
+          this.showSource = true
+          this.showFunding = true
+          this.showSigner = true
+          this.title = 'Set Inflation Destination'
+          this.tooltip = 'Set the inflation destination'
+          this.buttonTitle = 'Set Inflation Destination'
+          this.model.textValueLabel = 'Inflation destination'
+          this.header = 'Adds the inflation destination to the source account. Funding account is optional.'
+          this.subHeader = 'ex: GCCD6AJOYZCUAQLX32ZJF2MKFFAUJ53PVCFQI3RHWKL3V47QYE2BNAUT'
+          this.model.textValueHint = 'visit: https://lumenaut.net/'
+          break
+        case 'federation':
+          this.title = 'Lookup Federation Address'
+          this.tooltip = 'Lookup Federation Address'
+          this.buttonTitle = 'Lookup'
+          this.model.textValueLabel = 'Federation address'
+          this.header = 'Enter the federation address'
+          this.model.textValueHint = 'example*domain.com'
+          break
+        default:
+          console.log('switch case not handled')
+          break
+      }
+    },
     doOperation() {
       switch (this.operation) {
         case 'domain':
@@ -132,6 +131,7 @@ export default {
     setDomain() {
       const sourceWallet = this.dialogAccounts().sourceWallet()
       const fundingWallet = this.dialogAccounts().fundingWallet()
+      const textValue = this.dialogAccounts().textValue(true)
 
       // additional signers optional
       const signerWallet = this.dialogAccounts().signerWallet()
@@ -140,11 +140,11 @@ export default {
         additionalSigners = [signerWallet]
       }
 
-      if (sourceWallet) {
+      if (sourceWallet && Helper.strOK(textValue)) {
         this.loading = true
         Helper.debugLog('Setting home domain...')
 
-        StellarUtils.setDomain(sourceWallet, this.inputText, fundingWallet, additionalSigners)
+        StellarUtils.setDomain(sourceWallet, textValue, fundingWallet, additionalSigners)
           .then((result) => {
             Helper.debugLog(result)
             this.loading = false
@@ -162,6 +162,7 @@ export default {
     setInflationDestination() {
       const sourceWallet = this.dialogAccounts().sourceWallet()
       const fundingWallet = this.dialogAccounts().fundingWallet()
+      const textValue = this.dialogAccounts().textValue(true)
 
       // additional signers optional
       const signerWallet = this.dialogAccounts().signerWallet()
@@ -170,36 +171,36 @@ export default {
         additionalSigners = [signerWallet]
       }
 
-      if (sourceWallet) {
+      if (sourceWallet && Helper.strOK(textValue)) {
         this.loading = true
         Helper.debugLog('Setting inflation destination...')
 
         // sending in blank string or null just eats transaction fees and does nothing
         // remove this if statement when fixed in stellar core
-        if (Helper.strOK(this.inputText)) {
-          StellarUtils.setInflationDestination(sourceWallet, this.inputText, fundingWallet, additionalSigners)
-            .then((result) => {
-              Helper.debugLog(result)
-              this.loading = false
-              StellarUtils.updateBalances()
+        StellarUtils.setInflationDestination(sourceWallet, textValue, fundingWallet, additionalSigners)
+          .then((result) => {
+            Helper.debugLog(result)
+            this.loading = false
+            StellarUtils.updateBalances()
 
-              this.displayToast('Success')
-            })
-            .catch((error) => {
-              Helper.debugLog(error, 'Error')
-              this.displayToast('Failed: see console', true)
+            this.displayToast('Success')
+          })
+          .catch((error) => {
+            Helper.debugLog(error, 'Error')
+            this.displayToast('Failed: see console', true)
 
-              this.loading = false
-            })
-        }
+            this.loading = false
+          })
       }
     },
     federationLookup() {
-      if (!Helper.isFederation(this.inputText)) {
+      const textValue = this.dialogAccounts().textValue(true)
+
+      if (!Helper.isFederation(textValue)) {
         let formResponse = ''
 
-        if (this.inputText.length > 0) {
-          formResponse = 'The address "' + this.inputText + '" appears to be invalid.'
+        if (textValue.length > 0) {
+          formResponse = 'The address "' + textValue + '" appears to be invalid.'
         } else {
           formResponse = 'Enter your federation address in the field above.'
         }
@@ -208,9 +209,9 @@ export default {
       } else {
         this.loadingFederation = true
 
-        Helper.debugLog('Talking to federation server: ' + this.inputText)
+        Helper.debugLog('Talking to federation server: ' + textValue)
 
-        StellarSdk.FederationServer.resolve(this.inputText)
+        StellarSdk.FederationServer.resolve(textValue)
           .then(federationRecord => {
             this.loadingFederation = false
 
