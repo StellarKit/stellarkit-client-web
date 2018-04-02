@@ -10,10 +10,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='addData' :model="model" v-on:toast='displayToast' :showSource=true :showFunding=true :showSigner=true />
-
-        <v-text-field hide-details label='Name' v-model.trim="name" @keyup.enter="addData()" ref='input'></v-text-field>
-        <v-text-field hide-details label='Value' v-model.trim="value" @keyup.enter="addData()"></v-text-field>
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='addData' :model="model" v-on:toast='displayToast' :showSource=true :showNameValue=true :showFunding=true :showSigner=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -49,8 +46,6 @@ export default {
     return {
       visible: false,
       title: 'Edit Account Data',
-      name: '',
-      value: '',
       loading: false
     }
   },
@@ -60,7 +55,9 @@ export default {
 
       // autofocus hack
       this.$nextTick(() => {
-        this.$refs.input.focus()
+        if (this.$refs.input) {
+          this.$refs.input.focus()
+        }
       })
     }
   },
@@ -69,8 +66,10 @@ export default {
       return this.$refs.dialogAccounts
     },
     addData() {
+      const nameValue = this.dialogAccounts().nameValue(true)
+
       // value can be empty to erase both key and value
-      if (Helper.strOK(this.name)) {
+      if (Helper.strOK(nameValue.name)) {
         const sourceWallet = this.dialogAccounts().sourceWallet()
         const fundingWallet = this.dialogAccounts().fundingWallet()
 
@@ -85,7 +84,7 @@ export default {
           Helper.debugLog('Setting key value data...')
           this.loading = true
 
-          StellarUtils.manageData(sourceWallet, fundingWallet, this.name, this.value, additionalSigners)
+          StellarUtils.manageData(sourceWallet, fundingWallet, nameValue.name, nameValue.value, additionalSigners)
             .then((result) => {
               Helper.debugLog(result)
               this.loading = false
@@ -100,8 +99,6 @@ export default {
               this.displayToast('Error!', true)
             })
         }
-      } else {
-        this.displayToast('Key is blank!', true)
       }
     },
     displayToast(message, error = false) {

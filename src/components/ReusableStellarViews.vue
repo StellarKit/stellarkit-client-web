@@ -58,6 +58,10 @@
     <v-text-field hide-details label="Amount" type='number' v-model.number="model.assetAmount" @keyup.enter="enterKeyDown"></v-text-field>
   </div>
 
+  <div v-if='showNumberValue' class='account-choice-box'>
+    <v-text-field :label="model.numberValueLabel" :hint='model.numberValueHint' type='number' v-model.number="model.numberValue" @keyup.enter="enterKeyDown"></v-text-field>
+  </div>
+
   <div v-if='showManageOffer' class='account-choice-box'>
     <v-text-field hide-details label="Sell amount" @keyup.enter="enterKeyDown" type='number' v-model.number='model.sellAmount'></v-text-field>
 
@@ -84,7 +88,12 @@
   </div>
 
   <div v-if='showTextValue' class='account-choice-box'>
-    <v-text-field :label="model.textValueLabel" @keyup.enter="enterKeyDown" v-model.trim="model.textValue" :hint='model.textValueHint'></v-text-field>
+    <v-text-field :label="model.textValueLabel" @keyup.enter="enterKeyDown" v-model.trim="model.textValue" :hint='model.textValueHint' ref='input'></v-text-field>
+  </div>
+
+  <div v-if='showNameValue' class='account-choice-box'>
+    <v-text-field hide-details :label="model.nameValueOneLabel" @keyup.enter="enterKeyDown" v-model.trim="model.nameValueOneValue" ref='input'></v-text-field>
+    <v-text-field hide-details :label="model.nameValueTwoLabel" @keyup.enter="enterKeyDown" v-model.trim="model.nameValueTwoValue"></v-text-field>
   </div>
 
   <div v-if='showTimeLock' class='account-choice-box'>
@@ -138,7 +147,9 @@ import {
 const StellarSdk = require('stellar-sdk')
 
 export default {
-  props: ['model', 'showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer', 'showTextValue', 'showAuthFlags',
+  props: ['model', 'showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showNumberValue', 'showAsset', 'showAccountName', 'showSecret', 'showNameValue', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer',
+    'showTextValue',
+    'showAuthFlags',
     'showTimeLock'
   ],
   mixins: [StellarCommonMixin],
@@ -501,6 +512,26 @@ export default {
       }
 
       return result
+    },
+    numberValue() {
+      const result = this.model.numberValue
+
+      return result
+    },
+    nameValue(required = false) {
+      const name = this.model.nameValueOneValue
+      const value = this.model.nameValueTwoValue
+
+      // only name is required
+      if (required && !Helper.strOK(name)) {
+        this._displayToast('Please fill out all fields', true)
+        Helper.debugLog('Please fill out all fields', 'Error')
+      }
+
+      return {
+        name: name,
+        value: value
+      }
     },
     amount() {
       return this.model.assetAmount

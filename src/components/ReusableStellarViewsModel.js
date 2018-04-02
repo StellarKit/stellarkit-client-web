@@ -24,7 +24,16 @@ export default class ReusableStellarViewsModel {
 
     this.assetAmount = 10
 
+    this.nameValueOneLabel = 'Name'
+    this.nameValueTwoLabel = 'Value'
+    this.nameValueOneValue = ''
+    this.nameValueOneValue = ''
+
     this.accountName = generateName()
+
+    this.textValue = 1000000
+    this.numberValueLabel = 'Label'
+    this.numberValueHint = 'Hint'
 
     this.assetModel = {
       asset: StellarSdk.Asset.native()

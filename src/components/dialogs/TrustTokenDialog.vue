@@ -10,9 +10,7 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='trustToken' :model="model" v-on:toast='displayToast' :showSource=true :showFunding=true :showAsset=true />
-
-        <v-text-field persistent-hint label='Trust Limit' v-model.number="trustLimit" @keyup.enter="trustToken()" hint="Set Trust Limit to zero to remove the trust line"></v-text-field>
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='trustToken' :model="model" v-on:toast='displayToast' :showNumberValue=true :showSource=true :showFunding=true :showAsset=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -47,13 +45,16 @@ export default {
     return {
       visible: false,
       title: 'Trust Token',
-      trustLimit: 100000,
       loading: false
     }
   },
   watch: {
     ping: function() {
       this.visible = true
+
+      this.model.numberValue = 1000000
+      this.model.numberValueLabel = 'Trust limit'
+      this.model.numberValueHint = 'Set Trust Limit to zero to remove the trust line.'
 
       // autofocus hack
       this.$nextTick(() => {
@@ -69,6 +70,7 @@ export default {
     },
     trustToken() {
       const asset = this.dialogAccounts().asset()
+      const trustLimit = this.dialogAccounts().numberValue()
 
       if (asset && !asset.isNative()) {
         const sourceWallet = this.dialogAccounts().sourceWallet()
@@ -78,7 +80,7 @@ export default {
           Helper.debugLog('Setting trust...')
           this.loading = true
 
-          StellarUtils.changeTrust(sourceWallet, fundingWallet, asset, String(this.trustLimit))
+          StellarUtils.changeTrust(sourceWallet, fundingWallet, asset, String(trustLimit))
             .then((result) => {
               Helper.debugLog(result)
               this.loading = false
