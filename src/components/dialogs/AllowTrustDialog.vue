@@ -15,11 +15,11 @@
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round color='secondary' slot="activator" @click="allowTrust(false)" :loading="loading">Revoke Trust</v-btn>
+          <v-btn round color='secondary' slot="activator" @click="allowTrust(false)" :loading="loadingRevoke">Revoke Trust</v-btn>
           <span>Allow destination to hold the asset</span>
         </v-tooltip>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round color='primary' slot="activator" @click="allowTrust(true)" :loading="loading">Allow Trust</v-btn>
+          <v-btn round color='primary' slot="activator" @click="allowTrust(true)" :loading="loadingTrust">Allow Trust</v-btn>
           <span>Allow destination to hold the asset</span>
         </v-tooltip>
       </div>
@@ -50,7 +50,8 @@ export default {
     return {
       visible: false,
       title: 'Allow Trust',
-      loading: false
+      loadingRevoke: false,
+      loadingTrust: false
     }
   },
   watch: {
@@ -65,21 +66,23 @@ export default {
     allowTrust(authorize) {
       const sourceWallet = this.dialogAccounts().sourceWallet()
       const destWallet = this.dialogAccounts().destWallet()
+      const fundingWallet = this.dialogAccounts().fundingWallet()
       const asset = this.dialogAccounts().asset()
 
       if (sourceWallet && destWallet && asset) {
         if (authorize) {
           Helper.debugLog('Authorizing trust...')
+          this.loadingTrust = true
         } else {
           Helper.debugLog('Revoking trust...')
+          this.loadingRevoke = true
         }
 
-        this.loading = true
-
-        StellarUtils.allowTrust(sourceWallet, destWallet, asset, authorize)
+        StellarUtils.allowTrust(sourceWallet, destWallet, asset, authorize, fundingWallet)
           .then((response) => {
             Helper.debugLog(response)
-            this.loading = false
+            this.loadingTrust = false
+            this.loadingRevoke = false
 
             this.displayToast('Success!')
             return null

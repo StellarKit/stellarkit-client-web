@@ -80,8 +80,8 @@ class StellarUtils {
     return this.api().changeTrust(sourceWallet, fundingWallet, asset, amount)
   }
 
-  allowTrust(sourceWallet, trustWallet, asset, authorize) {
-    return this.api().allowTrust(sourceWallet, trustWallet, asset, authorize)
+  allowTrust(sourceWallet, destWallet, asset, authorize, fundingWallet = null) {
+    return this.api().allowTrust(sourceWallet, destWallet, asset, authorize, fundingWallet)
   }
 
   setDomain(sourceWallet, domain, fundingWallet = null, additionalSigners = null) {
