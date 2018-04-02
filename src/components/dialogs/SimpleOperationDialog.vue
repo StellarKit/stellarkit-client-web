@@ -124,7 +124,7 @@ export default {
     setDomain() {
       const sourceWallet = this.dialogAccounts().sourceWallet()
       const fundingWallet = this.dialogAccounts().fundingWallet()
-      const textValue = this.dialogAccounts().textValue(true)
+      const textValue = this.dialogAccounts().textValue()
 
       // additional signers optional
       const signerWallet = this.dialogAccounts().signerWallet()
@@ -133,7 +133,8 @@ export default {
         additionalSigners = [signerWallet]
       }
 
-      if (sourceWallet && Helper.strOK(textValue)) {
+      // blank textValue is OK for clearing domain
+      if (sourceWallet) {
         this.loading = true
         Helper.debugLog('Setting home domain...')
 
