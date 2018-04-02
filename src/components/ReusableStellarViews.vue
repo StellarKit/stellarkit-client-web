@@ -83,7 +83,7 @@
     </div>
   </div>
 
-  <div v-if='showTextField' class='account-choice-box'>
+  <div v-if='showTextValue' class='account-choice-box'>
     <v-text-field :label="model.textValueLabel" @keyup.enter="enterKeyDown" v-model.trim="model.textValue" :hint='model.textValueHint'></v-text-field>
   </div>
 
@@ -138,7 +138,7 @@ import {
 const StellarSdk = require('stellar-sdk')
 
 export default {
-  props: ['model', 'showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer', 'showTextField', 'showAuthFlags',
+  props: ['model', 'showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer', 'showTextValue', 'showAuthFlags',
     'showTimeLock'
   ],
   mixins: [StellarCommonMixin],
