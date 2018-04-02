@@ -69,7 +69,7 @@
   <div v-if='showManageOffer' class='account-choice-box'>
     <v-text-field hide-details label="Sell amount" @keyup.enter="enterKeyDown" type='number' v-model.number='model.sellAmount'></v-text-field>
 
-    <div>Price:</div>
+    <div class='price-header'>Price:</div>
     <div class='accounts-small-text'>For example, you want buy 1000 XLM for 1 MyToken.</div>
     <div class='price-pair'>
       <v-text-field hide-details class='buy-price' label="Buy unit" @keyup.enter="enterKeyDown" type='number' v-model.number="buyUnit"></v-text-field>
@@ -732,7 +732,9 @@ export default {
             margin-right: 8px;
         }
     }
-
+    .price-header {
+        margin-top: 8px;
+    }
     .public-key-text {
         width: 100%;
         height: 120px;
