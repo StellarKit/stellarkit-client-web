@@ -492,8 +492,15 @@ export default {
 
       return result
     },
-    textValue() {
-      return this.model.textValue
+    textValue(required = false) {
+      const result = this.model.textValue
+
+      if (!Helper.strOK(result) && required) {
+        this._displayToast('Please fill out all fields', true)
+        Helper.debugLog('Please fill out all fields', 'Error')
+      }
+
+      return result
     },
     amount() {
       return this.model.assetAmount

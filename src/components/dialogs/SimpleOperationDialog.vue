@@ -196,35 +196,29 @@ export default {
     federationLookup() {
       const textValue = this.dialogAccounts().textValue(true)
 
-      if (!Helper.isFederation(textValue)) {
-        let formResponse = ''
-
-        if (textValue.length > 0) {
-          formResponse = 'The address "' + textValue + '" appears to be invalid.'
+      if (Helper.strOK(textValue)) {
+        if (!Helper.isFederation(textValue)) {
+          this.displayToast('The address "' + textValue + '" appears to be invalid.', true)
         } else {
-          formResponse = 'Enter your federation address in the field above.'
+          this.loadingFederation = true
+
+          Helper.debugLog('Talking to federation server: ' + textValue)
+
+          StellarSdk.FederationServer.resolve(textValue)
+            .then(federationRecord => {
+              this.loadingFederation = false
+
+              Helper.debugLog(federationRecord.account_id)
+
+              this.displayToast('Success')
+            })
+            .catch(error => {
+              this.loadingFederation = false
+              this.displayToast('Failed: see console', true)
+
+              Helper.debugLog(error)
+            })
         }
-
-        this.displayToast(formResponse, true)
-      } else {
-        this.loadingFederation = true
-
-        Helper.debugLog('Talking to federation server: ' + textValue)
-
-        StellarSdk.FederationServer.resolve(textValue)
-          .then(federationRecord => {
-            this.loadingFederation = false
-
-            Helper.debugLog(federationRecord.account_id)
-
-            this.displayToast('Success')
-          })
-          .catch(error => {
-            this.loadingFederation = false
-            this.displayToast('Failed: see console', true)
-
-            Helper.debugLog(error)
-          })
       }
     },
     displayToast(message, error = false) {
