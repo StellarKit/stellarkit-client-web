@@ -9,11 +9,11 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' v-on:enter-key-down='sendXLM' :model="model" :showSource=true :showFunding=true :showDest=true :showAmount=true :showSigner=true :showAsset=true />
+        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' v-on:enter-key-down='sendAssets' :model="model" :showSource=true :showFunding=true :showDest=true :showAmount=true :showSigner=true :showAsset=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round color='primary' slot="activator" @click="sendXLM()" :loading="loading">Send Payment</v-btn>
+          <v-btn round color='primary' slot="activator" @click="sendAssets()" :loading="loading">Send Payment</v-btn>
           <span>Send the payment</span>
         </v-tooltip>
       </div>
@@ -78,7 +78,7 @@ export default {
 
       return result
     },
-    sendXLM() {
+    sendAssets() {
       const sourceWallet = this.dialogAccounts().sourceWallet()
       const amount = this.dialogAccounts().amount()
       const asset = this.dialogAccounts().asset()

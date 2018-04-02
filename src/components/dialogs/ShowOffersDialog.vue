@@ -80,44 +80,34 @@ export default {
           })
       }
     },
-    deleteOffersFromArray(sourceWallet, offers) {
-      return new Promise((resolve, reject) => {
-        const offer = offers.pop()
-        if (offer) {
-          const buying = StellarUtils.assetFromObject(offer.buying)
-          const selling = StellarUtils.assetFromObject(offer.selling)
-
-          StellarUtils.manageOffer(sourceWallet, null, buying, selling, '0', offer.price_r, offer.id)
-            .then((result) => {
-              Helper.debugLog(result, 'Success')
-
-              resolve(this.deleteOffersFromArray(sourceWallet, offers))
-            })
-            .catch((error) => {
-              Helper.debugLog(error, 'Error')
-
-              reject(error)
-            })
-        } else {
-          resolve(true)
-        }
-      })
-    },
     deleteOffers() {
       const sourceWallet = this.dialogAccounts().sourceWallet()
 
       if (sourceWallet) {
         Helper.debugLog('Deleting Offers...')
+
         sourceWallet.publicKey()
           .then((pubicKey) => {
             StellarUtils.server().offers('accounts', pubicKey)
               .call()
               .then((response) => {
-                return this.deleteOffersFromArray(sourceWallet, response.records)
+                let nextPromise = Promise.resolve()
+
+                for (const offer of response.records) {
+                  nextPromise = nextPromise.then(() => {
+                    const buying = StellarUtils.assetFromObject(offer.buying)
+                    const selling = StellarUtils.assetFromObject(offer.selling)
+
+                    return StellarUtils.manageOffer(sourceWallet, null, buying, selling, '0', offer.price_r, offer.id)
+                  })
+                }
+
+                return nextPromise
               })
               .then((result) => {
                 Helper.debugLog('Deleted all offers', 'Success')
                 StellarUtils.updateBalances()
+                this.visible = false
 
                 return result
               })
