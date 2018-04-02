@@ -159,7 +159,7 @@ export default {
   },
   data() {
     return {
-      destType: 'publicKey',
+      destType: 'account',
       destPublicKey: '',
 
       sourceType: 'account',
