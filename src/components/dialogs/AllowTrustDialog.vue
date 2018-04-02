@@ -5,18 +5,22 @@
 
     <div class='help-contents'>
       <div class='help-text'>
-        <div>Merging an account destroys the source account.</div>
+        <div>Enable the destination to hold an asset if auth required is set on the issuer's account.</div>
         <div class='sub-header'>
-          Great if you have some XLM in another account and you want to extract the balance into another account. If the source has any other assets, the destination must first trust that asset.</div>
+          Source account is the asset issuer. Destination is the account you would like to enable authorization to hold the issuer's asset.</div>
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='mergeAccounts' :model="model" v-on:toast='displayToast' :showSource=true :showDest=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='allowTrust' :model="model" v-on:toast='displayToast' :showSource=true :showDest=true :showAsset=true :showFunding=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
-          <v-btn round color='primary' slot="activator" @click="mergeAccounts()" :loading="loading">Merge into Destination</v-btn>
-          <span>Merge source assets into destination</span>
+          <v-btn round color='secondary' slot="activator" @click="allowTrust(false)" :loading="loading">Revoke Trust</v-btn>
+          <span>Allow destination to hold the asset</span>
+        </v-tooltip>
+        <v-tooltip open-delay='200' bottom>
+          <v-btn round color='primary' slot="activator" @click="allowTrust(true)" :loading="loading">Allow Trust</v-btn>
+          <span>Allow destination to hold the asset</span>
         </v-tooltip>
       </div>
 
@@ -45,7 +49,7 @@ export default {
   data() {
     return {
       visible: false,
-      title: 'Merge Source into Destination',
+      title: 'Allow Trust',
       loading: false
     }
   },
@@ -58,20 +62,24 @@ export default {
     dialogAccounts() {
       return this.$refs.dialogAccounts
     },
-    mergeAccounts() {
+    allowTrust(authorize) {
       const sourceWallet = this.dialogAccounts().sourceWallet()
       const destWallet = this.dialogAccounts().destWallet()
+      const asset = this.dialogAccounts().asset()
 
-      if (sourceWallet && destWallet) {
-        Helper.debugLog('Merging...')
+      if (sourceWallet && destWallet && asset) {
+        if (authorize) {
+          Helper.debugLog('Authorizing trust...')
+        } else {
+          Helper.debugLog('Revoking trust...')
+        }
+
         this.loading = true
 
-        StellarUtils.mergeAccount(sourceWallet, destWallet)
+        StellarUtils.allowTrust(sourceWallet, destWallet, asset, authorize)
           .then((response) => {
             Helper.debugLog(response)
             this.loading = false
-
-            StellarUtils.updateBalances()
 
             this.displayToast('Success!')
             return null

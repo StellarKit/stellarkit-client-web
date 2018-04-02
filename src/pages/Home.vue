@@ -22,6 +22,7 @@
       <v-btn round small @click="manageOfferDialogPing = !manageOfferDialogPing">Manage Offer</v-btn>
       <v-btn round small @click="buyAssetDialogPing = !buyAssetDialogPing">Buy Asset</v-btn>
       <v-btn round small @click="showOffersDialogPing = !showOffersDialogPing">Show Offers</v-btn>
+      <v-btn round small @click="allowTrustDialogPing = !allowTrustDialogPing">Allow Trust</v-btn>
 
       <v-btn round small @click="setDomainPing = !setDomainPing">Set Domain</v-btn>
       <v-btn round small @click="setInflationPing = !setInflationPing">Set Inflation Destination</v-btn>
@@ -68,6 +69,7 @@
   <manage-offer-dialog :ping='manageOfferDialogPing' :model="manageOfferDialogModel" />
   <buy-asset-dialog :ping='buyAssetDialogPing' :model="buyAssetDialogModel" />
   <show-offers-dialog :ping='showOffersDialogPing' :model="showOffersDialogModel" />
+  <allow-trust-dialog :ping='allowTrustDialogPing' :model='allowTrustDialogModel' />
 </div>
 </template>
 
@@ -84,6 +86,7 @@ import TrustTokenDialog from '../components/dialogs/TrustTokenDialog.vue'
 import ManageOfferDialog from '../components/dialogs/ManageOfferDialog.vue'
 import ShowOffersDialog from '../components/dialogs/ShowOffersDialog.vue'
 import BuyAssetDialog from '../components/dialogs/BuyAssetDialog.vue'
+import AllowTrustDialog from '../components/dialogs/AllowTrustDialog.vue'
 import StellarUtils from '../js/StellarUtils.js'
 import SavePrintSecretDialog from '../components/dialogs/SavePrintSecretDialog.vue'
 import {
@@ -106,7 +109,8 @@ export default {
     'send-assets-dialog': SendAssetsDialog,
     'manage-offer-dialog': ManageOfferDialog,
     'buy-asset-dialog': BuyAssetDialog,
-    'show-offers-dialog': ShowOffersDialog
+    'show-offers-dialog': ShowOffersDialog,
+    'allow-trust-dialog': AllowTrustDialog
   },
   data() {
     return {
@@ -121,6 +125,7 @@ export default {
       manageOfferDialogModel: new ReusableStellarViewsModel(),
       buyAssetDialogModel: new ReusableStellarViewsModel(),
       showOffersDialogModel: new ReusableStellarViewsModel(),
+      allowTrustDialogModel: new ReusableStellarViewsModel(),
 
       lookupFederationPing: false,
       setDomainPing: false,
@@ -133,7 +138,8 @@ export default {
       trustDialogPing: false,
       manageOfferDialogPing: false,
       buyAssetDialogPing: false,
-      showOffersDialogPing: false
+      showOffersDialogPing: false,
+      allowTrustDialogPing: false
     }
   },
   methods: {
