@@ -12,19 +12,7 @@
           <v-text-field hide-details label='Token Balance' v-model.trim="tokenBalance" @keyup.enter="createAccount()" ref='input'></v-text-field>
           <v-text-field hide-details label='XLM Balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccount()"></v-text-field>
         </div>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createAccount' v-on:toast='displayToast' :showFunding=true :showAccountName=true />
-        <div class='time-lock-fields'>
-          <v-checkbox small label="Time lock this account" v-model="timeLockEnabled"></v-checkbox>
-
-          <v-dialog v-model="modal" persistent lazy full-width width="290px" :return-value.sync="date" ref="dialog">
-            <v-text-field hide-details :disabled='!timeLockEnabled' slot="activator" label="Time Lock Expiration Date" v-model="date" prepend-icon="event" readonly></v-text-field>
-            <v-date-picker v-model="date" scrollable actions>
-              <v-spacer></v-spacer>
-              <v-btn flat color="primary" @click="modal = false">Cancel</v-btn>
-              <v-btn flat color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
-            </v-date-picker>
-          </v-dialog>
-        </div>
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createAccount' v-on:toast='displayToast' :showFunding=true :showAccountName=true :showTimeLock=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -64,10 +52,6 @@ export default {
       loading: false,
       tokenBalance: 10,
       xlmBalance: 2,
-      timeLockEnabled: false,
-      timeLockSeconds: 10,
-      modal: false,
-      date: null,
       unlockTransaction: null
     }
   },
@@ -93,6 +77,7 @@ export default {
     createAccount() {
       const fundingWallet = this.dialogAccounts().fundingWallet()
       const accountName = this.dialogAccounts().accountName()
+      const timeLockDate = this.dialogAccounts().timeLock()
 
       if (fundingWallet) {
         this.loading = true
@@ -105,7 +90,7 @@ export default {
             // result is {account: newAccount, keypair: keypair}
             Helper.debugLog(result.account)
 
-            if (this.timeLockEnabled) {
+            if (timeLockDate) {
               Helper.debugLog('adding funding account as signer...')
               const newWallet = StellarWallet.secret(result.keypair.secret())
 
@@ -204,13 +189,6 @@ export default {
                     margin-right: 16px;
                 }
             }
-        }
-
-        .time-lock-fields {
-            padding: 10px;
-            border-radius: 4px;
-            display: flex;
-            background: rgba(0,10,30,.03);
         }
     }
 }

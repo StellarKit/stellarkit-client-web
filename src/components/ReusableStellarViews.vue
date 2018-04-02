@@ -87,6 +87,21 @@
     <v-text-field hide-details label="Home domain (Optional)" @keyup.enter="enterKeyDown" v-model.trim="issuerHomeDomain" hint='www.example-domain.com'></v-text-field>
   </div>
 
+  <div v-if='showTimeLock' class='account-choice-box'>
+    <v-checkbox hide-details small label="Time lock access to this account" v-model="timeLockEnabled"></v-checkbox>
+
+    <div v-if='timeLockEnabled'>
+      <v-dialog v-model="timeLockModal" persistent lazy full-width width="290px" :return-value.sync="timeLockDate" ref="dialog">
+        <v-text-field hide-details :disabled='!timeLockEnabled' slot="activator" label="Time Lock Expiration Date" v-model="timeLockDate" prepend-icon="event" readonly></v-text-field>
+        <v-date-picker v-model="timeLockDate" scrollable actions>
+          <v-spacer></v-spacer>
+          <v-btn flat color="primary" @click="timeLockModal = false">Cancel</v-btn>
+          <v-btn flat color="primary" @click="$refs.dialog.save(timeLockDate)">OK</v-btn>
+        </v-date-picker>
+      </v-dialog>
+    </div>
+  </div>
+
   <div v-if='showFunding' class='account-choice-box'>
     <div>
       <menu-button v-on:menu-selected='fundingMenuSelected' title='Funding account' :items='fundingMenuItems' :selectedID='fundingType' />
@@ -124,7 +139,7 @@ const generateName = require('sillyname')
 const StellarSdk = require('stellar-sdk')
 
 export default {
-  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer', 'showHomeDomain', 'showAuthFlags'],
+  props: ['showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showAsset', 'showAccountName', 'showSecret', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer', 'showHomeDomain', 'showAuthFlags', 'showTimeLock'],
   mixins: [StellarCommonMixin],
   components: {
     'menu-button': MenuButton,
@@ -169,6 +184,10 @@ export default {
 
       authRequired: false,
       authRevocable: false,
+
+      timeLockEnabled: false,
+      timeLockModal: false,
+      timeLockDate: null,
 
       destPaymentsMenuItems: [{
           id: '1',
@@ -491,6 +510,13 @@ export default {
     accountName() {
       // ok for account name to be null or ''
       return this.name
+    },
+    timeLock() {
+      if (this.timeLockEnabled) {
+        return this.timeLockDate
+      }
+
+      return null
     },
     authFlags() {
       let result = 0
