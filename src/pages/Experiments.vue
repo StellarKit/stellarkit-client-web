@@ -88,7 +88,7 @@ export default {
           throw new Error('issuer account not found for asset')
         }
 
-        // create issuer
+        throw new Error('creating users wallet')
         StellarUtils.newAccount(fundingWallet, String(startingBalance))
           .then((accountInfo) => {
             userWallet = StellarWallet.secret(accountInfo.keypair.secret())
@@ -97,20 +97,20 @@ export default {
               throw new Error('userWallet null')
             }
 
-            Helper.debugLog('setting trust...')
+            Helper.debugLog('setting trust for token...')
             const trustLimit = 1000000
             return StellarUtils.changeTrust(userWallet, fundingWallet, asset, String(trustLimit))
           })
-          .then(() => {
-            Helper.debugLog('allowing trust...')
+          .then((result) => {
+            Helper.debugLog('allowing user to hold tokens...')
             return StellarUtils.allowTrust(issuerWallet, userWallet, asset, true)
           })
           .then((result) => {
-            Helper.debugLog('adding multi sig...')
+            Helper.debugLog('adding multi sig to users wallet...')
             return StellarUtils.makeMultiSig(userWallet, signerWallet, fundingWallet)
           })
           .then((result) => {
-            this.displayToast('Success!')
+            this.displayToast('Success! Users wallet is ready.')
             return null
           })
           .catch((error) => {
