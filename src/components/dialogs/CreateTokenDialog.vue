@@ -61,73 +61,72 @@ export default {
     createToken() {
       const amount = this.dialogAccounts().amount()
       const fundingWallet = this.dialogAccounts().fundingWallet(true)
+      const symbol = this.dialogAccounts().symbol(true)
 
-      if (amount < 1) {
-        this.displayToast('Create token amount must be greater than 0', true)
-        return
-      }
-      if (!Helper.strOK(this.model.symbol)) {
-        this.displayToast('Type in a symbol name', true)
-        return
-      }
+      if (Helper.strOK(symbol)) {
+        if (amount < 1) {
+          this.displayToast('Create token amount must be greater than 0', true)
+          return
+        }
 
-      if (fundingWallet) {
-        this.loading = true
+        if (fundingWallet) {
+          this.loading = true
 
-        let issuerKeypair = null
-        let distributorKeypair = null
-        let asset = null
-        let issuerWallet = null
-        const homeDomain = this.dialogAccounts().textValue()
-        const authFlags = this.dialogAccounts().authFlags()
+          let issuerKeypair = null
+          let distributorKeypair = null
+          let asset = null
+          let issuerWallet = null
+          const homeDomain = this.dialogAccounts().textValue()
+          const authFlags = this.dialogAccounts().authFlags()
 
-        // create issuer
-        StellarUtils.newAccount(fundingWallet, '1.5', 'Issuer: ' + this.model.symbol, this.model.symbol)
-          .then((accountInfo) => {
-            issuerKeypair = accountInfo.keypair
-            issuerWallet = StellarWallet.secret(issuerKeypair.secret())
-            asset = new StellarSdk.Asset(this.model.symbol, issuerKeypair.publicKey())
+          // create issuer
+          StellarUtils.newAccount(fundingWallet, '1.5', 'Issuer: ' + symbol, symbol)
+            .then((accountInfo) => {
+              issuerKeypair = accountInfo.keypair
+              issuerWallet = StellarWallet.secret(issuerKeypair.secret())
+              asset = new StellarSdk.Asset(symbol, issuerKeypair.publicKey())
 
-            return StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, '3', asset, String(amount), 'Distributor: ' + this.model.symbol, this.model.symbol)
-          })
-          .then((accountInfo) => {
-            distributorKeypair = accountInfo.keypair
-
-            // optional
-            if (Helper.strOK(homeDomain)) {
-              return StellarUtils.setDomain(issuerWallet, homeDomain, fundingWallet)
-            }
-
-            return null
-          })
-          .then(() => {
-            if (authFlags !== 0) {
-              return StellarUtils.setFlags(issuerWallet, authFlags)
-            }
-
-            return null
-          })
-          .then(() => {
-            // return results and close
-            this.$emit('token-created', issuerKeypair, distributorKeypair, asset)
-            this.visible = false
-
-            this.displayToast('Success!')
-
-            AssetManager.addAsset({
-              symbol: asset.getCode(),
-              issuer: asset.getIssuer()
+              return StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, '3', asset, String(amount), 'Distributor: ' + symbol, symbol)
             })
+            .then((accountInfo) => {
+              distributorKeypair = accountInfo.keypair
 
-            return null
-          })
-          .catch((error) => {
-            this.displayToast('Error: ' + error.message, true)
-            Helper.debugLog(error)
-          })
-          .finally(() => {
-            this.loading = false
-          })
+              // optional
+              if (Helper.strOK(homeDomain)) {
+                return StellarUtils.setDomain(issuerWallet, homeDomain, fundingWallet)
+              }
+
+              return null
+            })
+            .then(() => {
+              if (authFlags !== 0) {
+                return StellarUtils.setFlags(issuerWallet, authFlags)
+              }
+
+              return null
+            })
+            .then(() => {
+              // return results and close
+              this.$emit('token-created', issuerKeypair, distributorKeypair, asset)
+              this.visible = false
+
+              this.displayToast('Success!')
+
+              AssetManager.addAsset({
+                symbol: asset.getCode(),
+                issuer: asset.getIssuer()
+              })
+
+              return null
+            })
+            .catch((error) => {
+              this.displayToast('Error: ' + error.message, true)
+              Helper.debugLog(error)
+            })
+            .finally(() => {
+              this.loading = false
+            })
+        }
       }
     },
     displayToast(message, error = false) {

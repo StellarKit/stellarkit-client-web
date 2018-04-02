@@ -57,17 +57,17 @@
   </div>
 
   <save-secret-dialog :ping='saveSecretDialogPing' />
-  <manage-data-dialog :ping='manageDataPing' :model="model" />
-  <merge-dialog :ping='mergeDialogPing' :model="model" />
-  <simple-dialog :ping='setDomainPing' operation='domain' :model="model" />
-  <simple-dialog :ping='setInflationPing' operation='inflation' :model="model" />
-  <simple-dialog :ping='lookupFederationPing' operation='federation' :model="model" />
-  <trust-token-dialog :ping='trustDialogPing' :model="model" />
-  <add-remove-signer :ping='addRemoveSignerDialogPing' :model="model" />
-  <send-assets-dialog :ping='sendAssetsDialogPing' :model="model" />
-  <manage-offer-dialog :ping='manageOfferDialogPing' :model="model" />
-  <buy-asset-dialog :ping='buyAssetDialogPing' :model="model" />
-  <show-offers-dialog :ping='showOffersDialogPing' :model="model" />
+  <manage-data-dialog :ping='manageDataPing' :model="manageDataModel" />
+  <merge-dialog :ping='mergeDialogPing' :model="mergeDialogModel" />
+  <simple-dialog :ping='setDomainPing' operation='domain' :model="setDomainModel" />
+  <simple-dialog :ping='setInflationPing' operation='inflation' :model="setInflationModel" />
+  <simple-dialog :ping='lookupFederationPing' operation='federation' :model="lookupFederationModel" />
+  <trust-token-dialog :ping='trustDialogPing' :model="trustDialogModel" />
+  <add-remove-signer :ping='addRemoveSignerDialogPing' :model="addRemoveSignerDialogModel" />
+  <send-assets-dialog :ping='sendAssetsDialogPing' :model="sendAssetsDialogModel" />
+  <manage-offer-dialog :ping='manageOfferDialogPing' :model="manageOfferDialogModel" />
+  <buy-asset-dialog :ping='buyAssetDialogPing' :model="buyAssetDialogModel" />
+  <show-offers-dialog :ping='showOffersDialogPing' :model="showOffersDialogModel" />
 </div>
 </template>
 
@@ -110,7 +110,18 @@ export default {
   },
   data() {
     return {
-      model: new ReusableStellarViewsModel(),
+      manageDataModel: new ReusableStellarViewsModel(),
+      mergeDialogModel: new ReusableStellarViewsModel(),
+      setDomainModel: new ReusableStellarViewsModel(),
+      setInflationModel: new ReusableStellarViewsModel(),
+      lookupFederationModel: new ReusableStellarViewsModel(),
+      trustDialogModel: new ReusableStellarViewsModel(),
+      addRemoveSignerDialogModel: new ReusableStellarViewsModel(),
+      sendAssetsDialogModel: new ReusableStellarViewsModel(),
+      manageOfferDialogModel: new ReusableStellarViewsModel(),
+      buyAssetDialogModel: new ReusableStellarViewsModel(),
+      showOffersDialogModel: new ReusableStellarViewsModel(),
+
       lookupFederationPing: false,
       setDomainPing: false,
       setInflationPing: false,

@@ -527,8 +527,13 @@ export default {
 
       return result
     },
-    symbol() {
+    symbol(required = false) {
       const result = this.model.symbol
+
+      if (required && !Helper.strOK(result)) {
+        this._displayToast('Please type a symbol', true)
+        Helper.debugLog('Please type a symbol', 'Error')
+      }
 
       return result
     },
