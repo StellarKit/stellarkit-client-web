@@ -84,7 +84,7 @@
   </div>
 
   <div v-if='showHomeDomain' class='account-choice-box'>
-    <v-text-field hide-details label="Home domain (Optional)" @keyup.enter="enterKeyDown" v-model.trim="issuerHomeDomain" hint='www.example-domain.com'></v-text-field>
+    <v-text-field hide-details label="Home domain (optional)" @keyup.enter="enterKeyDown" v-model.trim="issuerHomeDomain" hint='www.example-domain.com'></v-text-field>
   </div>
 
   <div v-if='showTimeLock' class='account-choice-box'>
