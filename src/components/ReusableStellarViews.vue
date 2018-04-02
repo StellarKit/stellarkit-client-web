@@ -87,7 +87,7 @@
   <div v-if='showBuyOffer' class='account-choice-box'>
     <div class='price-pair'>
       <v-text-field hide-details class='buy-price' label="Buy amount" @keyup.enter="enterKeyDown" type='number' v-model.number="buyAmount"></v-text-field>
-      <v-text-field hide-details label="Send maximum" @keyup.enter="enterKeyDown" type='number' v-model.number="buySendMax"></v-text-field>
+      <v-text-field hide-details label="Send maximum selling asset" @keyup.enter="enterKeyDown" type='number' v-model.number="buySendMax"></v-text-field>
     </div>
   </div>
 
