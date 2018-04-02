@@ -31,7 +31,7 @@ export default class ReusableStellarViewsModel {
 
     this.accountName = generateName()
 
-    this.textValue = 1000000
+    this.numberValue = 1000000
     this.numberValueLabel = 'Label'
     this.numberValueHint = 'Hint'
 
