@@ -55,13 +55,6 @@ export default {
       this.model.numberValue = 1000000
       this.model.numberValueLabel = 'Trust limit'
       this.model.numberValueHint = 'Set Trust Limit to zero to remove the trust line.'
-
-      // autofocus hack
-      this.$nextTick(() => {
-        if (this.$refs.input) {
-          this.$refs.input.focus()
-        }
-      })
     }
   },
   methods: {

@@ -46,13 +46,6 @@ export default {
   watch: {
     ping: function() {
       this.visible = true
-
-      // autofocus hack
-      this.$nextTick(() => {
-        if (this.$refs.input) {
-          this.$refs.input.focus()
-        }
-      })
     }
   },
   methods: {

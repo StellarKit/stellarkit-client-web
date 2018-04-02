@@ -1,5 +1,9 @@
 <template>
 <div>
+  <div v-if='showSymbol' class='account-choice-box'>
+    <v-text-field label="Symbol" @keyup.enter="enterKeyDown" v-model.trim="model.symbol" hint='Symbol can be 1-12 characters long' autofocus></v-text-field>
+  </div>
+
   <div v-if='showSource' class='account-choice-box'>
     <div>
       <menu-button v-on:menu-selected='sourceMenuSelected' title='Source account' :items='sourceMenuItems' :selectedID='sourceType' />
@@ -14,7 +18,7 @@
       <menu-button v-on:menu-selected='destMenuSelected' title='Destination account' :items='destMenuItems' :selectedID='destType' />
     </div>
     <div v-if='destType === "publicKey"'>
-      <v-text-field hide-details label="Destination public key" v-model.trim="destPublicKey" ref='input' @keyup.enter="enterKeyDown"></v-text-field>
+      <v-text-field hide-details label="Destination public key" v-model.trim="destPublicKey" autofocus @keyup.enter="enterKeyDown"></v-text-field>
     </div>
     <div v-if='destType === "account"'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="model.destAccount" clearable label="Destination account" autocomplete return-object max-height="600"></v-select>
@@ -88,11 +92,11 @@
   </div>
 
   <div v-if='showTextValue' class='account-choice-box'>
-    <v-text-field :label="model.textValueLabel" @keyup.enter="enterKeyDown" v-model.trim="model.textValue" :hint='model.textValueHint' ref='input'></v-text-field>
+    <v-text-field :label="model.textValueLabel" @keyup.enter="enterKeyDown" v-model.trim="model.textValue" :hint='model.textValueHint' autofocus></v-text-field>
   </div>
 
   <div v-if='showNameValue' class='account-choice-box'>
-    <v-text-field hide-details :label="model.nameValueOneLabel" @keyup.enter="enterKeyDown" v-model.trim="model.nameValueOneValue" ref='input'></v-text-field>
+    <v-text-field hide-details :label="model.nameValueOneLabel" @keyup.enter="enterKeyDown" v-model.trim="model.nameValueOneValue" autofocus></v-text-field>
     <v-text-field hide-details :label="model.nameValueTwoLabel" @keyup.enter="enterKeyDown" v-model.trim="model.nameValueTwoValue"></v-text-field>
   </div>
 
@@ -147,10 +151,15 @@ import {
 const StellarSdk = require('stellar-sdk')
 
 export default {
-  props: ['model', 'showSource', 'showDest', 'showFunding', 'showSigner', 'showAmount', 'showNumberValue', 'showAsset', 'showAccountName', 'showSecret', 'showNameValue', 'showManageOffer', 'showBuyingAsset', 'showSellingAsset', 'showBuyOffer',
-    'showTextValue',
-    'showAuthFlags',
-    'showTimeLock'
+  props: ['model', 'showSource', 'showDest',
+    'showSigner', 'showAmount',
+    'showNumberValue', 'showAsset',
+    'showAccountName', 'showSecret',
+    'showNameValue', 'showManageOffer',
+    'showBuyingAsset', 'showSellingAsset',
+    'showBuyOffer', 'showTextValue',
+    'showAuthFlags', 'showTimeLock',
+    'showFunding', 'showSymbol'
   ],
   mixins: [StellarCommonMixin],
   components: {
@@ -515,6 +524,11 @@ export default {
     },
     numberValue() {
       const result = this.model.numberValue
+
+      return result
+    },
+    symbol() {
+      const result = this.model.symbol
 
       return result
     },

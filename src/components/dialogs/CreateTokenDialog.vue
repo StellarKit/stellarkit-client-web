@@ -5,11 +5,10 @@
 
     <div class='help-contents'>
       <div class='help-text'>
-        <div>Give your asset a symbol and create the tokens. Symbol can be 1-12 characters long</div>
+        <div>Give your asset a symbol and create the tokens.</div>
       </div>
       <div class='help-email'>
-        <v-text-field hide-details label='Symbol' v-model.trim="symbol" @keyup.enter="createToken()" ref='input'></v-text-field>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createToken' :model="model" v-on:toast='displayToast' :showAmount=true :showFunding=true :showTextValue=true :showAuthFlags=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createToken' :model="model" v-on:toast='displayToast' :showSymbol=true :showAmount=true :showFunding=true :showTextValue=true :showAuthFlags=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -47,21 +46,12 @@ export default {
     return {
       visible: false,
       title: 'Create Token',
-      symbol: '',
       loading: false
     }
   },
   watch: {
     ping: function() {
       this.visible = true
-      this.symbol = ''
-
-      // autofocus hack
-      this.$nextTick(() => {
-        if (this.$refs.input) {
-          this.$refs.input.focus()
-        }
-      })
     }
   },
   methods: {
@@ -76,7 +66,7 @@ export default {
         this.displayToast('Create token amount must be greater than 0', true)
         return
       }
-      if (!Helper.strOK(this.symbol)) {
+      if (!Helper.strOK(this.model.symbol)) {
         this.displayToast('Type in a symbol name', true)
         return
       }
@@ -92,13 +82,13 @@ export default {
         const authFlags = this.dialogAccounts().authFlags()
 
         // create issuer
-        StellarUtils.newAccount(fundingWallet, '1.5', 'Issuer: ' + this.symbol, this.symbol)
+        StellarUtils.newAccount(fundingWallet, '1.5', 'Issuer: ' + this.model.symbol, this.model.symbol)
           .then((accountInfo) => {
             issuerKeypair = accountInfo.keypair
             issuerWallet = StellarWallet.secret(issuerKeypair.secret())
-            asset = new StellarSdk.Asset(this.symbol, issuerKeypair.publicKey())
+            asset = new StellarSdk.Asset(this.model.symbol, issuerKeypair.publicKey())
 
-            return StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, '3', asset, String(amount), 'Distributor: ' + this.symbol, this.symbol)
+            return StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, '3', asset, String(amount), 'Distributor: ' + this.model.symbol, this.model.symbol)
           })
           .then((accountInfo) => {
             distributorKeypair = accountInfo.keypair

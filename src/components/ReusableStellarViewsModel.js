@@ -7,6 +7,8 @@ export default class ReusableStellarViewsModel {
   }
 
   reset() {
+    this.symbol = ''
+
     this.textValue = ''
     this.textValueLabel = 'Label'
     this.textValueHint = 'Hint'

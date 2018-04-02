@@ -61,13 +61,6 @@ export default {
     ping: function() {
       this.visible = true
       this.updateForOperation()
-
-      // autofocus hack
-      this.$nextTick(() => {
-        if (this.$refs.input) {
-          this.$refs.input.focus()
-        }
-      })
     }
   },
   methods: {
