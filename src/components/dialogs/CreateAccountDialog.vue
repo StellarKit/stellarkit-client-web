@@ -1,5 +1,5 @@
 <template>
-<v-dialog lazy persistent v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
   <div class='main-container'>
     <dialog-titlebar :title=title v-on:close='visible = false' />
 

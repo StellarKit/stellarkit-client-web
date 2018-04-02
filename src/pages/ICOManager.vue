@@ -46,14 +46,14 @@
         <v-btn round small @click="sendTokens()">Send Tokens</v-btn>
         <v-btn round small @click="manageOffer()">Manage Offer</v-btn>
         <v-btn round small @click="showOffers()">Show Offers</v-btn>
-        <v-btn round small @click="deleteOffers()">Delete Offers</v-btn>
         <v-btn round small @click="lockIssuer()">Lock Issuer</v-btn>
       </div>
     </div>
   </div>
 
-  <manage-offer-dialog :ping='offerDialogPing' :model='model' :project='dialogProject' />
-  <send-tokens-dialog :ping='sendTokensDialogPing' :model='model' :project='dialogProject' />
+  <show-offers-dialog :ping='showOffersDialogPing' :model='model' />
+  <manage-offer-dialog :ping='offerDialogPing' :model='model' />
+  <send-assets-dialog :ping='sendAssetsDialogPing' :model='model' />
   <create-account-dialog :ping='accountDialogPing' :model='model' :project='dialogProject' />
   <create-token-dialog v-on:token-created='createDialogResult' :model='model' :ping='createDialogPing' />
   <confirm-dialog v-on:confirm-dialog-ok='deleteTokenProjectConfirmed' :ping='confirmDialogPing' title='Delete Token Project?' message='Do you want to delete this token project? Tokens will remain on the network, but make sure you have your keys.' okTitle='Delete Project'
@@ -71,8 +71,9 @@ import AccountList from '../components/AccountList.vue'
 import CreateTokenDialog from '../components/dialogs/CreateTokenDialog.vue'
 import CreateAccountDialog from '../components/dialogs/CreateAccountDialog.vue'
 import ManageOfferDialog from '../components/dialogs/ManageOfferDialog.vue'
-import SendTokensDialog from '../components/dialogs/SendTokensDialog.vue'
+import SendAssetsDialog from '../components/dialogs/SendAssetsDialog.vue'
 import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue'
+import ShowOffersDialog from '../components/dialogs/ShowOffersDialog.vue'
 import StyleExtractionMixin from '../components/StyleExtractionMixin.js'
 import ReusableStellarViewsModel from '../components/ReusableStellarViewsModel.js'
 
@@ -91,9 +92,10 @@ export default {
     'create-token-dialog': CreateTokenDialog,
     'manage-offer-dialog': ManageOfferDialog,
     'create-account-dialog': CreateAccountDialog,
-    'send-tokens-dialog': SendTokensDialog,
+    'send-assets-dialog': SendAssetsDialog,
     'instructions-header': InstructionsHeader,
-    'confirm-dialog': ConfirmDialog
+    'confirm-dialog': ConfirmDialog,
+    'show-offers-dialog': ShowOffersDialog
   },
   computed: {
     menuButtonName: function() {
@@ -130,12 +132,13 @@ export default {
       projectIndex: 0,
       createDialogPing: false,
       offerDialogPing: false,
-      sendTokensDialogPing: false,
+      sendAssetsDialogPing: false,
       dialogProject: null,
       accountDialogPing: false,
       showSummary: false,
       confirmDialogPing: false,
       confirmLockDialogPing: false,
+      showOffersDialogPing: false,
       printing: false
     }
   },
@@ -254,79 +257,26 @@ export default {
       this.model.sourceAccount = StellarAccounts.accountWithPublicKey(this.currentProject().distributor)
       this.model.setSellingAsset(new StellarSdk.Asset(this.currentProject().symbol, this.currentProject().issuer))
 
-      this.dialogProject = this.currentProject()
       this.offerDialogPing = !this.offerDialogPing
     },
     sendTokens() {
-      this.dialogProject = this.currentProject()
-      this.sendTokensDialogPing = !this.sendTokensDialogPing
+      this.model = new ReusableStellarViewsModel()
+
+      this.model.sourceAccount = StellarAccounts.accountWithPublicKey(this.currentProject().distributor)
+      this.model.setAsset(new StellarSdk.Asset(this.currentProject().symbol, this.currentProject().issuer))
+
+      this.sendAssetsDialogPing = !this.sendAssetsDialogPing
     },
     createUserAccount() {
       this.dialogProject = this.currentProject()
       this.accountDialogPing = !this.accountDialogPing
     },
     showOffers() {
-      Helper.debugLog('Offers...')
+      this.model = new ReusableStellarViewsModel()
 
-      const project = this.currentProject()
-      if (project) {
-        StellarUtils.server().offers('accounts', project.distributor)
-          .call()
-          .then((response) => {
-            response.records.forEach((offer) => {
-              Helper.debugLog(offer)
-            })
+      this.model.sourceAccount = StellarAccounts.accountWithPublicKey(this.currentProject().distributor)
 
-            Helper.debugLog('Offers done')
-
-            return null
-          })
-      }
-    },
-    deleteOffersFromArray(project, offers) {
-      return new Promise((resolve, reject) => {
-        const offer = offers.pop()
-        if (offer) {
-          const buying = StellarUtils.assetFromObject(offer.buying)
-          const selling = StellarUtils.assetFromObject(offer.selling)
-
-          StellarUtils.manageOffer(StellarWallet.secret(project.distributorSecret), null, buying, selling, '0', offer.price_r, offer.id)
-            .then((result) => {
-              Helper.debugLog(result, 'Success')
-
-              resolve(this.deleteOffersFromArray(project, offers))
-            })
-            .catch((error) => {
-              Helper.debugLog(error, 'Error')
-
-              reject(error)
-            })
-        } else {
-          resolve(true)
-        }
-      })
-    },
-    deleteOffers() {
-      Helper.debugLog('Deleting Offers...')
-      const project = this.currentProject()
-      if (project) {
-        StellarUtils.server().offers('accounts', project.distributor)
-          .call()
-          .then((response) => {
-            // Helper.debugLog(response)
-            return this.deleteOffersFromArray(project, response.records)
-          })
-          .then((result) => {
-            Helper.debugLog('Deleted all offers', 'Success')
-            StellarUtils.updateBalances()
-
-            return result
-          })
-          .catch((error) => {
-            Helper.debugLog(error, 'Error')
-            return false
-          })
-      }
+      this.showOffersDialogPing = !this.showOffersDialogPing
     },
     lockIssuer() {
       this.confirmLockDialogPing = !this.confirmLockDialogPing

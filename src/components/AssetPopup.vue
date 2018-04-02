@@ -73,8 +73,8 @@ export default {
       return ''
     },
     menuClick(item) {
-      if (Helper.strOK(this.item.issuer)) {
-        this.model.asset = new StellarSdk.Asset(this.item.symbol, this.item.issuer)
+      if (Helper.strOK(item.issuer)) {
+        this.model.asset = new StellarSdk.Asset(item.symbol, item.issuer)
       } else {
         this.model.asset = StellarSdk.Asset.native()
       }

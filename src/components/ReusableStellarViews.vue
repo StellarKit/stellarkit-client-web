@@ -55,7 +55,7 @@
   </div>
 
   <div v-if='showAmount' class='account-choice-box'>
-    <v-text-field hide-details label="Amount" type='number' v-model.number="assetAmount" @keyup.enter="enterKeyDown"></v-text-field>
+    <v-text-field hide-details label="Amount" type='number' v-model.number="model.assetAmount" @keyup.enter="enterKeyDown"></v-text-field>
   </div>
 
   <div v-if='showManageOffer' class='account-choice-box'>
@@ -84,7 +84,7 @@
   </div>
 
   <div v-if='showHomeDomain' class='account-choice-box'>
-    <v-text-field hide-details label="Home domain (optional)" @keyup.enter="enterKeyDown" v-model.trim="issuerHomeDomain" hint='www.example-domain.com'></v-text-field>
+    <v-text-field hide-details label="Home domain (optional)" @keyup.enter="enterKeyDown" v-model.trim="model.homeDomain" hint='www.example-domain.com'></v-text-field>
   </div>
 
   <div v-if='showTimeLock' class='account-choice-box'>
@@ -158,7 +158,6 @@ export default {
 
       showSecretText: false,
 
-      assetAmount: 10,
       ledgerAPI: null,
 
       // buy  offer fields
@@ -171,8 +170,6 @@ export default {
 
       destPublicKeyList: '',
       destPaymentsType: '10',
-
-      issuerHomeDomain: '',
 
       authRequired: false,
       authRevocable: false,
@@ -496,10 +493,10 @@ export default {
       return result
     },
     homeDomain() {
-      return this.issuerHomeDomain
+      return this.model.homeDomain
     },
     amount() {
-      return this.assetAmount
+      return this.model.assetAmount
     },
     timeLock() {
       if (this.timeLockEnabled) {

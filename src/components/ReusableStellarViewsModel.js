@@ -20,6 +20,8 @@ export default class ReusableStellarViewsModel {
     this.secretKey = ''
     this.publicKey = ''
 
+    this.assetAmount = 10
+
     this.accountName = generateName()
 
     this.assetModel = {
