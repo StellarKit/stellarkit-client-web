@@ -104,14 +104,13 @@ export default {
           .then((result) => {
             Helper.debugLog('allowing user to hold tokens...')
             return StellarUtils.allowTrust(issuerWallet, userWallet, asset, true)
-              .then(() {
+              .then(() => {
                 return null
               })
-              .catch(() {
-                  Helper.debugLog('Allow trust not necessary, continuing...')
-                  return null
-                }
-              }
+              .catch(() => {
+                Helper.debugLog('Allow trust not necessary, continuing...')
+                return null
+              })
           })
           .then((result) => {
             Helper.debugLog('adding multi sig to users wallet...')
