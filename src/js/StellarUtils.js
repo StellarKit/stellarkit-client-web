@@ -237,7 +237,7 @@ class StellarUtils {
             }
           })
       })
-      .then((result) => {
+      .then(() => {
         Helper.debugLog('sending tokens...')
         return this.sendAsset(sourceWallet, fundingWallet, newWallet, amount, asset)
       })
