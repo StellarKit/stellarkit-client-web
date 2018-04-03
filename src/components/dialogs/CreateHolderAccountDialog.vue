@@ -12,7 +12,7 @@
           <v-text-field hide-details label='Token Balance' v-model.trim="tokenBalance" @keyup.enter="createAccount()" ref='input'></v-text-field>
           <v-text-field hide-details label='XLM Balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccount()"></v-text-field>
         </div>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createAccount' :model="model" v-on:toast='displayToast' :showFunding=true :showAccountName=true :showTimeLock=true />
+        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createAccount' :model="model" v-on:toast='displayToast' :showAsset=true :showSource=true :showFunding=true :showAccountName=true :showTimeLock=true />
       </div>
       <div class='button-holder'>
         <v-tooltip open-delay='200' bottom>
@@ -35,11 +35,10 @@ import {
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
-const StellarSdk = require('stellar-sdk')
 import ReusableStellarViews from '../ReusableStellarViews.vue'
 
 export default {
-  props: ['ping', 'model', 'project'],
+  props: ['ping', 'model'],
   components: {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent,
@@ -70,17 +69,16 @@ export default {
       return this.$refs.dialogAccounts
     },
     createAccount() {
-      const fundingWallet = this.dialogAccounts().fundingWallet(true)
-      const accountName = this.accountName()
+      const sourceWallet = this.dialogAccounts().sourceWallet()
+      const fundingWallet = this.dialogAccounts().fundingWallet()
+      const accountName = this.dialogAccounts().accountName()
+      const asset = this.dialogAccounts().asset()
       const timeLockDate = this.dialogAccounts().timeLock()
 
-      if (fundingWallet) {
+      if (sourceWallet && asset) {
         this.loading = true
 
-        const asset = new StellarSdk.Asset(this.project.symbol, this.project.issuer)
-        const distributorWallet = StellarWallet.secret(this.project.distributorSecret)
-
-        StellarUtils.newAccountWithTokens(fundingWallet, distributorWallet, String(this.xlmBalance), asset, String(this.tokenBalance), accountName, this.project.symbol)
+        StellarUtils.newAccountWithTokens(fundingWallet, sourceWallet, String(this.xlmBalance), asset, String(this.tokenBalance), accountName, asset.getCode())
           .then((result) => {
             // result is {account: newAccount, keypair: keypair}
             Helper.debugLog(result.account)
@@ -89,9 +87,9 @@ export default {
               Helper.debugLog('adding funding account as signer...')
               const newWallet = StellarWallet.secret(result.keypair.secret())
 
-              StellarUtils.makeMultiSig(newWallet, fundingWallet)
+              return StellarUtils.makeMultiSig(newWallet, sourceWallet, fundingWallet)
                 .then(() => {
-                  return this.createUnlockTransaction(newWallet, fundingWallet)
+                  return this.createUnlockTransaction(newWallet, sourceWallet)
                 })
             }
 
@@ -115,7 +113,7 @@ export default {
     timeFromNow(secondsAhead = 0) {
       return secondsAhead + Math.round((new Date()).getTime() / 1000)
     },
-    createUnlockTransaction(newAccountWallet, fundingWallet) {
+    createUnlockTransaction(newAccountWallet, sourceWallet) {
       // for debugging
       const seconds = 10
       let minTime = this.timeFromNow(seconds)
@@ -132,7 +130,7 @@ export default {
       }
 
       // using source account instead of distributor, sequence numbers would be different in the future
-      return StellarUtils.removeMultiSigTransaction(newAccountWallet, fundingWallet, transactionOpts)
+      return StellarUtils.removeMultiSigTransaction(newAccountWallet, sourceWallet, transactionOpts)
         .then((transaction) => {
           this.unlockTransaction = transaction.toEnvelope().toXDR('base64')
           Helper.debugLog(this.unlockTransaction, 'Save this transaction to submit later')

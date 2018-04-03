@@ -54,7 +54,7 @@
   <show-offers-dialog :ping='showOffersDialogPing' :model='model' />
   <manage-offer-dialog :ping='offerDialogPing' :model='model' />
   <send-assets-dialog :ping='sendAssetsDialogPing' :model='model' />
-  <create-account-dialog :ping='accountDialogPing' :model='model' :project='dialogProject' />
+  <create-account-dialog :ping='accountDialogPing' :model='model' />
   <create-token-dialog v-on:token-created='createDialogResult' :model='model' :ping='createDialogPing' />
   <confirm-dialog v-on:confirm-dialog-ok='deleteTokenProjectConfirmed' :ping='confirmDialogPing' title='Delete Token Project?' message='Do you want to delete this token project? Tokens will remain on the network, but make sure you have your keys.' okTitle='Delete Project'
   />
@@ -69,7 +69,7 @@ import Helper from '../js/helper.js'
 import StellarAccounts from '../js/StellarAccounts.js'
 import AccountList from '../components/AccountList.vue'
 import CreateTokenDialog from '../components/dialogs/CreateTokenDialog.vue'
-import CreateAccountDialog from '../components/dialogs/CreateAccountDialog.vue'
+import CreateHolderAccountDialog from '../components/dialogs/CreateHolderAccountDialog.vue'
 import ManageOfferDialog from '../components/dialogs/ManageOfferDialog.vue'
 import SendAssetsDialog from '../components/dialogs/SendAssetsDialog.vue'
 import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue'
@@ -91,7 +91,7 @@ export default {
     'account-list': AccountList,
     'create-token-dialog': CreateTokenDialog,
     'manage-offer-dialog': ManageOfferDialog,
-    'create-account-dialog': CreateAccountDialog,
+    'create-account-dialog': CreateHolderAccountDialog,
     'send-assets-dialog': SendAssetsDialog,
     'instructions-header': InstructionsHeader,
     'confirm-dialog': ConfirmDialog,
@@ -133,7 +133,6 @@ export default {
       createDialogPing: false,
       offerDialogPing: false,
       sendAssetsDialogPing: false,
-      dialogProject: null,
       accountDialogPing: false,
       showSummary: false,
       confirmDialogPing: false,
@@ -276,9 +275,10 @@ export default {
     createUserAccount() {
       this.model = new ReusableStellarViewsModel()
 
+      this.model.sourceAccount = StellarAccounts.accountWithPublicKey(this.currentProject().distributor)
       this.model.fundingMessage = 'Choose an account to pay the transaction fee'
+      this.model.setAsset(new StellarSdk.Asset(this.currentProject().symbol, this.currentProject().issuer))
 
-      this.dialogProject = this.currentProject()
       this.accountDialogPing = !this.accountDialogPing
     },
     showOffers() {
