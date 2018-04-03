@@ -9,8 +9,8 @@
       </div>
       <div class='help-email'>
         <div class='balance-fields'>
-          <v-text-field hide-details label='Token Balance' v-model.trim="tokenBalance" @keyup.enter="createAccount()" ref='input'></v-text-field>
-          <v-text-field hide-details label='XLM Balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccount()"></v-text-field>
+          <v-text-field hide-details label='Asset starting balance' v-model.trim="tokenBalance" @keyup.enter="createAccount()" ref='input'></v-text-field>
+          <v-text-field hide-details label='XLM starting balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccount()"></v-text-field>
         </div>
         <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createAccount' :model="model" v-on:toast='displayToast' :showAsset=true :showSource=true :showFunding=true :showAccountName=true :showTimeLock=true />
       </div>
@@ -34,6 +34,7 @@ import {
   StellarWallet
 } from 'stellar-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
+import StellarAccounts from '../../js/StellarAccounts.js'
 import ToastComponent from '../ToastComponent.vue'
 import ReusableStellarViews from '../ReusableStellarViews.vue'
 
@@ -75,10 +76,20 @@ export default {
       const asset = this.dialogAccounts().asset()
       const timeLockDate = this.dialogAccounts().timeLock()
 
-      if (sourceWallet && asset) {
+      if (sourceWallet && asset && !asset.isNative()) {
+        let issuerWallet = null
+
+        // kind of fragile, assumes issuer is in our account list
+        // but issuer is only needed for allowTrust / auth required accounts
+        const acct = StellarAccounts.accountWithPublicKey(asset.getIssuer())
+        if (acct) {
+          Helper.debugLog(acct)
+          issuerWallet = StellarWallet.secret(acct.secret)
+        }
+
         this.loading = true
 
-        StellarUtils.newAccountWithTokens(fundingWallet, sourceWallet, String(this.xlmBalance), asset, String(this.tokenBalance), accountName, asset.getCode())
+        StellarUtils.newAccountWithTokens(fundingWallet, sourceWallet, String(this.xlmBalance), asset, String(this.tokenBalance), accountName, asset.getCode(), issuerWallet)
           .then((result) => {
             // result is {account: newAccount, keypair: keypair}
             Helper.debugLog(result.account)

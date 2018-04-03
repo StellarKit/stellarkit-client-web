@@ -224,7 +224,7 @@ class StellarUtils {
         return this.changeTrust(newWallet, fundingWallet, asset, String(trustLimit))
           .then(() => {
             if (issuerWallet) {
-              return StellarUtils.allowTrust(issuerWallet, newWallet, asset, true, fundingWallet)
+              return this.allowTrust(issuerWallet, newWallet, asset, true, fundingWallet)
                 .then(() => {
                   return null
                 })
@@ -235,6 +235,8 @@ class StellarUtils {
                   return null
                 })
             }
+
+            return null
           })
       })
       .then(() => {
