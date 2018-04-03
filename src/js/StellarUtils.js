@@ -224,13 +224,13 @@ class StellarUtils {
         return this.changeTrust(newWallet, fundingWallet, asset, String(trustLimit))
           .then(() => {
             if (issuerWallet) {
+              Helper.debugLog('Allow trust...')
               return this.allowTrust(issuerWallet, newWallet, asset, true, fundingWallet)
                 .then(() => {
                   return null
                 })
-                .catch((error) => {
+                .catch(() => {
                   Helper.debugLog('Allow trust was not necessary, continuing...')
-                  Helper.debugLog(error)
 
                   return null
                 })

@@ -83,7 +83,6 @@ export default {
         // but issuer is only needed for allowTrust / auth required accounts
         const acct = StellarAccounts.accountWithPublicKey(asset.getIssuer())
         if (acct) {
-          Helper.debugLog(acct)
           issuerWallet = StellarWallet.secret(acct.secret)
         }
 
