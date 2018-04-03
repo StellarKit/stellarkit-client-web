@@ -105,7 +105,7 @@
 
     <div v-if='timeLockEnabled'>
       <v-dialog v-model="timeLockModal" persistent lazy full-width width="290px" :return-value.sync="timeLockDate" ref="dialog">
-        <v-text-field hide-details :disabled='!timeLockEnabled' slot="activator" label="Time Lock Expiration Date" v-model="timeLockDate" prepend-icon="event" readonly></v-text-field>
+        <v-text-field hide-details slot="activator" label="Time Lock Expiration Date" v-model="timeLockDate" prepend-icon="event" readonly></v-text-field>
         <v-date-picker v-model="timeLockDate" scrollable actions>
           <v-spacer></v-spacer>
           <v-btn flat color="primary" @click="timeLockModal = false">Cancel</v-btn>
@@ -196,7 +196,7 @@ export default {
 
       timeLockEnabled: false,
       timeLockModal: false,
-      timeLockDate: null,
+      timeLockDate: '',
 
       destPaymentsMenuItems: [{
           id: '1',
@@ -557,7 +557,7 @@ export default {
     },
     timeLock() {
       if (this.timeLockEnabled) {
-        return this.timeLockDate
+        return new Date(this.timeLockDate)
       }
 
       return null

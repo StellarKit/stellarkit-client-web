@@ -89,7 +89,7 @@ export default {
 
               return StellarUtils.makeMultiSig(newWallet, sourceWallet, fundingWallet)
                 .then(() => {
-                  return this.createUnlockTransaction(newWallet, sourceWallet)
+                  return this.createUnlockTransaction(newWallet, sourceWallet, timeLockDate)
                 })
             }
 
@@ -113,14 +113,8 @@ export default {
     timeFromNow(secondsAhead = 0) {
       return secondsAhead + Math.round((new Date()).getTime() / 1000)
     },
-    createUnlockTransaction(newAccountWallet, sourceWallet) {
-      // for debugging
-      const seconds = 10
-      let minTime = this.timeFromNow(seconds)
-
-      if (this.date) {
-        minTime = this.date.getSeconds()
-      }
+    createUnlockTransaction(newAccountWallet, sourceWallet, timeLockDate) {
+      const minTime = timeLockDate.getSeconds()
 
       const transactionOpts = {
         timebounds: {

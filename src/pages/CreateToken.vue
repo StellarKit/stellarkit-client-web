@@ -98,7 +98,7 @@
         </div>
         <div class='expansion-message'>
           <div class='message-comment'>Issues mulitiple operations. Wait for it to complete.</div>
-          <v-btn round small @click="newAccountWithTokens()">Create New Account</v-btn>
+          <v-btn round small @click="createNewAccount()">Create New Account</v-btn>
         </div>
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -142,7 +142,7 @@ export default {
     'instructions-header': InstructionsHeader
   },
   methods: {
-    newAccountWithTokens() {
+    createNewAccount() {
       const distributorAccount = this.distributor()
 
       if (distributorAccount) {

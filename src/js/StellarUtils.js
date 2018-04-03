@@ -202,28 +202,44 @@ class StellarUtils {
   }
 
   // returns {account: newAccount, keypair: keypair}
-  newAccountWithTokens(fundingWallet, distributorWallet, startingBalance, asset, amount, accountName = null, accountTag = null) {
+  newAccountWithTokens(fundingWallet, sourceWallet, startingBalance, asset, amount, accountName = null, accountTag = null, issuerWallet = null) {
     let info = null
+    let newWallet = null
 
-    // problem if fundingWallet and distributorWallet is the same, fails for the sendAsset (too many signers)
-    let newAccountFundingWallet = fundingWallet
-    if (!newAccountFundingWallet) {
-      newAccountFundingWallet = distributorWallet
+    let newAccountSourceWallet = sourceWallet
+    if (fundingWallet) {
+      newAccountSourceWallet = fundingWallet
     }
 
-    return this.newAccount(newAccountFundingWallet, startingBalance, accountName, accountTag)
+    return this.newAccount(newAccountSourceWallet, startingBalance, accountName, accountTag)
       .then((result) => {
         info = result
 
+        newWallet = StellarWallet.secret(info.keypair.secret())
+
         // just make sure limit is at least > amount, but boosting it up just in case
-        const trustLimit = Math.max(amount * 2, 100000)
+        const trustLimit = Math.max(amount * 2, 1000000)
 
         Helper.debugLog('setting trust...')
-        return this.changeTrust(StellarWallet.secret(info.keypair.secret()), fundingWallet, asset, String(trustLimit))
+        return this.changeTrust(newWallet, fundingWallet, asset, String(trustLimit))
+          .then(() => {
+            if (issuerWallet) {
+              return StellarUtils.allowTrust(issuerWallet, newWallet, asset, true, fundingWallet)
+                .then(() => {
+                  return null
+                })
+                .catch((error) => {
+                  Helper.debugLog('Allow trust was not necessary, continuing...')
+                  Helper.debugLog(error)
+
+                  return null
+                })
+            }
+          })
       })
       .then((result) => {
         Helper.debugLog('sending tokens...')
-        return this.sendAsset(distributorWallet, fundingWallet, StellarWallet.secret(info.keypair.secret()), amount, asset)
+        return this.sendAsset(sourceWallet, fundingWallet, newWallet, amount, asset)
       })
       .then((result) => {
         Helper.debugLog(result, 'Success')
