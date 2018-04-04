@@ -174,15 +174,4 @@ export default {
 .top-controls {
     padding: 10px 20px;
 }
-
-.address-box {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-    div.input-group {
-        flex: 1 0 200px;
-        margin-right: 16px;
-    }
-}
 </style>
