@@ -41,11 +41,13 @@ import {
 } from 'stellar-js-utils'
 import SendAssetsDialog from '../components/dialogs/SendAssetsDialog.vue'
 import BuyAssetDialog from '../components/dialogs/BuyAssetDialog.vue'
+import ReusableStellarViewsModel from '../components/ReusableStellarViewsModel.js'
 
 export default {
   mixins: [StellarCommonMixin],
   data() {
     return {
+      model: new ReusableStellarViewsModel(),
       loading: false,
       loadingBuy: false,
       loadingSend: false,
