@@ -17,7 +17,8 @@
     </v-list>
   </v-menu>
   <div class='network-string'>{{serverURL()}}</div>
-  <v-btn small outline class='tiny-button' color='primary' @click="horizonMetrics()">Horizon Metrics</v-btn>
+  <v-btn v-if='signOut' small outline class='tiny-button' color='primary' @click="sendSignOut()">Sign Out</v-btn>
+  <v-btn v-else small outline class='tiny-button' color='primary' @click="horizonMetrics()">Horizon Metrics</v-btn>
 </div>
 </template>
 
@@ -27,6 +28,7 @@ import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
 
 export default {
+  props: ['signOut'],
   data() {
     return {
       server: null,
@@ -63,6 +65,9 @@ export default {
       }
 
       return 'Public'
+    },
+    sendSignOut() {
+      Helper.emit('sign-out')
     },
     horizonMetrics() {
       Helper.debugLog('horizon metrics...')

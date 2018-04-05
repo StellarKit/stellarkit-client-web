@@ -3,7 +3,7 @@
   <div class='app-wrapper' v-if='!initializing'>
     <navivation-drawer :ping='showNavigation' />
     <div class='main-container'>
-      <header-bar v-on:show-drawer='showDrawer' v-on:show-github='showGitHub' :tabs='tabs' />
+      <header-bar v-on:show-drawer='showDrawer' v-on:show-github='showGitHub' :tabs='tabs' :networkIndicator='false' homeTitle='Stellar Army' />
       <network-menu />
       <div class='app-content'>
         <div class='router-container '>
@@ -26,7 +26,7 @@ import NavigationDrawer from './components/NavigationDrawer.vue'
 import HeaderBar from './components/HeaderBar.vue'
 import TabsManager from './js/TabsManager.js'
 import ConsoleComponent from './components/ConsoleComponent.vue'
-import NetworkMenu from './components/NetworkMenu.vue'
+import NetworkBar from './components/NetworkBar.vue'
 import Helper from './js/helper.js'
 import Storage from './js/storage.js'
 import ToastComponent from './components/ToastComponent.vue'
@@ -34,7 +34,7 @@ import ToastComponent from './components/ToastComponent.vue'
 export default {
   components: {
     'navivation-drawer': NavigationDrawer,
-    'network-menu': NetworkMenu,
+    'network-menu': NetworkBar,
     'toast-component': ToastComponent,
     'console': ConsoleComponent,
     'header-bar': HeaderBar

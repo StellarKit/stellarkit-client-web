@@ -10,7 +10,17 @@
     </div>
   </div>
   <div class='right-header-bar'>
-    <v-btn icon small @click='clickButton("github")'>
+    <div v-if='networkIndicator' class='network-indicator'>
+      <v-tooltip v-if='isTestnet' left>
+        <div class='testnet' slot="activator" />
+        <span>Test Network</span>
+      </v-tooltip>
+      <v-tooltip v-else left>
+        <div class='publicnet' slot="activator" />
+        <span>Public Network</span>
+      </v-tooltip>
+    </div>
+    <v-btn v-else icon small @click='clickButton("github")'>
       <v-icon>fa-github</v-icon>
     </v-btn>
   </div>
@@ -31,23 +41,29 @@
 
 <script>
 import Helper from '../js/helper.js'
+import StellarUtils from '../js/StellarUtils.js'
 
 export default {
-  props: ['items', 'tabs'],
+  props: ['items', 'tabs', 'networkIndicator', 'homeTitle'],
   computed: {
     pageTitle: function() {
       if (this.$route.path === '/') {
-        return 'Stellar Army'
+        return this.homeTitle
       }
       return this.$route.name
     }
   },
   data() {
     return {
-      xx: true
+      isTestnet: true
     }
   },
   mounted() {
+    this.isTestnet = StellarUtils.isTestnet()
+    Helper.vue().$on('stellar-network-updated', () => {
+      this.isTestnet = StellarUtils.isTestnet()
+    })
+
     Helper.vue().$on('enable-experiments', () => {
       for (const tab of this.tabs) {
         if (tab.disabled === true) {
@@ -94,6 +110,26 @@ export default {
             .tab-indicator {
                 visibility: hidden;
             }
+        }
+    }
+
+    .network-indicator {
+        margin-right: 13px;
+
+        .publicnet,
+        .testnet {
+            width: 12px;
+            height: 12px;
+            border-radius: 500px;
+        }
+
+        .publicnet {
+            background: rgb(0,255,70);
+        }
+
+        .testnet {
+            background: rgb(0,194,255);
+            box-shadow: 0 0 1px white;
         }
     }
 
