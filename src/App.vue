@@ -3,7 +3,7 @@
   <div class='app-wrapper' v-if='!initializing'>
     <navivation-drawer :ping='showNavigation' />
     <div class='main-container'>
-      <header-bar v-on:show-drawer='showDrawer' v-on:show-github='showGitHub' />
+      <header-bar v-on:show-drawer='showDrawer' v-on:show-github='showGitHub' :tabs='tabs' />
       <network-menu />
       <div class='app-content'>
         <div class='router-container '>
@@ -24,6 +24,7 @@
 import './scss/vuetify/main.styl'
 import NavigationDrawer from './components/NavigationDrawer.vue'
 import HeaderBar from './components/HeaderBar.vue'
+import TabsManager from './js/TabsManager.js'
 import ConsoleComponent from './components/ConsoleComponent.vue'
 import NetworkMenu from './components/NetworkMenu.vue'
 import Helper from './js/helper.js'
@@ -41,7 +42,8 @@ export default {
   data() {
     return {
       showNavigation: false,
-      initializing: true
+      initializing: true,
+      tabs: []
     }
   },
   created() {
@@ -52,6 +54,9 @@ export default {
       .catch((error) => {
         console.log(error)
       })
+  },
+  mounted() {
+    this.tabs = TabsManager.getTabs()
   },
   methods: {
     showGitHub() {
