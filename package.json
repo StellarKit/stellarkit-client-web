@@ -53,7 +53,7 @@
     "localforage": "^1.7.1",
     "save-file": "^1.2.0",
     "sillyname": "^0.1.0",
-    "stellar-js-utils": "git://github.com/StellarKit/stellar-js-utils",
+    "stellar-js-utils": "git://github.com/StellarKit/stellarkit-js-utils",
     "stellar-sdk": "^0.8.0"
   }
 }
