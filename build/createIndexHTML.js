@@ -20,7 +20,7 @@ let contents = `
 </body>
 </html>
 `
-contents = contents.replace("__TITLE__", 'Stellar Army')
+contents = contents.replace("__TITLE__", 'StellarArmy')
 contents = contents.replace("__VERSION__", version)
 
 // make sure dist folder exists

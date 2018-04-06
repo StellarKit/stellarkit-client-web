@@ -3,7 +3,7 @@
   <div class='app-wrapper' v-if='!initializing'>
     <navivation-drawer :ping='showNavigation' />
     <div class='main-container'>
-      <header-bar v-on:show-drawer='showDrawer' v-on:show-github='showGitHub' :tabs='tabs' :networkIndicator='false' homeTitle='Stellar Army' />
+      <header-bar v-on:show-drawer='showDrawer' v-on:show-github='showGitHub' :tabs='tabs' :networkIndicator='false' homeTitle='StellarArmy' />
       <network-menu />
       <div class='app-content'>
         <div class='router-container '>

@@ -255,6 +255,6 @@ export default class Helper {
       return name
     }
 
-    return 'Stellar Army'
+    return 'StellarArmy'
   }
 }
