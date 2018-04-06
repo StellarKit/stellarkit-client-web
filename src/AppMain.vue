@@ -15,6 +15,7 @@
   </div>
 
   <toast-component />
+  <disclaimer-dialog :ping='disclaimerDialogPing' />
 </div>
 </template>
 
@@ -27,6 +28,7 @@ import ConsoleComponent from './components/ConsoleComponent.vue'
 import NetworkBar from './components/NetworkBar.vue'
 import Helper from './js/helper.js'
 import ToastComponent from './components/ToastComponent.vue'
+import DisclaimerDialog from './components/dialogs/DisclaimerDialog.vue'
 
 export default {
   components: {
@@ -34,16 +36,25 @@ export default {
     'network-menu': NetworkBar,
     'toast-component': ToastComponent,
     'console': ConsoleComponent,
-    'header-bar': HeaderBar
+    'header-bar': HeaderBar,
+    'disclaimer-dialog': DisclaimerDialog
   },
   data() {
     return {
       showNavigation: false,
+      disclaimerDialogPing: false,
       tabs: []
     }
   },
   mounted() {
     this.tabs = TabsManager.getTabs()
+
+    // show disclaimer once
+    if (!Helper.get('shown-disclaimer')) {
+      Helper.set('shown-disclaimer', true)
+
+      this.disclaimerDialogPing = !this.disclaimerDialogPing
+    }
   },
   methods: {
     showGitHub() {
