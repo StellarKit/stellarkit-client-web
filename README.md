@@ -1,4 +1,4 @@
-# Stellar Client Web
+# StellarKit Client Web
 
 See it live at [`https://stellar.army`](https://stellar.army).
 
@@ -16,6 +16,8 @@ You need don't https (needed for Ledger testing)
 To build
 
     npm run dist
+
+Disclaimer: We not affiliated with, or sponsored or endorsed by, the Stellar Development Foundation.
 
 ### Donations
 
