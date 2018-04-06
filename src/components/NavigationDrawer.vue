@@ -93,7 +93,7 @@ export default {
             this.showAboutPing = !this.showAboutPing
             break
           case 'github':
-            Helper.openBrowser('https://github.com/StellarKit/stellar-client-web')
+            Helper.openBrowser('https://github.com/StellarKit/stellarkit-client-web')
             break
           default:
             break

@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     showGitHub() {
-      Helper.openBrowser('https://github.com/StellarKit/stellar-client-web')
+      Helper.openBrowser('https://github.com/StellarKit/stellarkit-client-web')
     },
     showDrawer() {
       this.showNavigation = !this.showNavigation

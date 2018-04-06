@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "description": "Main code for stellar-client",
-  "repository": "github.com/StellarKit/stellar-client-web",
+  "repository": "github.com/StellarKit/stellarkit-client-web",
   "homepage": "https://stellarkit.io",
   "author": {
     "name": "Steve Gehrman",
