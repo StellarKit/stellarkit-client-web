@@ -17,7 +17,7 @@ To build
 
     npm run dist
 
-Disclaimer: We not affiliated with, or sponsored or endorsed by, the Stellar Development Foundation.
+Disclaimer: We are not affiliated with, or sponsored or endorsed by, the Stellar Development Foundation.
 
 ### Donations
 
