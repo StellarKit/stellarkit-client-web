@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import './scss/vuetify/main.styl'
 import NavigationDrawer from './components/NavigationDrawer.vue'
 import HeaderBar from './components/HeaderBar.vue'
 import TabsManager from './js/TabsManager.js'
