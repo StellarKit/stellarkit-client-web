@@ -45,6 +45,10 @@
     "webpack-merge": "^4.1.2"
   },
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.5",
+    "@fortawesome/fontawesome-free-brands": "^5.0.9",
+    "@fortawesome/fontawesome-free-solid": "^5.0.9",
+    "@fortawesome/vue-fontawesome": "0.0.22",
     "axios": "^0.18.0",
     "firebase": "^4.12.1",
     "firebaseui": "^2.7.0",

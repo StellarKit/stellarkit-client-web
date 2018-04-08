@@ -21,7 +21,7 @@
       </v-tooltip>
     </div>
     <v-btn v-else icon small @click='clickButton("github")'>
-      <v-icon>fa-github</v-icon>
+      <v-icon>fab fa-github</v-icon>
     </v-btn>
   </div>
 

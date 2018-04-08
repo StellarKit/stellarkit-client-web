@@ -74,7 +74,7 @@ export default {
         {
           id: 'github',
           title: 'Source on Github',
-          icon: 'fa-github'
+          icon: 'fab fa-github'
         }
       ]
     }

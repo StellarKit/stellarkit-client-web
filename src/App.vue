@@ -8,6 +8,12 @@
 import './scss/vuetify/main.styl'
 import Storage from './js/storage.js'
 import AppMain from './AppMain.vue'
+import fontawesome from '@fortawesome/fontawesome'
+import brands from '@fortawesome/fontawesome-free-brands'
+import solid from '@fortawesome/fontawesome-free-solid'
+
+// setup font awesome
+fontawesome.library.add(brands, solid)
 
 export default {
   components: {
