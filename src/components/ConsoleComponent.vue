@@ -113,10 +113,13 @@ export default {
     },
     scrollToEnd(delay = 250) {
       this.$nextTick(() => {
-        $('.output-container').animate({
-          scrollTop: $('.output-container')[0].scrollHeight,
-          scrollLeft: 0
-        }, delay)
+        // make sure view hasn't disappeared
+        if ($('.output-container')[0]) {
+          $('.output-container').animate({
+            scrollTop: $('.output-container')[0].scrollHeight,
+            scrollLeft: 0
+          }, delay)
+        }
       })
     },
     clearLog() {
