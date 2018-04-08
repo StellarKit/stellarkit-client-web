@@ -199,6 +199,10 @@ export default class Helper {
     return typeof object
   }
 
+  static debugHeader(title) {
+    Helper.debugLog('--------------------------------------------------' + '\n' + '-----  ' + title + '\n' + '--------------------------------------------------')
+  }
+
   static debugLog(input, tag = null) {
     let newText = ''
 
