@@ -24,7 +24,7 @@ export default class Storage {
     let result
 
     if (!this.ready) {
-      console.log('called get before ready')
+      console.log('called get before ready: ' + key)
     } else {
       result = this.memoryStore[key]
     }
@@ -34,7 +34,7 @@ export default class Storage {
 
   static set(key, value) {
     if (!this.ready) {
-      console.log('called set before ready')
+      console.log('called set before ready: ' + key)
     } else {
       this.memoryStore[key] = value
 
