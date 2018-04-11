@@ -123,7 +123,7 @@ export default {
           const destWallet = this.dialogAccounts().destWallet()
 
           if (destWallet) {
-            Helper.debugLog('Sending XLM...')
+            Helper.debugLog('Sending...')
             this.loading = true
 
             return StellarUtils.sendAsset(sourceWallet, fundingWallet, destWallet, String(amount), asset, null, additionalSigners)

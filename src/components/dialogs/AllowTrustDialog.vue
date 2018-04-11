@@ -81,16 +81,17 @@ export default {
         StellarUtils.allowTrust(sourceWallet, destWallet, asset, authorize, fundingWallet)
           .then((response) => {
             Helper.debugLog(response)
-            this.loadingTrust = false
-            this.loadingRevoke = false
 
             this.displayToast('Success!')
             return null
           })
           .catch((error) => {
             Helper.debugLog(error, 'Error')
-            this.loading = false
             this.displayToast('Error!', true)
+          })
+          .finally(() => {
+            this.loadingTrust = false
+            this.loadingRevoke = false
           })
       }
     },
