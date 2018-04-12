@@ -72,18 +72,18 @@ export default {
 <style  lang='scss' scoped>
 .app-wrapper {
     display: flex;
-    flex: 1;
+    flex: 1 1 auto;
 }
 
 .main-container {
     display: flex;
-    flex: 1;
+    flex: 1 1 auto;
     flex-direction: column;
 
     .app-content {
         display: flex;
         width: 100%;
-        flex: 1;
+        flex: 1 1 auto;
 
         flex-direction: column;
 
