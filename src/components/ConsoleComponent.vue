@@ -161,6 +161,22 @@ export default {
         overflow: auto;
         color: rgb(0,256,150);
         margin: 4px 0 0 30px;
+
+        &::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: black;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: darkgreen;
+        }
+        &::-webkit-scrollbar-corner {
+            background: black;
+        }
     }
 }
 
