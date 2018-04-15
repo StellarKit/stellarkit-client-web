@@ -1,7 +1,8 @@
 const StellarSdk = require('stellar-sdk')
 const generateName = require('sillyname')
-import Helper from '../js/helper.js'
+import Helper from './helper.js'
 import StellarUtils from './StellarUtils.js'
+import DataStorage from './DataStorage.js'
 
 class SharedAccounts {
   constructor(network) {
@@ -43,7 +44,7 @@ class SharedAccounts {
   }
 
   load() {
-    const accounts = Helper.get(this.network + 'accounts')
+    const accounts = DataStorage.get(this.network + 'accounts')
 
     if (accounts && accounts.length > 0) {
       this._accounts = accounts
@@ -63,7 +64,7 @@ class SharedAccounts {
       setTimeout(() => {
         this._saving = false
 
-        Helper.set(this.network + 'accounts', this._accounts)
+        DataStorage.set(this.network + 'accounts', this._accounts)
       }, 500)
     }
   }
