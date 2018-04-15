@@ -48,12 +48,6 @@ class SharedAccounts {
     if (accounts && accounts.length > 0) {
       this._accounts = accounts
     }
-
-    // converting from old format
-    // april 1, delete after a few weeks
-    if (this._accounts.length < 1) {
-      this.loadPreviousFormat()
-    }
   }
 
   save(alert = true) {
@@ -71,30 +65,6 @@ class SharedAccounts {
 
         Helper.set(this.network + 'accounts', this._accounts)
       }, 500)
-    }
-  }
-
-  loadPreviousFormat() {
-    const alreadyRestored = Helper.get(this.network + '-restored')
-
-    // only restore once since it could be retriggered when the user deletes all accounts
-    if (!alreadyRestored) {
-      Helper.set(this.network + '-restored', true)
-
-      const oldAccounts = Helper.get('accounts')
-      if (oldAccounts) {
-        const isMainnet = this.network === 'public'
-
-        const result = oldAccounts.filter(value => {
-          return isMainnet === Boolean(value.mainnet) // could be undefined
-        })
-
-        if (result && result.length > 0) {
-          this._accounts = result
-
-          this.save(false)
-        }
-      }
     }
   }
 }
