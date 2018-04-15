@@ -28,6 +28,9 @@ export default class DataStorage {
       this.storage.set(key, value)
     } else {
       Helper.set(key, value)
+
+      // this.storage is requied to trigger this, we have to do it manually with helper
+      this.notify()
     }
   }
 

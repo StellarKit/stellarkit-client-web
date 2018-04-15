@@ -53,14 +53,11 @@ class SharedAccounts {
     if (accounts && accounts.length > 0) {
       this._accounts = accounts
     }
+
+    Helper.emit('stellar-accounts-updated')
   }
 
-  save(alert = true) {
-    // alert ui to update
-    if (alert) {
-      Helper.emit('stellar-accounts-updated')
-    }
-
+  save() {
     // save throttle, probably not necessary, but couldn't hurt
     if (!this._saving) {
       this._saving = true
@@ -69,7 +66,7 @@ class SharedAccounts {
         this._saving = false
 
         DataStorage.set(this.network + 'accounts', this._accounts)
-      }, 500)
+      }, 100)
     }
   }
 }
