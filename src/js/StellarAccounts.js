@@ -10,6 +10,10 @@ class SharedAccounts {
     this.network = network
 
     this.load()
+
+    Helper.vue().$on('data-storage-updated', () => {
+      this.load()
+    })
   }
 
   add(acct) {

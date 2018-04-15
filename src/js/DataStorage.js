@@ -10,7 +10,7 @@ export default class DataStorage {
     let result
 
     if (this.storage) {
-      result = this.storage.get(key)
+      result = this.storage.get(key, defaultValue)
     } else {
       result = Helper.get(key)
     }
@@ -29,5 +29,10 @@ export default class DataStorage {
     } else {
       Helper.set(key, value)
     }
+  }
+
+  // call when changed from the server by another person
+  static notify() {
+    Helper.emit('data-storage-updated')
   }
 }
