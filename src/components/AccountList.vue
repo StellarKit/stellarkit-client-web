@@ -39,7 +39,7 @@
     Create an account
   </div>
   <transition-group v-else class='accounts' name="list" tag="div">
-    <div class='account-item' v-for="item in items" @click.stop='clickItem(item)' :key='item.name'>
+    <div class='account-item' v-for="item in items" @click.stop='clickItem(item)' :key='item.publicKey'>
       <v-tooltip open-delay='200' bottom>
         <div slot="activator">
           <div class='account-name'>{{item.name}}</div>
