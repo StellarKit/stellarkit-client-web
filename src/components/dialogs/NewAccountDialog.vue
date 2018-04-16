@@ -6,15 +6,15 @@
     <div class='help-contents'>
       <div v-if='mode === "start"' class='start-box'>
         <v-tooltip v-if='isTestnet()' open-delay='200' bottom>
-          <v-btn color='primary' slot="activator" @click="buttonClick('testnet-account')" :loading="loading">Free Testnet Account</v-btn>
+          <v-btn color='primary' slot="activator" @click="buttonClick('testnet-account')">Free Testnet Account</v-btn>
           <span>Add a free testnet account</span>
         </v-tooltip>
         <v-tooltip open-delay='200' bottom>
-          <v-btn color='primary' slot="activator" @click="buttonClick('add-account')" :loading="loading">Add Existing Account</v-btn>
+          <v-btn color='primary' slot="activator" @click="buttonClick('add-account')">Add Existing Account</v-btn>
           <span>Add existing account with a secret key</span>
         </v-tooltip>
         <v-tooltip open-delay='200' bottom>
-          <v-btn color='primary' slot="activator" @click="buttonClick('create-account')" :loading="loading">Create New Account</v-btn>
+          <v-btn color='primary' slot="activator" @click="buttonClick('create-account')">Create New Account</v-btn>
           <span>Create a new account with a source account's secret key</span>
         </v-tooltip>
       </div>
@@ -170,6 +170,8 @@ export default {
     createTestnetAccount() {
       const accountName = this.dialogAccounts().accountName()
 
+      this.loading = true
+
       StellarUtils.createTestAccount(accountName)
         .then((result) => {
           Helper.debugLog(result)
@@ -178,6 +180,9 @@ export default {
         })
         .catch((error) => {
           Helper.debugLog(error, 'Error')
+        })
+        .finally(() => {
+          this.loading = false
         })
     },
     createAccount() {
@@ -197,13 +202,14 @@ export default {
             Helper.debugLog(error)
             this.displayToast('Error', true)
           })
+          .finally(() => {
+            this.loading = false
+          })
       }
     },
     accountCreated(accountInfo) {
       this.displayToast('Account Created! Save the secret key!')
       StellarUtils.updateBalances()
-
-      this.loading = false
 
       Helper.debugLog('New Account')
       Helper.debugLog(accountInfo.keypair.publicKey())
