@@ -13,7 +13,7 @@
       <menu-button v-on:menu-selected='sourceMenuSelected' title='Source account' :items='sourceMenuItems' :selectedID='sourceType' />
     </div>
     <div v-if='sourceType === "account"'>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model='model.sourceAccount' clearable label="Source account" autocomplete return-object max-height="600" :value-comparator='selectCompare'></v-select>
+      <v-select hide-details :items="accountsUI" item-text='name' item-value='publicKey' v-model='model.sourceAccount' clearable label="Source account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
 
@@ -25,7 +25,7 @@
       <v-text-field hide-details label="Destination public key" v-model.trim="destPublicKey" autofocus @keyup.enter="enterKeyDown"></v-text-field>
     </div>
     <div v-if='destType === "account"'>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model="model.destAccount" clearable label="Destination account" autocomplete return-object max-height="600" :value-comparator='selectCompare'></v-select>
+      <v-select hide-details :items="accountsUI" item-text='name' item-value='publicKey' v-model="model.destAccount" clearable label="Destination account" autocomplete return-object max-height="600"></v-select>
     </div>
     <div v-if='destType === "publicKeyList"'>
       <textarea v-model='destPublicKeyList' placeholder='Paste in a list of public keys separated by returns, spaces or commas.' class='public-key-text'></textarea>
@@ -120,7 +120,7 @@
       <menu-button v-on:menu-selected='fundingMenuSelected' title='Funding account' :items='fundingMenuItems' :selectedID='fundingType' />
     </div>
     <div v-if='fundingType === "account"'>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model="model.fundingAccount" clearable label="Funding account" autocomplete return-object max-height="600" :value-comparator='selectCompare'></v-select>
+      <v-select hide-details :items="accountsUI" item-text='name' item-value='publicKey' v-model="model.fundingAccount" clearable label="Funding account" autocomplete return-object max-height="600"></v-select>
     </div>
     <div v-if='fundingType === "none"'>
       <div class='accounts-small-text'>{{this.model.fundingMessage}}</div>
@@ -132,7 +132,7 @@
       <menu-button v-on:menu-selected='signerMenuSelected' title='Add Signer account' :items='signerMenuItems' :selectedID='signerType' />
     </div>
     <div v-if='signerType === "account"'>
-      <v-select hide-details :items="accountsUI" item-text='name' v-model="model.signerAccount" clearable label="Signing account" autocomplete return-object max-height="600" :value-comparator='selectCompare'></v-select>
+      <v-select hide-details :items="accountsUI" item-text='name' item-value='publicKey' v-model="model.signerAccount" clearable label="Signing account" autocomplete return-object max-height="600"></v-select>
     </div>
   </div>
 
@@ -281,10 +281,6 @@ export default {
     }
   },
   methods: {
-    selectCompare(acct1, acct2) {
-      // had to add this since it was using object pointer and data refreshes were not matching
-      return acct1.publicKey === acct2.publicKey
-    },
     adjustSetting(id) {
       switch (id) {
         case 'destType':
