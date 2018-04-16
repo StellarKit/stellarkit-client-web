@@ -5,6 +5,10 @@
 
     <div class='help-contents'>
       <div v-if='mode === "start"' class='start-box'>
+        <v-tooltip v-if='isTestnet()' open-delay='200' bottom>
+          <v-btn color='primary' slot="activator" @click="buttonClick('testnet-account')" :loading="loading">Free Testnet Account</v-btn>
+          <span>Add a free testnet account</span>
+        </v-tooltip>
         <v-tooltip open-delay='200' bottom>
           <v-btn color='primary' slot="activator" @click="buttonClick('add-account')" :loading="loading">Add Existing Account</v-btn>
           <span>Add existing account with a secret key</span>
@@ -14,14 +18,16 @@
           <span>Create a new account with a source account's secret key</span>
         </v-tooltip>
       </div>
+
       <div v-else>
         <div v-if='mode === "add"' class='choice-box'>
-          <div class='note-text'>Paste in the secret key of an existing account.</div>
+          <div class='note-text'>Paste in the secret or public key of an existing account.</div>
           <dialog-accounts ref='dialogAccountsAdd' v-on:enter-key-down='addExistingAccount' v-on:toast='displayToast' :model="model" :showSecret=true :showAccountName=true />
+
           <div class='button-holder'>
             <v-tooltip open-delay='200' bottom>
-              <v-btn round color='primary' slot="activator" @click="addExistingAccount()" :loading="loading">Add Account</v-btn>
-              <span>Add account with secret key</span>
+              <v-btn round color='primary' slot="activator" @click="addExistingAccount" :loading="loading">Add Account</v-btn>
+              <span>Add account with key</span>
             </v-tooltip>
           </div>
         </div>
@@ -30,7 +36,17 @@
           <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createAccount' v-on:toast='displayToast' :model="model" :showFunding=true :showAccountName=true :showAmount=true />
           <div class='button-holder'>
             <v-tooltip open-delay='200' bottom>
-              <v-btn round color='primary' slot="activator" @click="createAccount()" :loading="loading">Create Account</v-btn>
+              <v-btn round color='primary' slot="activator" @click="createAccount" :loading="loading">Create Account</v-btn>
+              <span>Add account with secret key</span>
+            </v-tooltip>
+          </div>
+        </div>
+
+        <div v-if='mode === "testnet"' class='choice-box'>
+          <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createTestnetAccount' v-on:toast='displayToast' :model="model" :showAccountName=true />
+          <div class='button-holder'>
+            <v-tooltip open-delay='200' bottom>
+              <v-btn round color='primary' slot="activator" @click="createTestnetAccount" :loading="loading">Create Account</v-btn>
               <span>Add account with secret key</span>
             </v-tooltip>
           </div>
@@ -38,7 +54,6 @@
       </div>
 
       <save-secret-dialog :ping='saveSecretDialogPing' :publicKey='newAccountPublicKey' />
-
       <toast-component :absolute=true location='create-account-dialog' :bottom=false :top=true />
     </div>
   </div>
@@ -90,6 +105,9 @@ export default {
     }
   },
   methods: {
+    isTestnet() {
+      return StellarUtils.isTestnet()
+    },
     dialogAccounts() {
       return this.$refs.dialogAccounts
     },
@@ -104,8 +122,8 @@ export default {
         case 'create-account':
           this.mode = 'secret'
           break
-        case 'ledger-account':
-          this.mode = 'ledger'
+        case 'testnet-account':
+          this.mode = 'testnet'
           break
         default:
           break
@@ -148,6 +166,19 @@ export default {
           }
         }
       }
+    },
+    createTestnetAccount() {
+      const accountName = this.dialogAccounts().accountName()
+
+      StellarUtils.createTestAccount(accountName)
+        .then((result) => {
+          Helper.debugLog(result)
+
+          this.visible = false
+        })
+        .catch((error) => {
+          Helper.debugLog(error, 'Error')
+        })
     },
     createAccount() {
       const fundingWallet = this.dialogAccounts().fundingWallet(true)

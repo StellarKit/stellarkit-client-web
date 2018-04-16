@@ -13,6 +13,8 @@ class SharedAccounts {
 
     Helper.vue().$on('data-storage-updated', () => {
       this.load()
+
+      Helper.emit('stellar-accounts-updated')
     })
   }
 
@@ -53,8 +55,6 @@ class SharedAccounts {
     if (accounts && accounts.length > 0) {
       this._accounts = accounts
     }
-
-    Helper.emit('stellar-accounts-updated')
   }
 
   save() {
