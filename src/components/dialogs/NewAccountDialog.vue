@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <save-secret-dialog :ping='saveSecretDialogPing' :secret='newAccountSecret' />
+      <save-secret-dialog :ping='saveSecretDialogPing' :publicKey='newAccountPublicKey' />
 
       <toast-component :absolute=true location='create-account-dialog' :bottom=false :top=true />
     </div>
@@ -73,7 +73,7 @@ export default {
       title: 'Add/Create Account',
       loading: false,
       mode: 'start',
-      newAccountSecret: '',
+      newAccountPublicKey: '',
       saveSecretDialogPing: false
     }
   },
@@ -180,7 +180,7 @@ export default {
 
       setTimeout(() => {
         // update this before showing the dialog
-        this.newAccountSecret = accountInfo.keypair.secret()
+        this.newAccountPublicKey = accountInfo.keypair.publicKey()
         this.saveSecretDialogPing = !this.saveSecretDialogPing
       }, 1000)
     },

@@ -40,12 +40,13 @@ import {
 } from 'stellar-js-utils'
 import ToastComponent from '../ToastComponent.vue'
 import StellarUtils from '../../js/StellarUtils.js'
+import StellarAccounts from '../../js/StellarAccounts.js'
 import StellarCommonMixin from '../StellarCommonMixin.js'
 const SaveFile = require('save-file')
 const $ = require('jquery')
 
 export default {
-  props: ['ping', 'secret'],
+  props: ['ping', 'publicKey'],
   mixins: [StellarCommonMixin],
   components: {
     'dialog-titlebar': DialogTitleBar,
@@ -73,13 +74,11 @@ export default {
   },
   methods: {
     setup() {
-      // find account with the secret passed in
-      for (const account of this.accountsUI) {
-        if (account.secret === this.secret) {
-          this.selectedSource = account
-          break
-        }
+      // find account with the publicKey passed in
+      if (this.publicKey) {
+        this.selectedSource = StellarAccounts.accountWithPublicKey(this.publicKey)
       }
+
       if (!this.selectedSource && this.accountsUI.length > 0) {
         this.selectedSource = this.accountsUI[0]
       }
