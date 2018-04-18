@@ -54,6 +54,8 @@ class SharedAccounts {
 
     if (accounts && accounts.length > 0) {
       this._accounts = accounts
+    } else {
+      this._accounts = []
     }
   }
 
