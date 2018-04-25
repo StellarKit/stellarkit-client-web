@@ -1,5 +1,5 @@
-import Helper from './js/helper.js'
-import StellarUtils from './js/StellarUtils.js'
+import Helper from './helper.js'
+import StellarUtils from './StellarUtils.js'
 const EventEmitter = require('events')
 const debounce = require('debounce')
 
