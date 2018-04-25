@@ -71,9 +71,9 @@ export default {
     this.setup()
   },
   methods: {
-    clickLink(link)(
+    clickLink(link) {
       Helper.openBrowser(link)
-    ),
+    },
     setup() {
       if (!this.publicKey) {
         console.log('publicKey null')
