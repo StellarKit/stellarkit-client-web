@@ -48,7 +48,7 @@ import ManageOfferDialog from './dialogs/ManageOfferDialog.vue'
 import AllowTrustDialog from './dialogs/AllowTrustDialog.vue'
 import SavePrintSecretDialog from './dialogs/SavePrintSecretDialog.vue'
 import StellarAccounts from '../js/StellarAccounts.js'
-import HistoryDialog from './HistoryDialog.vue'
+import HistoryDialog from './dialogs/HistoryDialog.vue'
 
 export default {
   props: ['publicKey'],
