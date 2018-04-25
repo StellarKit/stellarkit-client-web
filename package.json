@@ -50,6 +50,7 @@
     "@fortawesome/fontawesome-free-solid": "^5.0.10",
     "@fortawesome/vue-fontawesome": "0.0.22",
     "axios": "^0.18.0",
+    "debounce": "^1.1.0",
     "firebase": "^4.12.1",
     "firebaseui": "^2.7.0",
     "gsap": "^1.20.4",

@@ -11,7 +11,6 @@ export default class StreamingCache {
     this.index = -1
     this.pagingToken = 0
     this.publicKey = publicKey
-    this.streamStopper = null
     this.reachedEnd = false
     this.loading = false
   }

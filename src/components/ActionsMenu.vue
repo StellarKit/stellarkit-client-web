@@ -5,27 +5,31 @@
       <v-icon>&#xE5D4;</v-icon>
     </v-btn>
     <v-list dense>
-      <v-list-tile @click="ledgerMenu('show-offers')">
+      <v-list-tile @click="actionMenu('show-offers')">
         <v-list-tile-title>Show Offers</v-list-tile-title>
       </v-list-tile>
-      <v-list-tile @click="ledgerMenu('post-offer')">
+      <v-list-tile @click="actionMenu('post-offer')">
         <v-list-tile-title>Post Offer</v-list-tile-title>
       </v-list-tile>
-      <v-list-tile @click="ledgerMenu('send-asset')">
+      <v-list-tile @click="actionMenu('send-asset')">
         <v-list-tile-title>Send Asset</v-list-tile-title>
       </v-list-tile>
-      <v-list-tile @click="ledgerMenu('save-keys')">
+      <v-list-tile @click="actionMenu('save-keys')">
         <v-list-tile-title>Save/Print Keys</v-list-tile-title>
       </v-list-tile>
-      <v-list-tile @click="ledgerMenu('trust-asset')">
+      <v-list-tile @click="actionMenu('trust-asset')">
         <v-list-tile-title>Trust Asset</v-list-tile-title>
       </v-list-tile>
-      <v-list-tile @click="ledgerMenu('allow-trust')">
+      <v-list-tile @click="actionMenu('allow-trust')">
         <v-list-tile-title>Allow Trust</v-list-tile-title>
+      </v-list-tile>
+      <v-list-tile @click="actionMenu('history')">
+        <v-list-tile-title>Show History</v-list-tile-title>
       </v-list-tile>
     </v-list>
   </v-menu>
 
+  <history-dialog :ping='historyDialogPing' :publicKey='publicKey' />
   <show-offers-dialog :ping='showOffersDialogPing' :model="showOffersDialogModel" />
   <save-print-secret-dialog :ping='saveSecretDialogPing' :publicKey='publicKey' />
   <trust-token-dialog :ping='trustDialogPing' :model="trustDialogModel" />
@@ -44,6 +48,7 @@ import ManageOfferDialog from './dialogs/ManageOfferDialog.vue'
 import AllowTrustDialog from './dialogs/AllowTrustDialog.vue'
 import SavePrintSecretDialog from './dialogs/SavePrintSecretDialog.vue'
 import StellarAccounts from '../js/StellarAccounts.js'
+import HistoryDialog from './HistoryDialog.vue'
 
 export default {
   props: ['publicKey'],
@@ -53,11 +58,13 @@ export default {
     TrustTokenDialog,
     SendAssetsDialog,
     ManageOfferDialog,
-    AllowTrustDialog
+    AllowTrustDialog,
+    HistoryDialog
   },
   data() {
     return {
       showOffersDialogPing: false,
+      historyDialogPing: false,
       saveSecretDialogPing: false,
       trustDialogPing: false,
       sendAssetsDialogPing: false,
@@ -71,7 +78,7 @@ export default {
     }
   },
   methods: {
-    ledgerMenu(id) {
+    actionMenu(id) {
       switch (id) {
         case 'show-offers':
           this.showOffersDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.publicKey)
@@ -95,6 +102,9 @@ export default {
         case 'allow-trust':
           this.allowTrustDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.publicKey)
           this.allowTrustDialogPing = !this.allowTrustDialogPing
+          break
+        case 'history':
+          this.historyDialogPing = !this.historyDialogPing
           break
         default:
           break
