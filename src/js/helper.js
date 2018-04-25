@@ -33,6 +33,27 @@ export default class Helper {
     return inString.length > 0
   }
 
+  static truncString(fullStr, strLen) {
+    if (!fullStr) {
+      return ''
+    }
+
+    if (fullStr.length <= strLen) {
+      return fullStr
+    }
+
+    const separator = '...'
+
+    const sepLen = separator.length
+    const charsToShow = strLen - sepLen
+    const frontChars = Math.ceil(charsToShow / 2)
+    const backChars = Math.floor(charsToShow / 2)
+
+    return fullStr.substr(0, frontChars) +
+      separator +
+      fullStr.substr(fullStr.length - backChars)
+  }
+
   static stripZeros(floatString) {
     // blank string return 0, not 'NaN'
     if (!this.strOK(floatString)) {
