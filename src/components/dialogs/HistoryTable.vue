@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import WalletStream from '../js/WalletStream.js'
+import WalletStream from '../../js/WalletStream.js'
 import TableHeader from './TableHeader.vue'
 
 export default {
