@@ -30,7 +30,7 @@
 
 <script>
 import WalletStream from '../../js/WalletStream.js'
-import TableHeader from './TableHeader.vue'
+import TableHeader from '../TableHeader.vue'
 
 export default {
   props: ['publicKey'],
