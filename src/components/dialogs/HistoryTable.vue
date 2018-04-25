@@ -7,7 +7,7 @@
       <tr @click="props.expanded = !props.expanded">
          <td>{{ props.item.name }}</td>
          <td>{{ props.item.value }}</td>
-         <td><a :href='props.item.link'>link</a></td>
+         <td><a :href='props.item.link' @click.native.stop target='_blank'>link</a></td>
        </tr>
     </template>
 
