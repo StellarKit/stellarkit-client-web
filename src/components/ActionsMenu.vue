@@ -43,9 +43,10 @@ import TrustTokenDialog from './dialogs/TrustTokenDialog.vue'
 import ManageOfferDialog from './dialogs/ManageOfferDialog.vue'
 import AllowTrustDialog from './dialogs/AllowTrustDialog.vue'
 import SavePrintSecretDialog from './dialogs/SavePrintSecretDialog.vue'
+import StellarAccounts from '../js/StellarAccounts.js'
 
 export default {
-  props: ['acct'],
+  props: ['publicKey'],
   components: {
     ShowOffersDialog,
     SavePrintSecretDialog,
@@ -67,34 +68,32 @@ export default {
       sendAssetsDialogModel: new ReusableStellarViewsModel(),
       manageOfferDialogModel: new ReusableStellarViewsModel(),
       allowTrustDialogModel: new ReusableStellarViewsModel(),
-      publicKey: ''
     }
   },
   methods: {
     ledgerMenu(id) {
       switch (id) {
         case 'show-offers':
-          this.showOffersDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.acct.publicKey)
+          this.showOffersDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.publicKey)
           this.showOffersDialogPing = !this.showOffersDialogPing
           break
         case 'save-keys':
-          this.publicKey = this.acct.publicKey
           this.saveSecretDialogPing = !this.saveSecretDialogPing
           break
         case 'trust-asset':
-          this.trustDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.acct.publicKey)
+          this.trustDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.publicKey)
           this.trustDialogPing = !this.trustDialogPing
           break
         case 'send-asset':
-          this.sendAssetsDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.acct.publicKey)
+          this.sendAssetsDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.publicKey)
           this.sendAssetsDialogPing = !this.sendAssetsDialogPing
           break
         case 'post-offer':
-          this.manageOfferDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.acct.publicKey)
+          this.manageOfferDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.publicKey)
           this.manageOfferDialogPing = !this.manageOfferDialogPing
           break
         case 'allow-trust':
-          this.allowTrustDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.acct.publicKey)
+          this.allowTrustDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.publicKey)
           this.allowTrustDialogPing = !this.allowTrustDialogPing
           break
         default:
