@@ -67,7 +67,7 @@ export default {
       trustDialogModel: new ReusableStellarViewsModel(),
       sendAssetsDialogModel: new ReusableStellarViewsModel(),
       manageOfferDialogModel: new ReusableStellarViewsModel(),
-      allowTrustDialogModel: new ReusableStellarViewsModel(),
+      allowTrustDialogModel: new ReusableStellarViewsModel()
     }
   },
   methods: {
