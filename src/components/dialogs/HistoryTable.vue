@@ -53,12 +53,13 @@ export default {
         align: 'left',
         value: 'name'
       }, {
-        text: 'Value',
+        text: 'XLM',
         align: 'left',
         value: 'value'
       }, {
         text: 'Link',
-        align: 'left',
+        align: 'right',
+        sortable: false,
         value: 'link'
       }]
     }
