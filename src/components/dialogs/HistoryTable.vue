@@ -1,13 +1,13 @@
 <template>
 <v-card>
   <table-header :vars='headerVars' />
-  <v-data-table :headers="headers" :items="events" :loading='loading' sort-icon='keyboard_arrow_down' :search="headerVars.search" item-key="id" :rows-per-page-items='[15,30,100,{"text":"All","value":-1}]'>
+  <v-data-table :headers="headers" :items="history" :loading='loading' sort-icon='keyboard_arrow_down' :search="headerVars.search" item-key="id" :rows-per-page-items='[15,30,100,{"text":"All","value":-1}]'>
     <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
     <template slot="items" slot-scope="props">
       <tr @click="props.expanded = !props.expanded">
          <td>{{ props.item.name }}</td>
          <td>{{ props.item.value }}</td>
-         <td>{{ props.item.link }}</td>
+         <td><a :href='props.item.link'>link</a></td>
        </tr>
     </template>
 
@@ -43,10 +43,10 @@ export default {
       walletStream: null,
       cache: null,
       headerVars: {
-        title: 'Events',
+        title: 'History',
         search: ''
       },
-      events: [],
+      history: [],
       headers: [{
         text: 'Name',
         align: 'left',
@@ -82,8 +82,10 @@ export default {
 
         this.walletStream = new WalletStream(this.publicKey)
 
+        this.history = []
+
         this.walletStream.on('updated', () => {
-          this.events = this.walletStream.getItems()
+          this.history = this.walletStream.getItems()
         })
       }
     }
