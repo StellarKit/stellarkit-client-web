@@ -165,7 +165,9 @@ export default class Helper {
     this.emit('toast', message, error, location)
   }
 
-  static toStr(object) {
+  static toStr(inObject) {
+    let object = inObject
+
     if (!object) {
       return 'null'
     }
@@ -194,6 +196,9 @@ export default class Helper {
     } else if (typeof object === 'string') {
       return object
     } else if (typeof object === 'object') {
+      // copy the object since we change things and don't want to corrupt the original
+      object = JSON.parse(JSON.stringify(object))
+
       if (expandXDR) {
         if (object.envelope_xdr) {
           object.envelope_xdr = StellarSdk.xdr.TransactionEnvelope.fromXDR(object.envelope_xdr, 'base64')
