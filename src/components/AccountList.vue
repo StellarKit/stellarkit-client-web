@@ -49,6 +49,9 @@
         </div>
         <span>{{item.publicKey}}</span>
       </v-tooltip>
+      <div class='action-button-holder'>
+        <actions-menu :small=true :publicKey='item.publicKey' />
+      </div>
       <v-btn class='delete-button' icon small @click.stop='deleteItem(item)'>
         <v-tooltip open-delay='200' bottom>
           <v-icon slot="activator">&#xE15C;</v-icon>
@@ -76,6 +79,7 @@ import $ from 'jquery'
 import StellarAccounts from '../js/StellarAccounts.js'
 import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue'
 import AssetManager from '../js/AssetManager.js'
+import ActionsMenu from './ActionsMenu.vue'
 import ReusableStellarViewsModel from '../components/ReusableStellarViewsModel.js'
 
 export default {
@@ -90,8 +94,9 @@ export default {
     }
   },
   components: {
-    'new-account-dialog': NewAccountDialog,
-    'confirm-dialog': ConfirmDialog
+    NewAccountDialog,
+    ConfirmDialog,
+    ActionsMenu
   },
   mounted() {
     setInterval(() => {
@@ -333,6 +338,14 @@ export default {
                 i {
                     font-size: 18px;
                 }
+            }
+            .action-button-holder {
+                z-index: 1;
+                position: absolute;
+                // height: 8px;
+                // width: 8px;
+                bottom: -4px;
+                left: -4px;
             }
         }
     }

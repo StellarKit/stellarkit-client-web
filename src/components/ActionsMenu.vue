@@ -1,7 +1,7 @@
 <template>
 <div>
   <v-menu offset-y @click.native.stop>
-    <v-btn icon slot="activator">
+    <v-btn icon :small='small' :class="{ 'small-button': small}" slot="activator">
       <v-icon>&#xE5D4;</v-icon>
     </v-btn>
     <v-list dense>
@@ -51,7 +51,7 @@ import StellarAccounts from '../js/StellarAccounts.js'
 import HistoryDialog from './dialogs/HistoryDialog.vue'
 
 export default {
-  props: ['publicKey'],
+  props: ['publicKey', 'small'],
   components: {
     ShowOffersDialog,
     SavePrintSecretDialog,
@@ -115,5 +115,13 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.small-button {
+    margin: 0;
+    padding: 0;
+    color: rgba(0, 0, 0, .6);
 
+    i {
+        font-size: 18px;
+    }
+}
 </style>
