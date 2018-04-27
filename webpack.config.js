@@ -1,60 +1,59 @@
 const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
+const {
+  VueLoaderPlugin
+} = require('vue-loader')
 
 let common = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/dist/'
   },
+  plugins: [
+    new VueLoaderPlugin()
+  ],
   module: {
     rules: [{
-        enforce: 'pre',
-        test: /.(vue|js)$/,
-        use: 'eslint-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.vue$/,
-        use: 'vue-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.css$/,
-        use: ['vue-style-loader', 'css-loader'],
-        exclude: /node_modules/
-      },
-      {
-        test: /\.styl$/,
-        use: ['style-loader', 'css-loader', 'stylus-loader'],
-        exclude: /node_modules/
-      },
-      {
-        test: /\.js$/,
-        use: [{
-          loader: 'babel-loader'
-        }],
-        exclude: /node_modules/
-      },
-      {
-        test: /\.(png|jpg|gif|svg)$/,
-        use: [{
-            loader: 'file-loader',
-            options: {
-              // name: '[name].[ext]?[hash]'
-              name: 'images/[hash].[ext]'
-            }
-          },
-          {
-            loader: 'img-loader',
-            options: {
-              enabled: process.env.NODE_ENV === 'production'
-            }
-          }
-        ],
-        exclude: /node_modules/
-      }
-    ]
+      enforce: 'pre',
+      test: /.(vue|js)$/,
+      loader: 'eslint-loader',
+      exclude: /node_modules/
+    }, {
+      test: /\.vue$/,
+      loader: 'vue-loader',
+      exclude: /node_modules/
+    }, {
+      test: /\.css$/,
+      use: ['vue-style-loader', 'css-loader'],
+      exclude: /node_modules/
+    }, {
+      test: /\.scss$/,
+      use: ['vue-style-loader', 'css-loader', 'sass-loader']
+    }, {
+      test: /\.styl$/,
+      use: ['style-loader', 'css-loader', 'stylus-loader'],
+      exclude: /node_modules/
+    }, {
+      test: /\.js$/,
+      loader: 'babel-loader',
+      exclude: /node_modules/
+    }, {
+      test: /\.(png|jpg|gif|svg)$/,
+      use: [{
+        loader: 'file-loader',
+        options: {
+          // name: '[name].[ext]?[hash]'
+          name: 'images/[hash].[ext]'
+        }
+      }, {
+        loader: 'img-loader',
+        options: {
+          enabled: process.env.NODE_ENV === 'production'
+        }
+      }],
+      exclude: /node_modules/
+    }]
   },
   devtool: 'eval-source-map',
   mode: 'development'
