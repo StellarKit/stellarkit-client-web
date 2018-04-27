@@ -48,12 +48,12 @@ export default {
   mounted() {
     this.tabs = TabsManager.getTabs()
 
-    // show disclaimer once
-    if (!Helper.get('shown-disclaimer')) {
-      Helper.set('shown-disclaimer', true)
-
-      this.disclaimerDialogPing = !this.disclaimerDialogPing
-    }
+    // show disclaimer once (disabled)
+    // if (!Helper.get('shown-disclaimer')) {
+    //   Helper.set('shown-disclaimer', true)
+    //
+    //   this.disclaimerDialogPing = !this.disclaimerDialogPing
+    // }
   },
   methods: {
     showGitHub() {
