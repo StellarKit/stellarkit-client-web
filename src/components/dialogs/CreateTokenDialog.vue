@@ -142,7 +142,7 @@ export default {
               this.visible = false
 
               this.displayToast('Success!')
-              Helper.displayLog('Create token successful')
+              Helper.debugLog('Create token successful')
 
               AssetManager.addAsset({
                 symbol: asset.getCode(),
