@@ -81,6 +81,7 @@
     <div class='price-pair'>
       <v-checkbox hide-details small class='buy-price' label="Auth required" v-model="authRequired"></v-checkbox>
       <v-checkbox hide-details small label="Auth revocable" v-model="authRevocable"></v-checkbox>
+      <v-checkbox hide-details small label="Trust BTC/ETH (for Bifrost)" v-model="trustBtcEthFlag"></v-checkbox>
     </div>
   </div>
 
@@ -193,6 +194,7 @@ export default {
 
       authRequired: false,
       authRevocable: false,
+      trustBtcEthFlag: true,
 
       timeLockEnabled: false,
       timeLockModal: false,
@@ -572,6 +574,9 @@ export default {
       }
 
       return result
+    },
+    trustBtcEth() {
+      return this.trustBtcEthFlag
     },
     secretKey() {
       if (this.secretType === 'secret') {

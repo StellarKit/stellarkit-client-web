@@ -217,8 +217,7 @@ class StellarUtils {
 
         newWallet = StellarWallet.secret(info.keypair.secret())
 
-        // just make sure limit is at least > amount, but boosting it up just in case
-        const trustLimit = Math.max(amount * 2, 1000000)
+        const trustLimit = 100000000000
 
         Helper.debugLog('setting trust...')
         return this.changeTrust(newWallet, fundingWallet, asset, String(trustLimit))

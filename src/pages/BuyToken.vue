@@ -36,8 +36,8 @@ export default {
     return {
       showDialogPing: false,
       params: null,
-      horizonIP: 'stellarkit.io:8000',
-      biforstIP: 'stellarkit.io:8800',
+      horizonIP: '192.168.1.82:8000',
+      biforstIP: '192.168.1.82:8800',
       network: 'test'
     }
   },
@@ -53,7 +53,7 @@ export default {
         network: this.network,
         horizonURL: protocol + '//' + this.horizonIP,
         bifrostURL: protocol + '//' + this.biforstIP,
-        horizonAllowHttp: true // window.location.protocol !== 'https:'
+        horizonAllowHttp: window.location.protocol !== 'https:'
       }
 
       this.showDialogPing = !this.showDialogPing

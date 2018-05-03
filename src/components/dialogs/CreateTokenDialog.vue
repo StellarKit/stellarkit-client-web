@@ -76,8 +76,10 @@ export default {
           let distributorKeypair = null
           let asset = null
           let issuerWallet = null
+          let distributorWallet = null
           const homeDomain = this.dialogAccounts().textValue()
           const authFlags = this.dialogAccounts().authFlags()
+          const trustBtcEth = this.dialogAccounts().trustBtcEth()
 
           // create issuer
           StellarUtils.newAccount(fundingWallet, '1.5', 'Issuer: ' + symbol, symbol)
@@ -90,10 +92,28 @@ export default {
             })
             .then((accountInfo) => {
               distributorKeypair = accountInfo.keypair
+              distributorWallet = StellarWallet.secret(distributorKeypair.secret())
 
               // optional
               if (Helper.strOK(homeDomain)) {
                 return StellarUtils.setDomain(issuerWallet, homeDomain, fundingWallet)
+              }
+
+              return null
+            })
+            .then(() => {
+              // optional
+              if (trustBtcEth) {
+                return issuerWallet.publicKey()
+                  .then((publicKey) => {
+                    const ethAsset = new StellarSdk.Asset('ETH', publicKey)
+                    const btcAsset = new StellarSdk.Asset('BTC', publicKey)
+
+                    return StellarUtils.changeTrust(distributorWallet, null, ethAsset, '100000000')
+                      .then(() => {
+                        return StellarUtils.changeTrust(distributorWallet, null, btcAsset, '100000000')
+                      })
+                  })
               }
 
               return null
