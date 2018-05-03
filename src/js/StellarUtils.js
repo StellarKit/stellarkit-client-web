@@ -243,7 +243,6 @@ class StellarUtils {
         return this.sendAsset(sourceWallet, fundingWallet, newWallet, amount, asset)
       })
       .then((result) => {
-        Helper.debugLog(result, 'Success')
         this.updateBalances()
 
         return info

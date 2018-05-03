@@ -53,7 +53,7 @@ export default {
         network: this.network,
         horizonURL: protocol + '//' + this.horizonIP,
         bifrostURL: protocol + '//' + this.biforstIP,
-        horizonAllowHttp: window.location.protocol !== 'https:'
+        horizonAllowHttp: protocol !== 'https:'
       }
 
       this.showDialogPing = !this.showDialogPing

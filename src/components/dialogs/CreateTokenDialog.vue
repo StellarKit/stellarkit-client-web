@@ -111,7 +111,18 @@ export default {
 
                     return StellarUtils.changeTrust(distributorWallet, null, ethAsset, '100000000')
                       .then(() => {
+                        AssetManager.addAsset({
+                          symbol: ethAsset.getCode(),
+                          issuer: ethAsset.getIssuer()
+                        })
+
                         return StellarUtils.changeTrust(distributorWallet, null, btcAsset, '100000000')
+                          .then(() => {
+                            AssetManager.addAsset({
+                              symbol: btcAsset.getCode(),
+                              issuer: btcAsset.getIssuer()
+                            })
+                          })
                       })
                   })
               }
@@ -131,6 +142,7 @@ export default {
               this.visible = false
 
               this.displayToast('Success!')
+              Helper.displayLog('Create token successful')
 
               AssetManager.addAsset({
                 symbol: asset.getCode(),
