@@ -4,7 +4,7 @@
     <dialog-titlebar :title=title v-on:close='visible = false' />
 
     <div class='help-contents'>
-      <textarea v-model="transaction"></textarea>
+      <textarea v-model="editableTransaction"></textarea>
       <div>{{statusMessage}}</div>
 
       <div class='button-holder'>
@@ -33,24 +33,28 @@ export default {
     'dialog-titlebar': DialogTitleBar,
     'toast-component': ToastComponent
   },
+  watch: {
+    transaction() {
+      this.editableTransaction = this.transaction
+    },
+    ping() {
+      this.visible = true
+      this.statusMessage = ''
+    }
+  },
   data() {
     return {
       visible: false,
       title: 'Submit Transaction',
       loadingTransaction: false,
-      statusMessage: ''
-    }
-  },
-  watch: {
-    ping: function () {
-      this.visible = true
-      this.statusMessage = ''
+      statusMessage: '',
+      editableTransaction: ''
     }
   },
   methods: {
     submitTransaction() {
-      if (Helper.strlen(this.transaction) > 0) {
-        const envelope = StellarSdk.xdr.TransactionEnvelope.fromXDR(this.transaction, 'base64')
+      if (Helper.strlen(this.editableTransaction) > 0) {
+        const envelope = StellarSdk.xdr.TransactionEnvelope.fromXDR(this.editableTransaction, 'base64')
         const transaction = new StellarSdk.Transaction(envelope)
 
         this.loadingTransaction = true

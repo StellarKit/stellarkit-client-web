@@ -17,9 +17,12 @@
     </div>
 
     <v-btn round small color='primary' @click="showDialog">Buy Token</v-btn>
+    <v-btn round small color='primary' @click="transactionDialogPing = !transactionDialogPing">Submit Transaction</v-btn>
 
     <buy-token-dialog :ping='showDialogPing' :params='params' />
   </div>
+
+  <transaction-dialog :ping='transactionDialogPing' />
 </div>
 </template>
 
@@ -29,12 +32,14 @@ import {
 } from 'stellar-js-utils'
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
+import TransactionDialog from '../components/dialogs/TransactionDialog.vue'
 
 export default {
   mixins: [StellarCommonMixin],
   data() {
     return {
       showDialogPing: false,
+      transactionDialogPing: false,
       params: null,
       horizonIP: '192.168.1.82:8000',
       biforstIP: '192.168.1.82:8800',
@@ -42,8 +47,9 @@ export default {
     }
   },
   components: {
-    'buy-token-dialog': BuyTokenDialog,
-    'instructions-header': InstructionsHeader
+    BuyTokenDialog,
+    InstructionsHeader,
+    TransactionDialog
   },
   methods: {
     showDialog() {

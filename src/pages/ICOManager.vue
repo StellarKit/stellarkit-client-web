@@ -54,7 +54,7 @@
   <show-offers-dialog :ping='showOffersDialogPing' :model='model' />
   <manage-offer-dialog :ping='offerDialogPing' :model='model' />
   <send-assets-dialog :ping='sendAssetsDialogPing' :model='model' />
-  <create-account-dialog :ping='accountDialogPing' :model='model' />
+  <create-holder-account-dialog :ping='accountDialogPing' :model='model' />
   <create-token-dialog v-on:token-created='createDialogResult' :model='model' :ping='createDialogPing' />
   <confirm-dialog v-on:confirm-dialog-ok='deleteTokenProjectConfirmed' :ping='confirmDialogPing' title='Delete Token Project?' message='Do you want to delete this token project? Tokens will remain on the network, but make sure you have your keys.' okTitle='Delete Project'
   />
@@ -88,14 +88,14 @@ import InstructionsHeader from '../components/InstructionsHeader.vue'
 export default {
   mixins: [StellarCommonMixin, StyleExtractionMixin],
   components: {
-    'account-list': AccountList,
-    'create-token-dialog': CreateTokenDialog,
-    'manage-offer-dialog': ManageOfferDialog,
-    'create-account-dialog': CreateHolderAccountDialog,
-    'send-assets-dialog': SendAssetsDialog,
-    'instructions-header': InstructionsHeader,
-    'confirm-dialog': ConfirmDialog,
-    'show-offers-dialog': ShowOffersDialog
+    AccountList,
+    CreateTokenDialog,
+    ManageOfferDialog,
+    CreateHolderAccountDialog,
+    SendAssetsDialog,
+    InstructionsHeader,
+    ConfirmDialog,
+    ShowOffersDialog
   },
   computed: {
     menuButtonName: function() {
