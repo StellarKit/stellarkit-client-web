@@ -173,7 +173,7 @@ class StellarUtils {
     if (sourceWallet) {
       Helper.debugLog('Deleting Offers...')
 
-      sourceWallet.publicKey()
+      return sourceWallet.publicKey()
         .then((pubicKey) => {
           this.server().offers('accounts', pubicKey)
             .call()
@@ -198,6 +198,8 @@ class StellarUtils {
               return null
             })
         })
+    } else {
+      return Promise.reject()
     }
   }
 
