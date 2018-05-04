@@ -88,7 +88,7 @@ export default {
               issuerWallet = StellarWallet.secret(issuerKeypair.secret())
               asset = new StellarSdk.Asset(symbol, issuerKeypair.publicKey())
 
-              return StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, '3', asset, String(amount), 'Distributor: ' + symbol, symbol)
+              return StellarUtils.newAccountWithTokens(fundingWallet, issuerWallet, '4', asset, String(amount), 'Distributor: ' + symbol, symbol)
             })
             .then((accountInfo) => {
               distributorKeypair = accountInfo.keypair
@@ -143,6 +143,9 @@ export default {
 
               this.displayToast('Success!')
               Helper.debugLog('Create token successful')
+
+              // for the ETC BTC trust
+              StellarUtils.updateBalances()
 
               AssetManager.addAsset({
                 symbol: asset.getCode(),
