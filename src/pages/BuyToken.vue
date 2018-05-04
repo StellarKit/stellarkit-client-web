@@ -1,5 +1,6 @@
 <template>
 <div>
+  <account-list :items="accountsUI" />
   <instructions-header>
     <div>Content coming soon...</div>
   </instructions-header>
@@ -16,12 +17,13 @@
       <v-text-field hide-details label="Network" v-model.trim="network"></v-text-field>
     </div>
 
-    <v-btn round small color='primary' @click="showDialog">Buy Token</v-btn>
-    <v-btn round small color='primary' @click="transactionDialogPing = !transactionDialogPing">Submit Transaction</v-btn>
-
-    <buy-token-dialog :ping='showDialogPing' :params='params' />
+    <div style='margin-top: 20px;' class='button-group'>
+      <v-btn round small color='primary' @click="showDialog">Buy Token</v-btn>
+      <v-btn round small color='primary' @click="transactionDialogPing = !transactionDialogPing">Submit Transaction</v-btn>
+    </div>
   </div>
 
+  <buy-token-dialog :ping='showDialogPing' :params='params' v-on:new-account='newAccount' />
   <transaction-dialog :ping='transactionDialogPing' />
 </div>
 </template>
@@ -33,6 +35,9 @@ import {
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
 import TransactionDialog from '../components/dialogs/TransactionDialog.vue'
+import AccountList from '../components/AccountList.vue'
+import StellarAccounts from '../js/StellarAccounts.js'
+import StellarSdk from 'stellar-sdk'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -49,9 +54,15 @@ export default {
   components: {
     BuyTokenDialog,
     InstructionsHeader,
-    TransactionDialog
+    TransactionDialog,
+    AccountList
   },
   methods: {
+    newAccount(secretKey) {
+      // purchase successful, add account
+      const keyPair = StellarSdk.Keypair.fromSecret(secretKey)
+      StellarAccounts.addAccount(keyPair)
+    },
     showDialog() {
       const protocol = window.location.protocol
 
@@ -75,10 +86,6 @@ export default {
     display: flex;
     flex-direction: column;
     align-items:: center;
-
-    button {
-        margin: 20px;
-    }
 
     .bifrost-notes {
         margin-bottom: 20px;
