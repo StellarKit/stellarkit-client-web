@@ -18,7 +18,10 @@ let common = {
       enforce: 'pre',
       test: /.(vue|js)$/,
       loader: 'eslint-loader',
-      exclude: /node_modules/
+      exclude: /node_modules/,
+      options: {
+        fix: true
+      }
     }, {
       test: /\.vue$/,
       loader: 'vue-loader',
