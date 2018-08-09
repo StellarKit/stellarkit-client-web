@@ -93,6 +93,9 @@ export default class StreamingCache {
           case 'operations':
             builder = StellarUtils.server().operations()
             break
+          case 'effects':
+            builder = StellarUtils.server().effects()
+            break
           default:
             break
         }

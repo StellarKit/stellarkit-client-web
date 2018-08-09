@@ -32,6 +32,7 @@
       <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
       <v-btn round small @click="paymentsForSelectedSource()">Payments</v-btn>
       <v-btn round small @click="operationsForSelectedSource()">Operations</v-btn>
+      <v-btn round small @click="effectsForSelectedSource()">Effects</v-btn>
     </div>
 
     <div class='button-row'>
@@ -86,6 +87,10 @@ export default {
         {
           title: 'Payments',
           menuID: 'payments'
+        },
+        {
+          title: 'Effects',
+          menuID: 'effects'
         }
       ],
       orderItems: [{
@@ -117,6 +122,9 @@ export default {
           break
         case 'operations':
           result = 'Operations'
+          break
+        case 'effects':
+          result = 'Effects'
           break
         default:
           break
@@ -158,6 +166,13 @@ export default {
 
       if (wallet) {
         StellarUtils.transactionsForWallet(wallet, this.order)
+      }
+    },
+    effectsForSelectedSource() {
+      const wallet = this.sourceWallet()
+
+      if (wallet) {
+        StellarUtils.effectsForWallet(wallet, this.order)
       }
     },
     clearUI() {

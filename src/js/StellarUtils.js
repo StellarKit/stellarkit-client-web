@@ -453,6 +453,23 @@ class StellarUtils {
         Helper.toast('Error', true)
       })
   }
+
+  effectsForWallet(wallet, order = 'desc') {
+    wallet.publicKey()
+      .then((publicKey) => {
+        this.server().effects()
+          .forAccount(publicKey)
+          .order(order)
+          .call()
+          .then((response) => {
+            Helper.debugLog(response)
+          })
+      })
+      .catch((error) => {
+        Helper.debugLog(error, 'Error')
+        Helper.toast('Error', true)
+      })
+  }
 }
 
 const instance = new StellarUtils()
