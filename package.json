@@ -17,13 +17,13 @@
     "distLib": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.1",
+    "@babel/core": "^7.1.0",
     "babel-loader": "^8.0.2",
-    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
-    "eslint": "^5.5.0",
-    "eslint-loader": "^2.1.0",
+    "eslint": "^5.6.0",
+    "eslint-loader": "^2.1.1",
     "eslint-plugin-vue": "beta",
     "file-loader": "^2.0.0",
     "img-loader": "^3.0.0",
@@ -34,12 +34,12 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "vue": "^2.5.17",
-    "vue-devtools": "^4.1.4",
+    "vue-devtools": "^5.0.0-beta.1",
     "vue-loader": "^15.4.2",
     "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.17",
-    "vuetify": "^1.2.3",
-    "webpack": "^4.19.0",
+    "vuetify": "^1.2.4",
+    "webpack": "^4.19.1",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.8",
     "webpack-merge": "^4.1.4"
@@ -51,7 +51,7 @@
     "@fortawesome/vue-fontawesome": "0.1.1",
     "axios": "^0.18.0",
     "debounce": "^1.2.0",
-    "firebase": "^5.5.0",
+    "firebase": "^5.5.1",
     "firebaseui": "^3.4.1",
     "gsap": "^2.0.2",
     "jquery": "^3.3.1",
@@ -59,6 +59,6 @@
     "save-file": "^1.2.1",
     "sillyname": "^0.1.0",
     "stellar-js-utils": "git://github.com/StellarKit/stellarkit-js-utils",
-    "stellar-sdk": "^0.10.3"
+    "stellar-sdk": "^0.11.0"
   }
 }
