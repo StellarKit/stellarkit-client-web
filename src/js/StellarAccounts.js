@@ -230,11 +230,6 @@ class StellarAccountsImp {
 // =============================================================
 
 class StellarAccounts {
-  constructor() {
-    this.publicNet = new StellarAccountsImp('public')
-    this.testNet = new StellarAccountsImp('test')
-  }
-
   // returns null if account already exists
   addAccount(keyPair, name = null, tag = null) {
     return this.imp().addAccount(keyPair, name, tag)
@@ -274,14 +269,20 @@ class StellarAccounts {
 
   imp() {
     if (StellarUtils.isTestnet()) {
+      if (!this.testNet) {
+        this.testNet = new StellarAccountsImp('test')
+      }
+
       return this.testNet
     }
 
-    return this.publicNet
+    this.publicNet = new StellarAccountsImp('public')
+
+    if (this.publicNet)
+      return this.publicNet
   }
 }
 
 const instance = new StellarAccounts()
-Object.freeze(instance)
 
 export default instance

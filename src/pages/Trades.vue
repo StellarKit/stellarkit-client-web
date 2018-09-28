@@ -4,23 +4,65 @@
     <div>Content coming soon...</div>
   </instructions-header>
 
+  <div class='accounts-box'>
+    <v-checkbox
+      label="Stream All Accounts"
+      hide-details
+      v-model="everyAccount"
+    ></v-checkbox>
+
+      <v-select
+        v-if='!everyAccount'
+        hide-details
+        :items="accountsUI"
+        item-text='name'
+        v-model="selectedSource"
+        label="Source account"
+        return-object
+        :menu-props="{maxHeight:'600'}"
+      ></v-select>
+  </div>
   <!-- <v-btn round small @click="assets()">Assets</v-btn> -->
   <div class='button-group'>
-    <v-btn round small @click="streamPayments()">{{paymentsButtonName}}</v-btn>
-    <v-btn round small @click="streamOperations()">{{operationsButtonName}}</v-btn>
-    <v-btn round small @click="streamTrades()">{{tradesButtonName}}</v-btn>
+    <v-btn
+      round
+      small
+      @click="streamPayments()"
+    >{{paymentsButtonName}}</v-btn>
+      <v-btn
+        round
+        small
+        @click="streamOperations()"
+      >{{operationsButtonName}}</v-btn>
+        <v-btn
+          round
+          small
+          @click="streamTrades()"
+        >{{tradesButtonName}}</v-btn>
   </div>
   <div class="operations-content">
     <div class='operations-title'>Live Stream</div>
-    <div class='operations-item' v-for="item in operations" :key='item.id + item.name'>
-      <a :href='item.link' class='item-name' target='_blank'>
+    <div
+      class='operations-item'
+      v-for="item in operations"
+      :key='item.id + item.name'
+    >
+      <a
+        :href='item.link'
+        class='item-name'
+        target='_blank'
+      >
         {{item.name}}:
-      </a>
-      <a :href='item.link' class='item-value' target='_blank'>
-        {{item.value}}
-      </a>
-    </div>
+        </a>
+        <a
+          :href='item.link'
+          class='item-value'
+          target='_blank'
+        >
+          {{item.value}}
+          </a>
   </div>
+</div>
 </div>
 </template>
 
@@ -29,6 +71,9 @@ import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
+import {
+  StellarWallet
+} from 'stellar-js-utils'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -37,11 +82,25 @@ export default {
       paymentStopper: null,
       operationStopper: null,
       tradeStopper: null,
-      operations: []
+      operations: [],
+      selectedSource: null,
+      everyAccount: true
     }
   },
   components: {
     'instructions-header': InstructionsHeader
+  },
+  watch: {
+    selectedSource() {
+      this.clearUI()
+      Helper.clearLog()
+    },
+    everyAccount() {
+      this.clearUI()
+      Helper.clearLog()
+
+      this.restartStreams()
+    }
   },
   computed: {
     paymentsButtonName: function() {
@@ -64,6 +123,57 @@ export default {
     }
   },
   methods: {
+    restartStreams() {
+      if (this.paymentStopper !== null) {
+        this.paymentStopper()
+        this.paymentStopper = null
+
+        this.streamPayments()
+      }
+      if (this.tradeStopper !== null) {
+        this.tradeStopper()
+        this.tradeStopper = null
+
+        this.streamTrades()
+      }
+      if (this.operationStopper !== null) {
+        this.operationStopper()
+        this.operationStopper = null
+
+        this.streamOperations()
+      }
+    },
+    clearUI() {
+      this.operations = []
+    },
+    publicKey() {
+      if (!this.everyAccount) {
+        if (this.sourceValid()) {
+          return this.selectedSource.publicKey
+        }
+      }
+
+      return null
+    },
+    sourceWallet() {
+      if (this.sourceValid()) {
+        return StellarWallet.public(this.selectedSource.publicKey)
+      }
+
+      return null
+    },
+    sourceValid() {
+      const result = this.selectedSource ? this.selectedSource.publicKey : null
+
+      if (Helper.strlen(result) > 0) {
+        return true
+      }
+
+      Helper.debugLog('please select a source account', 'Error')
+      Helper.toast('Please select a source account', true)
+
+      return false
+    },
     addOperation(item, tx) {
       item.link = tx._links.self.href
 
@@ -180,6 +290,11 @@ export default {
         const builder = StellarUtils.server().payments()
           .cursor('now')
 
+        const publicKey = this.publicKey()
+        if (publicKey) {
+          builder.forAccount(publicKey)
+        }
+
         this.paymentStopper = builder.stream({
           onmessage: (txResponse) => {
             this.displayTransaction(txResponse)
@@ -207,6 +322,11 @@ export default {
         const builder = StellarUtils.server().operations()
           .cursor('now')
 
+        const publicKey = this.publicKey()
+        if (publicKey) {
+          builder.forAccount(publicKey)
+        }
+
         this.operationStopper = builder.stream({
           onmessage: (txResponse) => {
             this.displayTransaction(txResponse)
@@ -233,6 +353,11 @@ export default {
 
         const builder = StellarUtils.server().trades()
           .cursor('now')
+
+        const publicKey = this.publicKey()
+        if (publicKey) {
+          builder.forAccount(publicKey)
+        }
 
         this.tradeStopper = builder.stream({
           onmessage: (txResponse) => {
@@ -271,6 +396,11 @@ export default {
         const builder = StellarUtils.server().assets()
           .order('desc')
 
+        const publicKey = this.publicKey()
+        if (publicKey) {
+          builder.forAccount(publicKey)
+        }
+
         builder.call()
           .then((response) => {
             for (const rec of response.records) {
@@ -297,6 +427,19 @@ export default {
 <style scoped lang='scss'>
 @import '../scss/styles.scss';
 
+.accounts-box {
+    display: flex;
+    overflow: hidden;
+
+    .v-input--checkbox {
+        flex: 0 1 auto;
+        margin-right: 20px;
+    }
+
+    .v-select {
+        // background: rgba(0,0,0,.03);
+    }
+}
 .operations-content {
     display: flex;
     width: 100%;
