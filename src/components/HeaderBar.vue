@@ -1,40 +1,80 @@
 <template>
 <div class='header-bar'>
   <div class='left-header-bar'>
-    <v-btn icon small @click='clickButton("menu")'>
+    <v-btn
+      icon
+      small
+      @click='clickButton("menu")'
+    >
       <v-icon>&#xE5D2;</v-icon>
-    </v-btn>
+      </v-btn>
 
-    <div class='tab-indicator'>
-      {{pageTitle}}
-    </div>
+      <div class='tab-indicator'>
+        {{pageTitle}}
+      </div>
   </div>
   <div class='right-header-bar'>
-    <div v-if='networkIndicator' class='network-indicator'>
-      <v-tooltip v-if='isTestnet' left>
-        <div class='testnet' slot="activator" />
+    <div
+      v-if='networkIndicator'
+      class='network-indicator'
+    >
+      <v-tooltip
+        v-if='isTestnet'
+        left
+      >
+        <div
+          class='testnet'
+          slot="activator"
+        />
         <span>Test Network</span>
-      </v-tooltip>
-      <v-tooltip v-else left>
-        <div class='publicnet' slot="activator" />
-        <span>Public Network</span>
-      </v-tooltip>
-    </div>
-    <v-btn v-else icon small @click='clickButton("github")'>
-      <v-icon>fab fa-github</v-icon>
-    </v-btn>
-  </div>
-
-  <div class='header-tab-bar'>
-    <div class='header-tab-bar-inner'>
-      <v-btn icon small v-if='!tab.disabled' v-for='tab in tabs' :to='tab.path' exact :key='tab.path' class="bar-item" active-class="header-active-tab">
-        <v-tooltip open-delay='800' bottom>
-          <v-icon slot='activator' v-html='tab.icon'></v-icon>
-          <span>{{tab.tooltip}}</span>
         </v-tooltip>
-      </v-btn>
-    </div>
+        <v-tooltip
+          v-else
+          left
+        >
+          <div
+            class='publicnet'
+            slot="activator"
+          />
+          <span>Public Network</span>
+          </v-tooltip>
   </div>
+  <v-btn
+    v-else
+    icon
+    small
+    @click='clickButton("github")'
+  >
+    <v-icon>fab fa-github</v-icon>
+    </v-btn>
+</div>
+
+<div class='header-tab-bar'>
+  <div class='header-tab-bar-inner'>
+    <v-btn
+      icon
+      small
+      v-if='!tab.disabled'
+      v-for='tab in tabs'
+      :to='tab.path'
+      exact
+      :key='tab.path'
+      class="bar-item"
+      active-class="header-active-tab"
+    >
+      <v-tooltip
+        open-delay='800'
+        bottom
+      >
+        <v-icon
+          slot='activator'
+          v-html='tab.icon'
+        ></v-icon>
+          <span>{{tab.tooltip}}</span>
+          </v-tooltip>
+          </v-btn>
+  </div>
+</div>
 
 </div>
 </template>
@@ -60,8 +100,11 @@ export default {
   },
   mounted() {
     this.isTestnet = StellarUtils.isTestnet()
-    Helper.vue().$on('stellar-network-updated', () => {
-      this.isTestnet = StellarUtils.isTestnet()
+
+    Helper.vue().$on('settings-updated', (key) => {
+      if (key === 'server') {
+        this.isTestnet = StellarUtils.isTestnet()
+      }
     })
 
     Helper.vue().$on('enable-experiments', () => {

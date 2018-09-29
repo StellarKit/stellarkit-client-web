@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import LocalStorage from './localStorage.js'
 import HelperImplementation from './HelperImplementation.js'
+import SettingsStore from './SettingsStore.js'
 const StellarSdk = require('stellar-sdk')
 
 export default class Helper {
@@ -71,33 +71,8 @@ export default class Helper {
     return noZeroes
   }
 
-  static keyForKey(key) {
-    return 'pref-' + key
-  }
-
-  static get(key) {
-    let result = LocalStorage.get(this.keyForKey(key))
-
-    // some defaults
-    if (!result) {
-      switch (key) {
-        case 'server':
-          result = 'testnet'
-          break
-        default:
-          break
-      }
-    }
-
-    return result
-  }
-
-  static set(key, value) {
-    LocalStorage.set(this.keyForKey(key), value)
-  }
-
   static stripBrackets(object) {
-    const condensedOutput = Helper.get('condensedOutput')
+    const condensedOutput = SettingsStore.get('condensedOutput')
     if (condensedOutput) {
       const lineArray = []
 
@@ -172,7 +147,7 @@ export default class Helper {
       return 'null'
     }
 
-    const expandXDR = Helper.get('expandXDR')
+    const expandXDR = SettingsStore.get('expandXDR')
 
     if (object instanceof Error) {
       const json = this.stringify(object)

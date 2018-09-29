@@ -2,7 +2,7 @@ const StellarSdk = require('stellar-sdk')
 const generateName = require('sillyname')
 import Helper from './helper.js'
 import StellarUtils from './StellarUtils.js'
-import DataStorage from './DataStorage.js'
+import SettingsStore from './SettingsStore.js'
 
 class SharedAccounts {
   constructor(network) {
@@ -11,10 +11,18 @@ class SharedAccounts {
 
     this.load()
 
-    Helper.vue().$on('data-storage-updated', () => {
-      this.load()
+    Helper.vue().$on('settings-updated', (key) => {
+      const accountsKey = this.network + 'accounts'
 
-      Helper.emit('stellar-accounts-updated')
+      switch (key) {
+        case accountsKey:
+          this.load()
+
+          Helper.emit('stellar-accounts-updated')
+          break
+        default:
+          break
+      }
     })
   }
 
@@ -50,7 +58,7 @@ class SharedAccounts {
   }
 
   load() {
-    const accounts = DataStorage.get(this.network + 'accounts')
+    const accounts = SettingsStore.get(this.network + 'accounts', null, true)
 
     if (accounts && accounts.length > 0) {
       this._accounts = accounts
@@ -67,7 +75,7 @@ class SharedAccounts {
       setTimeout(() => {
         this._saving = false
 
-        DataStorage.set(this.network + 'accounts', this._accounts)
+        SettingsStore.set(this.network + 'accounts', this._accounts, true)
       }, 100)
     }
   }

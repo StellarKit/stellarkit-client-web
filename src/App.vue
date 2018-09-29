@@ -9,7 +9,7 @@
 
 <script>
 import './scss/vuetify/main.styl'
-import LocalStorage from './js/localStorage.js'
+import SettingsStore from './js/SettingsStore.js'
 import AppMain from './AppMain.vue'
 import fontawesome from '@fortawesome/fontawesome'
 import brands from '@fortawesome/fontawesome-free-brands'
@@ -28,7 +28,7 @@ export default {
     }
   },
   created() {
-    LocalStorage.init()
+    SettingsStore.setup()
       .then(() => {
         this.initializing = false
       })

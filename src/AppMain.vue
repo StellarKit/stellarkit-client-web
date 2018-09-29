@@ -2,20 +2,28 @@
 <div class='app-wrapper'>
   <navivation-drawer :ping='showNavigation' />
   <div class='main-container'>
-    <header-bar v-on:show-drawer='showDrawer' v-on:show-github='showGitHub' :tabs='tabs' :networkIndicator='false' homeTitle='Home' />
+    <header-bar
+      v-on:show-drawer='showDrawer'
+      v-on:show-github='showGitHub'
+      :tabs='tabs'
+      :networkIndicator='false'
+      homeTitle='Home'
+    />
     <network-menu />
     <div class='app-content'>
-      <div class='router-container '>
+      <div
+        class='router-container '
+      >
         <keep-alive>
           <router-view></router-view>
         </keep-alive>
-      </div>
-      <console />
     </div>
+    <console />
   </div>
+</div>
 
-  <toast-component />
-  <disclaimer-dialog :ping='disclaimerDialogPing' />
+<toast-component />
+<disclaimer-dialog :ping='disclaimerDialogPing' />
 </div>
 </template>
 
@@ -49,8 +57,8 @@ export default {
     this.tabs = TabsManager.getTabs()
 
     // show disclaimer once (disabled)
-    // if (!Helper.get('shown-disclaimer')) {
-    //   Helper.set('shown-disclaimer', true)
+    // if (!SettingsStore.get('shown-disclaimer')) {
+    //   SettingsStore.set('shown-disclaimer', true)
     //
     //   this.disclaimerDialogPing = !this.disclaimerDialogPing
     // }

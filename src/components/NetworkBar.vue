@@ -1,30 +1,61 @@
 <template>
 <div class='menu-button-container'>
   <v-menu offset-y>
-    <v-btn small outline class='tiny-button' color='primary' slot="activator">
+    <v-btn
+      small
+      outline
+      class='tiny-button'
+      color='primary'
+      slot="activator"
+    >
       {{buttonTitle()}}
       <v-icon>&#xE5C5;</v-icon>
-    </v-btn>
-    <v-list dense>
-      <v-list-tile v-for="item in items" :key="item.title + (item.main ? 'main':'test')" @click="menuSelected(item)">
-        <div class='network-menu-item'>
-          <div class='menu-tile-title'>{{item.title}}</div>
+      </v-btn>
+      <v-list dense>
+        <v-list-tile
+          v-for="item in items"
+          :key="item.title + (item.main ? 'main':'test')"
+          @click="menuSelected(item)"
+        >
+          <div class='network-menu-item'>
+            <div class='menu-tile-title'>{{item.title}}</div>
 
-          <div v-if='item.main' class='network-main'>PUBLIC</div>
-          <div v-else class='network-test'>TEST</div>
-        </div>
-      </v-list-tile>
-    </v-list>
-  </v-menu>
-  <div class='network-string'>{{serverURL()}}</div>
-  <v-btn v-if='signOut' small outline class='tiny-button' color='primary' @click="sendSignOut()">Sign Out</v-btn>
-  <v-btn v-else small outline class='tiny-button' color='primary' @click="horizonMetrics()">Horizon Metrics</v-btn>
+            <div
+              v-if='item.main'
+              class='network-main'
+            >PUBLIC</div>
+          <div
+            v-else
+            class='network-test'
+          >TEST</div>
 </div>
+</v-list-tile>
+</v-list>
+</v-menu>
+<div class='network-string'>{{serverURL()}}</div>
+<v-btn
+  v-if='signOut'
+  small
+  outline
+  class='tiny-button'
+  color='primary'
+  @click="sendSignOut()"
+>Sign Out</v-btn>
+  <v-btn
+    v-else
+    small
+    outline
+    class='tiny-button'
+    color='primary'
+    @click="horizonMetrics()"
+  >Horizon Metrics</v-btn>
+    </div>
 </template>
 
 <script>
 import StellarServer from '../js/StellarServer.js'
 import Helper from '../js/helper.js'
+import SettingsStore from '../js/SettingsStore.js'
 import StellarUtils from '../js/StellarUtils.js'
 
 export default {
@@ -41,16 +72,16 @@ export default {
           id: 'mainnet',
           main: true,
           title: 'Stellar.org'
-        },
-        {
-          id: 'stellarkit',
-          main: false,
-          title: 'StellarKit.io'
-        },
-        {
-          id: 'local',
-          main: false,
-          title: 'Local server'
+          // },
+          // {
+          //   id: 'stellarkit',
+          //   main: false,
+          //   title: 'StellarKit.io'
+          // },
+          // {
+          //   id: 'local',
+          //   main: false,
+          //   title: 'Local server'
         }
       ]
     }
@@ -84,10 +115,7 @@ export default {
       return this.server.serverURL()
     },
     menuSelected(item) {
-      Helper.set('server', item.id)
-
-      // alert ui to update
-      Helper.emit('stellar-network-updated')
+      SettingsStore.set('server', item.id)
 
       this.$forceUpdate()
     }

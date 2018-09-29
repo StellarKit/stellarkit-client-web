@@ -1,4 +1,5 @@
 import Helper from '../js/helper.js'
+import SettingsStore from '../js/SettingsStore.js'
 import StellarUtils from './StellarUtils.js'
 
 class AssetManagerImp {
@@ -66,7 +67,7 @@ class AssetManagerImp {
   }
 
   _load() {
-    const result = Helper.get(this.prefKey)
+    const result = SettingsStore.get(this.prefKey)
 
     if (!result) {
       return []
@@ -86,7 +87,7 @@ class AssetManagerImp {
       setTimeout(() => {
         this._saving = false
 
-        Helper.set(this.prefKey, this._lazyAssets())
+        SettingsStore.set(this.prefKey, this._lazyAssets())
       }, 500)
     }
   }
@@ -98,8 +99,10 @@ class AssetManager {
     this.testNet = new AssetManagerImp('test')
 
     // if network updates, we need to signal any popups to refresh
-    Helper.vue().$on('stellar-network-updated', () => {
-      Helper.emit('assets-updated')
+    Helper.vue().$on('settings-updated', (key) => {
+      if (key === 'server') {
+        Helper.emit('assets-updated')
+      }
     })
   }
 

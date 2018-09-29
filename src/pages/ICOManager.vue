@@ -6,60 +6,140 @@
   </instructions-header>
 
   <div class='page-contents'>
-    <v-menu offset-y :transition=false>
-      <v-btn small color='primary' :ripple=false slot="activator">
+    <v-menu
+      offset-y
+      :transition=false
+    >
+      <v-btn
+        small
+        color='primary'
+        :ripple=false
+        slot="activator"
+      >
         {{menuButtonName}}
         <v-icon>&#xE5C5;</v-icon>
-      </v-btn>
-      <v-list dense>
-        <v-list-tile v-for="(item, index) in tokenMenuItems" :key="item.title" @click="projectsMenuClick(index, item.action)">
-          <v-list-tile-title>{{item.title}}</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
-    </v-menu>
+        </v-btn>
+        <v-list dense>
+          <v-list-tile
+            v-for="(item, index) in tokenMenuItems"
+            :key="item.title"
+            @click="projectsMenuClick(index, item.action)"
+          >
+            <v-list-tile-title>{{item.title}}</v-list-tile-title>
+            </v-list-tile>
+        </v-list>
+        </v-menu>
 
-    <div v-if='showSummary' class='summary-view'>
-      <div class='summary-header'>Token Information
-        <v-spacer />
-        <v-btn small icon @click='deleteTokenProject'>
-          <v-icon>close</v-icon>
-        </v-btn>
-        <v-btn small icon @click='printInfo'>
-          <v-icon>&#xE8AD;</v-icon>
-        </v-btn>
-      </div>
-      <div class='summary-list'>
-        <div class='operations-item' v-for="item in summaryMap" :key=item.content>
-          <div class='item-name'>
-            {{item.title}}:
+        <div
+          v-if='showSummary'
+          class='summary-view'
+        >
+          <div class='summary-header'>Token Information
+            <v-spacer />
+            <v-btn
+              small
+              icon
+              @click='deleteTokenProject'
+            >
+              <v-icon>close</v-icon>
+              </v-btn>
+              <v-btn
+                small
+                icon
+                @click='printInfo'
+              >
+                <v-icon>&#xE8AD;</v-icon>
+                </v-btn>
           </div>
-          <div v-if='item.secret && !printing' class='item-value' @click='item.secret = false'>
-            Click to reveal
+          <div class='summary-list'>
+            <div
+              class='operations-item'
+              v-for="item in summaryMap"
+              :key=item.content
+            >
+              <div class='item-name'>
+                {{item.title}}:
+              </div>
+              <div
+                v-if='item.secret && !printing'
+                class='item-value'
+                @click='item.secret = false'
+              >
+                Click to reveal
           </div>
-          <div v-else class='item-value'>
+          <div
+            v-else
+            class='item-value'
+          >
             {{item.content}}
-          </div>
-        </div>
-      </div>
-      <div class='button-group'>
-        <v-btn round small @click="createUserAccount()">Create Account</v-btn>
-        <v-btn round small @click="sendTokens()">Send Tokens</v-btn>
-        <v-btn round small @click="manageOffer()">Manage Offer</v-btn>
-        <v-btn round small @click="showOffers()">Show Offers</v-btn>
-        <v-btn round small @click="lockIssuer()">Lock Issuer</v-btn>
-      </div>
-    </div>
   </div>
+</div>
+</div>
+<div class='button-group'>
+  <v-btn
+    round
+    small
+    @click="createUserAccount()"
+  >Create Account</v-btn>
+    <v-btn
+      round
+      small
+      @click="sendTokens()"
+    >Send Tokens</v-btn>
+      <v-btn
+        round
+        small
+        @click="manageOffer()"
+      >Manage Offer</v-btn>
+        <v-btn
+          round
+          small
+          @click="showOffers()"
+        >Show Offers</v-btn>
+          <v-btn
+            round
+            small
+            @click="lockIssuer()"
+          >Lock Issuer</v-btn>
+</div>
+</div>
+</div>
 
-  <show-offers-dialog :ping='showOffersDialogPing' :model='model' />
-  <manage-offer-dialog :ping='offerDialogPing' :model='model' />
-  <send-assets-dialog :ping='sendAssetsDialogPing' :model='model' />
-  <create-holder-account-dialog :ping='accountDialogPing' :model='model' />
-  <create-token-dialog v-on:token-created='createDialogResult' :model='model' :ping='createDialogPing' />
-  <confirm-dialog v-on:confirm-dialog-ok='deleteTokenProjectConfirmed' :ping='confirmDialogPing' title='Delete Token Project?' message='Do you want to delete this token project? Tokens will remain on the network, but make sure you have your keys.' okTitle='Delete Project'
-  />
-  <confirm-dialog v-on:confirm-dialog-ok='lockIssuerConfirmed' :ping='confirmLockDialogPing' title='Lock Issuer?' message='Any tokens or currency on this account will be locked forever. This feature is great to ensure no more tokens can ever be created, but make sure everything on this account is set, for example the home domain. Be ABSOLUTELY CERTAIN you know what your are doing. This is not reversible.'
-    okTitle='Lock Issuer' />
+<show-offers-dialog
+  :ping='showOffersDialogPing'
+  :model='model'
+/>
+<manage-offer-dialog
+  :ping='offerDialogPing'
+  :model='model'
+/>
+<send-assets-dialog
+  :ping='sendAssetsDialogPing'
+  :model='model'
+/>
+<create-holder-account-dialog
+  :ping='accountDialogPing'
+  :model='model'
+/>
+<create-token-dialog
+  v-on:token-created='createDialogResult'
+  :model='model'
+  :ping='createDialogPing'
+/>
+<confirm-dialog
+  v-on:confirm-dialog-ok='deleteTokenProjectConfirmed'
+  :ping='confirmDialogPing'
+  title='Delete Token Project?'
+  message='Do you want to delete this token project? Tokens will remain on the network, but make sure you have your keys.'
+  okTitle='Delete Project'
+/>
+<confirm-dialog
+  v-on:confirm-dialog-ok='lockIssuerConfirmed'
+  :ping='confirmLockDialogPing'
+  title='Lock Issuer?'
+  message='Any tokens or currency on this account will be locked forever. This feature is great to ensure no more tokens can ever be created, but make sure everything on this account is set, for example the home domain. Be ABSOLUTELY CERTAIN you know what your are doing. This is not reversible.'
+  okTitle='Lock Issuer'
+/>
 </div>
 </template>
 
@@ -84,6 +164,7 @@ import {
   StellarWallet
 } from 'stellar-js-utils'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
+import SettingsStore from '../js/SettingsStore.js'
 
 export default {
   mixins: [StellarCommonMixin, StyleExtractionMixin],
@@ -248,10 +329,10 @@ export default {
       this.saveProjects()
     },
     saveProjects() {
-      Helper.set('token-projects', this.tokenProjects)
+      SettingsStore.set('token-projects', this.tokenProjects)
     },
     loadProjects() {
-      return Helper.get('token-projects')
+      return SettingsStore.get('token-projects')
     },
     displayToken(index) {
       this.updateProjectIndex(index)

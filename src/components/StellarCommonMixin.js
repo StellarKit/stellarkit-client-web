@@ -11,7 +11,11 @@
    mounted() {
      this.updateAccountsUI()
      Helper.vue().$on('stellar-accounts-updated', this.updateAccountsUI)
-     Helper.vue().$on('stellar-network-updated', this.updateAccountsUI)
+     Helper.vue().$on('settings-updated', (key) => {
+       if (key === 'server') {
+         this.updateAccountsUI()
+       }
+     })
    },
    methods: {
      distributor() {

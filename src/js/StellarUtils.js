@@ -12,8 +12,10 @@ class StellarUtils {
   constructor() {
     this.s = new StellarServer()
 
-    Helper.vue().$on('stellar-network-updated', () => {
-      this.updateBalances()
+    Helper.vue().$on('settings-updated', (key) => {
+      if (key === 'server') {
+        this.updateBalances()
+      }
     })
 
     // AccountManger isn't ready, so delay a bit for first call
@@ -313,29 +315,6 @@ class StellarUtils {
       })
   }
 
-  // Public Key    GBW74UVOXKGHO3WX6AV5ZGTB4JYBKCEJOUQAUSI25NRO3PKY5BC7WYZS
-  // Secret Key    SA3W53XXG64ITFFIYQSBIJDG26LMXYRIMEVMNQMFAQJOYCZACCYBA34L
-
-  // SDNWCD4F63WBLU3E2QANDMVR3KLW6D5KBBENQSLSGC62X3PCHFMZQWHU
-  // GCFJ3JX6P5UZFABESJRZXNN2TH4UV67RGD5ECNTDUGPMIRQTFABXWWXV
-
-  doCreateTestAccount(name = null) {
-    const sourceWallet = StellarWallet.secret('SDNWCD4F63WBLU3E2QANDMVR3KLW6D5KBBENQSLSGC62X3PCHFMZQWHU')
-    return this.newAccount(sourceWallet, '1000', name)
-      .then((result) => {
-        this.updateBalances()
-        Helper.debugLog(result.account, 'Success')
-
-        return result.accountRec
-      })
-      .catch((error) => {
-        Helper.debugLog(error, 'Error')
-
-        // failed, try friendbot as a backup
-        return this.createTestAccountFriendBot(name)
-      })
-  }
-
   createTestAccount(name = null) {
     // we need this to run synchronously so that sequence numbers don't get out of sync
     if (!this.vars.syncPromise) {
@@ -343,7 +322,7 @@ class StellarUtils {
     }
 
     const result = this.vars.syncPromise.then(() => {
-      return this.doCreateTestAccount(name)
+      return this.createTestAccountFriendBot(name)
     })
 
     this.vars.syncPromise = result
