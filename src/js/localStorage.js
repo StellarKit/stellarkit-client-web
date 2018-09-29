@@ -1,6 +1,6 @@
 const localforage = require('localforage')
 
-export default class Storage {
+export default class LocalStorage {
   // returns a promise, calls back when everyhing initialized
   static init() {
     this.memoryStore = {}

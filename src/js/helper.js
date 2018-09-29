@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Storage from './storage.js'
+import LocalStorage from './localStorage.js'
 import HelperImplementation from './HelperImplementation.js'
 const StellarSdk = require('stellar-sdk')
 
@@ -76,7 +76,7 @@ export default class Helper {
   }
 
   static get(key) {
-    let result = Storage.get(this.keyForKey(key))
+    let result = LocalStorage.get(this.keyForKey(key))
 
     // some defaults
     if (!result) {
@@ -93,7 +93,7 @@ export default class Helper {
   }
 
   static set(key, value) {
-    Storage.set(this.keyForKey(key), value)
+    LocalStorage.set(this.keyForKey(key), value)
   }
 
   static stripBrackets(object) {

@@ -1,12 +1,15 @@
 <template>
 <v-app>
-  <app-main class='app-wrapper' v-if='!initializing' />
+  <app-main
+    class='app-wrapper'
+    v-if='!initializing'
+  />
 </v-app>
 </template>
 
 <script>
 import './scss/vuetify/main.styl'
-import Storage from './js/storage.js'
+import LocalStorage from './js/localStorage.js'
 import AppMain from './AppMain.vue'
 import fontawesome from '@fortawesome/fontawesome'
 import brands from '@fortawesome/fontawesome-free-brands'
@@ -25,7 +28,7 @@ export default {
     }
   },
   created() {
-    Storage.init()
+    LocalStorage.init()
       .then(() => {
         this.initializing = false
       })
