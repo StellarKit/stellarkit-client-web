@@ -66,7 +66,7 @@ let common = {
 const TARGET = process.env.npm_lifecycle_event
 
 if (TARGET === 'dist' || TARGET === 'dev' || TARGET === 'devHTTP') {
-  const entry = './src/entry.js'
+  const entry = ['@babel/polyfill', './src/entry.js']
   // const entry = './src/private/entry.js'
 
   common = merge(common, {
