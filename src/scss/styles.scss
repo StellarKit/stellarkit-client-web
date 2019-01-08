@@ -28,7 +28,7 @@ $border-radius: 8px;
 @mixin inner-dialog-contents {
   // for the toast absolute
   position: relative;
-  overflow: hidden;
+  overflow: auto;
 
   padding: 12px;
 
