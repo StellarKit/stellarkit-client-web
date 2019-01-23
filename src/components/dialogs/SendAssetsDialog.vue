@@ -1,7 +1,16 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog
+  lazy
+  v-model='visible'
+  scrollable
+  @keydown.esc="visible = false"
+  max-width="600"
+>
   <div class='main-container'>
-    <dialog-titlebar :title=title v-on:close='visible = false' />
+    <dialog-titlebar
+      :title=title
+      v-on:close='visible = false'
+    />
 
     <div class='help-contents'>
       <div class='help-text'>
@@ -9,16 +18,41 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:toast='displayToast' v-on:enter-key-down='sendAssets' :model="model" :showSource=true :showFunding=true :showDest=true :showAmount=true :showSigner=true :showAsset=true />
+        <dialog-accounts
+          ref='dialogAccounts'
+          v-on:toast='displayToast'
+          v-on:enter-key-down='sendAssets'
+          :model="model"
+          :showSource=true
+          :showFunding=true
+          :showDest=true
+          :showAmount=true
+          :showSigner=true
+          :showAsset=true
+        />
       </div>
       <div class='button-holder'>
-        <v-tooltip open-delay='200' bottom>
-          <v-btn round color='primary' slot="activator" @click="sendAssets()" :loading="loading">Send Payment</v-btn>
+        <v-tooltip
+          open-delay='200'
+          bottom
+        >
+          <v-btn
+            round
+            color='primary'
+            slot="activator"
+            @click="sendAssets()"
+            :loading="loading"
+          >Send Payment</v-btn>
           <span>Send the payment</span>
         </v-tooltip>
       </div>
 
-      <toast-component :absolute=true location='send-assets-dialog' :bottom=false :top=true />
+      <toast-component
+        :absolute=true
+        location='send-assets-dialog'
+        :bottom=false
+        :top=true
+      />
     </div>
   </div>
 </v-dialog>
@@ -33,6 +67,7 @@ import {
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
 import ReusableStellarViews from '../ReusableStellarViews.vue'
+import SerialTransactions from '../../js/SerialTransactions.js'
 
 export default {
   props: ['ping', 'model'],
@@ -92,6 +127,8 @@ export default {
         }
 
         const destPublicKeys = this.dialogAccounts().destPublicKeys()
+        const destKeysAndMemos = this.dialogAccounts().destKeysAndMemos()
+
         if (destPublicKeys.length > 0) {
           let nextPromise = Promise.resolve()
           this.loading = true
@@ -119,6 +156,30 @@ export default {
             StellarUtils.updateBalances()
             this.loading = false
           })
+        } else if (destKeysAndMemos.length > 0) {
+          const serial = new SerialTransactions((error) => {
+            this.loading = false
+            StellarUtils.updateBalances()
+
+            if (error) {
+              this.displayToast('Error: ' + error, true)
+              Helper.debugLog(error)
+            } else {
+              this.displayToast('Success!')
+            }
+          })
+
+          for (const x of destKeysAndMemos) {
+            // got to trim this stuff, will have spaces
+            const publicKey = x.key.trim()
+            const memo = x.memo.trim()
+
+            const destWallet = StellarWallet.public(publicKey)
+
+            serial.sendAsset(sourceWallet, fundingWallet, destWallet, String(amount), asset, memo, additionalSigners)
+          }
+          serial.go()
+          this.loading = true
         } else {
           const destWallet = this.dialogAccounts().destWallet()
 

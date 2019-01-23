@@ -1,314 +1,433 @@
 <template>
 <div>
-  <div v-if='showSymbol'
-       class='account-choice-box'>
-    <v-text-field label="Symbol"
-                  @keyup.enter="enterKeyDown"
-                  v-model.trim="model.symbol"
-                  hint='Symbol can be 1-12 characters long'
-                  autofocus></v-text-field>
+  <div
+    v-if='showSymbol'
+    class='account-choice-box'
+  >
+    <v-text-field
+      label="Symbol"
+      @keyup.enter="enterKeyDown"
+      v-model.trim="model.symbol"
+      hint='Symbol can be 1-12 characters long'
+      autofocus
+    ></v-text-field>
   </div>
 
-  <div v-if='showAccountName'
-       class='account-choice-box'>
-    <v-text-field hide-details
-                  spellcheck="false"
-                  label="Account name"
-                  v-model.trim="model.accountName"
-                  @keyup.enter="enterKeyDown"
-                  hint="A unique name helps you keep track of multiple accounts"> </v-text-field>
+  <div
+    v-if='showAccountName'
+    class='account-choice-box'
+  >
+    <v-text-field
+      hide-details
+      spellcheck="false"
+      label="Account name"
+      v-model.trim="model.accountName"
+      @keyup.enter="enterKeyDown"
+      hint="A unique name helps you keep track of multiple accounts"
+    > </v-text-field>
   </div>
 
-  <div v-if='showSource'
-       class='account-choice-box'>
+  <div
+    v-if='showSource'
+    class='account-choice-box'
+  >
     <div>
-      <menu-button v-on:menu-selected='sourceMenuSelected'
-                   title='Source account'
-                   :items='sourceMenuItems'
-                   :selectedID='sourceType' />
+      <menu-button
+        v-on:menu-selected='sourceMenuSelected'
+        title='Source account'
+        :items='sourceMenuItems'
+        :selectedID='sourceType'
+      />
     </div>
     <div v-if='sourceType === "account"'>
-      <v-select hide-details
-                :items="accountsUI"
-                item-text='name'
-                item-value='publicKey'
-                v-model='model.sourceAccount'
-                clearable
-                label="Source account"
-                autocomplete
-                return-object
-                max-height="600"></v-select>
+      <v-select
+        hide-details
+        :items="accountsUI"
+        item-text='name'
+        item-value='publicKey'
+        v-model='model.sourceAccount'
+        clearable
+        label="Source account"
+        autocomplete
+        return-object
+        max-height="600"
+      ></v-select>
     </div>
   </div>
 
-  <div v-if='showDest'
-       class='account-choice-box'>
+  <div
+    v-if='showDest'
+    class='account-choice-box'
+  >
     <div>
-      <menu-button v-on:menu-selected='destMenuSelected'
-                   title='Destination account'
-                   :items='destMenuItems'
-                   :selectedID='destType' />
+      <menu-button
+        v-on:menu-selected='destMenuSelected'
+        title='Destination account'
+        :items='destMenuItems'
+        :selectedID='destType'
+      />
     </div>
     <div v-if='destType === "publicKey"'>
-      <v-text-field hide-details
-                    label="Destination public key"
-                    v-model.trim="destPublicKey"
-                    autofocus
-                    @keyup.enter="enterKeyDown"></v-text-field>
+      <v-text-field
+        hide-details
+        label="Destination public key"
+        v-model.trim="destPublicKey"
+        autofocus
+        @keyup.enter="enterKeyDown"
+      ></v-text-field>
     </div>
     <div v-if='destType === "account"'>
-      <v-select hide-details
-                :items="accountsUI"
-                item-text='name'
-                item-value='publicKey'
-                v-model="model.destAccount"
-                clearable
-                label="Destination account"
-                autocomplete
-                return-object
-                max-height="600"></v-select>
+      <v-select
+        hide-details
+        :items="accountsUI"
+        item-text='name'
+        item-value='publicKey'
+        v-model="model.destAccount"
+        clearable
+        label="Destination account"
+        autocomplete
+        return-object
+        max-height="600"
+      ></v-select>
     </div>
     <div v-if='destType === "publicKeyList"'>
-      <textarea v-model='destPublicKeyList'
-                placeholder='Paste in a list of public keys separated by returns, spaces or commas.'
-                class='public-key-text'></textarea>
-      <menu-button v-on:menu-selected='destPaymentsMenuSelected'
-                   title='Payments per transaction'
-                   :items='destPaymentsMenuItems'
-                   :selectedID='destPaymentsType' />
+      <textarea
+        v-model='destPublicKeyList'
+        placeholder='Paste in a list of public keys separated by returns, spaces or commas.'
+        class='public-key-text'
+      ></textarea>
+      <menu-button
+        v-on:menu-selected='destPaymentsMenuSelected'
+        title='Payments per transaction'
+        :items='destPaymentsMenuItems'
+        :selectedID='destPaymentsType'
+      />
+    </div>
+    <div v-if='destType === "keysAndMemosList"'>
+      <textarea
+        v-model='destKeysAndMemosList'
+        placeholder='Paste in CSV format: KEY,MEMO to send asset with memo to account with memo'
+        class='public-key-text'
+      ></textarea>
     </div>
   </div>
 
-  <div v-if='showAsset'
-       class='account-choice-box'>
-    <asset-popup title='Asset'
-                 :model='model.assetModel' />
+  <div
+    v-if='showAsset'
+    class='account-choice-box'
+  >
+    <asset-popup
+      title='Asset'
+      :model='model.assetModel'
+    />
   </div>
 
-  <div v-if='showBuyingAsset'
-       class='account-choice-box'>
-    <asset-popup title='Buying asset'
-                 :model='model.buyingAssetModel' />
+  <div
+    v-if='showBuyingAsset'
+    class='account-choice-box'
+  >
+    <asset-popup
+      title='Buying asset'
+      :model='model.buyingAssetModel'
+    />
   </div>
 
-  <div v-if='showSellingAsset'
-       class='account-choice-box'>
-    <asset-popup title='Selling asset'
-                 :model='model.sellingAssetModel' />
+  <div
+    v-if='showSellingAsset'
+    class='account-choice-box'
+  >
+    <asset-popup
+      title='Selling asset'
+      :model='model.sellingAssetModel'
+    />
   </div>
 
-  <div v-if='showSecret'
-       class='account-choice-box'>
+  <div
+    v-if='showSecret'
+    class='account-choice-box'
+  >
     <div>
-      <menu-button v-on:menu-selected='secretMenuSelected'
-                   title='Enter an account key'
-                   :items='secretMenuItems'
-                   :selectedID='secretType' />
+      <menu-button
+        v-on:menu-selected='secretMenuSelected'
+        title='Enter an account key'
+        :items='secretMenuItems'
+        :selectedID='secretType'
+      />
     </div>
     <div v-if='secretType === "secret"'>
-      <v-text-field spellcheck="false"
-                    autofocus
-                    label="Secret key"
-                    :counter="56"
-                    v-model.trim="model.secretKey"
-                    @keyup.enter="enterKeyDown"
-                    hint="Starts with an 'S'"
-                    :append-icon="showSecretText ? 'visibility_off' : 'visibility'"
-                    :append-icon-cb="() => (showSecretText = !showSecretText)"
-                    :type="showSecretText ? 'text' : 'password'"></v-text-field>
+      <v-text-field
+        spellcheck="false"
+        autofocus
+        label="Secret key"
+        :counter="56"
+        v-model.trim="model.secretKey"
+        @keyup.enter="enterKeyDown"
+        hint="Starts with an 'S'"
+        :append-icon="showSecretText ? 'visibility_off' : 'visibility'"
+        :append-icon-cb="() => (showSecretText = !showSecretText)"
+        :type="showSecretText ? 'text' : 'password'"
+      ></v-text-field>
     </div>
     <div v-if='secretType === "public"'>
-      <v-text-field spellcheck="false"
-                    autofocus
-                    label="Public key"
-                    :counter="56"
-                    v-model.trim="model.publicKey"
-                    @keyup.enter="enterKeyDown"
-                    hint="Starts with an 'G'"></v-text-field>
+      <v-text-field
+        spellcheck="false"
+        autofocus
+        label="Public key"
+        :counter="56"
+        v-model.trim="model.publicKey"
+        @keyup.enter="enterKeyDown"
+        hint="Starts with an 'G'"
+      ></v-text-field>
     </div>
   </div>
 
-  <div v-if='showAmount'
-       class='account-choice-box'>
-    <v-text-field hide-details
-                  :label="model.amountLabel"
-                  type='number'
-                  v-model.number="model.assetAmount"
-                  @keyup.enter="enterKeyDown"></v-text-field>
+  <div
+    v-if='showAmount'
+    class='account-choice-box'
+  >
+    <v-text-field
+      hide-details
+      :label="model.amountLabel"
+      type='number'
+      v-model.number="model.assetAmount"
+      @keyup.enter="enterKeyDown"
+    ></v-text-field>
   </div>
 
-  <div v-if='showNumberValue'
-       class='account-choice-box'>
-    <v-text-field :label="model.numberValueLabel"
-                  :hint='model.numberValueHint'
-                  type='number'
-                  v-model.number="model.numberValue"
-                  @keyup.enter="enterKeyDown"></v-text-field>
+  <div
+    v-if='showNumberValue'
+    class='account-choice-box'
+  >
+    <v-text-field
+      :label="model.numberValueLabel"
+      :hint='model.numberValueHint'
+      type='number'
+      v-model.number="model.numberValue"
+      @keyup.enter="enterKeyDown"
+    ></v-text-field>
   </div>
 
-  <div v-if='showManageOffer'
-       class='account-choice-box'>
-    <v-text-field hide-details
-                  label="Sell amount"
-                  @keyup.enter="enterKeyDown"
-                  type='number'
-                  v-model.number='model.sellAmount'></v-text-field>
+  <div
+    v-if='showManageOffer'
+    class='account-choice-box'
+  >
+    <v-text-field
+      hide-details
+      label="Sell amount"
+      @keyup.enter="enterKeyDown"
+      type='number'
+      v-model.number='model.sellAmount'
+    ></v-text-field>
 
     <div class='price-header'>Price:</div>
     <div class='accounts-small-text'>For example, you want buy 1000 XLM for 1 MyToken.</div>
     <div class='price-pair'>
-      <v-text-field hide-details
-                    class='buy-price'
-                    label="Buy unit"
-                    @keyup.enter="enterKeyDown"
-                    type='number'
-                    v-model.number="buyUnit"></v-text-field>
-      <v-text-field hide-details
-                    label="Sell unit"
-                    @keyup.enter="enterKeyDown"
-                    type='number'
-                    v-model.number="sellUnit"></v-text-field>
+      <v-text-field
+        hide-details
+        class='buy-price'
+        label="Buy unit"
+        @keyup.enter="enterKeyDown"
+        type='number'
+        v-model.number="buyUnit"
+      ></v-text-field>
+      <v-text-field
+        hide-details
+        label="Sell unit"
+        @keyup.enter="enterKeyDown"
+        type='number'
+        v-model.number="sellUnit"
+      ></v-text-field>
     </div>
   </div>
 
-  <div v-if='showAuthFlags'
-       class='account-choice-box'>
+  <div
+    v-if='showAuthFlags'
+    class='account-choice-box'
+  >
     <div class='price-pair'>
-      <v-checkbox hide-details
-                  small
-                  class='buy-price'
-                  label="Auth required"
-                  v-model="authRequired"></v-checkbox>
-      <v-checkbox hide-details
-                  small
-                  label="Auth revocable"
-                  v-model="authRevocable"></v-checkbox>
-      <v-checkbox hide-details
-                  small
-                  label="Trust BTC/ETH (for Bifrost)"
-                  v-model="trustBtcEthFlag"></v-checkbox>
+      <v-checkbox
+        hide-details
+        small
+        class='buy-price'
+        label="Auth required"
+        v-model="authRequired"
+      ></v-checkbox>
+      <v-checkbox
+        hide-details
+        small
+        label="Auth revocable"
+        v-model="authRevocable"
+      ></v-checkbox>
+      <v-checkbox
+        hide-details
+        small
+        label="Trust BTC/ETH (for Bifrost)"
+        v-model="trustBtcEthFlag"
+      ></v-checkbox>
     </div>
   </div>
 
-  <div v-if='showBuyOffer'
-       class='account-choice-box'>
+  <div
+    v-if='showBuyOffer'
+    class='account-choice-box'
+  >
     <div class='price-pair'>
-      <v-text-field hide-details
-                    class='buy-price'
-                    label="Buy amount"
-                    @keyup.enter="enterKeyDown"
-                    type='number'
-                    v-model.number="buyAmount"></v-text-field>
-      <v-text-field hide-details
-                    label="Send maximum selling asset"
-                    @keyup.enter="enterKeyDown"
-                    type='number'
-                    v-model.number="buySendMax"></v-text-field>
+      <v-text-field
+        hide-details
+        class='buy-price'
+        label="Buy amount"
+        @keyup.enter="enterKeyDown"
+        type='number'
+        v-model.number="buyAmount"
+      ></v-text-field>
+      <v-text-field
+        hide-details
+        label="Send maximum selling asset"
+        @keyup.enter="enterKeyDown"
+        type='number'
+        v-model.number="buySendMax"
+      ></v-text-field>
     </div>
   </div>
 
-  <div v-if='showTextValue'
-       class='account-choice-box'>
-    <v-text-field :label="model.textValueLabel"
-                  @keyup.enter="enterKeyDown"
-                  v-model.trim="model.textValue"
-                  :hint='model.textValueHint'
-                  autofocus></v-text-field>
+  <div
+    v-if='showTextValue'
+    class='account-choice-box'
+  >
+    <v-text-field
+      :label="model.textValueLabel"
+      @keyup.enter="enterKeyDown"
+      v-model.trim="model.textValue"
+      :hint='model.textValueHint'
+      autofocus
+    ></v-text-field>
   </div>
 
-  <div v-if='showNameValue'
-       class='account-choice-box'>
-    <v-text-field hide-details
-                  :label="model.nameValueOneLabel"
-                  @keyup.enter="enterKeyDown"
-                  v-model.trim="model.nameValueOneValue"
-                  autofocus></v-text-field>
-    <v-text-field hide-details
-                  :label="model.nameValueTwoLabel"
-                  @keyup.enter="enterKeyDown"
-                  v-model.trim="model.nameValueTwoValue"></v-text-field>
+  <div
+    v-if='showNameValue'
+    class='account-choice-box'
+  >
+    <v-text-field
+      hide-details
+      :label="model.nameValueOneLabel"
+      @keyup.enter="enterKeyDown"
+      v-model.trim="model.nameValueOneValue"
+      autofocus
+    ></v-text-field>
+    <v-text-field
+      hide-details
+      :label="model.nameValueTwoLabel"
+      @keyup.enter="enterKeyDown"
+      v-model.trim="model.nameValueTwoValue"
+    ></v-text-field>
   </div>
 
-  <div v-if='showTimeLock'
-       class='account-choice-box'>
-    <v-checkbox hide-details
-                small
-                label="Time lock access to this account"
-                v-model="timeLockEnabled"></v-checkbox>
+  <div
+    v-if='showTimeLock'
+    class='account-choice-box'
+  >
+    <v-checkbox
+      hide-details
+      small
+      label="Time lock access to this account"
+      v-model="timeLockEnabled"
+    ></v-checkbox>
 
     <div v-if='timeLockEnabled'>
-      <v-dialog v-model="timeLockModal"
-                persistent
-                lazy
-                full-width
-                width="290px"
-                :return-value.sync="timeLockDate"
-                ref="dialog">
-        <v-text-field hide-details
-                      slot="activator"
-                      label="Time Lock Expiration Date"
-                      v-model="timeLockDate"
-                      prepend-icon="event"
-                      readonly></v-text-field>
-        <v-date-picker v-model="timeLockDate"
-                       scrollable
-                       actions>
+      <v-dialog
+        v-model="timeLockModal"
+        persistent
+        lazy
+        full-width
+        width="290px"
+        :return-value.sync="timeLockDate"
+        ref="dialog"
+      >
+        <v-text-field
+          hide-details
+          slot="activator"
+          label="Time Lock Expiration Date"
+          v-model="timeLockDate"
+          prepend-icon="event"
+          readonly
+        ></v-text-field>
+        <v-date-picker
+          v-model="timeLockDate"
+          scrollable
+          actions
+        >
           <v-spacer></v-spacer>
-          <v-btn flat
-                 color="primary"
-                 @click="timeLockModal = false">Cancel</v-btn>
-          <v-btn flat
-                 color="primary"
-                 @click="$refs.dialog.save(timeLockDate)">OK</v-btn>
+          <v-btn
+            flat
+            color="primary"
+            @click="timeLockModal = false"
+          >Cancel</v-btn>
+          <v-btn
+            flat
+            color="primary"
+            @click="$refs.dialog.save(timeLockDate)"
+          >OK</v-btn>
         </v-date-picker>
       </v-dialog>
     </div>
   </div>
 
-  <div v-if='showFunding'
-       class='account-choice-box'>
+  <div
+    v-if='showFunding'
+    class='account-choice-box'
+  >
     <div>
-      <menu-button v-on:menu-selected='fundingMenuSelected'
-                   title='Funding account'
-                   :items='fundingMenuItems'
-                   :selectedID='fundingType' />
+      <menu-button
+        v-on:menu-selected='fundingMenuSelected'
+        title='Funding account'
+        :items='fundingMenuItems'
+        :selectedID='fundingType'
+      />
     </div>
     <div v-if='fundingType === "account"'>
-      <v-select hide-details
-                :items="accountsUI"
-                item-text='name'
-                item-value='publicKey'
-                v-model="model.fundingAccount"
-                clearable
-                label="Funding account"
-                autocomplete
-                return-object
-                max-height="600"></v-select>
+      <v-select
+        hide-details
+        :items="accountsUI"
+        item-text='name'
+        item-value='publicKey'
+        v-model="model.fundingAccount"
+        clearable
+        label="Funding account"
+        autocomplete
+        return-object
+        max-height="600"
+      ></v-select>
     </div>
     <div v-if='fundingType === "none"'>
       <div class='accounts-small-text'>{{this.model.fundingMessage}}</div>
     </div>
   </div>
 
-  <div v-if='showSigner'
-       class='account-choice-box'>
+  <div
+    v-if='showSigner'
+    class='account-choice-box'
+  >
     <div>
-      <menu-button v-on:menu-selected='signerMenuSelected'
-                   title='Add Signer account'
-                   :items='signerMenuItems'
-                   :selectedID='signerType' />
+      <menu-button
+        v-on:menu-selected='signerMenuSelected'
+        title='Add Signer account'
+        :items='signerMenuItems'
+        :selectedID='signerType'
+      />
     </div>
     <div v-if='signerType === "account"'>
-      <v-select hide-details
-                :items="accountsUI"
-                item-text='name'
-                item-value='publicKey'
-                v-model="model.signerAccount"
-                clearable
-                label="Signing account"
-                autocomplete
-                return-object
-                max-height="600"></v-select>
+      <v-select
+        hide-details
+        :items="accountsUI"
+        item-text='name'
+        item-value='publicKey'
+        v-model="model.signerAccount"
+        clearable
+        label="Signing account"
+        autocomplete
+        return-object
+        max-height="600"
+      ></v-select>
     </div>
   </div>
 
@@ -325,6 +444,7 @@ import {
   LedgerAPI
 } from 'stellar-js-utils'
 const StellarSdk = require('stellar-sdk')
+const parse = require('csv-parse/lib/sync')
 
 export default {
   props: ['model', 'showSource', 'showDest',
@@ -366,6 +486,8 @@ export default {
 
       destPublicKeyList: '',
       destPaymentsType: '10',
+
+      destKeysAndMemosList: '',
 
       authRequired: false,
       authRevocable: false,
@@ -411,6 +533,10 @@ export default {
         {
           id: 'publicKeyList',
           title: 'Public key list'
+        },
+        {
+          id: 'keysAndMemosList',
+          title: 'Keys and Memos CSV'
         }
       ],
       sourceMenuItems: [{
@@ -587,6 +713,20 @@ export default {
             result = StellarWallet.public(this.model.destAccount.publicKey)
           }
           break
+        case 'keysAndMemosList':
+          {
+            // see destPublicKeys(), but we'll just use the first public key to avoid toast or errors
+            const keyList = this.parseKeysAndMemos()
+
+            if (keyList.length > 0) {
+              const publicKey = keyList[0].key
+
+              if (Helper.strOK(publicKey)) {
+                result = StellarWallet.public(publicKey)
+              }
+            }
+          }
+          break
         case 'publicKeyList':
           {
             // see destPublicKeys(), but we'll just use the first public key to avoid toast or errors
@@ -627,6 +767,24 @@ export default {
 
       return []
     },
+    parseKeysAndMemos() {
+      let result = []
+
+      if (Helper.strOK(this.destKeysAndMemosList)) {
+        const output = parse(this.destKeysAndMemosList, {
+          columns: [
+            'key', 'memo'
+          ],
+          skip_empty_lines: true
+        })
+
+        if (output && output.length > 0) {
+          result = result.concat(output)
+        }
+      }
+
+      return result
+    },
     destPublicKeys() {
       if (this.destType === 'publicKeyList') {
         if (Helper.strOK(this.destPublicKeyList)) {
@@ -635,6 +793,15 @@ export default {
 
           return result
         }
+      }
+
+      return []
+    },
+    destKeysAndMemos() {
+      if (this.destType === 'keysAndMemosList') {
+        const result = this.parseKeysAndMemos()
+
+        return result
       }
 
       return []
