@@ -150,12 +150,12 @@ export default {
               }
             } else if (value === 'auto') {
               if (name === 'top' || name === 'bottom' || name === 'left' || name === 'right' ||
-                name === 'width' || name === 'height' || 'background-size' || name === 'alignment-baseline') {
+                name === 'width' || name === 'height' || name === 'background-size' || name === 'alignment-baseline') {
                 stylesObj[name] = ''
               }
             } else if (value === 'normal') {
               if (name === 'justify-items' || name === 'justify-self' || name === 'align-content' || name === 'align-items' ||
-                name === 'align-self' || name === 'height' || 'background-size') {
+                name === 'align-self' || name === 'height' || name === 'background-size') {
                 stylesObj[name] = ''
               }
             } else if (value === '0px') {
