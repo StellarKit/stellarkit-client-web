@@ -1,7 +1,9 @@
 const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
-const {VueLoaderPlugin} = require('vue-loader')
+const {
+  VueLoaderPlugin
+} = require('vue-loader')
 const TerserPlugin = require('terser-webpack-plugin')
 
 let common = {
@@ -11,57 +13,53 @@ let common = {
   },
   plugins: [new VueLoaderPlugin()],
   module: {
-    rules: [
-      {
-        enforce: 'pre',
-        test: /.(vue|js)$/,
-        loader: 'eslint-loader',
-        exclude: /node_modules/,
+    rules: [{
+      enforce: 'pre',
+      test: /.(vue|js)$/,
+      loader: 'eslint-loader',
+      exclude: /node_modules/,
+      options: {
+        fix: true
+      }
+    }, {
+      test: /\.vue$/,
+      loader: 'vue-loader',
+      exclude: /node_modules/
+    }, {
+      test: /\.css$/,
+      use: [
+        'vue-style-loader', 'css-loader'
+      ],
+      exclude: /node_modules/
+    }, {
+      test: /\.scss$/,
+      use: ['vue-style-loader', 'css-loader', 'sass-loader']
+    }, {
+      test: /\.styl$/,
+      use: [
+        'style-loader', 'css-loader', 'stylus-loader'
+      ],
+      exclude: /node_modules/
+    }, {
+      test: /\.js$/,
+      loader: 'babel-loader',
+      exclude: /node_modules/
+    }, {
+      test: /\.(png|jpg|gif|svg)$/,
+      use: [{
+        loader: 'file-loader',
         options: {
-          fix: true
+          // name: '[name].[ext]?[hash]'
+          name: 'images/[hash].[ext]'
         }
       }, {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        exclude: /node_modules/
-      }, {
-        test: /\.css$/,
-        use: [
-          'vue-style-loader', 'css-loader'
-        ],
-        exclude: /node_modules/
-      }, {
-        test: /\.scss$/,
-        use: ['vue-style-loader', 'css-loader', 'sass-loader']
-      }, {
-        test: /\.styl$/,
-        use: [
-          'style-loader', 'css-loader', 'stylus-loader'
-        ],
-        exclude: /node_modules/
-      }, {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
-      }, {
-        test: /\.(png|jpg|gif|svg)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              // name: '[name].[ext]?[hash]'
-              name: 'images/[hash].[ext]'
-            }
-          }, {
-            loader: 'img-loader',
-            options: {
-              enabled: process.env.NODE_ENV === 'production'
-            }
-          }
-        ],
-        exclude: /node_modules/
-      }
-    ]
+        loader: 'img-loader',
+        options: {
+          enabled: process.env.NODE_ENV === 'production'
+        }
+      }],
+      exclude: /node_modules/
+    }]
   },
   devtool: 'eval-source-map',
   mode: 'development'
@@ -92,7 +90,7 @@ if (TARGET === 'dist' || TARGET === 'dev' || TARGET === 'devHTTP') {
   }
 } else if (TARGET === 'distLib') {
   common = merge(common, {
-    entry: './src/libEntry.js',
+    entry: ['@babel/polyfill', './src/libEntry.js'],
     output: {
       filename: 'distLib.js',
       library: 'stellar-client-web',
@@ -109,16 +107,16 @@ if (process.env.NODE_ENV === 'production') {
     // added to kill all comments, remove if you don't care (16k smaller too)
     optimization: {
       minimizer: [new TerserPlugin({
-          terserOptions: {
-            cache: true,
-            parallel: true,
-            compress: false, // ledger nano failing without this
-            output: {
-              comments: false,
-              semicolons: false
-            }
+        terserOptions: {
+          cache: true,
+          parallel: true,
+          compress: false, // ledger nano failing without this
+          output: {
+            comments: false,
+            semicolons: false
           }
-        })]
+        }
+      })]
     }
   })
 } else {
