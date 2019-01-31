@@ -284,10 +284,11 @@ class StellarAccounts {
       return this.testNet
     }
 
-    this.publicNet = new StellarAccountsImp('public')
+    if (!this.publicNet) {
+      this.publicNet = new StellarAccountsImp('public')
+    }
 
-    if (this.publicNet)
-      return this.publicNet
+    return this.publicNet
   }
 }
 

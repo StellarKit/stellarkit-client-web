@@ -36,9 +36,10 @@ export default class LocalStorage {
       result = this.memoryStore[this.keyForKey(key)]
 
       // need to clone objects or arrays or they could get changed and our isEqual will fail
-      if (result instanceof Array || result instanceof Object) {
-        // need deep copies, otherwise isEqual in set will fail
-        result = JSON.parse(JSON.stringify(result))
+      if (result instanceof Array) {
+        result = result.slice()
+      } else if (result instanceof Object) {
+        result = Object.assign({}, result)
       }
     }
 
