@@ -68,7 +68,7 @@ export default class LocalStorage {
         // need to clone objects or arrays or they could get changed and our isEqual will fail
         if (newValue instanceof Array) {
           newValue = newValue.slice()
-        } else if (result instanceof Object) {
+        } else if (newValue instanceof Object) {
           newValue = Object.assign({}, newValue)
         }
 
