@@ -63,11 +63,20 @@ export default class LocalStorage {
       console.log('called set before ready: ' + key)
     } else {
       if (!this.isEqual(this.memoryStore[this.keyForKey(key)], value)) {
-        this.memoryStore[this.keyForKey(key)] = value
+        let newValue = value
+
+        // need to clone objects or arrays or they could get changed and our isEqual will fail
+        if (newValue instanceof Array) {
+          newValue = newValue.slice()
+        } else if (result instanceof Object) {
+          newValue = Object.assign({}, newValue)
+        }
+
+        this.memoryStore[this.keyForKey(key)] = newValue
 
         SettingsStore.notify([key])
 
-        localforage.setItem(this.keyForKey(key), value)
+        localforage.setItem(this.keyForKey(key), newValue)
           .catch((err) => {
             console.log(JSON.stringify(err))
           })
