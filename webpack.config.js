@@ -7,6 +7,17 @@ const {
 const TerserPlugin = require('terser-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
+// set to {} for distLib
+let splitChunks = {
+  cacheGroups: {
+    commons: {
+      test: /[\\/]node_modules[\\/]/,
+      name: 'vendors',
+      chunks: 'all'
+    }
+  }
+}
+
 let common = {
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -96,6 +107,9 @@ if (TARGET === 'dist' || TARGET === 'dev' || TARGET === 'devHTTP') {
     })
   }
 } else if (TARGET === 'distLib') {
+  // don't split for library
+  splitChunks = {}
+
   common = merge(common, {
     entry: ['@babel/polyfill', './src/libEntry.js'],
     output: {
@@ -113,15 +127,7 @@ if (process.env.NODE_ENV === 'production') {
     devtool: false,
     // added to kill all comments, remove if you don't care (16k smaller too)
     optimization: {
-      splitChunks: {
-        cacheGroups: {
-          commons: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all'
-          }
-        }
-      },
+      splitChunks: splitChunks,
       minimizer: [new TerserPlugin({
         terserOptions: {
           cache: true,
