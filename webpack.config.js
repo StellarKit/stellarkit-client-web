@@ -5,13 +5,20 @@ const {
   VueLoaderPlugin
 } = require('vue-loader')
 const TerserPlugin = require('terser-webpack-plugin')
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let common = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/dist/'
   },
-  plugins: [new VueLoaderPlugin()],
+  plugins: [
+    new VueLoaderPlugin(),
+    new HtmlWebpackPlugin({
+      title: 'Stellar Army',
+      template: 'src/index.html'
+    })
+  ],
   module: {
     rules: [{
       enforce: 'pre',
@@ -106,6 +113,15 @@ if (process.env.NODE_ENV === 'production') {
     devtool: false,
     // added to kill all comments, remove if you don't care (16k smaller too)
     optimization: {
+      splitChunks: {
+        cacheGroups: {
+          commons: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all'
+          }
+        }
+      },
       minimizer: [new TerserPlugin({
         terserOptions: {
           cache: true,
