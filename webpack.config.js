@@ -16,7 +16,7 @@ let common = {
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       title: 'Stellar Army',
-      template: 'src/index.html'
+      template: 'src/prod/index.html'
     })
   ],
   module: {
