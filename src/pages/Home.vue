@@ -6,31 +6,95 @@
   </instructions-header>
   <div class='top-controls'>
     <div class='button-group'>
-      <v-btn round small @click="sendAssetsDialogPing = !sendAssetsDialogPing">Send Asset</v-btn>
-      <v-btn round small @click="addRemoveSignerDialogPing = !addRemoveSignerDialogPing">Add/Remove Signer</v-btn>
+      <v-btn
+        round
+        small
+        @click="sendAssetsDialogPing = !sendAssetsDialogPing"
+      >Send Asset</v-btn>
+      <v-btn
+        round
+        small
+        @click="addRemoveSignerDialogPing = !addRemoveSignerDialogPing"
+      >Add/Remove Signer</v-btn>
 
-      <v-tooltip open-delay='800' bottom>
-        <v-btn round small slot='activator' @click="mergeDialogPing = !mergeDialogPing">Merge Accounts</v-btn>
+      <v-tooltip
+        open-delay='800'
+        bottom
+      >
+        <v-btn
+          round
+          small
+          slot='activator'
+          @click="mergeDialogPing = !mergeDialogPing"
+        >Merge Accounts</v-btn>
         <span>Merges source into destination</span>
       </v-tooltip>
 
-      <v-tooltip open-delay='800' bottom>
-        <v-btn round small slot='activator' @click="trustDialogPing = !trustDialogPing">Trust Token</v-btn>
+      <v-tooltip
+        open-delay='800'
+        bottom
+      >
+        <v-btn
+          round
+          small
+          slot='activator'
+          @click="trustDialogPing = !trustDialogPing"
+        >Trust Token</v-btn>
         <span>Account must trust token before it can receive</span>
       </v-tooltip>
 
-      <v-btn round small @click="manageOfferDialogPing = !manageOfferDialogPing">Manage Offer</v-btn>
-      <v-btn round small @click="buyAssetDialogPing = !buyAssetDialogPing">Buy Asset</v-btn>
-      <v-btn round small @click="showOffersDialogPing = !showOffersDialogPing">Show Offers</v-btn>
-      <v-btn round small @click="allowTrustDialogPing = !allowTrustDialogPing">Allow Trust</v-btn>
+      <v-btn
+        round
+        small
+        @click="manageOfferDialogPing = !manageOfferDialogPing"
+      >Manage Offer</v-btn>
+      <v-btn
+        round
+        small
+        @click="buyAssetDialogPing = !buyAssetDialogPing"
+      >Buy Asset</v-btn>
+      <v-btn
+        round
+        small
+        @click="showOffersDialogPing = !showOffersDialogPing"
+      >Show Offers</v-btn>
+      <v-btn
+        round
+        small
+        @click="allowTrustDialogPing = !allowTrustDialogPing"
+      >Allow Trust</v-btn>
 
-      <v-btn round small @click="setDomainPing = !setDomainPing">Set Domain</v-btn>
-      <v-btn round small @click="setInflationPing = !setInflationPing">Set Inflation Destination</v-btn>
-      <v-btn round small @click="lookupFederationPing = !lookupFederationPing">Federation Lookup</v-btn>
-      <v-btn round small @click="manageDataPing = !manageDataPing">Manage Data</v-btn>
+      <v-btn
+        round
+        small
+        @click="setDomainPing = !setDomainPing"
+      >Set Domain</v-btn>
+      <v-btn
+        round
+        small
+        @click="setInflationPing = !setInflationPing"
+      >Set Inflation Destination</v-btn>
+      <v-btn
+        round
+        small
+        @click="lookupFederationPing = !lookupFederationPing"
+      >Federation Lookup</v-btn>
+      <v-btn
+        round
+        small
+        @click="manageDataPing = !manageDataPing"
+      >Manage Data</v-btn>
 
-      <v-menu offset-y :transition=false>
-        <v-btn round small :ripple=false slot="activator">
+      <v-menu
+        offset-y
+        :transition=false
+      >
+        <v-btn
+          round
+          small
+          :ripple=false
+          slot="activator"
+        >
           Ledger Nano
           <v-icon>&#xE5C5;</v-icon>
         </v-btn>
@@ -53,23 +117,66 @@
         </v-list>
       </v-menu>
 
-      <v-btn round small @click="saveSecretDialogPing = !saveSecretDialogPing">Save/Print Keys</v-btn>
+      <v-btn
+        round
+        small
+        @click="saveSecretDialogPing = !saveSecretDialogPing"
+      >Save/Print Keys</v-btn>
     </div>
   </div>
 
   <save-secret-dialog :ping='saveSecretDialogPing' />
-  <manage-data-dialog :ping='manageDataPing' :model="manageDataModel" />
-  <merge-dialog :ping='mergeDialogPing' :model="mergeDialogModel" />
-  <simple-dialog :ping='setDomainPing' operation='domain' :model="setDomainModel" />
-  <simple-dialog :ping='setInflationPing' operation='inflation' :model="setInflationModel" />
-  <simple-dialog :ping='lookupFederationPing' operation='federation' :model="lookupFederationModel" />
-  <trust-token-dialog :ping='trustDialogPing' :model="trustDialogModel" />
-  <add-remove-signer :ping='addRemoveSignerDialogPing' :model="addRemoveSignerDialogModel" />
-  <send-assets-dialog :ping='sendAssetsDialogPing' :model="sendAssetsDialogModel" />
-  <manage-offer-dialog :ping='manageOfferDialogPing' :model="manageOfferDialogModel" />
-  <buy-asset-dialog :ping='buyAssetDialogPing' :model="buyAssetDialogModel" />
-  <show-offers-dialog :ping='showOffersDialogPing' :model="showOffersDialogModel" />
-  <allow-trust-dialog :ping='allowTrustDialogPing' :model='allowTrustDialogModel' />
+  <manage-data-dialog
+    :ping='manageDataPing'
+    :model="manageDataModel"
+  />
+  <merge-dialog
+    :ping='mergeDialogPing'
+    :model="mergeDialogModel"
+  />
+  <simple-dialog
+    :ping='setDomainPing'
+    operation='domain'
+    :model="setDomainModel"
+  />
+  <simple-dialog
+    :ping='setInflationPing'
+    operation='inflation'
+    :model="setInflationModel"
+  />
+  <simple-dialog
+    :ping='lookupFederationPing'
+    operation='federation'
+    :model="lookupFederationModel"
+  />
+  <trust-token-dialog
+    :ping='trustDialogPing'
+    :model="trustDialogModel"
+  />
+  <add-remove-signer
+    :ping='addRemoveSignerDialogPing'
+    :model="addRemoveSignerDialogModel"
+  />
+  <send-assets-dialog
+    :ping='sendAssetsDialogPing'
+    :model="sendAssetsDialogModel"
+  />
+  <manage-offer-dialog
+    :ping='manageOfferDialogPing'
+    :model="manageOfferDialogModel"
+  />
+  <buy-asset-dialog
+    :ping='buyAssetDialogPing'
+    :model="buyAssetDialogModel"
+  />
+  <show-offers-dialog
+    :ping='showOffersDialogPing'
+    :model="showOffersDialogModel"
+  />
+  <allow-trust-dialog
+    :ping='allowTrustDialogPing'
+    :model='allowTrustDialogModel'
+  />
 </div>
 </template>
 
