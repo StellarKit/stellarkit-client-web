@@ -7,12 +7,12 @@
   <div class='top-controls'>
     <div class='button-group'>
       <v-btn
-        round
+        outline
         small
         @click="sendAssetsDialogPing = !sendAssetsDialogPing"
       >Send Asset</v-btn>
       <v-btn
-        round
+        outline
         small
         @click="addRemoveSignerDialogPing = !addRemoveSignerDialogPing"
       >Add/Remove Signer</v-btn>
@@ -22,7 +22,7 @@
         bottom
       >
         <v-btn
-          round
+          outline
           small
           slot='activator'
           @click="mergeDialogPing = !mergeDialogPing"
@@ -35,7 +35,7 @@
         bottom
       >
         <v-btn
-          round
+          outline
           small
           slot='activator'
           @click="trustDialogPing = !trustDialogPing"
@@ -44,43 +44,43 @@
       </v-tooltip>
 
       <v-btn
-        round
+        outline
         small
         @click="manageOfferDialogPing = !manageOfferDialogPing"
       >Manage Offer</v-btn>
       <v-btn
-        round
+        outline
         small
         @click="buyAssetDialogPing = !buyAssetDialogPing"
       >Buy Asset</v-btn>
       <v-btn
-        round
+        outline
         small
         @click="showOffersDialogPing = !showOffersDialogPing"
       >Show Offers</v-btn>
       <v-btn
-        round
+        outline
         small
         @click="allowTrustDialogPing = !allowTrustDialogPing"
       >Allow Trust</v-btn>
 
       <v-btn
-        round
+        outline
         small
         @click="setDomainPing = !setDomainPing"
       >Set Domain</v-btn>
       <v-btn
-        round
+        outline
         small
         @click="setInflationPing = !setInflationPing"
       >Set Inflation Destination</v-btn>
       <v-btn
-        round
+        outline
         small
         @click="lookupFederationPing = !lookupFederationPing"
       >Federation Lookup</v-btn>
       <v-btn
-        round
+        outline
         small
         @click="manageDataPing = !manageDataPing"
       >Manage Data</v-btn>
@@ -90,7 +90,7 @@
         :transition=false
       >
         <v-btn
-          round
+          outline
           small
           :ripple=false
           slot="activator"
@@ -118,7 +118,7 @@
       </v-menu>
 
       <v-btn
-        round
+        outline
         small
         @click="saveSecretDialogPing = !saveSecretDialogPing"
       >Save/Print Keys</v-btn>
