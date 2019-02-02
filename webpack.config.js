@@ -27,7 +27,8 @@ let common = {
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       title: 'Stellar Army',
-      template: 'src/prod/index.html'
+      template: 'src/prod/index.html',
+      favicon: 'favicon/favicon.ico'
     })
   ],
   module: {
