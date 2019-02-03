@@ -253,6 +253,10 @@ export default {
           this.model = new ReusableStellarViewsModel()
           this.model.fundingMessage = 'Choose an account to pay the transaction fee'
 
+          // for creating a new account using a vanity secret key
+          this.model.textValueLabel = 'Secret key (optional)'
+          this.model.textValueHint = 'Leave blank for random key pair. Used for creating an account on a personalized/vanity address'
+
           this.newAccountDialogPing = !this.newAccountDialogPing
           break
         default:

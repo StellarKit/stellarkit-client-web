@@ -97,6 +97,7 @@
             v-on:toast='displayToast'
             :model="model"
             :showFunding=true
+            :showTextValue=true
             :showAccountName=true
             :showAmount=true
           />
@@ -291,11 +292,14 @@ export default {
       const accountName = this.dialogAccounts().accountName()
       const amount = this.dialogAccounts().amount()
 
+      // used when providing a vanity address to create
+      const secretKey = this.dialogAccounts().textValue()
+
       if (fundingWallet) {
         this.loading = true
 
         // create issuer
-        StellarUtils.newAccount(fundingWallet, String(amount), accountName)
+        StellarUtils.newAccount(fundingWallet, String(amount), accountName, null, secretKey)
           .then((accountInfo) => {
             this.accountCreated(accountInfo)
           })

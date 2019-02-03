@@ -147,8 +147,14 @@ class StellarUtils {
   }
 
   // returns {account: newAccount, keypair: keypair}
-  newAccount(sourceWallet, startingBalance, name = null, tag = null) {
-    const keypair = StellarSdk.Keypair.random()
+  newAccount(sourceWallet, startingBalance, name = null, tag = null, secretKey = null) {
+    let keypair
+
+    if (Helper.strOK(secretKey)) {
+      keypair = StellarSdk.Keypair.fromSecret(secretKey)
+    } else {
+      keypair = StellarSdk.Keypair.random()
+    }
 
     Helper.debugLog('creating account...')
     Helper.debugLog(keypair.publicKey())
