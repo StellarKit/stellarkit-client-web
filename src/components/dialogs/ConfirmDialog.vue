@@ -1,21 +1,52 @@
 <template>
-<v-dialog lazy persistent v-model='visible' scrollable @keydown.esc="visible = false" max-width="400">
+<v-dialog
+  lazy
+  persistent
+  v-model='visible'
+  scrollable
+  @keydown.esc="visible = false"
+  max-width="400"
+>
   <div class='main-container'>
-    <dialog-titlebar :title=title v-on:close='visible = false' />
+    <dialog-titlebar
+      :title=title
+      v-on:close='visible = false'
+    />
 
     <div class='confirm-dialog-contents'>
       <div class='main-message'>
         {{message}}
       </div>
-      <v-checkbox label="I understand" v-model="confirmed"></v-checkbox>
+      <v-checkbox
+        label="I understand"
+        v-model="confirmed"
+      ></v-checkbox>
 
       <div class='button-holder'>
-        <v-tooltip open-delay='200' bottom>
-          <v-btn round small slot="activator" @click="visible = false">Cancel</v-btn>
+        <v-tooltip
+          open-delay='200'
+          bottom
+        >
+          <v-btn
+            round
+            small
+            slot="activator"
+            @click="visible = false"
+          >Cancel</v-btn>
           <span>Cancel</span>
         </v-tooltip>
-        <v-tooltip open-delay='200' bottom>
-          <v-btn round small color='error' slot="activator" @click="buttonClick('ok')" :disabled="!confirmed">{{okTitle}}</v-btn>
+        <v-tooltip
+          open-delay='200'
+          bottom
+        >
+          <v-btn
+            round
+            small
+            color='error'
+            slot="activator"
+            @click="buttonClick('ok')"
+            :disabled="!confirmed"
+          >{{okTitle}}</v-btn>
           <span>Confirm</span>
         </v-tooltip>
       </div>

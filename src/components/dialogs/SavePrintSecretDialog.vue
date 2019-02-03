@@ -1,14 +1,34 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="480">
+<v-dialog
+  lazy
+  v-model='visible'
+  scrollable
+  @keydown.esc="visible = false"
+  max-width="480"
+>
   <div class='main-container'>
-    <dialog-titlebar :title=title v-on:close='visible = false' />
+    <dialog-titlebar
+      :title=title
+      v-on:close='visible = false'
+    />
 
     <div class='dialog-contents'>
       <div class='top-dialog-text'>Don't loose these keys! Print or save them to a secure USB or hard disk</div>
 
-      <v-select :items="accountsUI" item-text='name' v-model="selectedSource" label="Account" return-object max-height="600"></v-select>
+      <v-select
+        :items="accountsUI"
+        item-text='name'
+        v-model="selectedSource"
+        label="Account"
+        return-object
+        max-height="600"
+      ></v-select>
 
-      <div class='operations-item' v-for="key in Array.from(summaryMap.keys())" :key=key>
+      <div
+        class='operations-item'
+        v-for="key in Array.from(summaryMap.keys())"
+        :key=key
+      >
         <div class='item-name'>
           {{key}}:
         </div>
@@ -18,17 +38,38 @@
       </div>
 
       <div class='buttons-area'>
-        <v-tooltip open-delay='200' bottom>
-          <v-btn color='primary' round slot="activator" @click="buttonClick('save-keys')">Save Keys...</v-btn>
+        <v-tooltip
+          open-delay='200'
+          bottom
+        >
+          <v-btn
+            color='primary'
+            round
+            slot="activator"
+            @click="buttonClick('save-keys')"
+          >Save Keys...</v-btn>
           <span>Save the keys to a file on a USB or disk</span>
         </v-tooltip>
-        <v-tooltip open-delay='200' bottom>
-          <v-btn color='primary' round slot="activator" @click="buttonClick('print-keys')">Print Keys...</v-btn>
+        <v-tooltip
+          open-delay='200'
+          bottom
+        >
+          <v-btn
+            color='primary'
+            round
+            slot="activator"
+            @click="buttonClick('print-keys')"
+          >Print Keys...</v-btn>
           <span>Print the keys for safety</span>
         </v-tooltip>
       </div>
     </div>
-    <toast-component :absolute=true location='save-keys-dialog' :bottom=false :top=true />
+    <toast-component
+      :absolute=true
+      location='save-keys-dialog'
+      :bottom=false
+      :top=true
+    />
   </div>
 </v-dialog>
 </template>

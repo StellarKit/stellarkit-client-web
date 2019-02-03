@@ -10,37 +10,37 @@
     >
       {{buttonTitle()}}
       <v-icon>&#xE5C5;</v-icon>
-      </v-btn>
-      <v-list dense>
-        <v-list-tile
-          v-for="item in items"
-          :key="item.title + (item.main ? 'main':'test')"
-          @click="menuSelected(item)"
-        >
-          <div class='network-menu-item'>
-            <div class='menu-tile-title'>{{item.title}}</div>
+    </v-btn>
+    <v-list dense>
+      <v-list-tile
+        v-for="item in items"
+        :key="item.title + (item.main ? 'main':'test')"
+        @click="menuSelected(item)"
+      >
+        <div class='network-menu-item'>
+          <div class='menu-tile-title'>{{item.title}}</div>
 
-            <div
-              v-if='item.main'
-              class='network-main'
-            >PUBLIC</div>
+          <div
+            v-if='item.main'
+            class='network-main'
+          >PUBLIC</div>
           <div
             v-else
             class='network-test'
           >TEST</div>
-</div>
-</v-list-tile>
-</v-list>
-</v-menu>
-<div class='network-string'>{{serverURL()}}</div>
-<v-btn
-  v-if='signOut'
-  small
-  outline
-  class='tiny-button'
-  color='primary'
-  @click="sendSignOut()"
->Sign Out</v-btn>
+        </div>
+      </v-list-tile>
+    </v-list>
+  </v-menu>
+  <div class='network-string'>{{serverURL()}}</div>
+  <v-btn
+    v-if='signOut'
+    small
+    outline
+    class='tiny-button'
+    color='primary'
+    @click="sendSignOut()"
+  >Sign Out</v-btn>
   <v-btn
     v-else
     small
@@ -49,7 +49,7 @@
     color='primary'
     @click="horizonMetrics()"
   >Horizon Metrics</v-btn>
-    </div>
+</div>
 </template>
 
 <script>

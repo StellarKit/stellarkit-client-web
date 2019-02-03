@@ -1,13 +1,33 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog
+  lazy
+  v-model='visible'
+  scrollable
+  @keydown.esc="visible = false"
+  max-width="600"
+>
   <div class='main-container'>
-    <dialog-titlebar :title=title v-on:close='visible = false' />
+    <dialog-titlebar
+      :title=title
+      v-on:close='visible = false'
+    />
 
     <div class='expansion-contents'>
       <v-expansion-panel class='custom-expansion-panel'>
-        <v-expansion-panel-content v-for="(item,i) in items" v-bind:value="i === 0" :key="i">
-          <div slot="header" class='expansion-title' v-html='item.title'></div>
-          <div class='expansion-message' v-html='item.content'></div>
+        <v-expansion-panel-content
+          v-for="(item,i) in items"
+          v-bind:value="i === 0"
+          :key="i"
+        >
+          <div
+            slot="header"
+            class='expansion-title'
+            v-html='item.title'
+          ></div>
+          <div
+            class='expansion-message'
+            v-html='item.content'
+          ></div>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </div>
@@ -33,7 +53,7 @@ export default {
     }
   },
   watch: {
-    ping: function () {
+    ping: function() {
       this.visible = true
     }
   },

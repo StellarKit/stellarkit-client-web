@@ -1,7 +1,16 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog
+  lazy
+  v-model='visible'
+  scrollable
+  @keydown.esc="visible = false"
+  max-width="600"
+>
   <div class='main-container'>
-    <dialog-titlebar :title=title v-on:close='visible = false' />
+    <dialog-titlebar
+      :title=title
+      v-on:close='visible = false'
+    />
 
     <div class='help-contents'>
       <div class='help-text'>
@@ -9,19 +18,56 @@
       </div>
       <div class='help-email'>
         <div class='balance-fields'>
-          <v-text-field hide-details label='Asset starting balance' v-model.trim="tokenBalance" @keyup.enter="createAccount()" ref='input'></v-text-field>
-          <v-text-field hide-details label='XLM starting balance' v-model.number="xlmBalance" type='number' @keyup.enter="createAccount()"></v-text-field>
+          <v-text-field
+            hide-details
+            label='Asset starting balance'
+            v-model.trim="tokenBalance"
+            @keyup.enter="createAccount()"
+            ref='input'
+          ></v-text-field>
+          <v-text-field
+            hide-details
+            label='XLM starting balance'
+            v-model.number="xlmBalance"
+            type='number'
+            @keyup.enter="createAccount()"
+          ></v-text-field>
         </div>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createAccount' :model="model" v-on:toast='displayToast' :showAsset=true :showSource=true :showFunding=true :showAccountName=true :showTimeLock=true />
+        <dialog-accounts
+          ref='dialogAccounts'
+          v-on:enter-key-down='createAccount'
+          :model="model"
+          v-on:toast='displayToast'
+          :showAsset=true
+          :showSource=true
+          :showFunding=true
+          :showAccountName=true
+          :showTimeLock=true
+        />
       </div>
       <div class='button-holder'>
-        <v-tooltip open-delay='200' bottom>
-          <v-btn round small color='primary' slot="activator" @click="createAccount()" :loading="loading">Create Account</v-btn>
+        <v-tooltip
+          open-delay='200'
+          bottom
+        >
+          <v-btn
+            round
+            small
+            color='primary'
+            slot="activator"
+            @click="createAccount()"
+            :loading="loading"
+          >Create Account</v-btn>
           <span>Create Token</span>
         </v-tooltip>
       </div>
 
-      <toast-component :absolute=true location='create-account-dialog' :bottom=false :top=true />
+      <toast-component
+        :absolute=true
+        location='create-account-dialog'
+        :bottom=false
+        :top=true
+      />
     </div>
   </div>
 </v-dialog>

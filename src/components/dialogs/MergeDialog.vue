@@ -1,7 +1,16 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog
+  lazy
+  v-model='visible'
+  scrollable
+  @keydown.esc="visible = false"
+  max-width="600"
+>
   <div class='main-container'>
-    <dialog-titlebar :title=title v-on:close='visible = false' />
+    <dialog-titlebar
+      :title=title
+      v-on:close='visible = false'
+    />
 
     <div class='help-contents'>
       <div class='help-text'>
@@ -11,16 +20,37 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='mergeAccounts' :model="model" v-on:toast='displayToast' :showSource=true :showDest=true />
+        <dialog-accounts
+          ref='dialogAccounts'
+          v-on:enter-key-down='mergeAccounts'
+          :model="model"
+          v-on:toast='displayToast'
+          :showSource=true
+          :showDest=true
+        />
       </div>
       <div class='button-holder'>
-        <v-tooltip open-delay='200' bottom>
-          <v-btn round color='primary' slot="activator" @click="mergeAccounts()" :loading="loading">Merge into Destination</v-btn>
+        <v-tooltip
+          open-delay='200'
+          bottom
+        >
+          <v-btn
+            round
+            color='primary'
+            slot="activator"
+            @click="mergeAccounts()"
+            :loading="loading"
+          >Merge into Destination</v-btn>
           <span>Merge source assets into destination</span>
         </v-tooltip>
       </div>
 
-      <toast-component :absolute=true location='trust-token-dialog' :bottom=false :top=true />
+      <toast-component
+        :absolute=true
+        location='trust-token-dialog'
+        :bottom=false
+        :top=true
+      />
     </div>
   </div>
 </v-dialog>

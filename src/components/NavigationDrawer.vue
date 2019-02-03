@@ -1,7 +1,16 @@
 <template>
-<v-navigation-drawer class='navigation-drawer' absolute clipped temporary v-model="drawer">
+<v-navigation-drawer
+  class='navigation-drawer'
+  absolute
+  clipped
+  temporary
+  v-model="drawer"
+>
   <div>
-    <div class='list-header-item' @click="clickItem()">
+    <div
+      class='list-header-item'
+      @click="clickItem()"
+    >
       <div class="title">
         {{applicationName}}
       </div>
@@ -9,7 +18,11 @@
   </div>
   <v-divider></v-divider>
   <v-list>
-    <v-list-tile v-for="item in items" :key="item.title" @click="clickItem(item)">
+    <v-list-tile
+      v-for="item in items"
+      :key="item.title"
+      @click="clickItem(item)"
+    >
       <div class='list-item-icon'>
         <v-icon>{{item.icon}}</v-icon>
       </div>
@@ -18,9 +31,18 @@
       </v-list-tile-content>
     </v-list-tile>
   </v-list>
-  <donate-dialog :ping='showDonatePing' :donationPublicKey='donationPublicKey' />
-  <help-dialog :ping='showHelpPing' title='Help' />
-  <about-dialog :ping='showAboutPing' title='About' />
+  <donate-dialog
+    :ping='showDonatePing'
+    :donationPublicKey='donationPublicKey'
+  />
+  <help-dialog
+    :ping='showHelpPing'
+    title='Help'
+  />
+  <about-dialog
+    :ping='showAboutPing'
+    title='About'
+  />
 </v-navigation-drawer>
 </template>
 

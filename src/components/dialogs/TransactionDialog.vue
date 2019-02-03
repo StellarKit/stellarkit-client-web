@@ -1,16 +1,37 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog
+  lazy
+  v-model='visible'
+  scrollable
+  @keydown.esc="visible = false"
+  max-width="600"
+>
   <div class='main-container'>
-    <dialog-titlebar :title=title v-on:close='visible = false' />
+    <dialog-titlebar
+      :title=title
+      v-on:close='visible = false'
+    />
 
     <div class='help-contents'>
       <textarea v-model="editableTransaction"></textarea>
       <div>{{statusMessage}}</div>
 
       <div class='button-holder'>
-        <v-btn round small color='primary' slot="activator" @click="submitTransaction()" :loading="loadingTransaction">Submit</v-btn>
+        <v-btn
+          round
+          small
+          color='primary'
+          slot="activator"
+          @click="submitTransaction()"
+          :loading="loadingTransaction"
+        >Submit</v-btn>
       </div>
-      <toast-component :absolute=true location='transaction-dialog' :bottom=false :top=true />
+      <toast-component
+        :absolute=true
+        location='transaction-dialog'
+        :bottom=false
+        :top=true
+      />
     </div>
   </div>
 </v-dialog>

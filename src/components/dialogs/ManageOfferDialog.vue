@@ -1,20 +1,54 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog
+  lazy
+  v-model='visible'
+  scrollable
+  @keydown.esc="visible = false"
+  max-width="600"
+>
   <div class='main-container'>
-    <dialog-titlebar :title=title v-on:close='visible = false' />
+    <dialog-titlebar
+      :title=title
+      v-on:close='visible = false'
+    />
 
     <div class='help-contents'>
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='manageOffer' v-on:toast='displayToast' :model="model" :showManageOffer=true :showFunding=true :showSource=true :showBuyingAsset=true :showSellingAsset=true />
+        <dialog-accounts
+          ref='dialogAccounts'
+          v-on:enter-key-down='manageOffer'
+          v-on:toast='displayToast'
+          :model="model"
+          :showManageOffer=true
+          :showFunding=true
+          :showSource=true
+          :showBuyingAsset=true
+          :showSellingAsset=true
+        />
       </div>
       <div class='button-holder'>
-        <v-tooltip open-delay='200' bottom>
-          <v-btn round small color='primary' slot="activator" @click="manageOffer()" :loading="loading">Post Offer</v-btn>
+        <v-tooltip
+          open-delay='200'
+          bottom
+        >
+          <v-btn
+            round
+            small
+            color='primary'
+            slot="activator"
+            @click="manageOffer()"
+            :loading="loading"
+          >Post Offer</v-btn>
           <span>Post an offer to Stellar</span>
         </v-tooltip>
       </div>
 
-      <toast-component :absolute=true location='manage-offer-dialog' :bottom=false :top=true />
+      <toast-component
+        :absolute=true
+        location='manage-offer-dialog'
+        :bottom=false
+        :top=true
+      />
     </div>
   </div>
 </v-dialog>

@@ -1,24 +1,64 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog
+  lazy
+  v-model='visible'
+  scrollable
+  @keydown.esc="visible = false"
+  max-width="600"
+>
   <div class='main-container'>
-    <dialog-titlebar :title=title v-on:close='visible = false' />
+    <dialog-titlebar
+      :title=title
+      v-on:close='visible = false'
+    />
 
     <div class='help-contents'>
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='showOffers' :model="model" v-on:toast='displayToast' :showSource=true />
+        <dialog-accounts
+          ref='dialogAccounts'
+          v-on:enter-key-down='showOffers'
+          :model="model"
+          v-on:toast='displayToast'
+          :showSource=true
+        />
       </div>
       <div class='button-holder'>
-        <v-tooltip open-delay='200' bottom>
-          <v-btn round small color='secondary' slot="activator" @click="deleteOffers()" :loading="loading">Delete Offers</v-btn>
+        <v-tooltip
+          open-delay='200'
+          bottom
+        >
+          <v-btn
+            round
+            small
+            color='secondary'
+            slot="activator"
+            @click="deleteOffers()"
+            :loading="loading"
+          >Delete Offers</v-btn>
           <span>Delete offers for the source account</span>
         </v-tooltip>
-        <v-tooltip open-delay='200' bottom>
-          <v-btn round small color='primary' slot="activator" @click="showOffers()" :loading="loading">Show Offers</v-btn>
+        <v-tooltip
+          open-delay='200'
+          bottom
+        >
+          <v-btn
+            round
+            small
+            color='primary'
+            slot="activator"
+            @click="showOffers()"
+            :loading="loading"
+          >Show Offers</v-btn>
           <span>Show offers for the source account</span>
         </v-tooltip>
       </div>
 
-      <toast-component :absolute=true location='manage-offer-dialog' :bottom=false :top=true />
+      <toast-component
+        :absolute=true
+        location='manage-offer-dialog'
+        :bottom=false
+        :top=true
+      />
     </div>
   </div>
 </v-dialog>

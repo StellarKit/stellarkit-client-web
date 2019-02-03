@@ -1,17 +1,32 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="500">
+<v-dialog
+  lazy
+  v-model='visible'
+  scrollable
+  @keydown.esc="visible = false"
+  max-width="500"
+>
   <div class='main-container'>
-    <dialog-titlebar :title=title v-on:close='visible = false' />
+    <dialog-titlebar
+      :title=title
+      v-on:close='visible = false'
+    />
 
     <!-- added the v-if visible here to kill the animation when dialog closed -->
-    <div v-if='visible' class='main-content'>
+    <div
+      v-if='visible'
+      class='main-content'
+    >
       <div id="rainbow"></div>
 
       <div class='contact-info'>
         <a href='mailto:steve@distantfutu.re'>steve@distantfutu.re</a>San Francisco, CA
       </div>
       <div class='initials-text'>
-        <a href='https://tripping.tech' target="_blank">LSD</a>
+        <a
+          href='https://tripping.tech'
+          target="_blank"
+        >LSD</a>
       </div>
     </div>
 

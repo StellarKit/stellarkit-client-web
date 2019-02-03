@@ -1,20 +1,55 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog
+  lazy
+  v-model='visible'
+  scrollable
+  @keydown.esc="visible = false"
+  max-width="600"
+>
   <div class='main-container'>
-    <dialog-titlebar :title=title v-on:close='visible = false' />
+    <dialog-titlebar
+      :title=title
+      v-on:close='visible = false'
+    />
 
     <div class='help-contents'>
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='buyAsset' v-on:toast='displayToast' :model="model" :showBuyOffer=true :showFunding=true :showSigner=true :showSource=true :showBuyingAsset=true :showSellingAsset=true />
+        <dialog-accounts
+          ref='dialogAccounts'
+          v-on:enter-key-down='buyAsset'
+          v-on:toast='displayToast'
+          :model="model"
+          :showBuyOffer=true
+          :showFunding=true
+          :showSigner=true
+          :showSource=true
+          :showBuyingAsset=true
+          :showSellingAsset=true
+        />
       </div>
       <div class='button-holder'>
-        <v-tooltip open-delay='200' bottom>
-          <v-btn round small color='primary' slot="activator" @click="buyAsset()" :loading="loading">Buy Asset</v-btn>
+        <v-tooltip
+          open-delay='200'
+          bottom
+        >
+          <v-btn
+            round
+            small
+            color='primary'
+            slot="activator"
+            @click="buyAsset()"
+            :loading="loading"
+          >Buy Asset</v-btn>
           <span>Buy an asset</span>
         </v-tooltip>
       </div>
 
-      <toast-component :absolute=true location='manage-offer-dialog' :bottom=false :top=true />
+      <toast-component
+        :absolute=true
+        location='manage-offer-dialog'
+        :bottom=false
+        :top=true
+      />
     </div>
   </div>
 </v-dialog>

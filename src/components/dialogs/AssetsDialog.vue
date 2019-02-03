@@ -1,7 +1,16 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog
+  lazy
+  v-model='visible'
+  scrollable
+  @keydown.esc="visible = false"
+  max-width="600"
+>
   <div class='main-container'>
-    <dialog-titlebar :title=title v-on:close='visible = false' />
+    <dialog-titlebar
+      :title=title
+      v-on:close='visible = false'
+    />
 
     <div class='asset-contents'>
       <div class='asset-text'>
@@ -9,16 +18,49 @@
       </div>
 
       <div class='asset-contents-inner'>
-        <v-select hide-details :items="assets" item-value='symbol' item-text='symbol' v-model='selectedAssetModel' v-on:input='typingSymbol' return-object combobox clearable label="Symbol" autocomplete max-height="600"></v-select>
-        <v-text-field hide-details label='Issuer' v-model.trim="issuer" @keyup.enter="addAsset()"></v-text-field>
+        <v-select
+          hide-details
+          :items="assets"
+          item-value='symbol'
+          item-text='symbol'
+          v-model='selectedAssetModel'
+          v-on:input='typingSymbol'
+          return-object
+          combobox
+          clearable
+          label="Symbol"
+          autocomplete
+          max-height="600"
+        ></v-select>
+        <v-text-field
+          hide-details
+          label='Issuer'
+          v-model.trim="issuer"
+          @keyup.enter="addAsset()"
+        ></v-text-field>
       </div>
 
       <div class='button-holder'>
-        <v-btn round color='secondary' slot="activator" @click="deleteAsset()">Delete Asset</v-btn>
-        <v-btn round color='primary' slot="activator" @click="addAsset()">Add Asset</v-btn>
+        <v-btn
+          round
+          color='secondary'
+          slot="activator"
+          @click="deleteAsset()"
+        >Delete Asset</v-btn>
+        <v-btn
+          round
+          color='primary'
+          slot="activator"
+          @click="addAsset()"
+        >Add Asset</v-btn>
       </div>
 
-      <toast-component :absolute=true location='data-dialog' :bottom=false :top=true />
+      <toast-component
+        :absolute=true
+        location='data-dialog'
+        :bottom=false
+        :top=true
+      />
     </div>
   </div>
 </v-dialog>

@@ -1,15 +1,26 @@
 <template>
 <div>
   <div class='instructions-header'>
-    <v-btn dark flat class='tiny-button' @click="slotVisible = !slotVisible">Help
+    <v-btn
+      dark
+      flat
+      class='tiny-button'
+      @click="slotVisible = !slotVisible"
+    >Help
       <v-icon>&#xE5C5;</v-icon>
     </v-btn>
     <div class='centered-title'>
       {{pageTitle}}
     </div>
-    <div class='experiments-button' @click='showExperiments'></div>
+    <div
+      class='experiments-button'
+      @click='showExperiments'
+    ></div>
   </div>
-  <div v-if='slotVisible' class='slot-hider'>
+  <div
+    v-if='slotVisible'
+    class='slot-hider'
+  >
     <slot></slot>
   </div>
 </div>

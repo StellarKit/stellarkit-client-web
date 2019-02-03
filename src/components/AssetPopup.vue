@@ -4,15 +4,27 @@
     {{title}}:
   </div>
   <v-menu offset-y>
-    <v-btn flat color='primary' class='custom-menu-button' slot="activator">
+    <v-btn
+      flat
+      color='primary'
+      class='custom-menu-button'
+      slot="activator"
+    >
       <div>{{getTitle()}}</div>
       <v-icon>&#xE5C5;</v-icon>
     </v-btn>
     <v-list dense>
-      <v-list-tile v-for="asset of assets" :key="asset.symbol + asset.issuer" @click="menuClick(asset)">
+      <v-list-tile
+        v-for="asset of assets"
+        :key="asset.symbol + asset.issuer"
+        @click="menuClick(asset)"
+      >
         <div>{{asset.symbol}}</div>
       </v-list-tile>
-      <v-list-tile class='edit-assets-item' @click="assetDialogPing = !assetDialogPing">
+      <v-list-tile
+        class='edit-assets-item'
+        @click="assetDialogPing = !assetDialogPing"
+      >
         <div>Edit Assets...</div>
       </v-list-tile>
     </v-list>
@@ -22,7 +34,7 @@
   <assets-dialog :ping='assetDialogPing' />
 </div>
 </template>
-
+ 
 <script>
 import AssetManager from '../js/AssetManager.js'
 import AssetsDialog from './dialogs/AssetsDialog.vue'

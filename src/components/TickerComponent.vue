@@ -1,5 +1,8 @@
 <template>
-<div v-if='valid' class='ticker-box'>
+<div
+  v-if='valid'
+  class='ticker-box'
+>
   <div><span class="dim-title">XLM</span> ${{price}}</div>
   <div :class="[ goingUp ? 'percent-up' : 'percent-down' ]">{{percentChange}}%</div>
   <div>${{volume}} <span class="dim-title">24h</span></div>

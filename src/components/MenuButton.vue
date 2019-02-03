@@ -4,12 +4,21 @@
     {{title}}:
   </div>
   <v-menu offset-y>
-    <v-btn flat color='primary' class='custom-menu-button' slot="activator">
+    <v-btn
+      flat
+      color='primary'
+      class='custom-menu-button'
+      slot="activator"
+    >
       {{getTitle()}}
       <v-icon>&#xE5C5;</v-icon>
     </v-btn>
     <v-list dense>
-      <v-list-tile v-for="(item, index) in items" :key="item.title" @click="menuClick(item, index)">
+      <v-list-tile
+        v-for="(item, index) in items"
+        :key="item.title"
+        @click="menuClick(item, index)"
+      >
         <div>{{item.title}}</div>
       </v-list-tile>
     </v-list>

@@ -1,7 +1,16 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog
+  lazy
+  v-model='visible'
+  scrollable
+  @keydown.esc="visible = false"
+  max-width="600"
+>
   <div class='main-container'>
-    <dialog-titlebar :title=title v-on:close='visible = false' />
+    <dialog-titlebar
+      :title=title
+      v-on:close='visible = false'
+    />
 
     <div class='help-contents'>
       <div class='simple-header'>
@@ -10,21 +19,45 @@
       </div>
 
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='doOperation' :model="model" v-on:toast='displayToast' :showSource=showSource :showFunding=showFunding :showSigner=showSigner :showTextValue=true />
+        <dialog-accounts
+          ref='dialogAccounts'
+          v-on:enter-key-down='doOperation'
+          :model="model"
+          v-on:toast='displayToast'
+          :showSource=showSource
+          :showFunding=showFunding
+          :showSigner=showSigner
+          :showTextValue=true
+        />
       </div>
       <div class='button-holder'>
-        <v-tooltip open-delay='200' bottom>
-          <v-btn round small color='primary' slot="activator" @click="doOperation()" :loading="loading">{{buttonTitle}}</v-btn>
+        <v-tooltip
+          open-delay='200'
+          bottom
+        >
+          <v-btn
+            round
+            small
+            color='primary'
+            slot="activator"
+            @click="doOperation()"
+            :loading="loading"
+          >{{buttonTitle}}</v-btn>
           <span>{{tooltip}}</span>
         </v-tooltip>
       </div>
 
-      <toast-component :absolute=true location='attribute-dialog' :bottom=false :top=true />
+      <toast-component
+        :absolute=true
+        location='attribute-dialog'
+        :bottom=false
+        :top=true
+      />
     </div>
   </div>
 </v-dialog>
 </template>
-
+ 
 <script>
 import Helper from '../../js/helper.js'
 import {

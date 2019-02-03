@@ -1,7 +1,15 @@
 <template>
 <div>
-  <v-menu offset-y @click.native.stop>
-    <v-btn icon :small='small' :class="{ 'small-button': small}" slot="activator">
+  <v-menu
+    offset-y
+    @click.native.stop
+  >
+    <v-btn
+      icon
+      :small='small'
+      :class="{ 'small-button': small}"
+      slot="activator"
+    >
       <v-icon>&#xE5D4;</v-icon>
     </v-btn>
     <v-list dense>
@@ -29,13 +37,34 @@
     </v-list>
   </v-menu>
 
-  <history-dialog :ping='historyDialogPing' :publicKey='publicKey' />
-  <show-offers-dialog :ping='showOffersDialogPing' :model="showOffersDialogModel" />
-  <save-print-secret-dialog :ping='saveSecretDialogPing' :publicKey='publicKey' />
-  <trust-token-dialog :ping='trustDialogPing' :model="trustDialogModel" />
-  <send-assets-dialog :ping='sendAssetsDialogPing' :model="sendAssetsDialogModel" />
-  <manage-offer-dialog :ping='manageOfferDialogPing' :model="manageOfferDialogModel" />
-  <allow-trust-dialog :ping='allowTrustDialogPing' :model='allowTrustDialogModel' />
+  <history-dialog
+    :ping='historyDialogPing'
+    :publicKey='publicKey'
+  />
+  <show-offers-dialog
+    :ping='showOffersDialogPing'
+    :model="showOffersDialogModel"
+  />
+  <save-print-secret-dialog
+    :ping='saveSecretDialogPing'
+    :publicKey='publicKey'
+  />
+  <trust-token-dialog
+    :ping='trustDialogPing'
+    :model="trustDialogModel"
+  />
+  <send-assets-dialog
+    :ping='sendAssetsDialogPing'
+    :model="sendAssetsDialogModel"
+  />
+  <manage-offer-dialog
+    :ping='manageOfferDialogPing'
+    :model="manageOfferDialogModel"
+  />
+  <allow-trust-dialog
+    :ping='allowTrustDialogPing'
+    :model='allowTrustDialogModel'
+  />
 </div>
 </template>
 

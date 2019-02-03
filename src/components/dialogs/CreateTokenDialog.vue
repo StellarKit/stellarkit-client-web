@@ -1,23 +1,57 @@
 <template>
-<v-dialog lazy v-model='visible' scrollable @keydown.esc="visible = false" max-width="600">
+<v-dialog
+  lazy
+  v-model='visible'
+  scrollable
+  @keydown.esc="visible = false"
+  max-width="600"
+>
   <div class='main-container'>
-    <dialog-titlebar :title=title v-on:close='visible = false' />
+    <dialog-titlebar
+      :title=title
+      v-on:close='visible = false'
+    />
 
     <div class='help-contents'>
       <div class='help-text'>
         <div>Give your asset a symbol and create the tokens.</div>
       </div>
       <div class='help-email'>
-        <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='createToken' :model="model" v-on:toast='displayToast' :showSymbol=true :showAmount=true :showFunding=true :showTextValue=true :showAuthFlags=true />
+        <dialog-accounts
+          ref='dialogAccounts'
+          v-on:enter-key-down='createToken'
+          :model="model"
+          v-on:toast='displayToast'
+          :showSymbol=true
+          :showAmount=true
+          :showFunding=true
+          :showTextValue=true
+          :showAuthFlags=true
+        />
       </div>
       <div class='button-holder'>
-        <v-tooltip open-delay='200' bottom>
-          <v-btn round small color='primary' slot="activator" @click="createToken()" :loading="loading">Create Token</v-btn>
+        <v-tooltip
+          open-delay='200'
+          bottom
+        >
+          <v-btn
+            round
+            small
+            color='primary'
+            slot="activator"
+            @click="createToken()"
+            :loading="loading"
+          >Create Token</v-btn>
           <span>Create Token</span>
         </v-tooltip>
       </div>
 
-      <toast-component :absolute=true location='create-token-dialog' :bottom=false :top=true />
+      <toast-component
+        :absolute=true
+        location='create-token-dialog'
+        :bottom=false
+        :top=true
+      />
     </div>
   </div>
 </v-dialog>

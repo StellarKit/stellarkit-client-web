@@ -1,9 +1,20 @@
 <template>
 <div class='main-container'>
   <div class='add-button'>
-    <v-menu v-if='isTestnet()' offset-y :transition=false>
-      <v-btn icon dark slot="activator">
-        <v-tooltip open-delay='800' bottom>
+    <v-menu
+      v-if='isTestnet()'
+      offset-y
+      :transition=false
+    >
+      <v-btn
+        icon
+        dark
+        slot="activator"
+      >
+        <v-tooltip
+          open-delay='800'
+          bottom
+        >
           <v-icon slot='activator'>&#xE147;</v-icon>
           <span>Create new account</span>
         </v-tooltip>
@@ -19,41 +30,87 @@
       </v-list>
     </v-menu>
 
-    <v-btn v-else icon dark @click="accountMenu('other')">
-      <v-tooltip open-delay='800' bottom>
+    <v-btn
+      v-else
+      icon
+      dark
+      @click="accountMenu('other')"
+    >
+      <v-tooltip
+        open-delay='800'
+        bottom
+      >
         <v-icon slot='activator'>&#xE147;</v-icon>
         <span>Create new account</span>
       </v-tooltip>
     </v-btn>
   </div>
 
-  <v-btn class='refresh-button' icon dark @click="refresh()">
-    <v-tooltip open-delay='800' bottom>
+  <v-btn
+    class='refresh-button'
+    icon
+    dark
+    @click="refresh()"
+  >
+    <v-tooltip
+      open-delay='800'
+      bottom
+    >
       <v-icon slot='activator'>&#xE5D5;</v-icon>
       <span>Refresh account balances</span>
     </v-tooltip>
   </v-btn>
 
   <div class='accounts-title'>Accounts - Click for Info</div>
-  <div v-if='items.length === 0' class='zero-accounts'>
+  <div
+    v-if='items.length === 0'
+    class='zero-accounts'
+  >
     Create an account
   </div>
-  <transition-group v-else class='accounts' name="list" tag="div">
-    <div class='account-item' v-for="item in items" @click.stop='clickItem(item)' :key='item.publicKey'>
-      <v-tooltip open-delay='200' bottom>
+  <transition-group
+    v-else
+    class='accounts'
+    name="list"
+    tag="div"
+  >
+    <div
+      class='account-item'
+      v-for="item in items"
+      @click.stop='clickItem(item)'
+      :key='item.publicKey'
+    >
+      <v-tooltip
+        open-delay='200'
+        bottom
+      >
         <div slot="activator">
           <div class='account-name'>{{item.name}}</div>
-          <div v-for="balance in balancesForItem(item)" :key='balance.issuer + balance.symbol'>
+          <div
+            v-for="balance in balancesForItem(item)"
+            :key='balance.issuer + balance.symbol'
+          >
             {{balance.symbol}}: {{balance.amount}}
           </div>
         </div>
         <span>{{item.publicKey}}</span>
       </v-tooltip>
       <div class='action-button-holder'>
-        <actions-menu :small=true :publicKey='item.publicKey' />
+        <actions-menu
+          :small=true
+          :publicKey='item.publicKey'
+        />
       </div>
-      <v-btn class='delete-button' icon small @click.stop='deleteItem(item)'>
-        <v-tooltip open-delay='200' bottom>
+      <v-btn
+        class='delete-button'
+        icon
+        small
+        @click.stop='deleteItem(item)'
+      >
+        <v-tooltip
+          open-delay='200'
+          bottom
+        >
           <v-icon slot="activator">&#xE15C;</v-icon>
           <span>Remove account</span>
         </v-tooltip>
@@ -61,9 +118,18 @@
     </div>
   </transition-group>
 
-  <new-account-dialog :model='model' :ping='newAccountDialogPing' />
+  <new-account-dialog
+    :model='model'
+    :ping='newAccountDialogPing'
+  />
 
-  <confirm-dialog v-on:confirm-dialog-ok='removeAccountConfirmed' :ping='confirmRemoveDialogPing' title='Remove Account?' message='Make sure you saved the secret key! You can later add this account back using the secret key.' okTitle='Remove Account' />
+  <confirm-dialog
+    v-on:confirm-dialog-ok='removeAccountConfirmed'
+    :ping='confirmRemoveDialogPing'
+    title='Remove Account?'
+    message='Make sure you saved the secret key! You can later add this account back using the secret key.'
+    okTitle='Remove Account'
+  />
 </div>
 </template>
 

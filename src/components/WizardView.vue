@@ -3,11 +3,20 @@
   <div class='wizard-title-box'>
     <div class='wizard-steps-menu'>
       <v-menu offset-y>
-        <v-btn icon dark small slot="activator">
+        <v-btn
+          icon
+          dark
+          small
+          slot="activator"
+        >
           <v-icon>&#xE5C5;</v-icon>
         </v-btn>
         <v-list>
-          <v-list-tile v-for="(item, index) in pageTitles" :key="item" @click="menuSelected(index)">
+          <v-list-tile
+            v-for="(item, index) in pageTitles"
+            :key="item"
+            @click="menuSelected(index)"
+          >
             <v-list-tile-content>
               <v-list-tile-title>{{ item }}</v-list-tile-title>
             </v-list-tile-content>
@@ -25,10 +34,22 @@
   </div>
 
   <div class='wizard-bottom-box'>
-    <v-btn round small color='secondary' @click='buttonClick("previous")' :disabled='disablePreviousButton()'>
+    <v-btn
+      round
+      small
+      color='secondary'
+      @click='buttonClick("previous")'
+      :disabled='disablePreviousButton()'
+    >
       Previous
     </v-btn>
-    <v-btn round small color='primary' @click='buttonClick("next")' :disabled='disableNextButton()'>
+    <v-btn
+      round
+      small
+      color='primary'
+      @click='buttonClick("next")'
+      :disabled='disableNextButton()'
+    >
       Next
     </v-btn>
   </div>

@@ -1,14 +1,30 @@
 <template>
 <div class='table-header'>
   {{vars.title}}
-  <v-btn v-if='vars.showAdd' small icon @click='addData'>
+  <v-btn
+    v-if='vars.showAdd'
+    small
+    icon
+    @click='addData'
+  >
     <v-icon>add_circle</v-icon>
   </v-btn>
-  <v-btn v-if='vars.showRefresh' small icon @click='refreshData'>
+  <v-btn
+    v-if='vars.showRefresh'
+    small
+    icon
+    @click='refreshData'
+  >
     <v-icon>refresh</v-icon>
   </v-btn>
   <v-spacer></v-spacer>
-  <v-text-field class='table-textview' append-icon="search" label="Search" hide-details v-model="vars.search"></v-text-field>
+  <v-text-field
+    class='table-textview'
+    append-icon="search"
+    label="Search"
+    hide-details
+    v-model="vars.search"
+  ></v-text-field>
 </div>
 </template>
 

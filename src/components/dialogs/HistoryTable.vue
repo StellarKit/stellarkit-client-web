@@ -1,27 +1,62 @@
 <template>
 <v-card>
   <table-header :vars='headerVars' />
-  <v-data-table :headers="headers" :items="history" :loading='loading' sort-icon='keyboard_arrow_down' :search="headerVars.search" item-key="id" :rows-per-page-items='[15,30,100,{"text":"All","value":-1}]'>
-    <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
-    <template slot="items" slot-scope="props">
+  <v-data-table
+    :headers="headers"
+    :items="history"
+    :loading='loading'
+    sort-icon='keyboard_arrow_down'
+    :search="headerVars.search"
+    item-key="id"
+    :rows-per-page-items='[15,30,100,{"text":"All","value":-1}]'
+  >
+    <v-progress-linear
+      slot="progress"
+      color="blue"
+      indeterminate
+    ></v-progress-linear>
+    <template
+      slot="items"
+      slot-scope="props"
+    >
       <tr @click="props.expanded = !props.expanded">
-         <td>{{ props.item.name }}</td>
-         <td>{{ props.item.value }}</td>
-         <td><v-btn small flat class='mx-0' @click.stop='clickLink(props.item.link)'>link</v-btn></td>
-        </tr>
+        <td>{{ props.item.name }}</td>
+        <td>{{ props.item.value }}</td>
+        <td>
+          <v-btn
+            small
+            flat
+            class='mx-0'
+            @click.stop='clickLink(props.item.link)'
+          >link</v-btn>
+        </td>
+      </tr>
     </template>
 
-    <template slot="expand" slot-scope="props">
+    <template
+      slot="expand"
+      slot-scope="props"
+    >
       <v-card flat>
         nothing yet
-         </v-card>
+      </v-card>
     </template>
 
-    <v-alert slot="no-data" :value="true" color="success" icon="info">
+    <v-alert
+      slot="no-data"
+      :value="true"
+      color="success"
+      icon="info"
+    >
       Sorry, nothing to display here :(
     </v-alert>
 
-    <v-alert slot="no-results" :value="true" color="error" icon="warning">
+    <v-alert
+      slot="no-results"
+      :value="true"
+      color="error"
+      icon="warning"
+    >
       Your search for "{{ headerVars.search }}" found no results.
     </v-alert>
   </v-data-table>
