@@ -6,6 +6,7 @@ const {
 } = require('vue-loader')
 const TerserPlugin = require('terser-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 
 // set to {} for distLib
 let splitChunks = {
@@ -25,10 +26,15 @@ let common = {
   },
   plugins: [
     new VueLoaderPlugin(),
+    new DuplicatePackageCheckerPlugin({
+      strict: true,
+      verbose: true
+    }),
     new HtmlWebpackPlugin({
       title: 'Stellar Army',
       template: 'src/prod/index.html',
-      favicon: 'favicon/favicon.ico'
+      favicon: 'favicon/favicon.ico',
+      hash: true
     })
   ],
   module: {
