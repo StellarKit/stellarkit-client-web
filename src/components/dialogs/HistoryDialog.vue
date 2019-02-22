@@ -20,7 +20,7 @@
     </div>
   </div>
 </v-dialog>
-</template> 
+</template>
 
 <script>
 import {

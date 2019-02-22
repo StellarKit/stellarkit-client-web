@@ -57,7 +57,7 @@
   </div>
 </v-dialog>
 </template>
- 
+
 <script>
 import Helper from '../../js/helper.js'
 import {

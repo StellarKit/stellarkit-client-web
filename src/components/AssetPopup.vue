@@ -34,7 +34,7 @@
   <assets-dialog :ping='assetDialogPing' />
 </div>
 </template>
- 
+
 <script>
 import AssetManager from '../js/AssetManager.js'
 import AssetsDialog from './dialogs/AssetsDialog.vue'
