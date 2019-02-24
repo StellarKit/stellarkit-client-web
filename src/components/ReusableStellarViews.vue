@@ -442,7 +442,7 @@ import AssetPopup from './AssetPopup.vue'
 import {
   StellarWallet,
   LedgerAPI
-} from 'stellar-js-utils'
+} from 'stellarkit-js-utils'
 const StellarSdk = require('stellar-sdk')
 const parse = require('csv-parse/lib/sync')
 

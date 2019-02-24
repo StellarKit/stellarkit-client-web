@@ -73,7 +73,7 @@ import StellarUtils from '../js/StellarUtils.js'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
 import {
   StellarWallet
-} from 'stellar-js-utils'
+} from 'stellarkit-js-utils'
 
 export default {
   mixins: [StellarCommonMixin],

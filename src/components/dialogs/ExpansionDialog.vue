@@ -38,7 +38,7 @@
 <script>
 import {
   DialogTitleBar
-} from 'stellar-js-utils'
+} from 'stellarkit-js-ui'
 
 export default {
   props: ['ping', 'title'],

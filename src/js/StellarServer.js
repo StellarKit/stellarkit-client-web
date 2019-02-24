@@ -3,7 +3,7 @@ import SettingsStore from '../js/SettingsStore.js'
 import {
   HorizonServer,
   StellarAPI
-} from 'stellar-js-utils'
+} from 'stellarkit-js-utils'
 
 export default class StellarServer {
   constructor() {

@@ -50,7 +50,7 @@ import StellarUtils from '../js/StellarUtils.js'
 const StellarSdk = require('stellar-sdk')
 import {
   StellarWallet
-} from 'stellar-js-utils'
+} from 'stellarkit-js-utils'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
 
 export default {

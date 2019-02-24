@@ -13,7 +13,7 @@ import $ from 'jquery'
 import HelperImplementation from './js/HelperImplementation.js'
 import {
   LedgerAPITransport
-} from 'stellar-js-utils'
+} from 'stellarkit-js-utils'
 
 import Vuetify from 'vuetify'
 Vue.use(Vuetify)

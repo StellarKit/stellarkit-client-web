@@ -162,7 +162,7 @@ const $ = require('jquery')
 import StellarUtils from '../js/StellarUtils.js'
 import {
   StellarWallet
-} from 'stellar-js-utils'
+} from 'stellarkit-js-utils'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
 import SettingsStore from '../js/SettingsStore.js'
 

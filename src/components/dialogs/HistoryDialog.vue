@@ -25,7 +25,7 @@
 <script>
 import {
   DialogTitleBar
-} from 'stellar-js-utils'
+} from 'stellarkit-js-ui'
 import HistoryTable from './HistoryTable.vue'
 
 export default {

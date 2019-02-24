@@ -199,7 +199,7 @@ import SavePrintSecretDialog from '../components/dialogs/SavePrintSecretDialog.v
 import {
   StellarWallet,
   LedgerAPI
-} from 'stellar-js-utils'
+} from 'stellarkit-js-utils'
 import ReusableStellarViewsModel from '../components/ReusableStellarViewsModel.js'
 
 export default {

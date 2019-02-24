@@ -49,7 +49,7 @@
 <script>
 import {
   PaymentDialog
-} from 'stellar-js-utils'
+} from 'stellarkit-js-ui'
 import Helper from '../js/helper.js'
 import ExpansionDialog from './dialogs/ExpansionDialog.vue'
 import AboutDialog from './dialogs/AboutDialog.vue'

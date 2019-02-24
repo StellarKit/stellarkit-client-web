@@ -37,7 +37,7 @@
 <script>
 import {
   DialogTitleBar
-} from 'stellar-js-utils'
+} from 'stellarkit-js-ui'
 import {
   TimelineMax,
   TweenMax,

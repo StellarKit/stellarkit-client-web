@@ -37,7 +37,7 @@ import StellarAccounts from '../js/StellarAccounts.js'
 import StellarUtils from '../js/StellarUtils.js'
 import {
   StellarWallet
-} from 'stellar-js-utils'
+} from 'stellarkit-js-utils'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
 
 export default {

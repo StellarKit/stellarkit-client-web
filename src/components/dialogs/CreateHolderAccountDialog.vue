@@ -76,9 +76,11 @@
 <script>
 import Helper from '../../js/helper.js'
 import {
-  DialogTitleBar,
+  DialogTitleBar
+} from 'stellarkit-js-ui'
+import {
   StellarWallet
-} from 'stellar-js-utils'
+} from 'stellarkit-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import StellarAccounts from '../../js/StellarAccounts.js'
 import ToastComponent from '../ToastComponent.vue'

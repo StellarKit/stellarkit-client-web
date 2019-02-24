@@ -38,7 +38,7 @@ import StellarUtils from '../js/StellarUtils.js'
 import StellarAccounts from '../js/StellarAccounts.js'
 import {
   StellarWallet
-} from 'stellar-js-utils'
+} from 'stellarkit-js-utils'
 import SendAssetsDialog from '../components/dialogs/SendAssetsDialog.vue'
 import BuyAssetDialog from '../components/dialogs/BuyAssetDialog.vue'
 import ReusableStellarViewsModel from '../components/ReusableStellarViewsModel.js'

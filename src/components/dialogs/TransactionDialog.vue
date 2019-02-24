@@ -41,7 +41,7 @@
 import Helper from '../../js/helper.js'
 import {
   DialogTitleBar
-} from 'stellar-js-utils'
+} from 'stellarkit-js-ui'
 import StellarCommonMixin from '../StellarCommonMixin.js'
 import StellarUtils from '../../js/StellarUtils.js'
 const StellarSdk = require('stellar-sdk')

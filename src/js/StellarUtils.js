@@ -5,7 +5,7 @@ import Helper from '../js/helper.js'
 import {
   StellarWallet,
   LedgerAPI
-} from 'stellar-js-utils'
+} from 'stellarkit-js-utils'
 import axios from 'axios'
 
 class StellarUtils {

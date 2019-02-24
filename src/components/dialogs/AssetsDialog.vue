@@ -72,7 +72,7 @@ import ToastComponent from '../ToastComponent.vue'
 import AssetManager from '../../js/AssetManager.js'
 import {
   DialogTitleBar
-} from 'stellar-js-utils'
+} from 'stellarkit-js-ui'
 
 export default {
   props: ['ping'],
