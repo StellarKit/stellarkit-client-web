@@ -293,7 +293,7 @@ class StellarUtils {
         // account exists, so friendbot will just fail, do the merge
         const keyPair = StellarSdk.Keypair.random()
 
-        const url = 'https://friendbot.stellar.org' + '?addr=' + keyPair.publicKey()
+        const url = 'https://friendbot.stellar.org' + '?addr=' + encodeURIComponent(keyPair.publicKey())
         return axios.get(url)
           .then((data) => {
             Helper.debugLog(data, 'Success')
