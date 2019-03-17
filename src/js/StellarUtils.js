@@ -340,7 +340,10 @@ class StellarUtils {
     const keyPair = StellarSdk.Keypair.random()
     const accountRec = StellarAccounts.addAccount(keyPair, name)
 
-    const url = 'https://friendbot.stellar.org' + '?addr=' + keyPair.publicKey()
+    const friendbotURL = 'https://horizon-testnet.stellar.org/friendbot'
+    // const friendbotURL = 'http://localhost:8000/friendbot'
+
+    const url = friendbotURL + '?addr=' + keyPair.publicKey()
     return axios.get(url)
       .then((info) => {
         Helper.debugLog(info, 'Success')

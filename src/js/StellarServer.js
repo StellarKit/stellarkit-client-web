@@ -62,7 +62,7 @@ export default class StellarServer {
         result = new HorizonServer('https://horizon.stellar.org', false)
         break
       case 'local':
-        result = new HorizonServer('http://192.168.1.82:8000', true, {
+        result = new HorizonServer('http://localhost:8000', true, {
           allowHttp: true
         })
         break

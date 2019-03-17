@@ -72,16 +72,16 @@ export default {
           id: 'mainnet',
           main: true,
           title: 'Stellar.org'
-          // },
-          // {
-          //   id: 'stellarkit',
-          //   main: false,
-          //   title: 'StellarKit.io'
-          // },
-          // {
-          //   id: 'local',
-          //   main: false,
-          //   title: 'Local server'
+        },
+        // {
+        //   id: 'stellarkit',
+        //   main: false,
+        //   title: 'StellarKit.io'
+        // },
+        {
+          id: 'local',
+          main: false,
+          title: 'localhost:8000'
         }
       ]
     }
