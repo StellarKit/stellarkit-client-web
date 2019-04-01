@@ -33,17 +33,17 @@ export default {
   components: {
     'donate-dialog': PaymentDialog,
     'help-dialog': ExpansionDialog,
-    'about-dialog': AboutDialog,
+    'about-dialog': AboutDialog
   },
   watch: {
     ping: function() {
       this.drawer = true
-    },
+    }
   },
   computed: {
     applicationName: function() {
       return Helper.applicationName()
-    },
+    }
   },
   data() {
     return {
@@ -57,24 +57,24 @@ export default {
         {
           id: 'about',
           title: 'About',
-          icon: 'person',
+          icon: 'person'
         },
         {
           id: 'donate',
           title: 'Donate',
-          icon: 'local_atm',
+          icon: 'local_atm'
         },
         {
           id: 'help',
           title: 'Help',
-          icon: 'help',
+          icon: 'help'
         },
         {
           id: 'github',
           title: 'Source on Github',
-          icon: 'fab fa-github',
-        },
-      ],
+          icon: 'fab fa-github'
+        }
+      ]
     }
   },
   methods: {
@@ -102,8 +102,8 @@ export default {
 
       // hide drawer for every click
       this.drawer = false
-    },
-  },
+    }
+  }
 }
 </script>
 
