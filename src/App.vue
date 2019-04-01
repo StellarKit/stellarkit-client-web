@@ -11,12 +11,15 @@
 import './scss/vuetify/main.styl'
 import SettingsStore from './js/SettingsStore.js'
 import AppMain from './AppMain.vue'
-import fontawesome from '@fortawesome/fontawesome'
-import brands from '@fortawesome/fontawesome-free-brands'
-import solid from '@fortawesome/fontawesome-free-solid'
+ import { fab } from '@fortawesome/free-brands-svg-icons'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
 
 // setup font awesome
-fontawesome.library.add(brands, solid)
+library.add(fab, fas)
+
+// Kicks off the process of finding <i> tags and replacing with <svg>
+dom.watch()
 
 export default {
   components: {
