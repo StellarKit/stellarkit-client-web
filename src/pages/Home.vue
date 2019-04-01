@@ -279,6 +279,6 @@ export default {
 @import '../scss/styles.scss';
 
 .top-controls {
-    padding: 10px 20px;
+    padding: 6px;
 }
 </style>
