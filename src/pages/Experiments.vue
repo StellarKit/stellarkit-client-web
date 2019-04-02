@@ -59,6 +59,28 @@
       </div>
 
       <div class="section-box">
+        <div class="section-title">Redeem Tokens</div>
+
+        <div>Send tokens to the Burn Carbon account to make them inaccessible forever.</div>
+
+        <v-text-field
+          style="width: 100%;"
+          label="Secret Key"
+          placeholder="Example: SCSDLFIJSE9JSFELFJSLDFJSLDFJSLDKFJSLDFJLS"
+          v-model.trim="publicKey"
+          @keyup.enter="requestTokens()"
+        ></v-text-field>
+
+        <v-btn
+          round
+          small
+          color="primary"
+          @click="sendAssetsDialogPing = !sendAssetsDialogPing"
+          :loading="loadingSend"
+        >Trust Asset</v-btn>
+      </div>
+
+      <div class="section-box">
         <div>Sign up for a free account</div>
         <div class="user-buttons">
           <v-btn
