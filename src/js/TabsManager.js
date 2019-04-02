@@ -37,11 +37,11 @@ class TabsManager {
         //   icon: String.fromCharCode('0xE851'),
         //   tooltip: 'Buy token with Bifrost',
         //   path: '/buytoken'
-        // }, {
-        //   icon: String.fromCharCode('0xE1E0'),
-        //   tooltip: 'Experiments',
-        //   path: '/experiments',
-        //   disabled: true
+      }, {
+        icon: String.fromCharCode('0xE1E0'),
+        tooltip: 'Experiments',
+        path: '/experiments'
+        // disabled: true
       }
     ]
   }

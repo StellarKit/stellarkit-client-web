@@ -1,31 +1,55 @@
 <template>
-<div>
-  <account-list :items="accountsUI" />
+  <div>
+    <account-list :items="accountsUI"/>
 
-  <instructions-header>
-    <div>Content coming soon...</div>
-  </instructions-header>
+    <instructions-header>
+      <div>Content coming soon...</div>
+    </instructions-header>
 
-  <div class='main-container'>
-    <div class='user-area'>
-      <div>Sign up for a free account</div>
-      <div class='user-buttons'>
-        <v-btn round small color='primary' @click="createAccount" :loading='loading'>Create Account</v-btn>
-        <v-btn round small color='primary' @click="buyAssetDialogPing = !buyAssetDialogPing" :loading='loadingBuy'>Buy</v-btn>
-        <v-btn round small color='primary' @click="sendAssetsDialogPing = !sendAssetsDialogPing" :loading='loadingSend'>Send</v-btn>
+    <div class="main-container">
+      <div class="user-area">
+        <div>Sign up for a free account</div>
+        <div class="user-buttons">
+          <v-btn
+            round
+            small
+            color="primary"
+            @click="createAccount"
+            :loading="loading"
+          >Create Account</v-btn>
+          <v-btn
+            round
+            small
+            color="primary"
+            @click="buyAssetDialogPing = !buyAssetDialogPing"
+            :loading="loadingBuy"
+          >Buy</v-btn>
+          <v-btn
+            round
+            small
+            color="primary"
+            @click="sendAssetsDialogPing = !sendAssetsDialogPing"
+            :loading="loadingSend"
+          >Send</v-btn>
+        </div>
+      </div>
+
+      <div class="admin-area">
+        <div>Admin</div>
+        <dialog-accounts
+          ref="dialogAccounts"
+          v-on:enter-key-down="adminEnterKey"
+          :model="model"
+          :showSource="true"
+          :showFunding="true"
+          :showAsset="true"
+        />
       </div>
     </div>
 
-    <div class='admin-area'>
-      <div>Admin</div>
-      <dialog-accounts ref='dialogAccounts' v-on:enter-key-down='adminEnterKey' :model="model" :showSource=true :showFunding=true :showAsset=true />
-    </div>
-
+    <send-assets-dialog :ping="sendAssetsDialogPing" :model="model"/>
+    <buy-asset-dialog :ping="buyAssetDialogPing" :model="model"/>
   </div>
-
-  <send-assets-dialog :ping='sendAssetsDialogPing' />
-  <buy-asset-dialog :ping='buyAssetDialogPing' />
-</div>
 </template>
 
 <script>
@@ -36,9 +60,7 @@ import AccountList from '../components/AccountList.vue'
 import ReusableStellarViews from '../components/ReusableStellarViews.vue'
 import StellarUtils from '../js/StellarUtils.js'
 import StellarAccounts from '../js/StellarAccounts.js'
-import {
-  StellarWallet
-} from 'stellarkit-js-utils'
+import { StellarWallet } from 'stellarkit-js-utils'
 import SendAssetsDialog from '../components/dialogs/SendAssetsDialog.vue'
 import BuyAssetDialog from '../components/dialogs/BuyAssetDialog.vue'
 import ReusableStellarViewsModel from '../components/ReusableStellarViewsModel.js'
@@ -70,6 +92,7 @@ export default {
       Helper.debugLog('nothing')
     },
     createAccount() {
+      debugger
       const signerWallet = this.dialogAccounts().sourceWallet()
       const asset = this.dialogAccounts().asset()
       let fundingWallet = this.dialogAccounts().fundingWallet()
@@ -92,7 +115,7 @@ export default {
 
         Helper.debugLog('creating users wallet...')
         StellarUtils.newAccount(fundingWallet, String(startingBalance))
-          .then((accountInfo) => {
+          .then(accountInfo => {
             userWallet = StellarWallet.secret(accountInfo.keypair.secret())
 
             if (!userWallet) {
@@ -101,11 +124,21 @@ export default {
 
             Helper.debugLog('setting trust for token...')
             const trustLimit = 1000000
-            return StellarUtils.changeTrust(userWallet, fundingWallet, asset, String(trustLimit))
+            return StellarUtils.changeTrust(
+              userWallet,
+              fundingWallet,
+              asset,
+              String(trustLimit)
+            )
           })
-          .then((result) => {
+          .then(result => {
             Helper.debugLog('allowing user to hold tokens...')
-            return StellarUtils.allowTrust(issuerWallet, userWallet, asset, true)
+            return StellarUtils.allowTrust(
+              issuerWallet,
+              userWallet,
+              asset,
+              true
+            )
               .then(() => {
                 return null
               })
@@ -114,15 +147,19 @@ export default {
                 return null
               })
           })
-          .then((result) => {
+          .then(result => {
             Helper.debugLog('adding multi sig to users wallet...')
-            return StellarUtils.makeMultiSig(userWallet, signerWallet, fundingWallet)
+            return StellarUtils.makeMultiSig(
+              userWallet,
+              signerWallet,
+              fundingWallet
+            )
           })
-          .then((result) => {
+          .then(result => {
             this.displayToast('Success! Users wallet is ready.')
             return null
           })
-          .catch((error) => {
+          .catch(error => {
             Helper.debugLog(error)
             this.displayToast('Error', true)
           })
