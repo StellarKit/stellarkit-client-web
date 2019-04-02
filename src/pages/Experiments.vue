@@ -179,34 +179,34 @@ export default {
 @import '../scss/styles.scss';
 
 .main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .user-area {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items:: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.025);
+    padding: 10px;
+    margin-top: 10px;
 
-    .user-area {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items:: center;
-        background: rgba(0,0,0,.025);
-        padding: 10px;
-        margin-top: 10px;
-
-        .user-buttons {
-            margin-top: 10px;
-            button {
-                margin: 0 3px;
-            }
-        }
+    .user-buttons {
+      margin-top: 10px;
+      button {
+        margin: 0 3px;
+      }
     }
-    .admin-area {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items:: center;
-        background: rgba(0,0,0,.05);
-        padding: 10px;
-        margin: 10px;
-    }
+  }
+  .admin-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    margin: 10px;
+  }
 }
 </style>
