@@ -1,90 +1,62 @@
 <template>
-<v-dialog
-  lazy
-  v-model='visible'
-  scrollable
-  @keydown.esc="visible = false"
-  max-width="480"
->
-  <div class='main-container'>
-    <dialog-titlebar
-      :title=title
-      v-on:close='visible = false'
-    />
+  <v-dialog lazy v-model="visible" scrollable @keydown.esc="visible = false" max-width="480">
+    <div class="main-container">
+      <dialog-titlebar :title="title" v-on:close="visible = false"/>
 
-    <div class='dialog-contents'>
-      <div class='top-dialog-text'>Don't loose these keys! Print or save them to a secure USB or hard disk</div>
+      <div class="dialog-contents">
+        <div
+          class="top-dialog-text"
+        >Don't loose these keys! Print or save them to a secure USB or hard disk</div>
 
-      <v-select
-        :items="accountsUI"
-        item-text='name'
-        v-model="selectedSource"
-        label="Account"
-        return-object
-        max-height="600"
-      ></v-select>
+        <v-select
+          :items="accountsUI"
+          item-text="name"
+          v-model="selectedSource"
+          label="Account"
+          return-object
+          max-height="600"
+        ></v-select>
 
-      <div
-        class='operations-item'
-        v-for="key in Array.from(summaryMap.keys())"
-        :key=key
-      >
-        <div class='item-name'>
-          {{key}}:
+        <div class="operations-item" v-for="key in Array.from(summaryMap.keys())" :key="key">
+          <div class="item-name">{{key}}:</div>
+          <div class="item-value">{{summaryMap.get(key)}}</div>
         </div>
-        <div class='item-value'>
-          {{summaryMap.get(key)}}
+
+        <div class="buttons-area">
+          <v-tooltip open-delay="200" bottom>
+            <v-btn
+              color="primary"
+              round
+              slot="activator"
+              @click="buttonClick('save-keys')"
+            >Save Keys...</v-btn>
+            <span>Save the keys to a file on a USB or disk</span>
+          </v-tooltip>
+          <v-tooltip open-delay="200" bottom>
+            <v-btn
+              color="primary"
+              round
+              slot="activator"
+              @click="buttonClick('print-keys')"
+            >Print Keys...</v-btn>
+            <span>Print the keys for safety</span>
+          </v-tooltip>
         </div>
       </div>
-
-      <div class='buttons-area'>
-        <v-tooltip
-          open-delay='200'
-          bottom
-        >
-          <v-btn
-            color='primary'
-            round
-            slot="activator"
-            @click="buttonClick('save-keys')"
-          >Save Keys...</v-btn>
-          <span>Save the keys to a file on a USB or disk</span>
-        </v-tooltip>
-        <v-tooltip
-          open-delay='200'
-          bottom
-        >
-          <v-btn
-            color='primary'
-            round
-            slot="activator"
-            @click="buttonClick('print-keys')"
-          >Print Keys...</v-btn>
-          <span>Print the keys for safety</span>
-        </v-tooltip>
-      </div>
+      <toast-component :absolute="true" location="save-keys-dialog" :bottom="false" :top="true"/>
     </div>
-    <toast-component
-      :absolute=true
-      location='save-keys-dialog'
-      :bottom=false
-      :top=true
-    />
-  </div>
-</v-dialog>
+  </v-dialog>
 </template>
 
 <script>
 import Helper from '../../js/helper.js'
-import {
-  DialogTitleBar
-} from 'stellarkit-js-ui'
+import { DialogTitleBar } from 'stellarkit-js-ui'
 import ToastComponent from '../ToastComponent.vue'
 import StellarUtils from '../../js/StellarUtils.js'
 import StellarAccounts from '../../js/StellarAccounts.js'
 import StellarCommonMixin from '../StellarCommonMixin.js'
-const SaveFile = require('save-file')
-const $ = require('jquery')
+const FileSaver = require('file-saver')
+import $ from 'jquery'
 
 export default {
   props: ['ping', 'publicKey'],
@@ -117,7 +89,9 @@ export default {
     setup() {
       // find account with the publicKey passed in
       if (this.publicKey) {
-        this.selectedSource = StellarAccounts.accountWithPublicKey(this.publicKey)
+        this.selectedSource = StellarAccounts.accountWithPublicKey(
+          this.publicKey
+        )
       }
 
       if (!this.selectedSource && this.accountsUI.length > 0) {
@@ -149,8 +123,10 @@ export default {
         document.body.appendChild(iframe)
 
         const frameWindow = window.frames['printkeys']
-        frameWindow.document.head.innerHTML = '<style>body{margin-top: 100px; font-size: 12px; text-align: center; font-family: Arial, Helvetica, sans-serif;}</style>'
-        frameWindow.document.body.innerHTML = '<div>' + this.keyString(true) + '</div>'
+        frameWindow.document.head.innerHTML =
+          '<style>body{margin-top: 100px; font-size: 12px; text-align: center; font-family: Arial, Helvetica, sans-serif;}</style>'
+        frameWindow.document.body.innerHTML =
+          '<div>' + this.keyString(true) + '</div>'
 
         frameWindow.print()
 
@@ -183,13 +159,11 @@ export default {
     },
     saveFile() {
       if (this.selectedSource) {
-        SaveFile(this.keyString(), 'stellar-account-keys.txt', (err, data) => {
-          if (err) {
-            Helper.debugLog('save failed')
-          }
-
-          Helper.debugLog('file saved')
+        const jsonString = this.keyString()
+        const blob = new Blob([jsonString], {
+          type: 'text/plain;charset=utf-8'
         })
+        FileSaver.saveAs(blob, 'stellar-account-keys.txt')
       } else {
         Helper.debugLog('Nothing to save?')
       }
@@ -217,44 +191,44 @@ export default {
 @import '../../scss/styles.scss';
 
 .main-container {
-    @include standard-dialog-contents();
+  @include standard-dialog-contents();
 
-    .dialog-contents {
-        @include inner-dialog-contents();
+  .dialog-contents {
+    @include inner-dialog-contents();
 
-        .top-dialog-text {
-            margin-bottom: 10px;
-        }
-        .operations-item {
-            display: flex;
-            font-size: 0.65em;
-
-            .item-name {
-                text-align: right;
-                padding-right: 5px;
-                font-weight: bold;
-                flex: 1 1 10%;
-            }
-
-            .item-value {
-                text-align: left;
-                flex: 2 2 90%;
-                padding-left: 5px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                font-family: monospace;
-                width: 0;
-            }
-        }
-
-        .buttons-area {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-        }
+    .top-dialog-text {
+      margin-bottom: 10px;
     }
+    .operations-item {
+      display: flex;
+      font-size: 0.65em;
+
+      .item-name {
+        text-align: right;
+        padding-right: 5px;
+        font-weight: bold;
+        flex: 1 1 10%;
+      }
+
+      .item-value {
+        text-align: left;
+        flex: 2 2 90%;
+        padding-left: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-family: monospace;
+        width: 0;
+      }
+    }
+
+    .buttons-area {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+  }
 }
 </style>

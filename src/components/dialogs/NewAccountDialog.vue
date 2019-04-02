@@ -34,6 +34,15 @@
             >Create New Account</v-btn>
             <span>Create a new account with a source account's secret key</span>
           </v-tooltip>
+
+          <v-tooltip open-delay="200" bottom>
+            <v-btn outline slot="activator" @click="buttonClick('import')">Import Accounts...</v-btn>
+            <span>Import a .json file of account keys</span>
+          </v-tooltip>
+          <v-tooltip open-delay="200" bottom>
+            <v-btn outline slot="activator" @click="buttonClick('export')">Export Accounts...</v-btn>
+            <span>Create a new account with a source account's secret key</span>
+          </v-tooltip>
         </div>
 
         <div v-else>
@@ -132,6 +141,8 @@ const StellarSdk = require('stellar-sdk')
 import StellarCommonMixin from '../StellarCommonMixin.js'
 import SavePrintSecretDialog from './SavePrintSecretDialog.vue'
 import ReusableStellarViews from '../ReusableStellarViews.vue'
+const FileSaver = require('file-saver')
+import $ from 'jquery'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -185,8 +196,68 @@ export default {
         case 'testnet-account':
           this.mode = 'testnet'
           break
+        case 'import':
+          {
+            const that = this
+            const input$ = $('<input type="file">')
+            const inputElement = input$[0]
+
+            input$
+              .on('change', () => {
+                that.importAccounts(inputElement.files)
+              })
+              .click()
+          }
+          break
+        case 'export':
+          this.exportAccounts()
+          break
         default:
           break
+      }
+    },
+    exportAccounts() {
+      const jsonObj = { accounts: [] }
+      for (const acct of StellarAccounts.accounts()) {
+        const acctInfo = {}
+        acctInfo.name = acct.name
+        acctInfo.secret = acct.secret
+        acctInfo.publicKey = acct.publicKey
+        jsonObj.accounts.push(acctInfo)
+      }
+
+      const jsonString = JSON.stringify(jsonObj, null, '  ')
+      const blob = new Blob([jsonString], {
+        type: 'text/plain;charset=utf-8'
+      })
+      FileSaver.saveAs(blob, 'accounts.json')
+    },
+    importAccounts(fileNames) {
+      if (fileNames.length === 1) {
+        const file = fileNames[0]
+
+        const reader = new FileReader()
+        reader.addEventListener('load', e => {
+          const json = JSON.parse(e.target.result)
+
+          console.log(JSON.stringify(json, null, '  '))
+
+          for (const acct of json.accounts) {
+            let keypair
+
+            if (Helper.strOK(acct.secret)) {
+              keypair = StellarSdk.Keypair.fromSecret(acct.secret)
+            } else if (Helper.strOK(acct.publicKey)) {
+              keypair = StellarSdk.Keypair.fromPublicKey(acct.publicKey)
+            }
+
+            StellarAccounts.addAccount(keypair, acct.name)
+          }
+
+          StellarUtils.updateBalances()
+        })
+
+        reader.readAsBinaryString(file)
       }
     },
     addExistingAccount() {

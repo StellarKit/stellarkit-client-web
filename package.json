@@ -47,7 +47,6 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "csv": "^5.1.1",
     "@babel/polyfill": "^7.4.0",
     "@fortawesome/fontawesome-free": "^5.8.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.17",
@@ -55,16 +54,17 @@
     "@fortawesome/free-solid-svg-icons": "^5.8.1",
     "@fortawesome/vue-fontawesome": "0.1.6",
     "axios": "^0.18.0",
+    "csv": "^5.1.1",
     "debounce": "^1.2.0",
+    "file-saver": "^2.0.1",
     "firebase": "^5.9.2",
     "firebaseui": "^3.5.2",
     "gsap": "^2.1.2",
     "jquery": "^3.3.1",
     "localforage": "^1.7.3",
-    "save-file": "2.3.1",
     "sillyname": "^0.1.0",
-    "stellarkit-js-utils": "git://github.com/StellarKit/stellarkit-js-utils",
+    "stellar-sdk": "^0.15.0",
     "stellarkit-js-ui": "git://github.com/StellarKit/stellarkit-js-ui",
-    "stellar-sdk": "^0.15.0"
+    "stellarkit-js-utils": "git://github.com/StellarKit/stellarkit-js-utils"
   }
 }
