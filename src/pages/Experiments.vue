@@ -8,6 +8,35 @@
 
     <div class="main-container">
       <div class="user-area">
+        <div class="section-title">Request Tokens</div>
+
+        <div>Enter your email address and public key to your Stellar wallet. We will send the tokens to the wallet. Your wallet must trust our asset, or this will fail.</div>
+
+        <v-text-field
+          style="width: 100%;"
+          label="Email"
+          placeholder="email@example.com"
+          v-model.trim="email"
+          @keyup.enter="requestTokens()"
+        ></v-text-field>
+        <v-text-field
+          style="width: 100%;"
+          label="Public Key"
+          placeholder="Example: GCSDLFIJSE9JSFELFJSLDFJSLDFJSLDKFJSLDFJLS"
+          v-model.trim="publicKey"
+          @keyup.enter="requestTokens()"
+        ></v-text-field>
+
+        <v-btn
+          round
+          small
+          color="primary"
+          @click="sendAssetsDialogPing = !sendAssetsDialogPing"
+          :loading="loadingSend"
+        >Request Tokens</v-btn>
+      </div>
+
+      <div class="user-area">
         <div>Sign up for a free account</div>
         <div class="user-buttons">
           <v-btn
@@ -74,7 +103,9 @@ export default {
       loadingBuy: false,
       loadingSend: false,
       buyAssetDialogPing: false,
-      sendAssetsDialogPing: false
+      sendAssetsDialogPing: false,
+      email: '',
+      publicKey: ''
     }
   },
   components: {
@@ -90,6 +121,9 @@ export default {
     },
     adminEnterKey() {
       Helper.debugLog('nothing')
+    },
+    requestTokens() {
+      // fdff
     },
     createAccount() {
       const signerWallet = this.dialogAccounts().sourceWallet()
@@ -185,12 +219,19 @@ export default {
 
   .user-area {
     width: 100%;
+    max-width: 600px;
     display: flex;
     flex-direction: column;
     align-items: center;
     background: rgba(0, 0, 0, 0.025);
-    padding: 10px;
-    margin-top: 10px;
+    border: solid 1px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    margin: 20px 0;
+
+    .section-title {
+      font-weight: bold;
+      font-size: 1.1em;
+    }
 
     .user-buttons {
       margin-top: 10px;

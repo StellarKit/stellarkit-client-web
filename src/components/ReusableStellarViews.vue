@@ -1,437 +1,352 @@
 <template>
-<div>
-  <div
-    v-if='showSymbol'
-    class='account-choice-box'
-  >
-    <v-text-field
-      label="Symbol"
-      @keyup.enter="enterKeyDown"
-      v-model.trim="model.symbol"
-      hint='Symbol can be 1-12 characters long'
-      autofocus
-    ></v-text-field>
-  </div>
-
-  <div
-    v-if='showAccountName'
-    class='account-choice-box'
-  >
-    <v-text-field
-      hide-details
-      spellcheck="false"
-      label="Account name"
-      v-model.trim="model.accountName"
-      @keyup.enter="enterKeyDown"
-      hint="A unique name helps you keep track of multiple accounts"
-    > </v-text-field>
-  </div>
-
-  <div
-    v-if='showSource'
-    class='account-choice-box'
-  >
-    <div>
-      <menu-button
-        v-on:menu-selected='sourceMenuSelected'
-        title='Source account'
-        :items='sourceMenuItems'
-        :selectedID='sourceType'
-      />
-    </div>
-    <div v-if='sourceType === "account"'>
-      <v-select
-        hide-details
-        :items="accountsUI"
-        item-text='name'
-        item-value='publicKey'
-        v-model='model.sourceAccount'
-        clearable
-        label="Source account"
-        autocomplete
-        return-object
-        max-height="600"
-      ></v-select>
-    </div>
-  </div>
-
-  <div
-    v-if='showDest'
-    class='account-choice-box'
-  >
-    <div>
-      <menu-button
-        v-on:menu-selected='destMenuSelected'
-        title='Destination account'
-        :items='destMenuItems'
-        :selectedID='destType'
-      />
-    </div>
-    <div v-if='destType === "publicKey"'>
+  <div>
+    <div v-if="showSymbol" class="account-choice-box">
       <v-text-field
-        hide-details
-        label="Destination public key"
-        v-model.trim="destPublicKey"
-        autofocus
+        label="Symbol"
         @keyup.enter="enterKeyDown"
+        v-model.trim="model.symbol"
+        hint="Symbol can be 1-12 characters long"
+        autofocus
       ></v-text-field>
     </div>
-    <div v-if='destType === "account"'>
-      <v-select
-        hide-details
-        :items="accountsUI"
-        item-text='name'
-        item-value='publicKey'
-        v-model="model.destAccount"
-        clearable
-        label="Destination account"
-        autocomplete
-        return-object
-        max-height="600"
-      ></v-select>
-    </div>
-    <div v-if='destType === "publicKeyList"'>
-      <textarea
-        v-model='destPublicKeyList'
-        placeholder='Paste in a list of public keys separated by returns, spaces or commas.'
-        class='public-key-text'
-      ></textarea>
-      <menu-button
-        v-on:menu-selected='destPaymentsMenuSelected'
-        title='Payments per transaction'
-        :items='destPaymentsMenuItems'
-        :selectedID='destPaymentsType'
-      />
-    </div>
-    <div v-if='destType === "keysAndMemosList"'>
-      <textarea
-        v-model='destKeysAndMemosList'
-        placeholder='Paste in CSV format: KEY,MEMO to send asset with memo to account with memo'
-        class='public-key-text'
-      ></textarea>
-    </div>
-  </div>
 
-  <div
-    v-if='showAsset'
-    class='account-choice-box'
-  >
-    <asset-popup
-      title='Asset'
-      :model='model.assetModel'
-    />
-  </div>
-
-  <div
-    v-if='showBuyingAsset'
-    class='account-choice-box'
-  >
-    <asset-popup
-      title='Buying asset'
-      :model='model.buyingAssetModel'
-    />
-  </div>
-
-  <div
-    v-if='showSellingAsset'
-    class='account-choice-box'
-  >
-    <asset-popup
-      title='Selling asset'
-      :model='model.sellingAssetModel'
-    />
-  </div>
-
-  <div
-    v-if='showSecret'
-    class='account-choice-box'
-  >
-    <div>
-      <menu-button
-        v-on:menu-selected='secretMenuSelected'
-        title='Enter an account key'
-        :items='secretMenuItems'
-        :selectedID='secretType'
-      />
-    </div>
-    <div v-if='secretType === "secret"'>
+    <div v-if="showAccountName" class="account-choice-box">
       <v-text-field
+        hide-details
         spellcheck="false"
-        autofocus
-        label="Secret key"
-        :counter="56"
-        v-model.trim="model.secretKey"
+        label="Account name"
+        v-model.trim="model.accountName"
         @keyup.enter="enterKeyDown"
-        hint="Starts with an 'S'"
-        :append-icon="showSecretText ? 'visibility_off' : 'visibility'"
-        :append-icon-cb="() => (showSecretText = !showSecretText)"
-        :type="showSecretText ? 'text' : 'password'"
+        hint="A unique name helps you keep track of multiple accounts"
       ></v-text-field>
     </div>
-    <div v-if='secretType === "public"'>
-      <v-text-field
-        spellcheck="false"
-        autofocus
-        label="Public key"
-        :counter="56"
-        v-model.trim="model.publicKey"
-        @keyup.enter="enterKeyDown"
-        hint="Starts with an 'G'"
-      ></v-text-field>
+
+    <div v-if="showSource" class="account-choice-box">
+      <div>
+        <menu-button
+          v-on:menu-selected="sourceMenuSelected"
+          title="Source account"
+          :items="sourceMenuItems"
+          :selectedID="sourceType"
+        />
+      </div>
+      <div v-if="sourceType === 'account'">
+        <v-autocomplete
+          hide-details
+          :items="accountsUI"
+          item-text="name"
+          item-value="publicKey"
+          v-model="model.sourceAccount"
+          clearable
+          label="Source account"
+          return-object
+          :menu-props="{maxHeight:'600'}"
+        ></v-autocomplete>
+      </div>
     </div>
-  </div>
 
-  <div
-    v-if='showAmount'
-    class='account-choice-box'
-  >
-    <v-text-field
-      hide-details
-      :label="model.amountLabel"
-      type='number'
-      v-model.number="model.assetAmount"
-      @keyup.enter="enterKeyDown"
-    ></v-text-field>
-  </div>
-
-  <div
-    v-if='showNumberValue'
-    class='account-choice-box'
-  >
-    <v-text-field
-      :label="model.numberValueLabel"
-      :hint='model.numberValueHint'
-      type='number'
-      v-model.number="model.numberValue"
-      @keyup.enter="enterKeyDown"
-    ></v-text-field>
-  </div>
-
-  <div
-    v-if='showManageOffer'
-    class='account-choice-box'
-  >
-    <v-text-field
-      hide-details
-      label="Sell amount"
-      @keyup.enter="enterKeyDown"
-      type='number'
-      v-model.number='model.sellAmount'
-    ></v-text-field>
-
-    <div class='price-header'>Price:</div>
-    <div class='accounts-small-text'>For example, you want buy 1000 XLM for 1 MyToken.</div>
-    <div class='price-pair'>
-      <v-text-field
-        hide-details
-        class='buy-price'
-        label="Buy unit"
-        @keyup.enter="enterKeyDown"
-        type='number'
-        v-model.number="buyUnit"
-      ></v-text-field>
-      <v-text-field
-        hide-details
-        label="Sell unit"
-        @keyup.enter="enterKeyDown"
-        type='number'
-        v-model.number="sellUnit"
-      ></v-text-field>
-    </div>
-  </div>
-
-  <div
-    v-if='showAuthFlags'
-    class='account-choice-box'
-  >
-    <div class='price-pair'>
-      <v-checkbox
-        hide-details
-        small
-        class='buy-price'
-        label="Auth required"
-        v-model="authRequired"
-      ></v-checkbox>
-      <v-checkbox
-        hide-details
-        small
-        label="Auth revocable"
-        v-model="authRevocable"
-      ></v-checkbox>
-      <v-checkbox
-        hide-details
-        small
-        label="Trust BTC/ETH (for Bifrost)"
-        v-model="trustBtcEthFlag"
-      ></v-checkbox>
-    </div>
-  </div>
-
-  <div
-    v-if='showBuyOffer'
-    class='account-choice-box'
-  >
-    <div class='price-pair'>
-      <v-text-field
-        hide-details
-        class='buy-price'
-        label="Buy amount"
-        @keyup.enter="enterKeyDown"
-        type='number'
-        v-model.number="buyAmount"
-      ></v-text-field>
-      <v-text-field
-        hide-details
-        label="Send maximum selling asset"
-        @keyup.enter="enterKeyDown"
-        type='number'
-        v-model.number="buySendMax"
-      ></v-text-field>
-    </div>
-  </div>
-
-  <div
-    v-if='showTextValue'
-    class='account-choice-box'
-  >
-    <v-text-field
-      :label="model.textValueLabel"
-      @keyup.enter="enterKeyDown"
-      v-model.trim="model.textValue"
-      :hint='model.textValueHint'
-      autofocus
-    ></v-text-field>
-  </div>
-
-  <div
-    v-if='showNameValue'
-    class='account-choice-box'
-  >
-    <v-text-field
-      hide-details
-      :label="model.nameValueOneLabel"
-      @keyup.enter="enterKeyDown"
-      v-model.trim="model.nameValueOneValue"
-      autofocus
-    ></v-text-field>
-    <v-text-field
-      hide-details
-      :label="model.nameValueTwoLabel"
-      @keyup.enter="enterKeyDown"
-      v-model.trim="model.nameValueTwoValue"
-    ></v-text-field>
-  </div>
-
-  <div
-    v-if='showTimeLock'
-    class='account-choice-box'
-  >
-    <v-checkbox
-      hide-details
-      small
-      label="Time lock access to this account"
-      v-model="timeLockEnabled"
-    ></v-checkbox>
-
-    <div v-if='timeLockEnabled'>
-      <v-dialog
-        v-model="timeLockModal"
-        persistent
-        lazy
-        full-width
-        width="290px"
-        :return-value.sync="timeLockDate"
-        ref="dialog"
-      >
+    <div v-if="showDest" class="account-choice-box">
+      <div>
+        <menu-button
+          v-on:menu-selected="destMenuSelected"
+          title="Destination account"
+          :items="destMenuItems"
+          :selectedID="destType"
+        />
+      </div>
+      <div v-if="destType === 'publicKey'">
         <v-text-field
           hide-details
-          slot="activator"
-          label="Time Lock Expiration Date"
-          v-model="timeLockDate"
-          prepend-icon="event"
-          readonly
+          label="Destination public key"
+          v-model.trim="destPublicKey"
+          autofocus
+          @keyup.enter="enterKeyDown"
         ></v-text-field>
-        <v-date-picker
-          v-model="timeLockDate"
-          scrollable
-          actions
+      </div>
+      <div v-if="destType === 'account'">
+        <v-autocomplete
+          hide-details
+          :items="accountsUI"
+          item-text="name"
+          item-value="publicKey"
+          v-model="model.destAccount"
+          clearable
+          label="Destination account"
+          return-object
+          :menu-props="{maxHeight:'600'}"
+        ></v-autocomplete>
+      </div>
+      <div v-if="destType === 'publicKeyList'">
+        <textarea
+          v-model="destPublicKeyList"
+          placeholder="Paste in a list of public keys separated by returns, spaces or commas."
+          class="public-key-text"
+        ></textarea>
+        <menu-button
+          v-on:menu-selected="destPaymentsMenuSelected"
+          title="Payments per transaction"
+          :items="destPaymentsMenuItems"
+          :selectedID="destPaymentsType"
+        />
+      </div>
+      <div v-if="destType === 'keysAndMemosList'">
+        <textarea
+          v-model="destKeysAndMemosList"
+          placeholder="Paste in CSV format: KEY,MEMO to send asset with memo to account with memo"
+          class="public-key-text"
+        ></textarea>
+      </div>
+    </div>
+
+    <div v-if="showAsset" class="account-choice-box">
+      <asset-popup title="Asset" :model="model.assetModel"/>
+    </div>
+
+    <div v-if="showBuyingAsset" class="account-choice-box">
+      <asset-popup title="Buying asset" :model="model.buyingAssetModel"/>
+    </div>
+
+    <div v-if="showSellingAsset" class="account-choice-box">
+      <asset-popup title="Selling asset" :model="model.sellingAssetModel"/>
+    </div>
+
+    <div v-if="showSecret" class="account-choice-box">
+      <div>
+        <menu-button
+          v-on:menu-selected="secretMenuSelected"
+          title="Enter an account key"
+          :items="secretMenuItems"
+          :selectedID="secretType"
+        />
+      </div>
+      <div v-if="secretType === 'secret'">
+        <v-text-field
+          spellcheck="false"
+          autofocus
+          label="Secret key"
+          :counter="56"
+          v-model.trim="model.secretKey"
+          @keyup.enter="enterKeyDown"
+          hint="Starts with an 'S'"
+          :append-icon="showSecretText ? 'visibility_off' : 'visibility'"
+          :append-icon-cb="() => (showSecretText = !showSecretText)"
+          :type="showSecretText ? 'text' : 'password'"
+        ></v-text-field>
+      </div>
+      <div v-if="secretType === 'public'">
+        <v-text-field
+          spellcheck="false"
+          autofocus
+          label="Public key"
+          :counter="56"
+          v-model.trim="model.publicKey"
+          @keyup.enter="enterKeyDown"
+          hint="Starts with an 'G'"
+        ></v-text-field>
+      </div>
+    </div>
+
+    <div v-if="showAmount" class="account-choice-box">
+      <v-text-field
+        hide-details
+        :label="model.amountLabel"
+        type="number"
+        v-model.number="model.assetAmount"
+        @keyup.enter="enterKeyDown"
+      ></v-text-field>
+    </div>
+
+    <div v-if="showNumberValue" class="account-choice-box">
+      <v-text-field
+        :label="model.numberValueLabel"
+        :hint="model.numberValueHint"
+        type="number"
+        v-model.number="model.numberValue"
+        @keyup.enter="enterKeyDown"
+      ></v-text-field>
+    </div>
+
+    <div v-if="showManageOffer" class="account-choice-box">
+      <v-text-field
+        hide-details
+        label="Sell amount"
+        @keyup.enter="enterKeyDown"
+        type="number"
+        v-model.number="model.sellAmount"
+      ></v-text-field>
+
+      <div class="price-header">Price:</div>
+      <div class="accounts-small-text">For example, you want buy 1000 XLM for 1 MyToken.</div>
+      <div class="price-pair">
+        <v-text-field
+          hide-details
+          class="buy-price"
+          label="Buy unit"
+          @keyup.enter="enterKeyDown"
+          type="number"
+          v-model.number="buyUnit"
+        ></v-text-field>
+        <v-text-field
+          hide-details
+          label="Sell unit"
+          @keyup.enter="enterKeyDown"
+          type="number"
+          v-model.number="sellUnit"
+        ></v-text-field>
+      </div>
+    </div>
+
+    <div v-if="showAuthFlags" class="account-choice-box">
+      <div class="price-pair">
+        <v-checkbox
+          hide-details
+          small
+          class="buy-price"
+          label="Auth required"
+          v-model="authRequired"
+        ></v-checkbox>
+        <v-checkbox hide-details small label="Auth revocable" v-model="authRevocable"></v-checkbox>
+        <v-checkbox
+          hide-details
+          small
+          label="Trust BTC/ETH (for Bifrost)"
+          v-model="trustBtcEthFlag"
+        ></v-checkbox>
+      </div>
+    </div>
+
+    <div v-if="showBuyOffer" class="account-choice-box">
+      <div class="price-pair">
+        <v-text-field
+          hide-details
+          class="buy-price"
+          label="Buy amount"
+          @keyup.enter="enterKeyDown"
+          type="number"
+          v-model.number="buyAmount"
+        ></v-text-field>
+        <v-text-field
+          hide-details
+          label="Send maximum selling asset"
+          @keyup.enter="enterKeyDown"
+          type="number"
+          v-model.number="buySendMax"
+        ></v-text-field>
+      </div>
+    </div>
+
+    <div v-if="showTextValue" class="account-choice-box">
+      <v-text-field
+        :label="model.textValueLabel"
+        @keyup.enter="enterKeyDown"
+        v-model.trim="model.textValue"
+        :hint="model.textValueHint"
+        autofocus
+      ></v-text-field>
+    </div>
+
+    <div v-if="showNameValue" class="account-choice-box">
+      <v-text-field
+        hide-details
+        :label="model.nameValueOneLabel"
+        @keyup.enter="enterKeyDown"
+        v-model.trim="model.nameValueOneValue"
+        autofocus
+      ></v-text-field>
+      <v-text-field
+        hide-details
+        :label="model.nameValueTwoLabel"
+        @keyup.enter="enterKeyDown"
+        v-model.trim="model.nameValueTwoValue"
+      ></v-text-field>
+    </div>
+
+    <div v-if="showTimeLock" class="account-choice-box">
+      <v-checkbox
+        hide-details
+        small
+        label="Time lock access to this account"
+        v-model="timeLockEnabled"
+      ></v-checkbox>
+
+      <div v-if="timeLockEnabled">
+        <v-dialog
+          v-model="timeLockModal"
+          persistent
+          lazy
+          full-width
+          width="290px"
+          :return-value.sync="timeLockDate"
+          ref="dialog"
         >
-          <v-spacer></v-spacer>
-          <v-btn
-            flat
-            color="primary"
-            @click="timeLockModal = false"
-          >Cancel</v-btn>
-          <v-btn
-            flat
-            color="primary"
-            @click="$refs.dialog.save(timeLockDate)"
-          >OK</v-btn>
-        </v-date-picker>
-      </v-dialog>
+          <v-text-field
+            hide-details
+            slot="activator"
+            label="Time Lock Expiration Date"
+            v-model="timeLockDate"
+            prepend-icon="event"
+            readonly
+          ></v-text-field>
+          <v-date-picker v-model="timeLockDate" scrollable actions>
+            <v-spacer></v-spacer>
+            <v-btn flat color="primary" @click="timeLockModal = false">Cancel</v-btn>
+            <v-btn flat color="primary" @click="$refs.dialog.save(timeLockDate)">OK</v-btn>
+          </v-date-picker>
+        </v-dialog>
+      </div>
+    </div>
+
+    <div v-if="showFunding" class="account-choice-box">
+      <div>
+        <menu-button
+          v-on:menu-selected="fundingMenuSelected"
+          title="Funding account"
+          :items="fundingMenuItems"
+          :selectedID="fundingType"
+        />
+      </div>
+      <div v-if="fundingType === 'account'">
+        <v-autocomplete
+          hide-details
+          :items="accountsUI"
+          item-text="name"
+          item-value="publicKey"
+          v-model="model.fundingAccount"
+          clearable
+          label="Funding account"
+          return-object
+          :menu-props="{maxHeight:'600'}"
+        ></v-autocomplete>
+      </div>
+      <div v-if="fundingType === 'none'">
+        <div class="accounts-small-text">{{this.model.fundingMessage}}</div>
+      </div>
+    </div>
+
+    <div v-if="showSigner" class="account-choice-box">
+      <div>
+        <menu-button
+          v-on:menu-selected="signerMenuSelected"
+          title="Add Signer account"
+          :items="signerMenuItems"
+          :selectedID="signerType"
+        />
+      </div>
+      <div v-if="signerType === 'account'">
+        <v-autocomplete
+          hide-details
+          :items="accountsUI"
+          item-text="name"
+          item-value="publicKey"
+          v-model="model.signerAccount"
+          clearable
+          label="Signing account"
+          return-object
+          :menu-props="{maxHeight:'600'}"
+        ></v-autocomplete>
+      </div>
     </div>
   </div>
-
-  <div
-    v-if='showFunding'
-    class='account-choice-box'
-  >
-    <div>
-      <menu-button
-        v-on:menu-selected='fundingMenuSelected'
-        title='Funding account'
-        :items='fundingMenuItems'
-        :selectedID='fundingType'
-      />
-    </div>
-    <div v-if='fundingType === "account"'>
-      <v-select
-        hide-details
-        :items="accountsUI"
-        item-text='name'
-        item-value='publicKey'
-        v-model="model.fundingAccount"
-        clearable
-        label="Funding account"
-        autocomplete
-        return-object
-        max-height="600"
-      ></v-select>
-    </div>
-    <div v-if='fundingType === "none"'>
-      <div class='accounts-small-text'>{{this.model.fundingMessage}}</div>
-    </div>
-  </div>
-
-  <div
-    v-if='showSigner'
-    class='account-choice-box'
-  >
-    <div>
-      <menu-button
-        v-on:menu-selected='signerMenuSelected'
-        title='Add Signer account'
-        :items='signerMenuItems'
-        :selectedID='signerType'
-      />
-    </div>
-    <div v-if='signerType === "account"'>
-      <v-select
-        hide-details
-        :items="accountsUI"
-        item-text='name'
-        item-value='publicKey'
-        v-model="model.signerAccount"
-        clearable
-        label="Signing account"
-        autocomplete
-        return-object
-        max-height="600"
-      ></v-select>
-    </div>
-  </div>
-
-</div>
 </template>
 
 <script>
@@ -439,23 +354,31 @@ import Helper from '../js/helper.js'
 import StellarCommonMixin from './StellarCommonMixin.js'
 import MenuButton from './MenuButton.vue'
 import AssetPopup from './AssetPopup.vue'
-import {
-  StellarWallet,
-  LedgerAPI
-} from 'stellarkit-js-utils'
+import { StellarWallet, LedgerAPI } from 'stellarkit-js-utils'
 const StellarSdk = require('stellar-sdk')
 const parse = require('csv-parse/lib/sync')
 
 export default {
-  props: ['model', 'showSource', 'showDest',
-    'showSigner', 'showAmount',
-    'showNumberValue', 'showAsset',
-    'showAccountName', 'showSecret',
-    'showNameValue', 'showManageOffer',
-    'showBuyingAsset', 'showSellingAsset',
-    'showBuyOffer', 'showTextValue',
-    'showAuthFlags', 'showTimeLock',
-    'showFunding', 'showSymbol'
+  props: [
+    'model',
+    'showSource',
+    'showDest',
+    'showSigner',
+    'showAmount',
+    'showNumberValue',
+    'showAsset',
+    'showAccountName',
+    'showSecret',
+    'showNameValue',
+    'showManageOffer',
+    'showBuyingAsset',
+    'showSellingAsset',
+    'showBuyOffer',
+    'showTextValue',
+    'showAuthFlags',
+    'showTimeLock',
+    'showFunding',
+    'showSymbol'
   ],
   mixins: [StellarCommonMixin],
   components: {
@@ -497,7 +420,8 @@ export default {
       timeLockModal: false,
       timeLockDate: '',
 
-      destPaymentsMenuItems: [{
+      destPaymentsMenuItems: [
+        {
           id: '1',
           title: '1'
         },
@@ -518,7 +442,8 @@ export default {
           title: '50'
         }
       ],
-      destMenuItems: [{
+      destMenuItems: [
+        {
           id: 'publicKey',
           title: 'Public key'
         },
@@ -539,7 +464,8 @@ export default {
           title: 'Keys and Memos CSV'
         }
       ],
-      sourceMenuItems: [{
+      sourceMenuItems: [
+        {
           id: 'account',
           title: 'Account'
         },
@@ -548,7 +474,8 @@ export default {
           title: 'Ledger Nano'
         }
       ],
-      secretMenuItems: [{
+      secretMenuItems: [
+        {
           id: 'secret',
           title: 'Secret key'
         },
@@ -557,10 +484,12 @@ export default {
           title: 'Public key'
         }
       ],
-      signerMenuItems: [{
+      signerMenuItems: [
+        {
           id: 'none',
           title: 'None'
-        }, {
+        },
+        {
           id: 'account',
           title: 'Account'
         },
@@ -569,10 +498,12 @@ export default {
           title: 'Ledger Nano'
         }
       ],
-      fundingMenuItems: [{
+      fundingMenuItems: [
+        {
           id: 'none',
           title: 'None'
-        }, {
+        },
+        {
           id: 'account',
           title: 'Account'
         },
@@ -757,10 +688,12 @@ export default {
     },
     parseDestKeys() {
       if (Helper.strOK(this.destPublicKeyList)) {
-        const result = this.destPublicKeyList.split(/\s*[\s,]\s*/).filter((word) => {
-          // filter Boolean removes blank lines - a double comma or ending comma can produce a blank math
-          return word.trim().length > 0
-        })
+        const result = this.destPublicKeyList
+          .split(/\s*[\s,]\s*/)
+          .filter(word => {
+            // filter Boolean removes blank lines - a double comma or ending comma can produce a blank math
+            return word.trim().length > 0
+          })
 
         return result
       }
@@ -772,9 +705,7 @@ export default {
 
       if (Helper.strOK(this.destKeysAndMemosList)) {
         const output = parse(this.destKeysAndMemosList, {
-          columns: [
-            'key', 'memo'
-          ],
+          columns: ['key', 'memo'],
           skip_empty_lines: true
         })
 
@@ -950,9 +881,7 @@ export default {
     manageOffer() {
       let good = false
 
-      if ((this.model.sellAmount > 0) &&
-        (this.buyUnit > 0) &&
-        (this.sellUnit > 0)) {
+      if (this.model.sellAmount > 0 && this.buyUnit > 0 && this.sellUnit > 0) {
         good = true
       }
 
@@ -974,8 +903,7 @@ export default {
     buyOffer() {
       let good = false
 
-      if ((this.buySendMax > 0) &&
-        (this.buyAmount > 0)) {
+      if (this.buySendMax > 0 && this.buyAmount > 0) {
         good = true
       }
 
@@ -1012,7 +940,9 @@ export default {
       return false
     },
     _signerValid() {
-      const result = this.model.signerAccount ? this.model.signerAccount.secret : null
+      const result = this.model.signerAccount
+        ? this.model.signerAccount.secret
+        : null
 
       if (Helper.strOK(result)) {
         return true
@@ -1026,7 +956,9 @@ export default {
       if (validForSigning) {
         key = this.model.sourceAccount ? this.model.sourceAccount.secret : null
       } else {
-        key = this.model.sourceAccount ? this.model.sourceAccount.publicKey : null
+        key = this.model.sourceAccount
+          ? this.model.sourceAccount.publicKey
+          : null
       }
 
       if (Helper.strOK(key)) {
@@ -1036,7 +968,9 @@ export default {
       return false
     },
     _fundingValid() {
-      const result = this.model.fundingAccount ? this.model.fundingAccount.secret : null
+      const result = this.model.fundingAccount
+        ? this.model.fundingAccount.secret
+        : null
 
       if (Helper.strOK(result)) {
         return true
@@ -1053,40 +987,40 @@ export default {
 
 <style lang='scss' scoped>
 .account-choice-box {
-    padding: 8px 12px;
-    margin-bottom: 8px;
-    background: rgba(0,0,0,.05);
-    border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
 
-    .accounts-small-text {
-        font-size: 0.85em;
-        color: rgba(0,0,0,.5);
-    }
+  .accounts-small-text {
+    font-size: 0.85em;
+    color: rgba(0, 0, 0, 0.5);
+  }
 
-    .price-pair {
-        display: flex;
+  .price-pair {
+    display: flex;
 
-        .buy-price {
-            margin-right: 8px;
-        }
+    .buy-price {
+      margin-right: 8px;
     }
+  }
 
-    .asset-pair {
-        display: flex;
+  .asset-pair {
+    display: flex;
 
-        .asset-code {
-            flex: 0 0 100px;
-            margin-right: 8px;
-        }
+    .asset-code {
+      flex: 0 0 100px;
+      margin-right: 8px;
     }
-    .price-header {
-        margin-top: 8px;
-    }
-    .public-key-text {
-        width: 100%;
-        height: 120px;
-        background: white;
-        font-size: 0.8em;
-    }
+  }
+  .price-header {
+    margin-top: 8px;
+  }
+  .public-key-text {
+    width: 100%;
+    height: 120px;
+    background: white;
+    font-size: 0.8em;
+  }
 }
 </style>
