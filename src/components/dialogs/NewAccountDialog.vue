@@ -240,8 +240,6 @@ export default {
         reader.addEventListener('load', e => {
           const json = JSON.parse(e.target.result)
 
-          console.log(JSON.stringify(json, null, '  '))
-
           for (const acct of json.accounts) {
             let keypair
 
