@@ -5,27 +5,68 @@
     <v-text-field
       style="width: 100%;"
       label="Secret Key"
-      placeholder="Example: SCSDLFIJSE9JSFELFJSLDFJSLDFJSLDKFJSLDFJLS"
+      placeholder="Starts with an 'S'"
       v-model.trim="secretKey"
-      @keyup.enter="trustAsset()"
+      @keyup.enter="trustAsset"
+      :counter="56"
+      hint="Starts with an 'S'"
+      :append-icon="showSecretText ? 'visibility_off' : 'visibility'"
+      :append-icon-cb="() => (showSecretText = !showSecretText)"
+      :type="showSecretText ? 'text' : 'password'"
     ></v-text-field>
 
-    <v-btn round small color="primary" @click="trustAsset()" :loading="loadingTrust">Trust Asset</v-btn>
+    <v-btn round small color="primary" @click="trustAsset()" :loading="loading">Trust Asset</v-btn>
   </div>
 </template>
 
 <script>
+import { StellarWallet } from 'stellarkit-js-utils'
+import Helper from '../../js/helper.js'
+import StellarUtils from '../../js/StellarUtils.js'
+
 export default {
   props: ['asset'],
   data() {
     return {
-      loadingTrust: false,
-      secretKey: ''
+      loading: false,
+      secretKey: '',
+      showSecretText: false
     }
   },
   methods: {
     trustAsset() {
-      // dd
+      if (Helper.strOK(this.secretKey)) {
+        const sourceWallet = StellarWallet.secret(this.secretKey)
+
+        const trustLimit = 0xffffffff
+
+        if (sourceWallet && this.asset && !this.asset.isNative()) {
+          Helper.debugLog('Setting trust...')
+          this.loading = true
+
+          StellarUtils.changeTrust(
+            sourceWallet,
+            sourceWallet,
+            this.asset,
+            String(trustLimit)
+          )
+            .then(result => {
+              Helper.debugLog(result)
+              this.loading = false
+
+              Helper.toast('Success!')
+            })
+            .catch(error => {
+              Helper.debugLog(error, 'Error')
+              this.loading = false
+              Helper.toast('Error!', true)
+            })
+        } else {
+          Helper.toast("Choose another asset. XLM doesn't need trust", true)
+        }
+      } else {
+        Helper.toast('The secret key is invalid', true)
+      }
     }
   }
 }

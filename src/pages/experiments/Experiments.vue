@@ -63,7 +63,7 @@ import Helper from '../../js/helper.js'
 import StellarCommonMixin from '../../components/StellarCommonMixin.js'
 import InstructionsHeader from '../../components/InstructionsHeader.vue'
 import AccountList from '../../components/AccountList.vue'
-
+const StellarSdk = require('stellar-sdk')
 import SettingsStore from '../../js/SettingsStore.js'
 import TrustComp from './TrustComp.vue'
 import RequestComp from './RequestComp.vue'
@@ -140,8 +140,8 @@ export default {
 
       const project = this.currentProject()
       if (project) {
-        this.setAccountsTag(project.symbol)
         this.showSummary = true
+        this.trustAsset = new StellarSdk.Asset(project.symbol, project.issuer)
 
         this.summaryMap.push(
           {
@@ -172,7 +172,6 @@ export default {
           }
         )
       } else {
-        this.setAccountsTag(null)
         this.showSummary = false
       }
     },
@@ -208,7 +207,7 @@ export default {
   flex-direction: column;
   align-items: center;
   overflow: auto;
-  max-height: 900px;
+  max-height: 40vh;
 
   .section-box {
     width: 100%;
