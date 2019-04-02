@@ -7,6 +7,43 @@
     </instructions-header>
 
     <div class="main-container">
+      <v-menu offset-y :transition="false">
+        <v-btn small color="primary" :ripple="false" slot="activator">
+          {{menuButtonName}}
+          <v-icon>&#xE5C5;</v-icon>
+        </v-btn>
+        <v-list dense>
+          <v-list-tile
+            v-for="(item, index) in tokenMenuItems"
+            :key="item.title"
+            @click="projectsMenuClick(index, item.action)"
+          >
+            <v-list-tile-title>{{item.title}}</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
+
+      <div v-if="showSummary" class="summary-view">
+        <div class="summary-header">
+          Token Information
+          <v-spacer/>
+          <v-btn small icon @click="printInfo">
+            <v-icon>&#xE8AD;</v-icon>
+          </v-btn>
+        </div>
+        <div class="summary-list">
+          <div class="operations-item" v-for="item in summaryMap" :key="item.content">
+            <div class="item-name">{{item.title}}:</div>
+            <div
+              v-if="item.secret && !printing"
+              class="item-value"
+              @click="item.secret = false"
+            >Click to reveal</div>
+            <div v-else class="item-value">{{item.content}}</div>
+          </div>
+        </div>
+      </div>
+
       <div class="section-box">
         <div class="section-title">Set Trust</div>
 
@@ -137,6 +174,8 @@ import { StellarWallet } from 'stellarkit-js-utils'
 import SendAssetsDialog from '../components/dialogs/SendAssetsDialog.vue'
 import BuyAssetDialog from '../components/dialogs/BuyAssetDialog.vue'
 import ReusableStellarViewsModel from '../components/ReusableStellarViewsModel.js'
+import SettingsStore from '../js/SettingsStore.js'
+import $ from 'jquery'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -149,7 +188,11 @@ export default {
       buyAssetDialogPing: false,
       sendAssetsDialogPing: false,
       email: '',
-      publicKey: ''
+      tokenProjects: [],
+      summaryMap: [],
+      publicKey: '',
+      showSummary: false,
+      printing: false
     }
   },
   components: {
@@ -159,7 +202,106 @@ export default {
     'buy-asset-dialog': BuyAssetDialog,
     'send-assets-dialog': SendAssetsDialog
   },
+  computed: {
+    menuButtonName: function() {
+      const project = this.currentProject()
+      if (project) {
+        return 'Token: ' + project.symbol
+      }
+
+      return 'Create Token'
+    },
+    tokenMenuItems: function() {
+      const result = []
+
+      for (const item of this.tokenProjects) {
+        result.push({
+          title: 'Token: ' + item.symbol,
+          symbol: item.symbol
+        })
+      }
+
+      result.push({
+        title: 'Create Token...',
+        action: 'create'
+      })
+
+      return result
+    }
+  },
+  mounted() {
+    this.tokenProjects = this.loadProjects()
+    if (!this.tokenProjects) {
+      this.tokenProjects = []
+    }
+    this.updateProjectIndex(0)
+  },
   methods: {
+    printInfo() {
+      this.printing = true
+
+      this.$nextTick(() => {
+        this.printTokenInfo($('.summary-list'))
+        this.printing = false
+      })
+    },
+    updateProjectIndex(index) {
+      this.projectIndex = index
+
+      this.summaryMap = []
+
+      const project = this.currentProject()
+      if (project) {
+        this.setAccountsTag(project.symbol)
+        this.showSummary = true
+
+        this.summaryMap.push(
+          {
+            title: 'Symbol',
+            content: project.symbol
+          },
+          {
+            title: 'Issuer',
+            content: project.issuer
+          },
+          {
+            title: 'Issuer Secret',
+            content: project.issuerSecret,
+            secret: true
+          },
+          {
+            title: 'Distributor',
+            content: project.distributor
+          },
+          {
+            title: 'Distributor Secret',
+            content: project.distributorSecret,
+            secret: true
+          },
+          {
+            title: 'Burn',
+            content: project.burn
+          }
+        )
+      } else {
+        this.setAccountsTag(null)
+        this.showSummary = false
+      }
+    },
+    loadProjects() {
+      return SettingsStore.get('token-projects')
+    },
+    currentProject() {
+      if (this.tokenProjects.length > 0) {
+        if (this.projectIndex >= this.tokenProjects.length) {
+          this.updateProjectIndex(0)
+        }
+
+        return this.tokenProjects[this.projectIndex]
+      }
+
+      return null
+    },
     dialogAccounts() {
       return this.$refs.dialogAccounts
     },
@@ -292,6 +434,51 @@ export default {
     background: rgba(0, 0, 0, 0.05);
     padding: 10px;
     margin: 10px;
+  }
+
+  .summary-view {
+    margin: 10px;
+    width: 90%;
+    display: flex;
+    flex: 0 1 auto;
+    flex-direction: column;
+
+    .summary-header {
+      display: flex;
+      font-weight: bold;
+      font-size: 1.1em;
+      text-transform: uppercase;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+
+      button {
+        margin: 0;
+      }
+    }
+
+    .operations-item {
+      display: flex;
+      font-size: 0.95em;
+
+      .item-name {
+        text-align: right;
+        padding-right: 5px;
+        font-weight: bold;
+        flex: 1 1 20%;
+      }
+
+      .item-value {
+        text-align: left;
+        flex: 2 2 80%;
+        padding-left: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-family: monospace;
+        width: 0;
+      }
+    }
   }
 }
 </style>
