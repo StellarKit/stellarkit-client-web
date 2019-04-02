@@ -23,16 +23,6 @@
         </v-list>
       </v-menu>
 
-      <div v-if="showSummary" class="summary-view">
-        <div class="summary-list">
-          <div class="operations-item" v-for="item in summaryMap" :key="item.content">
-            <div class="item-name">{{item.title}}:</div>
-            <div v-if="item.secret" class="item-value" @click="item.secret = false">Click to reveal</div>
-            <div v-else class="item-value">{{item.content}}</div>
-          </div>
-        </div>
-      </div>
-
       <div class="section-box">
         <div class="section-title">Set Trust</div>
         <TrustComp :asset="trustAsset"/>
@@ -46,7 +36,13 @@
       <div class="section-box">
         <div class="section-title">Redeem Tokens</div>
 
-        <RedeemComp :asset="trustAsset"/>
+        <RedeemComp :asset="trustAsset" :destKey="burn"/>
+      </div>
+
+      <div class="section-box">
+        <div class="section-title">Redeem Transactions</div>
+
+        <RedeemTransactions :asset="trustAsset" :destKey="burn"/>
       </div>
 
       <!-- <div class="section-box">
@@ -69,6 +65,7 @@ import TrustComp from './TrustComp.vue'
 import RequestComp from './RequestComp.vue'
 import RedeemComp from './RedeemComp.vue'
 import CreateComp from './CreateComp.vue'
+import RedeemTransactions from './RedeemTransactions.vue'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -77,10 +74,10 @@ export default {
       loading: false,
       email: '',
       tokenProjects: [],
-      summaryMap: [],
       publicKey: '',
       showSummary: false,
-      trustAsset: null
+      trustAsset: null,
+      burn: ''
     }
   },
   components: {
@@ -88,6 +85,7 @@ export default {
     RequestComp,
     RedeemComp,
     CreateComp,
+    RedeemTransactions,
     'account-list': AccountList,
     'instructions-header': InstructionsHeader
   },
@@ -136,41 +134,18 @@ export default {
     updateProjectIndex(index) {
       this.projectIndex = index
 
-      this.summaryMap = []
-
       const project = this.currentProject()
       if (project) {
         this.showSummary = true
         this.trustAsset = new StellarSdk.Asset(project.symbol, project.issuer)
 
-        this.summaryMap.push(
-          {
-            title: 'Symbol',
-            content: project.symbol
-          },
-          {
-            title: 'Issuer',
-            content: project.issuer
-          },
-          {
-            title: 'Issuer Secret',
-            content: project.issuerSecret,
-            secret: true
-          },
-          {
-            title: 'Distributor',
-            content: project.distributor
-          },
-          {
-            title: 'Distributor Secret',
-            content: project.distributorSecret,
-            secret: true
-          },
-          {
-            title: 'Burn',
-            content: project.burn
-          }
-        )
+        // content: project.symbol
+        // content: project.issuer
+        // content: project.issuerSecret,
+        // content: project.distributor
+        // content: project.distributorSecret,
+
+        this.burn = project.burn
       } else {
         this.showSummary = false
       }
@@ -207,7 +182,7 @@ export default {
   flex-direction: column;
   align-items: center;
   overflow: auto;
-  max-height: 40vh;
+  max-height: 60vh;
 
   .section-box {
     width: 100%;
@@ -251,29 +226,6 @@ export default {
 
       button {
         margin: 0;
-      }
-    }
-
-    .operations-item {
-      display: flex;
-      font-size: 0.95em;
-
-      .item-name {
-        text-align: right;
-        padding-right: 5px;
-        font-weight: bold;
-        flex: 1 1 20%;
-      }
-
-      .item-value {
-        text-align: left;
-        flex: 2 2 80%;
-        padding-left: 5px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-family: monospace;
-        width: 0;
       }
     }
   }

@@ -1,13 +1,37 @@
 <template>
   <div class="comp-box">
-    <div>Send tokens to the Burn Carbon account to make them inaccessible forever.</div>
+    <div>Send tokens to the this address to redeem: {{destKey}}</div>
+
+    <v-text-field
+      style="width: 100%;"
+      label="Email"
+      placeholder="email@example.com"
+      v-model.trim="email"
+      @keyup.enter="redeemCredits"
+      hint="Email"
+    ></v-text-field>
+
+    <v-text-field
+      style="width: 100%;"
+      label="Amount"
+      placeholder="Amount"
+      v-model.trim="amount"
+      @keyup.enter="redeemCredits"
+      hint="Amount"
+      type="number"
+    ></v-text-field>
 
     <v-text-field
       style="width: 100%;"
       label="Secret Key"
-      placeholder="Example: SCSDLFIJSE9JSFELFJSLDFJSLDFJSLDKFJSLDFJLS"
+      placeholder="Starts with an 'S'"
       v-model.trim="secretKey"
-      @keyup.enter="redeemCredits()"
+      @keyup.enter="redeemCredits"
+      :counter="56"
+      hint="Starts with an 'S'"
+      :append-icon="showSecretText ? 'visibility_off' : 'visibility'"
+      @click:append="() => (showSecretText = !showSecretText)"
+      :type="showSecretText ? 'text' : 'password'"
     ></v-text-field>
 
     <v-btn
@@ -22,16 +46,19 @@
 
 <script>
 export default {
-  props: ['asset'],
+  props: ['asset', 'destKey'],
   data() {
     return {
       loading: false,
-      secretKey: ''
+      secretKey: '',
+      showSecretText: false,
+      amount: 0,
+      email: ''
     }
   },
   methods: {
     redeemCredits() {
-      // dd
+      // check if account trusts our token
     }
   }
 }

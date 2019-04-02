@@ -12,7 +12,9 @@
     <v-text-field
       style="width: 100%;"
       label="Public Key"
-      placeholder="Example: GCSDLFIJSE9JSFELFJSLDFJSLDFJSLDKFJSLDFJLS"
+      :counter="56"
+      placeholder="Starts with an 'G'"
+      hint="Starts with an 'G'"
       v-model.trim="publicKey"
       @keyup.enter="requestTokens()"
     ></v-text-field>

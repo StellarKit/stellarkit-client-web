@@ -11,7 +11,7 @@
       :counter="56"
       hint="Starts with an 'S'"
       :append-icon="showSecretText ? 'visibility_off' : 'visibility'"
-      :append-icon-cb="() => (showSecretText = !showSecretText)"
+      @click:append="() => (showSecretText = !showSecretText)"
       :type="showSecretText ? 'text' : 'password'"
     ></v-text-field>
 
