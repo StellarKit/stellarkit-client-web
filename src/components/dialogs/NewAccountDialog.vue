@@ -1,172 +1,130 @@
 <template>
-<v-dialog
-  lazy
-  v-model='visible'
-  scrollable
-  @keydown.esc="visible = false"
-  max-width="600"
->
-  <div class='main-container'>
-    <dialog-titlebar
-      :title=title
-      v-on:close='visible = false'
-      v-on:back='mode = "start"'
-      :showBack='showBack'
-    />
-
-    <div class='help-contents'>
-      <div
-        v-if='mode === "start"'
-        class='start-box'
-      >
-        <v-tooltip
-          v-if='isTestnet()'
-          open-delay='200'
-          bottom
-        >
-          <v-btn
-            color='primary'
-            slot="activator"
-            @click="buttonClick('testnet-account')"
-          >Free Testnet Account</v-btn>
-          <span>Add a free testnet account</span>
-        </v-tooltip>
-        <v-tooltip
-          open-delay='200'
-          bottom
-        >
-          <v-btn
-            color='primary'
-            slot="activator"
-            @click="buttonClick('add-account')"
-          >Add Existing Account</v-btn>
-          <span>Add existing account with a secret key</span>
-        </v-tooltip>
-        <v-tooltip
-          open-delay='200'
-          bottom
-        >
-          <v-btn
-            color='primary'
-            slot="activator"
-            @click="buttonClick('create-account')"
-          >Create New Account</v-btn>
-          <span>Create a new account with a source account's secret key</span>
-        </v-tooltip>
-      </div>
-
-      <div v-else>
-        <div
-          v-if='mode === "add"'
-          class='choice-box'
-        >
-          <div class='note-text'>Paste in the secret or public key of an existing account.</div>
-          <dialog-accounts
-            ref='dialogAccountsAdd'
-            v-on:enter-key-down='addExistingAccount'
-            v-on:toast='displayToast'
-            :model="model"
-            :showSecret=true
-            :showAccountName=true
-          />
-
-          <div class='button-holder'>
-            <v-tooltip
-              open-delay='200'
-              bottom
-            >
-              <v-btn
-                round
-                color='primary'
-                slot="activator"
-                @click="addExistingAccount"
-                :loading="loading"
-              >Add Account</v-btn>
-              <span>Add account with key</span>
-            </v-tooltip>
-          </div>
-        </div>
-
-        <div
-          v-if='mode === "secret"'
-          class='choice-box'
-        >
-          <dialog-accounts
-            ref='dialogAccounts'
-            v-on:enter-key-down='createAccount'
-            v-on:toast='displayToast'
-            :model="model"
-            :showFunding=true
-            :showTextValue=true
-            :showAccountName=true
-            :showAmount=true
-          />
-          <div class='button-holder'>
-            <v-tooltip
-              open-delay='200'
-              bottom
-            >
-              <v-btn
-                round
-                color='primary'
-                slot="activator"
-                @click="createAccount"
-                :loading="loading"
-              >Create Account</v-btn>
-              <span>Add account with secret key</span>
-            </v-tooltip>
-          </div>
-        </div>
-
-        <div
-          v-if='mode === "testnet"'
-          class='choice-box'
-        >
-          <dialog-accounts
-            ref='dialogAccounts'
-            v-on:enter-key-down='createTestnetAccount'
-            v-on:toast='displayToast'
-            :model="model"
-            :showAccountName=true
-          />
-          <div class='button-holder'>
-            <v-tooltip
-              open-delay='200'
-              bottom
-            >
-              <v-btn
-                round
-                color='primary'
-                slot="activator"
-                @click="createTestnetAccount"
-                :loading="loading"
-              >Create Account</v-btn>
-              <span>Add account with secret key</span>
-            </v-tooltip>
-          </div>
-        </div>
-      </div>
-
-      <save-secret-dialog
-        :ping='saveSecretDialogPing'
-        :publicKey='newAccountPublicKey'
+  <v-dialog lazy v-model="visible" scrollable @keydown.esc="visible = false" max-width="600">
+    <div class="main-container">
+      <dialog-titlebar
+        :title="title"
+        v-on:close="visible = false"
+        v-on:back="mode = 'start'"
+        :showBack="showBack"
       />
-      <toast-component
-        :absolute=true
-        location='create-account-dialog'
-        :bottom=false
-        :top=true
-      />
+
+      <div class="help-contents">
+        <div v-if="mode === 'start'" class="start-box">
+          <v-tooltip v-if="isTestnet()" open-delay="200" bottom>
+            <v-btn
+              color="primary"
+              slot="activator"
+              @click="buttonClick('testnet-account')"
+            >Free Testnet Account</v-btn>
+            <span>Add a free testnet account</span>
+          </v-tooltip>
+          <v-tooltip open-delay="200" bottom>
+            <v-btn
+              color="primary"
+              slot="activator"
+              @click="buttonClick('add-account')"
+            >Add Existing Account</v-btn>
+            <span>Add existing account with a secret key</span>
+          </v-tooltip>
+          <v-tooltip open-delay="200" bottom>
+            <v-btn
+              color="primary"
+              slot="activator"
+              @click="buttonClick('create-account')"
+            >Create New Account</v-btn>
+            <span>Create a new account with a source account's secret key</span>
+          </v-tooltip>
+        </div>
+
+        <div v-else>
+          <div v-if="mode === 'add'" class="choice-box">
+            <div class="note-text">Paste in the secret or public key of an existing account.</div>
+            <dialog-accounts
+              ref="dialogAccountsAdd"
+              v-on:enter-key-down="addExistingAccount"
+              v-on:toast="displayToast"
+              :model="model"
+              :showSecret="true"
+              :showAccountName="true"
+            />
+
+            <div class="button-holder">
+              <v-tooltip open-delay="200" bottom>
+                <v-btn
+                  round
+                  color="primary"
+                  slot="activator"
+                  @click="addExistingAccount"
+                  :loading="loading"
+                >Add Account</v-btn>
+                <span>Add account with key</span>
+              </v-tooltip>
+            </div>
+          </div>
+
+          <div v-if="mode === 'secret'" class="choice-box">
+            <dialog-accounts
+              ref="dialogAccounts"
+              v-on:enter-key-down="createAccount"
+              v-on:toast="displayToast"
+              :model="model"
+              :showFunding="true"
+              :showTextValue="true"
+              :showAccountName="true"
+              :showAmount="true"
+            />
+            <div class="button-holder">
+              <v-tooltip open-delay="200" bottom>
+                <v-btn
+                  round
+                  color="primary"
+                  slot="activator"
+                  @click="createAccount"
+                  :loading="loading"
+                >Create Account</v-btn>
+                <span>Add account with secret key</span>
+              </v-tooltip>
+            </div>
+          </div>
+
+          <div v-if="mode === 'testnet'" class="choice-box">
+            <dialog-accounts
+              ref="dialogAccounts"
+              v-on:enter-key-down="createTestnetAccount"
+              v-on:toast="displayToast"
+              :model="model"
+              :showAccountName="true"
+            />
+            <div class="button-holder">
+              <v-tooltip open-delay="200" bottom>
+                <v-btn
+                  round
+                  color="primary"
+                  slot="activator"
+                  @click="createTestnetAccount"
+                  :loading="loading"
+                >Create Account</v-btn>
+                <span>Add account with secret key</span>
+              </v-tooltip>
+            </div>
+          </div>
+        </div>
+
+        <save-secret-dialog :ping="saveSecretDialogPing" :publicKey="newAccountPublicKey"/>
+        <toast-component
+          :absolute="true"
+          location="create-account-dialog"
+          :bottom="false"
+          :top="true"
+        />
+      </div>
     </div>
-  </div>
-</v-dialog>
+  </v-dialog>
 </template>
 
 <script>
 import Helper from '../../js/helper.js'
-import {
-  DialogTitleBar
-} from 'stellarkit-js-ui'
+import { DialogTitleBar } from 'stellarkit-js-ui'
 import StellarUtils from '../../js/StellarUtils.js'
 import StellarAccounts from '../../js/StellarAccounts.js'
 import ToastComponent from '../ToastComponent.vue'
@@ -275,12 +233,12 @@ export default {
       this.loading = true
 
       StellarUtils.createTestAccount(accountName)
-        .then((result) => {
+        .then(result => {
           Helper.debugLog(result)
 
           this.visible = false
         })
-        .catch((error) => {
+        .catch(error => {
           Helper.debugLog(error, 'Error')
         })
         .finally(() => {
@@ -299,11 +257,17 @@ export default {
         this.loading = true
 
         // create issuer
-        StellarUtils.newAccount(fundingWallet, String(amount), accountName, null, secretKey)
-          .then((accountInfo) => {
+        StellarUtils.newAccount(
+          fundingWallet,
+          String(amount),
+          accountName,
+          null,
+          secretKey
+        )
+          .then(accountInfo => {
             this.accountCreated(accountInfo)
           })
-          .catch((error) => {
+          .catch(error => {
             Helper.debugLog(error)
             this.displayToast('Error', true)
           })
@@ -337,36 +301,36 @@ export default {
 @import '../../scss/styles.scss';
 
 .main-container {
-    @include standard-dialog-contents();
+  @include standard-dialog-contents();
 
-    .help-contents {
-        @include inner-dialog-contents();
+  .help-contents {
+    @include inner-dialog-contents();
 
-        .text-fields-area {
-            margin: 0 30px;
-        }
-
-        .note-text {
-            margin-bottom: 10px;
-        }
-
-        .start-box {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-
-            button {
-                min-width: 250px;
-            }
-        }
-
-        .choice-box {
-            width: 100%;
-            padding: 0 20px;
-            display: flex;
-            flex-direction: column;
-        }
+    .text-fields-area {
+      margin: 0 30px;
     }
+
+    .note-text {
+      margin-bottom: 10px;
+    }
+
+    .start-box {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      button {
+        min-width: 250px;
+      }
+    }
+
+    .choice-box {
+      width: 100%;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+    }
+  }
 }
 </style>
