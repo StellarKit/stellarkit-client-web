@@ -7,7 +7,29 @@
     </instructions-header>
 
     <div class="main-container">
-      <div class="user-area">
+      <div class="section-box">
+        <div class="section-title">Set Trust</div>
+
+        <div>You must trust the Carbon asset before you can request your tokens. This can be done in your Stellar wallet application, or you can do it here.</div>
+
+        <v-text-field
+          style="width: 100%;"
+          label="Secret Key"
+          placeholder="Example: SCSDLFIJSE9JSFELFJSLDFJSLDFJSLDKFJSLDFJLS"
+          v-model.trim="publicKey"
+          @keyup.enter="requestTokens()"
+        ></v-text-field>
+
+        <v-btn
+          round
+          small
+          color="primary"
+          @click="sendAssetsDialogPing = !sendAssetsDialogPing"
+          :loading="loadingSend"
+        >Trust Asset</v-btn>
+      </div>
+
+      <div class="section-box">
         <div class="section-title">Request Tokens</div>
 
         <div>Enter your email address and public key to your Stellar wallet. We will send the tokens to the wallet. Your wallet must trust our asset, or this will fail.</div>
@@ -36,7 +58,7 @@
         >Request Tokens</v-btn>
       </div>
 
-      <div class="user-area">
+      <div class="section-box">
         <div>Sign up for a free account</div>
         <div class="user-buttons">
           <v-btn
@@ -217,7 +239,7 @@ export default {
   flex-direction: column;
   align-items: center;
 
-  .user-area {
+  .section-box {
     width: 100%;
     max-width: 600px;
     display: flex;
