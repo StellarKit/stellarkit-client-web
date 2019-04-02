@@ -8,7 +8,7 @@
 
     <div class="main-container">
       <v-menu offset-y :transition="false">
-        <v-btn small color="primary" :ripple="false" slot="activator">
+        <v-btn small color="primary" slot="activator">
           {{menuButtonName}}
           <v-icon>&#xE5C5;</v-icon>
         </v-btn>
@@ -221,11 +221,6 @@ export default {
         })
       }
 
-      result.push({
-        title: 'Create Token...',
-        action: 'create'
-      })
-
       return result
     }
   },
@@ -237,6 +232,18 @@ export default {
     this.updateProjectIndex(0)
   },
   methods: {
+    displayToken(index) {
+      this.updateProjectIndex(index)
+    },
+    projectsMenuClick(index, action) {
+      switch (action) {
+        case 'create':
+          break
+        default:
+          this.displayToken(index)
+          break
+      }
+    },
     printInfo() {
       this.printing = true
 
