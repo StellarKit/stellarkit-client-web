@@ -24,21 +24,10 @@
       </v-menu>
 
       <div v-if="showSummary" class="summary-view">
-        <div class="summary-header">
-          Token Information
-          <v-spacer/>
-          <v-btn small icon @click="printInfo">
-            <v-icon>&#xE8AD;</v-icon>
-          </v-btn>
-        </div>
         <div class="summary-list">
           <div class="operations-item" v-for="item in summaryMap" :key="item.content">
             <div class="item-name">{{item.title}}:</div>
-            <div
-              v-if="item.secret && !printing"
-              class="item-value"
-              @click="item.secret = false"
-            >Click to reveal</div>
+            <div v-if="item.secret" class="item-value" @click="item.secret = false">Click to reveal</div>
             <div v-else class="item-value">{{item.content}}</div>
           </div>
         </div>
@@ -175,7 +164,6 @@ import SendAssetsDialog from '../components/dialogs/SendAssetsDialog.vue'
 import BuyAssetDialog from '../components/dialogs/BuyAssetDialog.vue'
 import ReusableStellarViewsModel from '../components/ReusableStellarViewsModel.js'
 import SettingsStore from '../js/SettingsStore.js'
-import $ from 'jquery'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -191,8 +179,7 @@ export default {
       tokenProjects: [],
       summaryMap: [],
       publicKey: '',
-      showSummary: false,
-      printing: false
+      showSummary: false
     }
   },
   components: {
@@ -243,14 +230,6 @@ export default {
           this.displayToken(index)
           break
       }
-    },
-    printInfo() {
-      this.printing = true
-
-      this.$nextTick(() => {
-        this.printTokenInfo($('.summary-list'))
-        this.printing = false
-      })
     },
     updateProjectIndex(index) {
       this.projectIndex = index

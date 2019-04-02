@@ -193,13 +193,14 @@ export default {
             .then(() => {
               return this.makeBurnAccount(fundingWallet, asset, issuerWallet)
             })
-            .then(() => {
+            .then(burnKeypair => {
               // return results and close
               this.$emit(
                 'token-created',
                 issuerKeypair,
                 distributorKeypair,
-                asset
+                asset,
+                burnKeypair
               )
               this.visible = false
 
@@ -237,8 +238,8 @@ export default {
           asset.getCode()
         )
           .then(accountInfo => {
-            const issuerKeypair = accountInfo.keypair
-            const newWallet = StellarWallet.secret(issuerKeypair.secret())
+            const burnKeypair = accountInfo.keypair
+            const newWallet = StellarWallet.secret(burnKeypair.secret())
 
             // set trust on asset
             const trustLimit = 100000000000
@@ -263,7 +264,7 @@ export default {
                   result => {
                     Helper.debugLog('locked burn account!')
 
-                    return null
+                    return burnKeypair
                   }
                 )
               })
