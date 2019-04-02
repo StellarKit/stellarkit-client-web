@@ -92,7 +92,6 @@ export default {
       Helper.debugLog('nothing')
     },
     createAccount() {
-      debugger
       const signerWallet = this.dialogAccounts().sourceWallet()
       const asset = this.dialogAccounts().asset()
       let fundingWallet = this.dialogAccounts().fundingWallet()
