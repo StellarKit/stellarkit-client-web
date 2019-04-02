@@ -1,69 +1,43 @@
 <template>
-<div>
-  <account-list :items="accountsUI" />
-  <instructions-header>
-    <div>Content coming soon...</div>
-  </instructions-header>
+  <div>
+    <account-list :items="accountsUI"/>
+    <instructions-header>
+      <div>Content coming soon...</div>
+    </instructions-header>
 
-  <div class='main-container'>
-    <div class='bifrost-notes'>
-      <div>This is only going to work if you have setup a local server with Bifrost, BTC and ETH servers configured. </div>
-      <div>See <a
-          href="https://github.com/StellarKit"
-          target="_blank"
-        >https://github.com/StellarKit</a> for docker images to test on testnet.</div>
+    <div class="main-container">
+      <div class="bifrost-notes">
+        <div>This is only going to work if you have setup a local server with Bifrost, BTC and ETH servers configured.</div>
+        <div>
+          See
+          <a href="https://github.com/StellarKit" target="_blank">https://github.com/StellarKit</a> for docker images to test on testnet.
+        </div>
+      </div>
+
+      <div class="bifrost-params">
+        <v-text-field hide-details label="Horizon IP Address" v-model.trim="horizonIP"></v-text-field>
+        <v-text-field hide-details label="Bifrost IP Address" v-model.trim="biforstIP"></v-text-field>
+        <v-text-field hide-details label="Network" v-model.trim="network"></v-text-field>
+      </div>
+
+      <div style="margin-top: 20px;" class="button-group">
+        <v-btn round small color="primary" @click="showDialog">Buy Token</v-btn>
+        <v-btn
+          round
+          small
+          color="primary"
+          @click="transactionDialogPing = !transactionDialogPing"
+        >Submit Transaction</v-btn>
+      </div>
     </div>
 
-    <div class='bifrost-params'>
-      <v-text-field
-        hide-details
-        label="Horizon IP Address"
-        v-model.trim="horizonIP"
-      ></v-text-field>
-      <v-text-field
-        hide-details
-        label="Bifrost IP Address"
-        v-model.trim="biforstIP"
-      ></v-text-field>
-      <v-text-field
-        hide-details
-        label="Network"
-        v-model.trim="network"
-      ></v-text-field>
-    </div>
-
-    <div
-      style='margin-top: 20px;'
-      class='button-group'
-    >
-      <v-btn
-        round
-        small
-        color='primary'
-        @click="showDialog"
-      >Buy Token</v-btn>
-      <v-btn
-        round
-        small
-        color='primary'
-        @click="transactionDialogPing = !transactionDialogPing"
-      >Submit Transaction</v-btn>
-    </div>
+    <buy-token-dialog :ping="showDialogPing" :params="params" v-on:new-account="newAccount"/>
+    <transaction-dialog :ping="transactionDialogPing"/>
   </div>
-
-  <buy-token-dialog
-    :ping='showDialogPing'
-    :params='params'
-    v-on:new-account='newAccount'
-  />
-  <transaction-dialog :ping='transactionDialogPing' />
-</div>
 </template>
 
 <script>
-import {
-  BuyTokenDialog
-} from 'stellarkit-js-ui'
+import { BuyTokenDialog } from 'stellarkit-js-ui'
 import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
 import TransactionDialog from '../components/dialogs/TransactionDialog.vue'
@@ -115,23 +89,23 @@ export default {
 @import '../scss/styles.scss';
 
 .main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .bifrost-notes {
+    margin-bottom: 20px;
+  }
+
+  .bifrost-params {
     display: flex;
-    flex-direction: column;
-    align-items:: center;
+    justify-content: center;
+    flex-wrap: wrap;
 
-    .bifrost-notes {
-        margin-bottom: 20px;
+    .input-group {
+      margin-right: 12px;
+      flex: 1 0 200px;
     }
-
-    .bifrost-params {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-
-        .input-group {
-            margin-right: 12px;
-            flex: 1 0 200px;
-        }
-    }
+  }
 }
 </style>
