@@ -5,7 +5,7 @@ const debounce = require('debounce')
 
 export default class WalletStream extends EventEmitter {
   // typs is 'payments' 'transactions' 'operations' 'trades'
-  constructor(publicKey, type = 'payments', order = 'desc', limit = 0) {
+  constructor(publicKey, type = 'payments', order = 'desc', limit = 1000) {
     super()
 
     this.limit = limit

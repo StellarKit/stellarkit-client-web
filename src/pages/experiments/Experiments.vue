@@ -194,7 +194,7 @@ export default {
     padding: 20px;
     margin: 20px 0;
 
-    // HACK, added for datatable.  It was not strething to fit over a table.  mystery
+    // HACK, added for datatable.  It was not stretching to fit over a table.  mystery
     flex: 1 0 auto;
 
     .section-title {
