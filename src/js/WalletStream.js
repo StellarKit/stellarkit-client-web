@@ -5,7 +5,7 @@ const debounce = require('debounce')
 
 export default class WalletStream extends EventEmitter {
   // typs is 'payments' 'transactions' 'operations' 'trades'
-  constructor(publicKey, type = 'payments', order = 'desc', limit = 1000) {
+  constructor(publicKey, type = 'payments', order = 'desc', limit = 200) {
     super()
 
     this.limit = limit
@@ -197,10 +197,10 @@ export default class WalletStream extends EventEmitter {
     builder.forAccount(this.publicKey)
 
     const stopper = builder.stream({
-      onmessage: (txResponse) => {
+      onmessage: txResponse => {
         this.displayTransaction(txResponse)
       },
-      onerror: (error) => {
+      onerror: error => {
         if (error['isTrusted'] === true) {
           // not sure what this is, but ignoring it, constantly logs
         } else {
