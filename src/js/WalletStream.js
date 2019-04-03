@@ -5,19 +5,18 @@ const debounce = require('debounce')
 
 export default class WalletStream extends EventEmitter {
   // typs is 'payments' 'transactions' 'operations' 'trades'
-  constructor(publicKey, type = 'payments', order = 'desc', limit = 200) {
+  constructor(publicKey, type = 'payments', limit = 200) {
     super()
 
     this.limit = limit
     this.type = type
-    this.order = order
     this.publicKey = publicKey
 
     this.paymentStopper = null
     this.operationStopper = null
     this.tradeStopper = null
     this.transactionStopper = null
-    this.items = []
+    this.itemsMap = {}
     this.startFromNow = false
 
     this.notifyUpdated = debounce(() => {
@@ -50,18 +49,15 @@ export default class WalletStream extends EventEmitter {
   }
 
   getItems() {
-    return this.items.slice()
+    return Object.values(this.itemsMap)
   }
 
   addItem(item, tx) {
     item.link = tx._links.self.href
     item.date = tx.created_at
+    item.id = tx.id
 
-    this.items.unshift(item)
-
-    if (this.limit > 0) {
-      this.items = this.items.slice(0, this.limit)
-    }
+    this.itemsMap[item.id] = item
 
     this.notifyUpdated()
   }
@@ -188,7 +184,6 @@ export default class WalletStream extends EventEmitter {
     if (this.limit > 0) {
       builder.limit(this.limit)
     }
-    builder.order(this.order)
 
     if (this.startFromNow) {
       builder.cursor('now')
