@@ -1,55 +1,66 @@
 <template>
   <div>
-    <account-list :items="accountsUI"/>
+    <div v-if="password === 'secret'">
+      <account-list :items="accountsUI"/>
 
-    <instructions-header>
-      <div>Content coming soon...</div>
-    </instructions-header>
+      <instructions-header>
+        <div>Content coming soon...</div>
+      </instructions-header>
 
-    <div class="main-container">
-      <v-menu offset-y :transition="false">
-        <v-btn small color="primary" slot="activator">
-          {{menuButtonName}}
-          <v-icon>&#xE5C5;</v-icon>
-        </v-btn>
-        <v-list dense>
-          <v-list-tile
-            v-for="(item, index) in tokenMenuItems"
-            :key="item.title"
-            @click="projectsMenuClick(index, item.action)"
-          >
-            <v-list-tile-title>{{item.title}}</v-list-tile-title>
-          </v-list-tile>
-        </v-list>
-      </v-menu>
+      <div class="main-container">
+        <v-menu offset-y :transition="false">
+          <v-btn small color="primary" slot="activator">
+            {{menuButtonName}}
+            <v-icon>&#xE5C5;</v-icon>
+          </v-btn>
+          <v-list dense>
+            <v-list-tile
+              v-for="(item, index) in tokenMenuItems"
+              :key="item.title"
+              @click="projectsMenuClick(index, item.action)"
+            >
+              <v-list-tile-title>{{item.title}}</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
 
-      <div class="section-box">
-        <div class="section-title">Set Trust</div>
-        <TrustComp :asset="trustAsset"/>
-      </div>
+        <div class="section-box">
+          <div class="section-title">Set Trust</div>
+          <TrustComp :asset="trustAsset"/>
+        </div>
 
-      <div class="section-box">
-        <div class="section-title">Request Tokens</div>
-        <RequestComp :asset="trustAsset"/>
-      </div>
+        <div class="section-box">
+          <div class="section-title">Request Tokens</div>
+          <RequestComp :asset="trustAsset"/>
+        </div>
 
-      <div class="section-box">
-        <div class="section-title">Redeem Tokens</div>
+        <div class="section-box">
+          <div class="section-title">Redeem Tokens</div>
 
-        <RedeemComp :asset="trustAsset" :publicKey="burn"/>
-      </div>
+          <RedeemComp :asset="trustAsset" :publicKey="burn"/>
+        </div>
 
-      <div class="section-box">
-        <div class="section-title">Redeem Transactions</div>
+        <div class="section-box">
+          <div class="section-title">Redeem Transactions</div>
 
-        <RedeemTransactions :asset="trustAsset" :publicKey="burn"/>
-      </div>
+          <RedeemTransactions :asset="trustAsset" :publicKey="burn"/>
+        </div>
 
-      <!-- <div class="section-box">
+        <!-- <div class="section-box">
         <div class="section-title">Create Account</div>
 
         <CreateComp :asset="trustAsset"/>
-      </div>-->
+        </div>-->
+      </div>
+    </div>
+    <div v-else class="password-field">
+      <v-text-field
+        label="Password"
+        placeholder="Password"
+        v-model.trim="enteredPassword"
+        @keyup.enter="checkPassword"
+        hint="Password"
+      ></v-text-field>
     </div>
   </div>
 </template>
@@ -75,9 +86,11 @@ export default {
       email: '',
       tokenProjects: [],
       publicKey: '',
+      password: '',
       showSummary: false,
       trustAsset: null,
-      burn: ''
+      burn: '',
+      enteredPassword: ''
     }
   },
   components: {
@@ -112,6 +125,8 @@ export default {
     }
   },
   mounted() {
+    this.password = SettingsStore.get('experiments-password')
+
     this.tokenProjects = this.loadProjects()
     if (!this.tokenProjects) {
       this.tokenProjects = []
@@ -119,6 +134,10 @@ export default {
     this.updateProjectIndex(0)
   },
   methods: {
+    checkPassword() {
+      this.password = this.enteredPassword
+      SettingsStore.set('experiments-password', this.password)
+    },
     displayToken(index) {
       this.updateProjectIndex(index)
     },
@@ -177,6 +196,12 @@ export default {
 <style lang='scss' scoped>
 @import '../../scss/styles.scss';
 
+.password-field {
+  margin: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .main-container {
   display: flex;
   flex-direction: column;
