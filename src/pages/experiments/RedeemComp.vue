@@ -1,6 +1,7 @@
 <template>
   <div class="comp-box">
-    <div>Send tokens to the this address to redeem: {{destKey}}</div>
+    <div>You can use your own wallet to send tokens to the this address to redeem: {{publicKey}}</div>
+    <div>Or you can use the form below</div>
 
     <v-text-field
       style="width: 100%;"
@@ -37,16 +38,20 @@
     <v-btn
       round
       small
+      :loading="loading"
       color="primary"
       @click="redeemCredits"
-      :loading="loading"
     >Redeem Carbon Credits</v-btn>
   </div>
 </template>
 
 <script>
+import Helper from '../../js/helper.js'
+import StellarUtils from '../../js/StellarUtils.js'
+import { StellarWallet } from 'stellarkit-js-utils'
+
 export default {
-  props: ['asset', 'destKey'],
+  props: ['asset', 'publicKey'],
   data() {
     return {
       loading: false,
@@ -58,7 +63,39 @@ export default {
   },
   methods: {
     redeemCredits() {
-      // check if account trusts our token
+      if (
+        Helper.strOK(this.secretKey) &&
+        Helper.strOK(this.email) &&
+        Helper.strOK(this.publicKey) &&
+        this.amount > 0
+      ) {
+        const sourceWallet = StellarWallet.secret(this.secretKey)
+        const burnWallet = StellarWallet.public(this.publicKey)
+        this.loading = true
+
+        StellarUtils.sendAsset(
+          sourceWallet,
+          null,
+          burnWallet,
+          String(this.amount),
+          this.asset,
+          'from: ' + this.email
+        )
+          .then(response => {
+            Helper.debugLog(response, 'Success')
+
+            StellarUtils.updateBalances()
+            Helper.toast('Tokens Redeemed')
+
+            return null
+          })
+          .catch(error => {
+            Helper.debugLog(error, 'Error')
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      }
     }
   }
 }

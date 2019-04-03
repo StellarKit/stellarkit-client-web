@@ -36,7 +36,7 @@
       <div class="section-box">
         <div class="section-title">Redeem Tokens</div>
 
-        <RedeemComp :asset="trustAsset" :destKey="burn"/>
+        <RedeemComp :asset="trustAsset" :publicKey="burn"/>
       </div>
 
       <div class="section-box">

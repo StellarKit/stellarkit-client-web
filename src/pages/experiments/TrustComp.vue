@@ -1,6 +1,9 @@
 <template>
   <div class="comp-box">
     <div>You must trust the Carbon asset before you can request your tokens. This can be done in your Stellar wallet application, or you can do it here.</div>
+    <div>Token Information</div>
+    <div>Code: {{asset ? asset.getCode() : ""}}</div>
+    <div>Issuer: {{asset ? asset.getIssuer() : ""}}</div>
 
     <v-text-field
       style="width: 100%;"
