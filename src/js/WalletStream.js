@@ -69,6 +69,8 @@ export default class WalletStream extends EventEmitter {
       this.addItem({
         id: txResponse.id,
         name: 'Payment ' + asset,
+        from: txResponse.from,
+        assetCode: txResponse.asset_code,
         value: Helper.stripZeros(txResponse.amount)
       }, txResponse)
     } else if (txResponse.type === 'payment_path') {

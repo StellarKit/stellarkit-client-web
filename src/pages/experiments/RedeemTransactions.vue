@@ -1,23 +1,137 @@
 <template>
   <div class="comp-box">
-    <div>List of payments to the burn address: {{destKey}}</div>
+    <div>List of payments to burn: {{publicKey}}</div>
+
+    <table-header :vars="headerVars"/>
+    <v-data-table
+      class="table-hacks"
+      :headers="headers"
+      :items="history"
+      :loading="loading"
+      sort-icon="keyboard_arrow_down"
+      :search="headerVars.search"
+      item-key="id"
+      :rows-per-page-items="[15,30,100,{'text':'All','value':-1}]"
+    >
+      <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
+      <template slot="items" slot-scope="props">
+        <tr @click="props.expanded = !props.expanded">
+          <td>{{ props.item.name }}</td>
+          <td>{{ props.item.value }}</td>
+          <td>{{ props.item.from }}</td>
+          <td>{{ props.item.value }}</td>
+          <td>
+            <v-btn small flat class="mx-0" @click.stop="clickLink(props.item.link)">link</v-btn>
+          </td>
+        </tr>
+      </template>
+
+      <template slot="expand">
+        <v-card flat>nothing yet</v-card>
+      </template>
+
+      <v-alert
+        slot="no-data"
+        :value="true"
+        color="success"
+        icon="info"
+      >Sorry, nothing to display here :(</v-alert>
+
+      <v-alert
+        slot="no-results"
+        :value="true"
+        color="error"
+        icon="warning"
+      >Your search for "{{ headerVars.search }}" found no results.</v-alert>
+    </v-data-table>
   </div>
 </template>
 
 <script>
+import WalletStream from '../../js/WalletStream.js'
+import TableHeader from '../../components/TableHeader.vue'
+import Helper from '../../js/helper.js'
+
 export default {
-  props: ['asset', 'destKey'],
+  props: ['asset', 'publicKey'],
+  components: {
+    TableHeader
+  },
   data() {
     return {
       loading: false,
-      secretKey: '',
-      showSecretText: false,
-      amount: 0
+      walletStream: null,
+      cache: null,
+      headerVars: {
+        title: 'History',
+        search: ''
+      },
+      history: [],
+      headers: [
+        {
+          text: 'Name',
+          align: 'left',
+          value: 'name'
+        },
+        {
+          text: 'Carbon',
+          align: 'left',
+          value: 'value'
+        },
+        {
+          text: 'From',
+          align: 'right',
+          value: 'from'
+        },
+        {
+          text: 'Amount',
+          align: 'right',
+          value: 'value'
+        },
+        {
+          text: 'Link',
+          align: 'right',
+          sortable: false,
+          value: 'link'
+        }
+      ]
     }
   },
+  watch: {
+    publicKey() {
+      this.setup()
+    }
+  },
+  mounted() {
+    this.setup()
+  },
   methods: {
-    redeemCredits() {
-      // check if account trusts our token
+    clickLink(link) {
+      Helper.openBrowser(link)
+    },
+    setup() {
+      if (!this.publicKey) {
+        console.log('publicKey null')
+      } else {
+        if (this.walletStream) {
+          this.walletStream.stop()
+          this.walletStream = null
+        }
+
+        this.walletStream = new WalletStream(this.publicKey)
+
+        this.history = []
+
+        this.walletStream.on('updated', () => {
+          const result = this.walletStream.getItems()
+
+          for (const x of result) {
+            if (x.assetCode === this.asset.getCode()) {
+              this.history.push(x)
+            }
+          }
+        })
+      }
     }
   }
 }
@@ -26,8 +140,17 @@ export default {
 <style lang='scss' scoped>
 @import '../../scss/styles.scss';
 
+.image-wrapper {
+  border-radius: 500px;
+  height: 40px;
+  width: 40px;
+  overflow: hidden;
+  margin: 6px;
+}
+
 .comp-box {
-  display: flex;
+  // table header doesn't like flex
+  //   display: flex;
   flex-direction: column;
   align-items: center;
 }

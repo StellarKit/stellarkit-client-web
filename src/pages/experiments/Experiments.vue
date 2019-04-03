@@ -42,7 +42,7 @@
       <div class="section-box">
         <div class="section-title">Redeem Transactions</div>
 
-        <RedeemTransactions :asset="trustAsset" :destKey="burn"/>
+        <RedeemTransactions :asset="trustAsset" :publicKey="burn"/>
       </div>
 
       <!-- <div class="section-box">
@@ -186,18 +186,22 @@ export default {
 
   .section-box {
     width: 100%;
-    max-width: 600px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: rgba(0, 0, 0, 0.025);
+    background: rgba(255, 255, 255, 0.96);
     border: solid 1px rgba(0, 0, 0, 0.1);
-    padding: 10px 20px;
+    padding: 20px;
     margin: 20px 0;
+
+    // HACK, added for datatable.  It was not strething to fit over a table.  mystery
+    flex: 1 0 auto;
 
     .section-title {
       font-weight: bold;
-      font-size: 1.1em;
+      color: rgba(0, 40, 90, 0.7);
+      font-size: 1.71em;
+      margin-bottom: 20px;
     }
 
     .user-buttons {
