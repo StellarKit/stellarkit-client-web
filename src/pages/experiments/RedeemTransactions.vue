@@ -18,14 +18,18 @@
       <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
       <template slot="items" slot-scope="props">
         <tr @click="props.expanded = !props.expanded">
-          <td>{{ props.item.date }}</td>
+          <td>
+            <v-btn
+              small
+              flat
+              class="mx-0"
+              @click.stop="clickLink(props.item.link)"
+            >{{ props.item.date }}</v-btn>
+          </td>
+
           <td>{{ props.item.name }}</td>
           <td>{{ props.item.value }}</td>
           <td>{{ props.item.from }}</td>
-          <td>{{ props.item.value }}</td>
-          <td>
-            <v-btn small flat class="mx-0" @click.stop="clickLink(props.item.link)">link</v-btn>
-          </td>
         </tr>
       </template>
 
@@ -92,19 +96,8 @@ export default {
         },
         {
           text: 'From',
-          align: 'right',
+          align: 'left',
           value: 'from'
-        },
-        {
-          text: 'Amount',
-          align: 'right',
-          value: 'value'
-        },
-        {
-          text: 'Link',
-          align: 'right',
-          sortable: false,
-          value: 'link'
         }
       ]
     }
