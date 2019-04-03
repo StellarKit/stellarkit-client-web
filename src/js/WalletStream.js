@@ -16,6 +16,7 @@ export default class WalletStream extends EventEmitter {
     this.paymentStopper = null
     this.operationStopper = null
     this.tradeStopper = null
+    this.transactionStopper = null
     this.items = []
     this.startFromNow = false
 
@@ -41,6 +42,11 @@ export default class WalletStream extends EventEmitter {
       this.operationStopper()
       this.operationStopper = null
     }
+
+    if (this.transactionStopper !== null) {
+      this.transactionStopper()
+      this.transactionStopper = null
+    }
   }
 
   getItems() {
@@ -49,6 +55,7 @@ export default class WalletStream extends EventEmitter {
 
   addItem(item, tx) {
     item.link = tx._links.self.href
+    item.date = tx.created_at
 
     this.items.unshift(item)
 
@@ -189,7 +196,7 @@ export default class WalletStream extends EventEmitter {
 
     builder.forAccount(this.publicKey)
 
-    return builder.stream({
+    const stopper = builder.stream({
       onmessage: (txResponse) => {
         this.displayTransaction(txResponse)
       },
@@ -201,5 +208,23 @@ export default class WalletStream extends EventEmitter {
         }
       }
     })
+
+    switch (this.type) {
+      case 'payments':
+        this.paymentStopper = stopper
+        break
+      case 'transactions':
+        this.transactionStopper = stopper
+        break
+      case 'operations':
+        this.operationStopper = stopper
+        break
+      case 'trades':
+        this.tradeStopper = stopper
+        break
+      default:
+        Helper.debugLog('wallet stream, type invalid')
+        break
+    }
   }
 }

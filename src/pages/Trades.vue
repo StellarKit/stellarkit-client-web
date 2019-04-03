@@ -1,69 +1,37 @@
 <template>
-<div>
-  <instructions-header>
-    <div>Content coming soon...</div>
-  </instructions-header>
+  <div>
+    <instructions-header>
+      <div>Content coming soon...</div>
+    </instructions-header>
 
-  <div class='accounts-box'>
-    <v-checkbox
-      label="Stream All Accounts"
-      hide-details
-      v-model="everyAccount"
-    ></v-checkbox>
+    <div class="accounts-box">
+      <v-checkbox label="Stream All Accounts" hide-details v-model="everyAccount"></v-checkbox>
 
       <v-select
-        v-if='!everyAccount'
+        v-if="!everyAccount"
         hide-details
         :items="accountsUI"
-        item-text='name'
+        item-text="name"
         v-model="selectedSource"
         label="Source account"
         return-object
         :menu-props="{maxHeight:'600'}"
       ></v-select>
+    </div>
+    <!-- <v-btn round small @click="assets()">Assets</v-btn> -->
+    <div class="button-group">
+      <v-btn round small @click="streamPayments()">{{paymentsButtonName}}</v-btn>
+      <v-btn round small @click="streamOperations()">{{operationsButtonName}}</v-btn>
+      <v-btn round small @click="streamTrades()">{{tradesButtonName}}</v-btn>
+    </div>
+    <div class="operations-content">
+      <div class="operations-title">Live Stream</div>
+      <div class="operations-item" v-for="item in operations" :key="item.id + item.name">
+        <a :href="item.link" class="item-name" target="_blank">{{item.name}}:</a>
+        <a :href="item.link" class="item-value" target="_blank">{{item.value}}</a>
+      </div>
+    </div>
   </div>
-  <!-- <v-btn round small @click="assets()">Assets</v-btn> -->
-  <div class='button-group'>
-    <v-btn
-      round
-      small
-      @click="streamPayments()"
-    >{{paymentsButtonName}}</v-btn>
-      <v-btn
-        round
-        small
-        @click="streamOperations()"
-      >{{operationsButtonName}}</v-btn>
-        <v-btn
-          round
-          small
-          @click="streamTrades()"
-        >{{tradesButtonName}}</v-btn>
-  </div>
-  <div class="operations-content">
-    <div class='operations-title'>Live Stream</div>
-    <div
-      class='operations-item'
-      v-for="item in operations"
-      :key='item.id + item.name'
-    >
-      <a
-        :href='item.link'
-        class='item-name'
-        target='_blank'
-      >
-        {{item.name}}:
-        </a>
-        <a
-          :href='item.link'
-          class='item-value'
-          target='_blank'
-        >
-          {{item.value}}
-          </a>
-  </div>
-</div>
-</div>
 </template>
 
 <script>
@@ -71,9 +39,7 @@ import StellarCommonMixin from '../components/StellarCommonMixin.js'
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
-import {
-  StellarWallet
-} from 'stellarkit-js-utils'
+import { StellarWallet } from 'stellarkit-js-utils'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -188,11 +154,14 @@ export default {
         if (txResponse.asset_type !== 'native') {
           asset = txResponse.asset_code
         }
-        this.addOperation({
-          id: txResponse.id,
-          name: 'Payment ' + asset,
-          value: Helper.stripZeros(txResponse.amount)
-        }, txResponse)
+        this.addOperation(
+          {
+            id: txResponse.id,
+            name: 'Payment ' + asset,
+            value: Helper.stripZeros(txResponse.amount)
+          },
+          txResponse
+        )
       } else if (txResponse.type === 'payment_path') {
         let asset = 'XLM'
 
@@ -200,23 +169,32 @@ export default {
           asset = txResponse.asset_code
         }
 
-        this.addOperation({
-          id: txResponse.id,
-          name: 'Payment path' + asset + '/' + txResponse.source_asset_code,
-          value: Helper.stripZeros(txResponse.amount)
-        }, txResponse)
+        this.addOperation(
+          {
+            id: txResponse.id,
+            name: 'Payment path' + asset + '/' + txResponse.source_asset_code,
+            value: Helper.stripZeros(txResponse.amount)
+          },
+          txResponse
+        )
       } else if (txResponse.type === 'create_account') {
-        this.addOperation({
-          id: txResponse.id,
-          name: 'Create Account',
-          value: Helper.stripZeros(txResponse.starting_balance)
-        }, txResponse)
+        this.addOperation(
+          {
+            id: txResponse.id,
+            name: 'Create Account',
+            value: Helper.stripZeros(txResponse.starting_balance)
+          },
+          txResponse
+        )
       } else if (txResponse.type === 'account_merge') {
-        this.addOperation({
-          id: txResponse.id,
-          name: 'Account Merge',
-          value: 'merging'
-        }, txResponse)
+        this.addOperation(
+          {
+            id: txResponse.id,
+            name: 'Account Merge',
+            value: 'merging'
+          },
+          txResponse
+        )
       } else if (txResponse.type === 'manage_offer') {
         let buying = 'XLM'
         let selling = 'XLM'
@@ -227,11 +205,14 @@ export default {
         if (txResponse.selling_asset_type !== 'native') {
           selling = txResponse.selling_asset_code
         }
-        this.addOperation({
-          id: txResponse.id,
-          name: 'Manage Offer',
-          value: 'Selling: ' + selling + ' Buying: ' + buying
-        }, txResponse)
+        this.addOperation(
+          {
+            id: txResponse.id,
+            name: 'Manage Offer',
+            value: 'Selling: ' + selling + ' Buying: ' + buying
+          },
+          txResponse
+        )
       } else if (txResponse.type === 'change_trust') {
         let asset = 'XLM'
 
@@ -239,22 +220,28 @@ export default {
           asset = txResponse.asset_code
         }
 
-        this.addOperation({
-          id: txResponse.id,
-          name: 'Change Trust',
-          value: asset
-        }, txResponse)
+        this.addOperation(
+          {
+            id: txResponse.id,
+            name: 'Change Trust',
+            value: asset
+          },
+          txResponse
+        )
       } else if (txResponse.type === 'set_options') {
         let value = 'unknown'
         if (txResponse.inflation_dest) {
           value = 'Inflation dest = ' + txResponse.inflation_dest
         }
 
-        this.addOperation({
-          id: txResponse.id,
-          name: 'Set Options',
-          value: value
-        }, txResponse)
+        this.addOperation(
+          {
+            id: txResponse.id,
+            name: 'Set Options',
+            value: value
+          },
+          txResponse
+        )
       } else if (txResponse.type === 'allow_trust') {
         let asset = 'XLM'
 
@@ -262,17 +249,23 @@ export default {
           asset = txResponse.asset_code
         }
 
-        this.addOperation({
-          id: txResponse.id,
-          name: 'Allow Trust',
-          value: asset
-        }, txResponse)
+        this.addOperation(
+          {
+            id: txResponse.id,
+            name: 'Allow Trust',
+            value: asset
+          },
+          txResponse
+        )
       } else if (txResponse.type === 'manage_data') {
-        this.addOperation({
-          id: txResponse.id,
-          name: 'Manage Data',
-          value: 'Name = ' + txResponse.name + ' Value = ' + txResponse.value
-        }, txResponse)
+        this.addOperation(
+          {
+            id: txResponse.id,
+            name: 'Manage Data',
+            value: 'Name = ' + txResponse.name + ' Value = ' + txResponse.value
+          },
+          txResponse
+        )
       } else {
         Helper.debugLog(txResponse)
       }
@@ -287,7 +280,8 @@ export default {
         Helper.debugLog('listening for payments')
         this.operations = []
 
-        const builder = StellarUtils.server().payments()
+        const builder = StellarUtils.server()
+          .payments()
           .cursor('now')
 
         const publicKey = this.publicKey()
@@ -296,10 +290,10 @@ export default {
         }
 
         this.paymentStopper = builder.stream({
-          onmessage: (txResponse) => {
+          onmessage: txResponse => {
             this.displayTransaction(txResponse)
           },
-          onerror: (error) => {
+          onerror: error => {
             if (error['isTrusted'] === true) {
               // not sure what this is, but ignoring it, constantly logs
             } else {
@@ -319,7 +313,8 @@ export default {
         Helper.debugLog('listening for operations')
         this.operations = []
 
-        const builder = StellarUtils.server().operations()
+        const builder = StellarUtils.server()
+          .operations()
           .cursor('now')
 
         const publicKey = this.publicKey()
@@ -328,10 +323,10 @@ export default {
         }
 
         this.operationStopper = builder.stream({
-          onmessage: (txResponse) => {
+          onmessage: txResponse => {
             this.displayTransaction(txResponse)
           },
-          onerror: (error) => {
+          onerror: error => {
             if (error['isTrusted'] === true) {
               // not sure what this is, but ignoring it, constantly logs
             } else {
@@ -351,7 +346,8 @@ export default {
         Helper.debugLog('listening for trades')
         this.operations = []
 
-        const builder = StellarUtils.server().trades()
+        const builder = StellarUtils.server()
+          .trades()
           .cursor('now')
 
         const publicKey = this.publicKey()
@@ -360,10 +356,10 @@ export default {
         }
 
         this.tradeStopper = builder.stream({
-          onmessage: (txResponse) => {
+          onmessage: txResponse => {
             this.displayTransaction(txResponse)
           },
-          onerror: (error) => {
+          onerror: error => {
             if (error['isTrusted'] === true) {
               // not sure what this is, but ignoring it, constantly logs
             } else {
@@ -374,15 +370,14 @@ export default {
       }
     },
     nextAssetPage(inResponse) {
-      inResponse.next()
-        .then((response) => {
-          for (const rec of response.records) {
-            if (parseFloat(rec.amount) > 0.0) {
-              Helper.debugLog(rec.asset_code + ' ' + rec.amount)
-            }
+      inResponse.next().then(response => {
+        for (const rec of response.records) {
+          if (parseFloat(rec.amount) > 0.0) {
+            Helper.debugLog(rec.asset_code + ' ' + rec.amount)
           }
-          this.nextAssetPage(response)
-        })
+        }
+        this.nextAssetPage(response)
+      })
     },
     assets() {
       if (this.assetStopper) {
@@ -393,7 +388,8 @@ export default {
       } else {
         Helper.debugLog('Assets')
 
-        const builder = StellarUtils.server().assets()
+        const builder = StellarUtils.server()
+          .assets()
           .order('desc')
 
         const publicKey = this.publicKey()
@@ -401,15 +397,14 @@ export default {
           builder.forAccount(publicKey)
         }
 
-        builder.call()
-          .then((response) => {
-            for (const rec of response.records) {
-              if (parseFloat(rec.amount) > 0.0) {
-                Helper.debugLog(rec.asset_code + ' ' + rec.amount)
-              }
+        builder.call().then(response => {
+          for (const rec of response.records) {
+            if (parseFloat(rec.amount) > 0.0) {
+              Helper.debugLog(rec.asset_code + ' ' + rec.amount)
             }
-            this.nextAssetPage(response)
-          })
+          }
+          this.nextAssetPage(response)
+        })
         // this.assetStopper = builder.stream({
         //   onmessage: (response) => {
         //     Helper.debugLog(response)
@@ -428,65 +423,61 @@ export default {
 @import '../scss/styles.scss';
 
 .accounts-box {
-    display: flex;
-    overflow: hidden;
+  display: flex;
+  overflow: hidden;
 
-    .v-input--checkbox {
-        flex: 0 1 auto;
-        margin-right: 20px;
-    }
-
-    .v-select {
-        // background: rgba(0,0,0,.03);
-    }
+  .v-input--checkbox {
+    flex: 0 1 auto;
+    margin-right: 20px;
+  }
 }
 .operations-content {
+  display: flex;
+  width: 100%;
+  min-height: 300px;
+  flex-direction: column;
+  align-items: center;
+  background: rgb(55, 55, 55);
+  color: white;
+
+  .operations-item {
     display: flex;
     width: 100%;
-    min-height: 300px;
-    flex-direction: column;
-    align-items: center;
-    background: rgb(55,55,55);
-    color: white;
 
-    .operations-item {
-        display: flex;
-        width: 100%;
-
-        &:nth-child(even) {
-            background: rgba(255, 255, 255, .1);
-        }
-
-        .item-name {
-            text-align: right;
-            padding-right: 5px;
-            flex: 1 0 50%;
-            text-decoration: none;
-            color: white;
-
-            background: rgba(0,55,40, .2);
-        }
-
-        .item-value {
-            text-align: left;
-            flex: 1 0 50%;
-            padding-left: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            color: white;
-            background: rgba(0,0,200, .1);
-        }
+    &:nth-child(even) {
+      background: rgba(255, 255, 255, 0.1);
     }
 
-    .operations-title {
-        width: 100%;
-        text-align: center;
-        background: rgba(0,0,0,.3);
-        font-size: 1em;
-        color: rgba(255,255,255,.5);
-        font-weight: bold;
-        margin: 2px 0;
-        text-transform: uppercase;
+    .item-name {
+      text-align: right;
+      padding-right: 5px;
+      flex: 1 0 50%;
+      text-decoration: none;
+      color: white;
+
+      background: rgba(0, 55, 40, 0.2);
     }
+
+    .item-value {
+      text-align: left;
+      flex: 1 0 50%;
+      padding-left: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      color: white;
+      background: rgba(0, 0, 200, 0.1);
+    }
+  }
+
+  .operations-title {
+    width: 100%;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    font-size: 1em;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+    margin: 2px 0;
+    text-transform: uppercase;
+  }
 }
 </style>

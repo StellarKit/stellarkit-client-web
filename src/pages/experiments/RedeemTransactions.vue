@@ -6,6 +6,8 @@
     <v-data-table
       class="table-hacks"
       :headers="headers"
+      must-sort
+      :pagination.sync="pagination"
       :items="history"
       :loading="loading"
       sort-icon="keyboard_arrow_down"
@@ -16,6 +18,7 @@
       <v-progress-linear slot="progress" color="blue" indeterminate></v-progress-linear>
       <template slot="items" slot-scope="props">
         <tr @click="props.expanded = !props.expanded">
+          <td>{{ props.item.date }}</td>
           <td>{{ props.item.name }}</td>
           <td>{{ props.item.value }}</td>
           <td>{{ props.item.from }}</td>
@@ -66,11 +69,20 @@ export default {
         title: 'History',
         search: ''
       },
+      pagination: {
+        descending: true
+      },
       history: [],
       headers: [
         {
+          text: 'Date',
+          align: 'left',
+          value: 'date'
+        },
+        {
           text: 'Name',
           align: 'left',
+          sortable: false,
           value: 'name'
         },
         {
