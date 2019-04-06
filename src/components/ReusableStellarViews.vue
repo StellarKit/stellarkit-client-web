@@ -23,7 +23,7 @@
 
     <div v-if="showSource" class="account-choice-box">
       <div>
-        <menu-button
+        <MenuButton
           v-on:menu-selected="sourceMenuSelected"
           title="Source account"
           :items="sourceMenuItems"
@@ -47,7 +47,7 @@
 
     <div v-if="showDest" class="account-choice-box">
       <div>
-        <menu-button
+        <MenuButton
           v-on:menu-selected="destMenuSelected"
           title="Destination account"
           :items="destMenuItems"
@@ -82,7 +82,7 @@
           placeholder="Paste in a list of public keys separated by returns, spaces or commas."
           class="public-key-text"
         ></textarea>
-        <menu-button
+        <MenuButton
           v-on:menu-selected="destPaymentsMenuSelected"
           title="Payments per transaction"
           :items="destPaymentsMenuItems"
@@ -112,7 +112,7 @@
 
     <div v-if="showSecret" class="account-choice-box">
       <div>
-        <menu-button
+        <MenuButton
           v-on:menu-selected="secretMenuSelected"
           title="Enter an account key"
           :items="secretMenuItems"
@@ -298,7 +298,7 @@
 
     <div v-if="showFunding" class="account-choice-box">
       <div>
-        <menu-button
+        <MenuButton
           v-on:menu-selected="fundingMenuSelected"
           title="Funding account"
           :items="fundingMenuItems"
@@ -325,7 +325,7 @@
 
     <div v-if="showSigner" class="account-choice-box">
       <div>
-        <menu-button
+        <MenuButton
           v-on:menu-selected="signerMenuSelected"
           title="Add Signer account"
           :items="signerMenuItems"
@@ -382,8 +382,8 @@ export default {
   ],
   mixins: [StellarCommonMixin],
   components: {
-    'menu-button': MenuButton,
-    'asset-popup': AssetPopup
+    MenuButton,
+    AssetPopup
   },
   data() {
     return {
