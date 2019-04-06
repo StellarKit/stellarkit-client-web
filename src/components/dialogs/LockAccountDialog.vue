@@ -102,13 +102,13 @@ export default {
             .then(result => {
               Helper.debugLog('locked!')
               Helper.debugLog(result)
-              this.displayTrust('Account is now locked')
+              this.displayToast('Account is now locked')
               StellarUtils.updateBalances()
 
               return null
             })
             .catch(error => {
-              this.displayTrust('Lock failed', true)
+              this.displayToast('Lock failed', true)
               Helper.debugLog(error)
             })
             .finally(() => {
