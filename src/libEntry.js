@@ -4,7 +4,6 @@ import Home from './pages/Home.vue'
 import BuyToken from './pages/BuyToken.vue'
 import AllowTrust from './pages/AllowTrust.vue'
 import LockedTokens from './pages/LockedTokens.vue'
-import CreateToken from './pages/CreateToken.vue'
 import ICOManager from './pages/ICOManager.vue'
 import Experiments from './pages/experiments/Experiments.vue'
 import HistoryViewer from './pages/HistoryViewer.vue'
@@ -38,10 +37,6 @@ const router = new VueRouter({
     path: '/trades',
     component: Trades,
     name: 'Live Stream'
-  }, {
-    path: '/token',
-    component: CreateToken,
-    name: 'Create Token Tutorial'
   }, {
     path: '/ico',
     component: ICOManager,
