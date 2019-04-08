@@ -271,7 +271,7 @@ export default {
         issuerSecret: issuerKeypair.secret(),
         distributor: distributorKeypair.publicKey(),
         distributorSecret: distributorKeypair.secret(),
-        burn: burnKeypair.publicKey()
+        burn: burnKeypair ? burnKeypair.publicKey() : ''
       })
 
       this.updateProjectIndex(this.tokenProjects.length - 1)
