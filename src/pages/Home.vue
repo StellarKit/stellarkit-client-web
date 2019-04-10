@@ -87,7 +87,7 @@
       :model="lookupFederationModel"
     />
     <trust-token-dialog :ping="trustDialogPing" :model="trustDialogModel"/>
-    <add-remove-signer :ping="addRemoveSignerDialogPing" :model="addRemoveSignerDialogModel"/>
+    <AddRemoveSignerDialog :ping="addRemoveSignerDialogPing" :model="addRemoveSignerDialogModel"/>
     <send-assets-dialog :ping="sendAssetsDialogPing" :model="sendAssetsDialogModel"/>
     <manage-offer-dialog :ping="manageOfferDialogPing" :model="manageOfferDialogModel"/>
     <buy-asset-dialog :ping="buyAssetDialogPing" :model="buyAssetDialogModel"/>

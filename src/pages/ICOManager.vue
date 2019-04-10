@@ -29,6 +29,9 @@
           <v-btn small icon @click="deleteTokenProject">
             <v-icon>close</v-icon>
           </v-btn>
+          <v-btn small icon @click="saveToFile">
+            <v-icon>&#xE161;</v-icon>
+          </v-btn>
           <v-btn small icon @click="printInfo">
             <v-icon>&#xE8AD;</v-icon>
           </v-btn>
@@ -100,6 +103,7 @@ import StellarUtils from '../js/StellarUtils.js'
 import { StellarWallet } from 'stellarkit-js-utils'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
 import SettingsStore from '../js/SettingsStore.js'
+const FileSaver = require('file-saver')
 
 export default {
   mixins: [StellarCommonMixin, StyleExtractionMixin],
@@ -246,6 +250,31 @@ export default {
       }
 
       return null
+    },
+    keyString() {
+      let result = ''
+      const isMainnet = !StellarUtils.isTestnet()
+      const project = this.currentProject()
+
+      const network = isMainnet ? '(mainnet)' : '(testnet)'
+      const newLines = '\n\n'
+
+      result += 'Stellar token keys: ' + network
+
+      for (const key in project) {
+        result += newLines
+        result += key + ': ' + project[key]
+      }
+
+      return result
+    },
+    saveToFile() {
+      const jsonString = this.keyString()
+
+      const blob = new Blob([jsonString], {
+        type: 'text/plain;charset=utf-8'
+      })
+      FileSaver.saveAs(blob, 'stellar-token-keys.txt')
     },
     printInfo() {
       this.printing = true

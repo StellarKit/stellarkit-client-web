@@ -1,57 +1,70 @@
 <template>
-<div>
-  <instructions-header>
-    <div>Content coming soon...</div>
-  </instructions-header>
+  <div>
+    <instructions-header>
+      <div>Content coming soon...</div>
+    </instructions-header>
 
-  <div class='top-controls'>
-    <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
-    <div class='address-box'>
-      <v-menu offset-y :transition=false>
-        <v-btn small :ripple=false slot="activator">
-          {{buttonTitle}}
-          <v-icon>&#xE5C5;</v-icon>
-        </v-btn>
-        <v-list dense>
-          <v-list-tile v-for="item in items" :key="item.title" @click="menuClick(item.menuID)">
-            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-          </v-list-tile>
-        </v-list>
-      </v-menu>
-      <v-menu offset-y :transition=false>
-        <v-btn small :ripple=false slot="activator">
-          {{orderButtonTitle}}
-          <v-icon>&#xE5C5;</v-icon>
-        </v-btn>
-        <v-list dense>
-          <v-list-tile v-for="item in orderItems" :key="item.title" @click="orderMenuClick(item.menuID)">
-            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-          </v-list-tile>
-        </v-list>
-      </v-menu>
-      <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
-      <v-btn round small @click="paymentsForSelectedSource()">Payments</v-btn>
-      <v-btn round small @click="operationsForSelectedSource()">Operations</v-btn>
-      <v-btn round small @click="effectsForSelectedSource()">Effects</v-btn>
-    </div>
+    <div class="top-controls">
+      <v-autocomplete
+        hide-details
+        :items="accountsUI"
+        item-text="name"
+        v-model="selectedSource"
+        clearable
+        label="Source account"
+        return-object
+        :menu-props="{maxHeight:'600'}"
+      ></v-autocomplete>
+      <div class="address-box">
+        <v-menu offset-y :transition="false">
+          <v-btn small :ripple="false" slot="activator">
+            {{buttonTitle}}
+            <v-icon>&#xE5C5;</v-icon>
+          </v-btn>
+          <v-list dense>
+            <v-list-tile v-for="item in items" :key="item.title" @click="menuClick(item.menuID)">
+              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
+        <v-menu offset-y :transition="false">
+          <v-btn small :ripple="false" slot="activator">
+            {{orderButtonTitle}}
+            <v-icon>&#xE5C5;</v-icon>
+          </v-btn>
+          <v-list dense>
+            <v-list-tile
+              v-for="item in orderItems"
+              :key="item.title"
+              @click="orderMenuClick(item.menuID)"
+            >
+              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
+        <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
+        <v-btn round small @click="paymentsForSelectedSource()">Payments</v-btn>
+        <v-btn round small @click="operationsForSelectedSource()">Operations</v-btn>
+        <v-btn round small @click="effectsForSelectedSource()">Effects</v-btn>
+      </div>
 
-    <div class='button-row'>
-      <v-btn icon small color='secondary' @click="previous()">
-        <v-tooltip open-delay='800' bottom>
-          <v-icon slot='activator'>&#xE5CB;</v-icon>
-          <span>Previous</span>
-        </v-tooltip>
-      </v-btn>
-      <v-btn icon small color='secondary' @click="next()">
-        <v-tooltip open-delay='800' bottom>
-          <v-icon slot='activator'>&#xE5CC;</v-icon>
-          <span>Next</span>
-        </v-tooltip>
-      </v-btn>
-      <div v-if="displayIndex >= 0" class='display-index'>Index {{displayIndex}}</div>
+      <div class="button-row">
+        <v-btn icon small color="secondary" @click="previous()">
+          <v-tooltip open-delay="800" bottom>
+            <v-icon slot="activator">&#xE5CB;</v-icon>
+            <span>Previous</span>
+          </v-tooltip>
+        </v-btn>
+        <v-btn icon small color="secondary" @click="next()">
+          <v-tooltip open-delay="800" bottom>
+            <v-icon slot="activator">&#xE5CC;</v-icon>
+            <span>Next</span>
+          </v-tooltip>
+        </v-btn>
+        <div v-if="displayIndex >= 0" class="display-index">Index {{displayIndex}}</div>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -60,9 +73,7 @@ import StellarUtils from '../js/StellarUtils.js'
 import Helper from '../js/helper.js'
 import StreamingCache from '../js/StreamingCache.js'
 import InstructionsHeader from '../components/InstructionsHeader.vue'
-import {
-  StellarWallet
-} from 'stellarkit-js-utils'
+import { StellarWallet } from 'stellarkit-js-utils'
 
 export default {
   mixins: [StellarCommonMixin],
@@ -76,7 +87,8 @@ export default {
       cache: null,
       displayIndex: -1,
       order: 'desc',
-      items: [{
+      items: [
+        {
           title: 'Transactions',
           menuID: 'transactions'
         },
@@ -93,7 +105,8 @@ export default {
           menuID: 'effects'
         }
       ],
-      orderItems: [{
+      orderItems: [
+        {
           title: 'Ascending Order',
           menuID: 'asc'
         },
@@ -210,7 +223,11 @@ export default {
     streamingCache() {
       if (this.sourceValid()) {
         if (!this.cache) {
-          this.cache = new StreamingCache(this.mode, this.selectedSource.publicKey, this.order)
+          this.cache = new StreamingCache(
+            this.mode,
+            this.selectedSource.publicKey,
+            this.order
+          )
         }
 
         return this.cache
@@ -228,11 +245,12 @@ export default {
     next() {
       const cache = this.streamingCache()
       if (cache) {
-        return cache.next()
-          .then((result) => {
+        return cache
+          .next()
+          .then(result => {
             this.displayResult(result)
           })
-          .catch((error) => {
+          .catch(error => {
             Helper.debugLog(error)
           })
       }
@@ -240,11 +258,12 @@ export default {
     previous() {
       const cache = this.streamingCache()
       if (cache) {
-        return cache.previous()
-          .then((result) => {
+        return cache
+          .previous()
+          .then(result => {
             this.displayResult(result)
           })
-          .catch((error) => {
+          .catch(error => {
             Helper.debugLog(error)
           })
       }
@@ -257,47 +276,47 @@ export default {
 @import '../scss/styles.scss';
 
 .top-controls {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  .display-index {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0 10px;
+    font-size: 1em;
+  }
+
+  div.input-group {
+    max-width: 350px;
+    min-width: 140px;
+    margin-bottom: 6px;
+  }
+
+  .button-row {
     display: flex;
-    flex-direction: column;
-    padding: 10px 20px;
-    justify-content: center;
     align-items: center;
-    position: relative;
+    justify-content: center;
+    margin-top: 8px;
 
-    .display-index {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        margin: 0 10px;
-        font-size: 1em;
+    button {
+      margin: 0 12px;
     }
-
-    div.input-group {
-        max-width: 350px;
-        min-width: 140px;
-        margin-bottom: 6px;
-    }
-
-    .button-row {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 8px;
-
-        button {
-            margin: 0 12px;
-        }
-    }
+  }
 }
 
 .address-box {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
 
-    button {
-        margin: 4px;
-    }
+  button {
+    margin: 4px;
+  }
 }
 </style>
