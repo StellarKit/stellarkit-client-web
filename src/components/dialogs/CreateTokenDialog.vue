@@ -259,6 +259,11 @@ export default {
                   fundingWallet
                 )
               })
+              .catch(() => {
+                Helper.debugLog('Allow trust was not necessary, continuing...')
+
+                return null
+              })
               .then(() => {
                 return StellarUtils.lockAccount(newWallet, 'lock').then(
                   result => {
