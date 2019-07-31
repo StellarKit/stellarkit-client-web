@@ -19,6 +19,7 @@
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
+    "@mdi/font": "^3.8.95",
     "babel-loader": "^8.0.6",
     "cross-env": "^5.2.0",
     "css-loader": "^3.1.0",
