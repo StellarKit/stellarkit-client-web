@@ -1,9 +1,9 @@
 const path = require('path')
-const webpack = require('webpack')
 const merge = require('webpack-merge')
 const { VueLoaderPlugin } = require('vue-loader')
 const TerserPlugin = require('terser-webpack-plugin')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 
 // set to {} for distLib
 let splitChunks = {
@@ -22,6 +22,7 @@ let common = {
     publicPath: '/dist/'
   },
   plugins: [
+    new VuetifyLoaderPlugin(),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       title: 'Stellar Army',
@@ -52,8 +53,26 @@ let common = {
         exclude: /node_modules/
       },
       {
-        test: /\.scss$/,
+        test: [/\.scss$/, /\.sass$/],
+        exclude: /node_modules/,
         use: ['vue-style-loader', 'css-loader', 'sass-loader']
+      },
+      {
+        // this is for wacky vuetify, doesn't work with my scss
+        test: [/\.scss$/, /\.sass$/],
+        include: /node_modules/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              implementation: require('sass'),
+              fiber: require('fibers'),
+              indentedSyntax: true // optional
+            }
+          }
+        ]
       },
       {
         test: /\.styl$/,

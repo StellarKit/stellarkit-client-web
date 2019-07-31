@@ -1,7 +1,7 @@
 <template>
-  <v-dialog lazy v-model="visible" scrollable @keydown.esc="visible = false" max-width="600">
+  <v-dialog v-model="visible" scrollable @keydown.esc="visible = false" max-width="600">
     <div class="main-container">
-      <dialog-titlebar :title="title" v-on:close="visible = false"/>
+      <dialog-titlebar :title="title" v-on:close="visible = false" />
 
       <div class="help-contents">
         <div class="help-text">
@@ -24,13 +24,15 @@
         </div>
         <div class="button-holder">
           <v-tooltip open-delay="200" bottom>
-            <v-btn
-              round
-              color="primary"
-              slot="activator"
-              @click="sendAssets()"
-              :loading="loading"
-            >Send Payment</v-btn>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn
+                round
+                color="primary"
+                v-on="on"
+                @click="sendAssets()"
+                :loading="loading"
+              >Send Payment</v-btn>
+            </template>
             <span>Send the payment</span>
           </v-tooltip>
         </div>

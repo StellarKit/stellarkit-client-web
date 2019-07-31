@@ -1,29 +1,25 @@
 <template>
-<div class='menu-button-main'>
-  <div>
-    {{title}}:
+  <div class="menu-button-main">
+    <div>{{title}}:</div>
+    <v-menu offset-y>
+      <template v-slot:activator="{ on }">
+        <v-btn text color="primary" class="custom-menu-button" v-on="on">
+          {{getTitle()}}
+          <v-icon>&#xE5C5;</v-icon>
+        </v-btn>
+      </template>
+
+      <v-list dense>
+        <v-list-item
+          v-for="(item, index) in items"
+          :key="item.title"
+          @click="menuClick(item, index)"
+        >
+          <div>{{item.title}}</div>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </div>
-  <v-menu offset-y>
-    <v-btn
-      flat
-      color='primary'
-      class='custom-menu-button'
-      slot="activator"
-    >
-      {{getTitle()}}
-      <v-icon>&#xE5C5;</v-icon>
-    </v-btn>
-    <v-list dense>
-      <v-list-tile
-        v-for="(item, index) in items"
-        :key="item.title"
-        @click="menuClick(item, index)"
-      >
-        <div>{{item.title}}</div>
-      </v-list-tile>
-    </v-list>
-  </v-menu>
-</div>
 </template>
 
 <script>
@@ -72,12 +68,12 @@ export default {
 
 <style lang='scss' scoped>
 .menu-button-main {
-    display: flex;
-    align-items: center;
-    font-size: 0.95em;
+  display: flex;
+  align-items: center;
+  font-size: 0.95em;
 
-    .custom-menu-button {
-        margin: 0 0 0 6px;
-    }
+  .custom-menu-button {
+    margin: 0 0 0 6px;
+  }
 }
 </style>

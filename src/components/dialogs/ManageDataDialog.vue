@@ -1,67 +1,44 @@
 <template>
-<v-dialog
-  lazy
-  v-model='visible'
-  scrollable
-  @keydown.esc="visible = false"
-  max-width="600"
->
-  <div class='main-container'>
-    <dialog-titlebar
-      :title=title
-      v-on:close='visible = false'
-    />
+  <v-dialog v-model="visible" scrollable @keydown.esc="visible = false" max-width="600">
+    <div class="main-container">
+      <dialog-titlebar :title="title" v-on:close="visible = false" />
 
-    <div class='help-contents'>
-      <div class='help-text'>
-        <div>Add data to your account</div>
-        <div class='sub-header'>Data is limited to 64 bytes</div>
-      </div>
+      <div class="help-contents">
+        <div class="help-text">
+          <div>Add data to your account</div>
+          <div class="sub-header">Data is limited to 64 bytes</div>
+        </div>
 
-      <div class='help-email'>
-        <dialog-accounts
-          ref='dialogAccounts'
-          v-on:enter-key-down='addData'
-          :model="model"
-          v-on:toast='displayToast'
-          :showSource=true
-          :showNameValue=true
-          :showFunding=true
-          :showSigner=true
-        />
-      </div>
-      <div class='button-holder'>
-        <v-tooltip
-          open-delay='200'
-          bottom
-        >
-          <v-btn
-            round
-            color='primary'
-            slot="activator"
-            @click="addData()"
-            :loading="loading"
-          >Add Data</v-btn>
-          <span>Add data to an account</span>
-        </v-tooltip>
-      </div>
+        <div class="help-email">
+          <dialog-accounts
+            ref="dialogAccounts"
+            v-on:enter-key-down="addData"
+            :model="model"
+            v-on:toast="displayToast"
+            :showSource="true"
+            :showNameValue="true"
+            :showFunding="true"
+            :showSigner="true"
+          />
+        </div>
+        <div class="button-holder">
+          <v-tooltip open-delay="200" bottom>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn round color="primary" v-on="on" @click="addData()" :loading="loading">Add Data</v-btn>
+            </template>
+            <span>Add data to an account</span>
+          </v-tooltip>
+        </div>
 
-      <toast-component
-        :absolute=true
-        location='data-dialog'
-        :bottom=false
-        :top=true
-      />
+        <toast-component :absolute="true" location="data-dialog" :bottom="false" :top="true" />
+      </div>
     </div>
-  </div>
-</v-dialog>
+  </v-dialog>
 </template>
 
 <script>
 import Helper from '../../js/helper.js'
-import {
-  DialogTitleBar
-} from 'stellarkit-js-ui'
+import { DialogTitleBar } from 'stellarkit-js-ui'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
 // const StellarSdk = require('stellar-sdk')
@@ -109,15 +86,21 @@ export default {
           Helper.debugLog('Setting key value data...')
           this.loading = true
 
-          StellarUtils.manageData(sourceWallet, fundingWallet, nameValue.name, nameValue.value, additionalSigners)
-            .then((result) => {
+          StellarUtils.manageData(
+            sourceWallet,
+            fundingWallet,
+            nameValue.name,
+            nameValue.value,
+            additionalSigners
+          )
+            .then(result => {
               Helper.debugLog(result)
               this.loading = false
               StellarUtils.updateBalances()
 
               this.displayToast('Success!')
             })
-            .catch((error) => {
+            .catch(error => {
               Helper.debugLog(error)
               this.loading = false
 
@@ -137,25 +120,25 @@ export default {
 @import '../../scss/styles.scss';
 
 .main-container {
-    @include standard-dialog-contents();
+  @include standard-dialog-contents();
 
-    .help-contents {
-        @include inner-dialog-contents();
+  .help-contents {
+    @include inner-dialog-contents();
 
-        .help-text {
-            div {
-                margin-bottom: 10px;
-            }
-            margin-bottom: 20px;
+    .help-text {
+      div {
+        margin-bottom: 10px;
+      }
+      margin-bottom: 20px;
 
-            .sub-header {
-                font-size: 0.8em;
-            }
-        }
-
-        .help-email {
-            margin: 0 30px 16px;
-        }
+      .sub-header {
+        font-size: 0.8em;
+      }
     }
+
+    .help-email {
+      margin: 0 30px 16px;
+    }
+  }
 }
 </style>

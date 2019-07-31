@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <table-header :vars="headerVars"/>
+    <table-header :vars="headerVars" />
     <v-data-table
       :headers="headers"
       :items="history"
@@ -16,7 +16,7 @@
           <td>{{ props.item.name }}</td>
           <td>{{ props.item.value }}</td>
           <td>
-            <v-btn small flat class="mx-0" @click.stop="clickLink(props.item.link)">link</v-btn>
+            <v-btn small text class="mx-0" @click.stop="clickLink(props.item.link)">link</v-btn>
           </td>
         </tr>
       </template>

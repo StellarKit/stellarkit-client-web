@@ -1,146 +1,99 @@
 <template>
-<div class='main-container'>
-  <div class='add-button'>
-    <v-menu
-      v-if='isTestnet()'
-      offset-y
-      :transition=false
-    >
-      <v-btn
-        icon
-        dark
-        slot="activator"
-      >
-        <v-tooltip
-          open-delay='800'
-          bottom
-        >
-          <v-icon slot='activator'>&#xE147;</v-icon>
+  <div class="main-container">
+    <div class="add-button">
+      <v-menu v-if="isTestnet()" offset-y :transition="false">
+        <template v-slot:activator="{ on }">
+          <v-btn icon dark v-on="on">
+            <v-tooltip open-delay="800" bottom>
+              <template fred="duh" v-slot:activator="{ on }">
+                <v-icon v-on="on">&#xE147;</v-icon>
+              </template>
+              <span>Create new account</span>
+            </v-tooltip>
+          </v-btn>
+        </template>
+
+        <v-list dense>
+          <v-list-item @click="accountMenu('test')">
+            <v-list-item-title>Create New Testnet Account</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="accountMenu('other')">
+            <v-list-item-title>More Options...</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
+      <v-btn v-else icon dark @click="accountMenu('other')">
+        <v-tooltip open-delay="800" bottom>
+          <template fred="duh" v-slot:activator="{ on }">
+            <v-icon v-on="on">&#xE147;</v-icon>
+          </template>
           <span>Create new account</span>
         </v-tooltip>
       </v-btn>
+    </div>
 
-      <v-list dense>
-        <v-list-tile @click="accountMenu('test')">
-          <v-list-tile-title>Create New Testnet Account</v-list-tile-title>
-        </v-list-tile>
-        <v-list-tile @click="accountMenu('other')">
-          <v-list-tile-title>More Options...</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
-    </v-menu>
-
-    <v-btn
-      v-else
-      icon
-      dark
-      @click="accountMenu('other')"
-    >
-      <v-tooltip
-        open-delay='800'
-        bottom
-      >
-        <v-icon slot='activator'>&#xE147;</v-icon>
-        <span>Create new account</span>
+    <v-btn class="refresh-button" icon dark @click="refresh()">
+      <v-tooltip open-delay="800" bottom>
+        <template fred="duh" v-slot:activator="{ on }">
+          <v-icon v-on="on">&#xE5D5;</v-icon>
+        </template>
+        <span>Refresh account balances</span>
       </v-tooltip>
     </v-btn>
-  </div>
 
-  <v-btn
-    class='refresh-button'
-    icon
-    dark
-    @click="refresh()"
-  >
-    <v-tooltip
-      open-delay='800'
-      bottom
-    >
-      <v-icon slot='activator'>&#xE5D5;</v-icon>
-      <span>Refresh account balances</span>
-    </v-tooltip>
-  </v-btn>
-
-  <div class='accounts-title'>Accounts - Click for Info</div>
-  <div
-    v-if='items.length === 0'
-    class='zero-accounts'
-  >
-    Create an account
-  </div>
-  <transition-group
-    v-else
-    class='accounts'
-    name="list"
-    tag="div"
-  >
-    <div
-      class='account-item'
-      v-for="item in items"
-      @click.stop='clickItem(item)'
-      :key='item.publicKey'
-    >
-      <v-tooltip
-        open-delay='200'
-        bottom
+    <div class="accounts-title">Accounts - Click for Info</div>
+    <div v-if="items.length === 0" class="zero-accounts">Create an account</div>
+    <transition-group v-else class="accounts" name="list" tag="div">
+      <div
+        class="account-item"
+        v-for="item in items"
+        @click.stop="clickItem(item)"
+        :key="item.publicKey"
       >
-        <div slot="activator">
-          <div class='account-name'>{{item.name}}</div>
-          <div
-            v-for="balance in balancesForItem(item)"
-            :key='balance.issuer + balance.symbol'
-          >
-            {{balance.symbol}}: {{balance.amount}}
-          </div>
-        </div>
-        <span>{{item.publicKey}}</span>
-      </v-tooltip>
-      <div class='action-button-holder'>
-        <actions-menu
-          :small=true
-          :publicKey='item.publicKey'
-        />
-      </div>
-      <v-btn
-        class='delete-button'
-        icon
-        small
-        @click.stop='deleteItem(item)'
-      >
-        <v-tooltip
-          open-delay='200'
-          bottom
-        >
-          <v-icon slot="activator">&#xE15C;</v-icon>
-          <span>Remove account</span>
+        <v-tooltip open-delay="200" bottom>
+          <template fred="duh" v-slot:activator="{ on }">
+            <div v-on="on">
+              <div class="account-name">{{item.name}}</div>
+              <div
+                v-for="balance in balancesForItem(item)"
+                :key="balance.issuer + balance.symbol"
+              >{{balance.symbol}}: {{balance.amount}}</div>
+            </div>
+          </template>
+          <span>{{item.publicKey}}</span>
         </v-tooltip>
-      </v-btn>
-    </div>
-  </transition-group>
+        <div class="action-button-holder">
+          <actions-menu :small="true" :publicKey="item.publicKey" />
+        </div>
+        <v-btn class="delete-button" icon small @click.stop="deleteItem(item)">
+          <v-tooltip open-delay="200" bottom>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-icon v-on="on">&#xE15C;</v-icon>
+            </template>
+            <span>Remove account</span>
+          </v-tooltip>
+        </v-btn>
+      </div>
+    </transition-group>
 
-  <new-account-dialog
-    :model='model'
-    :ping='newAccountDialogPing'
-  />
+    <new-account-dialog :model="model" :ping="newAccountDialogPing" />
 
-  <confirm-dialog
-    v-on:confirm-dialog-ok='removeAccountConfirmed'
-    :ping='confirmRemoveDialogPing'
-    title='Remove Account?'
-    message='Make sure you saved the secret key! You can later add this account back using the secret key.'
-    okTitle='Remove Account'
-  />
-</div>
+    <confirm-dialog
+      v-on:confirm-dialog-ok="removeAccountConfirmed"
+      :ping="confirmRemoveDialogPing"
+      title="Remove Account?"
+      message="Make sure you saved the secret key! You can later add this account back using the secret key."
+      okTitle="Remove Account"
+    />
+  </div>
 </template>
 
 <script>
 import Helper from '../js/helper.js'
 import StellarUtils from '../js/StellarUtils.js'
 import NewAccountDialog from './dialogs/NewAccountDialog.vue'
-import {
-  TimelineMax,
-  Power3
-} from 'gsap'
+import { TimelineMax, Power3 } from 'gsap'
 import $ from 'jquery'
 import StellarAccounts from '../js/StellarAccounts.js'
 import ConfirmDialog from '../components/dialogs/ConfirmDialog.vue'
@@ -224,10 +177,10 @@ export default {
         const el = $(this.$el).find('.add-button i')
 
         this.timeline = new TimelineMax({
-            repeat: -1,
-            yoyo: false,
-            repeatDelay: 1
-          })
+          repeat: -1,
+          yoyo: false,
+          repeatDelay: 1
+        })
           .to(el, 0.2, {
             ease: Power3.easeIn,
             scale: 1.5
@@ -242,20 +195,22 @@ export default {
       switch (id) {
         case 'test':
           StellarUtils.createTestAccount()
-            .then((result) => {
+            .then(result => {
               Helper.debugLog(result)
             })
-            .catch((error) => {
+            .catch(error => {
               Helper.debugLog(error, 'Error')
             })
           break
         case 'other':
           this.model = new ReusableStellarViewsModel()
-          this.model.fundingMessage = 'Choose an account to pay the transaction fee'
+          this.model.fundingMessage =
+            'Choose an account to pay the transaction fee'
 
           // for creating a new account using a vanity secret key
           this.model.textValueLabel = 'Secret key (optional)'
-          this.model.textValueHint = 'Leave blank for random key pair. Used for creating an account on a personalized/vanity address'
+          this.model.textValueHint =
+            'Leave blank for random key pair. Used for creating an account on a personalized/vanity address'
 
           this.newAccountDialogPing = !this.newAccountDialogPing
           break
@@ -265,7 +220,7 @@ export default {
     },
     clickItem(item) {
       StellarUtils.accountInfo(item.publicKey)
-        .then((response) => {
+        .then(response => {
           const bar = '========================================='
           const shortBar = '===='
           const header = bar + '\n' + shortBar + '  ' + item.name + '\n' + bar
@@ -275,7 +230,7 @@ export default {
           Helper.debugLog(response)
           this.extractAssets(response)
         })
-        .catch((error) => {
+        .catch(error => {
           Helper.debugLog(error)
         })
     },
@@ -316,108 +271,112 @@ export default {
 // list animations
 .list-enter-active,
 .list-leave-active {
-    transition: all 0.2s;
+  transition: all 0.2s;
 }
 /* .list-leave-active below version 2.1.8 */
 .list-enter,
 .list-leave-to {
-    opacity: 0;
-    transform: scale(.1);
+  opacity: 0;
+  transform: scale(0.1);
 }
 
 .main-container {
-    padding: 6px 0;
-    position: relative;
+  padding: 6px 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: steelblue;
+  color: white;
+  text-align: center;
+
+  .accounts-title {
+    font-weight: bold;
+    font-size: 1em;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .add-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    button {
+      margin: 0;
+    }
+  }
+
+  .refresh-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+  }
+
+  .zero-accounts {
+    text-align: center;
+    padding: 12px 0;
+    font-size: 2em;
+    color: rgba(255, 255, 255, 0.2);
+    text-transform: uppercase;
+  }
+
+  .accounts {
     display: flex;
-    flex-direction: column;
-    background: steelblue;
-    color: white;
+    justify-content: center;
+    flex-wrap: wrap;
     text-align: center;
 
-    .accounts-title {
+    .account-item {
+      position: relative;
+      color: black;
+      font-size: 0.8em;
+      margin: 4px;
+      padding: 10px 12px 20px;
+      border-radius: 4px;
+      background: linear-gradient(
+        to bottom,
+        rgb(255, 255, 255),
+        rgb(235, 235, 235)
+      );
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.4);
+      line-height: 1.25;
+      cursor: pointer;
+
+      // for animations - faster?
+      backface-visibility: hidden;
+
+      .account-name {
         font-weight: bold;
-        font-size: 1em;
-        color: rgba(255,255,255,.7);
-    }
+        margin-bottom: 2px;
+        font-size: 1.1em;
+      }
 
-    .add-button {
-        position: absolute;
-        top: 0;
-        left: 0;
-
-        button {
-            margin: 0;
+      .delete-button {
+        &:hover {
+          color: rgba(255, 0, 0, 0.6);
         }
-    }
-
-    .refresh-button {
+        color: rgba(0, 0, 0, 0.3);
+        z-index: 1;
         position: absolute;
-        top: 0;
-        right: 0;
+        // height: 8px;
+        // width: 8px;
         margin: 0;
-    }
+        bottom: -4px;
+        right: -4px;
 
-    .zero-accounts {
-        text-align: center;
-        padding: 12px 0;
-        font-size: 2em;
-        color: rgba(255,255,255,.2);
-        text-transform: uppercase;
-    }
-
-    .accounts {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        text-align: center;
-
-        .account-item {
-            position: relative;
-            color: black;
-            font-size: 0.8em;
-            margin: 4px;
-            padding: 10px 12px 20px;
-            border-radius: 4px;
-            background: linear-gradient(to bottom, rgb(255,255,255), rgb(235,235,235));
-            box-shadow: 0 2px 2px rgba(0,0,0,.4);
-            line-height: 1.25;
-            cursor: pointer;
-
-            // for animations - faster?
-            backface-visibility: hidden;
-
-            .account-name {
-                font-weight: bold;
-                margin-bottom: 2px;
-                font-size: 1.1em;
-            }
-
-            .delete-button {
-                &:hover {
-                    color: rgba(255, 0, 0, .6);
-                }
-                color: rgba(0, 0, 0, .3);
-                z-index: 1;
-                position: absolute;
-                // height: 8px;
-                // width: 8px;
-                margin: 0;
-                bottom: -4px;
-                right: -4px;
-
-                i {
-                    font-size: 18px;
-                }
-            }
-            .action-button-holder {
-                z-index: 1;
-                position: absolute;
-                // height: 8px;
-                // width: 8px;
-                bottom: -4px;
-                left: -4px;
-            }
+        i {
+          font-size: 18px;
         }
+      }
+      .action-button-holder {
+        z-index: 1;
+        position: absolute;
+        // height: 8px;
+        // width: 8px;
+        bottom: -4px;
+        left: -4px;
+      }
     }
+  }
 }
 </style>

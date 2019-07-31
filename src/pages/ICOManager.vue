@@ -1,31 +1,33 @@
 <template>
   <div>
-    <account-list :items="accountsUI"/>
+    <account-list :items="accountsUI" />
     <instructions-header>
       <div>Content coming soon....</div>
     </instructions-header>
 
     <div class="page-contents">
       <v-menu offset-y :transition="false">
-        <v-btn small color="primary" :ripple="false" slot="activator">
-          {{menuButtonName}}
-          <v-icon>&#xE5C5;</v-icon>
-        </v-btn>
+        <template v-slot:activator="{ on }">
+          <v-btn small color="primary" :ripple="false" v-on="on">
+            {{menuButtonName}}
+            <v-icon>&#xE5C5;</v-icon>
+          </v-btn>
+        </template>
         <v-list dense>
-          <v-list-tile
+          <v-list-item
             v-for="(item, index) in tokenMenuItems"
             :key="item.title"
             @click="projectsMenuClick(index, item.action)"
           >
-            <v-list-tile-title>{{item.title}}</v-list-tile-title>
-          </v-list-tile>
+            <v-list-item-title>{{item.title}}</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
 
       <div v-if="showSummary" class="summary-view">
         <div class="summary-header">
           Token Information
-          <v-spacer/>
+          <v-spacer />
           <v-btn small icon @click="deleteTokenProject">
             <v-icon>close</v-icon>
           </v-btn>
@@ -57,10 +59,10 @@
       </div>
     </div>
 
-    <show-offers-dialog :ping="showOffersDialogPing" :model="model"/>
-    <manage-offer-dialog :ping="offerDialogPing" :model="model"/>
-    <send-assets-dialog :ping="sendAssetsDialogPing" :model="model"/>
-    <create-holder-account-dialog :ping="accountDialogPing" :model="model"/>
+    <show-offers-dialog :ping="showOffersDialogPing" :model="model" />
+    <manage-offer-dialog :ping="offerDialogPing" :model="model" />
+    <send-assets-dialog :ping="sendAssetsDialogPing" :model="model" />
+    <create-holder-account-dialog :ping="accountDialogPing" :model="model" />
     <create-token-dialog
       v-on:token-created="createDialogResult"
       :model="model"

@@ -3,55 +3,65 @@
     <div class="console-bar">
       <v-btn icon dark @click.stop="fullscreenConsole()">
         <v-tooltip open-delay="800" bottom>
-          <v-icon v-if="fullscreenMode" slot="activator">&#xE5D1;</v-icon>
-          <v-icon v-else slot="activator">&#xE5D0;</v-icon>
+          <template fred="duh" v-slot:activator="{ on }">
+            <v-icon v-if="fullscreenMode" v-on="on">&#xE5D1;</v-icon>
+            <v-icon v-else v-on="on">&#xE5D0;</v-icon>
+          </template>
           <span>Full Screen</span>
         </v-tooltip>
       </v-btn>
       <v-btn icon dark @click.stop="clearLog()">
         <v-tooltip open-delay="800" bottom>
-          <v-icon slot="activator">&#xE15C;</v-icon>
+          <template fred="duh" v-slot:activator="{ on }">
+            <v-icon v-on="on">&#xE15C;</v-icon>
+          </template>
           <span>Clear console</span>
         </v-tooltip>
       </v-btn>
       <div>
         <v-menu offset-x :close-on-content-click="false" :nudge-width="200" v-model="menu">
-          <v-btn slot="activator" icon dark>
-            <v-tooltip open-delay="800" bottom>
-              <v-icon slot="activator">&#xE8B8;</v-icon>
-              <span>Console settings</span>
-            </v-tooltip>
-          </v-btn>
+          <template v-slot:activator="{ on }">
+            <v-btn v-on="on" icon dark>
+              <v-tooltip open-delay="800" bottom>
+                <template fred="duh" v-slot:activator="{ on }">
+                  <v-icon v-on="on">&#xE8B8;</v-icon>
+                </template>
+                <span>Console settings</span>
+              </v-tooltip>
+            </v-btn>
+          </template>
 
           <v-card>
             <v-list dense>
-              <v-list-tile avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title>Console Settings</v-list-tile-title>
-                </v-list-tile-content>
-              </v-list-tile>
+              <v-list-item avatar>
+                <v-list-item-content>
+                  <v-list-item-title>Console Settings</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
             </v-list>
             <v-divider></v-divider>
             <v-list dense>
-              <v-list-tile>
-                <v-list-tile-action>
+              <v-list-item>
+                <v-list-item-action>
                   <v-switch v-model="condensedOutput" color="primary"></v-switch>
-                </v-list-tile-action>
-                <v-list-tile-title>Condensed output</v-list-tile-title>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-action>
+                </v-list-item-action>
+                <v-list-item-title>Condensed output</v-list-item-title>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-action>
                   <v-switch v-model="expandXDR" color="primary"></v-switch>
-                </v-list-tile-action>
-                <v-list-tile-title>Expand XDR</v-list-tile-title>
-              </v-list-tile>
+                </v-list-item-action>
+                <v-list-item-title>Expand XDR</v-list-item-title>
+              </v-list-item>
             </v-list>
           </v-card>
         </v-menu>
       </div>
       <v-btn icon dark @click.stop="saveConsoleToFile()">
         <v-tooltip open-delay="800" bottom>
-          <v-icon slot="activator">&#xE161;</v-icon>
+          <template fred="duh" v-slot:activator="{ on }">
+            <v-icon v-on="on">&#xE161;</v-icon>
+          </template>
           <span>Save console output to file</span>
         </v-tooltip>
       </v-btn>

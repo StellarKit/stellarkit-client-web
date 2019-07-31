@@ -1,17 +1,13 @@
 <template>
-<v-app>
-  <app-main
-    class='app-wrapper'
-    v-if='!initializing'
-  />
-</v-app>
+  <v-app>
+    <app-main class="app-wrapper" v-if="!initializing" />
+  </v-app>
 </template>
 
 <script>
-import './scss/vuetify/main.styl'
 import SettingsStore from './js/SettingsStore.js'
 import AppMain from './AppMain.vue'
- import { fab } from '@fortawesome/free-brands-svg-icons'
+import { fab } from '@fortawesome/free-brands-svg-icons'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { library, dom } from '@fortawesome/fontawesome-svg-core'
 
@@ -35,7 +31,7 @@ export default {
       .then(() => {
         this.initializing = false
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error)
       })
   }
@@ -43,15 +39,18 @@ export default {
 </script>
 
 <style lang='scss'>
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons');
+@import url('https://fonts.googleapis.com/css?family=Orbitron:300,400,500,700');
+
 // gets rid of scrollbars on desktop
 body,
 html {
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
 }
 
 #app {
-    height: 100%;
+  height: 100%;
 }
 </style>

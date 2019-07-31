@@ -1,7 +1,7 @@
 <template>
-  <v-dialog lazy v-model="visible" scrollable @keydown.esc="visible = false" max-width="600">
+  <v-dialog v-model="visible" scrollable @keydown.esc="visible = false" max-width="600">
     <div class="main-container">
-      <dialog-titlebar :title="title" v-on:close="visible = false"/>
+      <dialog-titlebar :title="title" v-on:close="visible = false" />
 
       <div class="help-contents">
         <div class="help-email">
@@ -29,15 +29,17 @@
 
         <div class="button-holder">
           <v-tooltip open-delay="200" bottom>
-            <v-btn
-              round
-              small
-              :disabled="!confirmed"
-              color="primary"
-              slot="activator"
-              @click="lockAccount"
-              :loading="loading"
-            >Lock Account</v-btn>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn
+                round
+                small
+                :disabled="!confirmed"
+                color="primary"
+                v-on="on"
+                @click="lockAccount"
+                :loading="loading"
+              >Lock Account</v-btn>
+            </template>
             <span>Lock account so it can never be accessed by anyone</span>
           </v-tooltip>
         </div>

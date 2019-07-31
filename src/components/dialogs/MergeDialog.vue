@@ -1,66 +1,55 @@
 <template>
-<v-dialog
-  lazy
-  v-model='visible'
-  scrollable
-  @keydown.esc="visible = false"
-  max-width="600"
->
-  <div class='main-container'>
-    <dialog-titlebar
-      :title=title
-      v-on:close='visible = false'
-    />
+  <v-dialog v-model="visible" scrollable @keydown.esc="visible = false" max-width="600">
+    <div class="main-container">
+      <dialog-titlebar :title="title" v-on:close="visible = false" />
 
-    <div class='help-contents'>
-      <div class='help-text'>
-        <div>Merging an account destroys the source account.</div>
-        <div class='sub-header'>
-          Great if you have some XLM in another account and you want to extract the balance into another account. If the source has any other assets, the destination must first trust that asset.</div>
-      </div>
+      <div class="help-contents">
+        <div class="help-text">
+          <div>Merging an account destroys the source account.</div>
+          <div
+            class="sub-header"
+          >Great if you have some XLM in another account and you want to extract the balance into another account. If the source has any other assets, the destination must first trust that asset.</div>
+        </div>
 
-      <div class='help-email'>
-        <dialog-accounts
-          ref='dialogAccounts'
-          v-on:enter-key-down='mergeAccounts'
-          :model="model"
-          v-on:toast='displayToast'
-          :showSource=true
-          :showDest=true
+        <div class="help-email">
+          <dialog-accounts
+            ref="dialogAccounts"
+            v-on:enter-key-down="mergeAccounts"
+            :model="model"
+            v-on:toast="displayToast"
+            :showSource="true"
+            :showDest="true"
+          />
+        </div>
+        <div class="button-holder">
+          <v-tooltip open-delay="200" bottom>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn
+                round
+                color="primary"
+                v-on="on"
+                @click="mergeAccounts()"
+                :loading="loading"
+              >Merge into Destination</v-btn>
+            </template>
+            <span>Merge source assets into destination</span>
+          </v-tooltip>
+        </div>
+
+        <toast-component
+          :absolute="true"
+          location="trust-token-dialog"
+          :bottom="false"
+          :top="true"
         />
       </div>
-      <div class='button-holder'>
-        <v-tooltip
-          open-delay='200'
-          bottom
-        >
-          <v-btn
-            round
-            color='primary'
-            slot="activator"
-            @click="mergeAccounts()"
-            :loading="loading"
-          >Merge into Destination</v-btn>
-          <span>Merge source assets into destination</span>
-        </v-tooltip>
-      </div>
-
-      <toast-component
-        :absolute=true
-        location='trust-token-dialog'
-        :bottom=false
-        :top=true
-      />
     </div>
-  </div>
-</v-dialog>
+  </v-dialog>
 </template>
 
 <script>
 import Helper from '../../js/helper.js'
-import {
-  DialogTitleBar
-} from 'stellarkit-js-ui'
+import { DialogTitleBar } from 'stellarkit-js-ui'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
 import ReusableStellarViews from '../ReusableStellarViews.vue'
@@ -97,7 +86,7 @@ export default {
         this.loading = true
 
         StellarUtils.mergeAccount(sourceWallet, destWallet)
-          .then((response) => {
+          .then(response => {
             Helper.debugLog(response)
             this.loading = false
 
@@ -106,7 +95,7 @@ export default {
             this.displayToast('Success!')
             return null
           })
-          .catch((error) => {
+          .catch(error => {
             Helper.debugLog(error, 'Error')
             this.loading = false
             this.displayToast('Error!', true)
@@ -124,25 +113,25 @@ export default {
 @import '../../scss/styles.scss';
 
 .main-container {
-    @include standard-dialog-contents();
+  @include standard-dialog-contents();
 
-    .help-contents {
-        @include inner-dialog-contents();
+  .help-contents {
+    @include inner-dialog-contents();
 
-        .help-text {
-            div {
-                margin-bottom: 10px;
-            }
-            margin-bottom: 20px;
+    .help-text {
+      div {
+        margin-bottom: 10px;
+      }
+      margin-bottom: 20px;
 
-            .sub-header {
-                font-size: 0.8em;
-            }
-        }
-
-        .help-email {
-            margin: 0 30px 16px;
-        }
+      .sub-header {
+        font-size: 0.8em;
+      }
     }
+
+    .help-email {
+      margin: 0 30px 16px;
+    }
+  }
 }
 </style>

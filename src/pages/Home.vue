@@ -1,81 +1,90 @@
 <template>
   <div>
-    <account-list :items="accountsUI"/>
+    <account-list :items="accountsUI" />
     <instructions-header>
       <div>Content coming soon...</div>
     </instructions-header>
     <div class="top-controls">
       <div class="button-group">
-        <v-btn outline small @click="sendAssetsDialogPing = !sendAssetsDialogPing">Send Asset</v-btn>
+        <v-btn outlined small @click="sendAssetsDialogPing = !sendAssetsDialogPing">Send Asset</v-btn>
         <v-btn
-          outline
+          outlined
           small
           @click="addRemoveSignerDialogPing = !addRemoveSignerDialogPing"
         >Add/Remove Signer</v-btn>
 
         <v-tooltip open-delay="800" bottom>
-          <v-btn
-            outline
-            small
-            slot="activator"
-            @click="mergeDialogPing = !mergeDialogPing"
-          >Merge Accounts</v-btn>
+          <template fred="duh" v-slot:activator="{ on }">
+            <v-btn
+              outlined
+              small
+              v-on="on"
+              @click="mergeDialogPing = !mergeDialogPing"
+            >Merge Accounts</v-btn>
+          </template>
           <span>Merges source into destination</span>
         </v-tooltip>
 
         <v-tooltip open-delay="800" bottom>
-          <v-btn
-            outline
-            small
-            slot="activator"
-            @click="trustDialogPing = !trustDialogPing"
-          >Trust Token</v-btn>
+          <template fred="duh" v-slot:activator="{ on }">
+            <v-btn outlined small v-on="on" @click="trustDialogPing = !trustDialogPing">Trust Token</v-btn>
+          </template>
           <span>Account must trust token before it can receive</span>
         </v-tooltip>
 
-        <v-btn outline small @click="manageOfferDialogPing = !manageOfferDialogPing">Manage Offer</v-btn>
-        <v-btn outline small @click="buyAssetDialogPing = !buyAssetDialogPing">Buy Asset</v-btn>
-        <v-btn outline small @click="showOffersDialogPing = !showOffersDialogPing">Show Offers</v-btn>
-        <v-btn outline small @click="allowTrustDialogPing = !allowTrustDialogPing">Allow Trust</v-btn>
+        <v-btn outlined small @click="manageOfferDialogPing = !manageOfferDialogPing">Manage Offer</v-btn>
+        <v-btn outlined small @click="buyAssetDialogPing = !buyAssetDialogPing">Buy Asset</v-btn>
+        <v-btn outlined small @click="showOffersDialogPing = !showOffersDialogPing">Show Offers</v-btn>
+        <v-btn outlined small @click="allowTrustDialogPing = !allowTrustDialogPing">Allow Trust</v-btn>
 
-        <v-btn outline small @click="setDomainPing = !setDomainPing">Set Domain</v-btn>
-        <v-btn outline small @click="setInflationPing = !setInflationPing">Set Inflation Destination</v-btn>
-        <v-btn outline small @click="lookupFederationPing = !lookupFederationPing">Federation Lookup</v-btn>
-        <v-btn outline small @click="manageDataPing = !manageDataPing">Manage Data</v-btn>
-        <v-btn outline small @click="lockAccountDialogPing = !lockAccountDialogPing">Lock Account</v-btn>
+        <v-btn outlined small @click="setDomainPing = !setDomainPing">Set Domain</v-btn>
+        <v-btn
+          outlined
+          small
+          @click="setInflationPing = !setInflationPing"
+        >Set Inflation Destination</v-btn>
+        <v-btn
+          outlined
+          small
+          @click="lookupFederationPing = !lookupFederationPing"
+        >Federation Lookup</v-btn>
+        <v-btn outlined small @click="manageDataPing = !manageDataPing">Manage Data</v-btn>
+        <v-btn outlined small @click="lockAccountDialogPing = !lockAccountDialogPing">Lock Account</v-btn>
 
         <v-menu offset-y :transition="false">
-          <v-btn outline small :ripple="false" slot="activator">
-            Ledger Nano
-            <v-icon>&#xE5C5;</v-icon>
-          </v-btn>
+          <template v-slot:activator="{ on }">
+            <v-btn outlined small :ripple="false" v-on="on">
+              Ledger Nano
+              <v-icon>&#xE5C5;</v-icon>
+            </v-btn>
+          </template>
           <v-list dense>
-            <v-list-tile @click="ledgerMenu('info')">
-              <v-list-tile-title>Display Ledger Info</v-list-tile-title>
-            </v-list-tile>
-            <v-list-tile @click="ledgerMenu('refill')">
-              <v-list-tile-title>Boost Testnet Balance</v-list-tile-title>
-            </v-list-tile>
-            <v-list-tile @click="ledgerMenu('payments')">
-              <v-list-tile-title>View Payments</v-list-tile-title>
-            </v-list-tile>
-            <v-list-tile @click="ledgerMenu('operations')">
-              <v-list-tile-title>View Operations</v-list-tile-title>
-            </v-list-tile>
-            <v-list-tile @click="ledgerMenu('transactions')">
-              <v-list-tile-title>View Transactions</v-list-tile-title>
-            </v-list-tile>
+            <v-list-item @click="ledgerMenu('info')">
+              <v-list-item-title>Display Ledger Info</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="ledgerMenu('refill')">
+              <v-list-item-title>Boost Testnet Balance</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="ledgerMenu('payments')">
+              <v-list-item-title>View Payments</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="ledgerMenu('operations')">
+              <v-list-item-title>View Operations</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="ledgerMenu('transactions')">
+              <v-list-item-title>View Transactions</v-list-item-title>
+            </v-list-item>
           </v-list>
         </v-menu>
 
-        <v-btn outline small @click="saveSecretDialogPing = !saveSecretDialogPing">Save/Print Keys</v-btn>
+        <v-btn outlined small @click="saveSecretDialogPing = !saveSecretDialogPing">Save/Print Keys</v-btn>
       </div>
     </div>
 
-    <SavePrintSecretDialog :ping="saveSecretDialogPing"/>
-    <manage-data-dialog :ping="manageDataPing" :model="manageDataModel"/>
-    <merge-dialog :ping="mergeDialogPing" :model="mergeDialogModel"/>
-    <SimpleOperationDialog :ping="setDomainPing" operation="domain" :model="setDomainModel"/>
+    <SavePrintSecretDialog :ping="saveSecretDialogPing" />
+    <manage-data-dialog :ping="manageDataPing" :model="manageDataModel" />
+    <merge-dialog :ping="mergeDialogPing" :model="mergeDialogModel" />
+    <SimpleOperationDialog :ping="setDomainPing" operation="domain" :model="setDomainModel" />
     <SimpleOperationDialog
       :ping="setInflationPing"
       operation="inflation"
@@ -86,14 +95,14 @@
       operation="federation"
       :model="lookupFederationModel"
     />
-    <trust-token-dialog :ping="trustDialogPing" :model="trustDialogModel"/>
-    <AddRemoveSignerDialog :ping="addRemoveSignerDialogPing" :model="addRemoveSignerDialogModel"/>
-    <send-assets-dialog :ping="sendAssetsDialogPing" :model="sendAssetsDialogModel"/>
-    <manage-offer-dialog :ping="manageOfferDialogPing" :model="manageOfferDialogModel"/>
-    <buy-asset-dialog :ping="buyAssetDialogPing" :model="buyAssetDialogModel"/>
-    <show-offers-dialog :ping="showOffersDialogPing" :model="showOffersDialogModel"/>
-    <allow-trust-dialog :ping="allowTrustDialogPing" :model="allowTrustDialogModel"/>
-    <LockAccountDialog :ping="lockAccountDialogPing" :model="lockAccountDialogModel"/>
+    <trust-token-dialog :ping="trustDialogPing" :model="trustDialogModel" />
+    <AddRemoveSignerDialog :ping="addRemoveSignerDialogPing" :model="addRemoveSignerDialogModel" />
+    <send-assets-dialog :ping="sendAssetsDialogPing" :model="sendAssetsDialogModel" />
+    <manage-offer-dialog :ping="manageOfferDialogPing" :model="manageOfferDialogModel" />
+    <buy-asset-dialog :ping="buyAssetDialogPing" :model="buyAssetDialogModel" />
+    <show-offers-dialog :ping="showOffersDialogPing" :model="showOffersDialogModel" />
+    <allow-trust-dialog :ping="allowTrustDialogPing" :model="allowTrustDialogModel" />
+    <LockAccountDialog :ping="lockAccountDialogPing" :model="lockAccountDialogModel" />
   </div>
 </template>
 

@@ -1,10 +1,10 @@
 <template>
-  <v-dialog lazy v-model="visible" scrollable @keydown.esc="visible = false" max-width="640">
+  <v-dialog v-model="visible" scrollable @keydown.esc="visible = false" max-width="640">
     <div class="main-container">
-      <dialog-title-bar :title="title" v-on:close="visible = false"/>
+      <dialog-title-bar :title="title" v-on:close="visible = false" />
 
       <div class="help-contents">
-        <history-table v-if="publicKey" :publicKey="publicKey"/>
+        <history-table v-if="publicKey" :publicKey="publicKey" />
       </div>
     </div>
   </v-dialog>

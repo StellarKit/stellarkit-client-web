@@ -1,71 +1,45 @@
 <template>
-<div>
-  <v-menu
-    offset-y
-    @click.native.stop
-  >
-    <v-btn
-      icon
-      :small='small'
-      :class="{ 'small-button': small}"
-      slot="activator"
-    >
-      <v-icon>&#xE5D4;</v-icon>
-    </v-btn>
-    <v-list dense>
-      <v-list-tile @click="actionMenu('show-offers')">
-        <v-list-tile-title>Show Offers</v-list-tile-title>
-      </v-list-tile>
-      <v-list-tile @click="actionMenu('post-offer')">
-        <v-list-tile-title>Post Offer</v-list-tile-title>
-      </v-list-tile>
-      <v-list-tile @click="actionMenu('send-asset')">
-        <v-list-tile-title>Send Asset</v-list-tile-title>
-      </v-list-tile>
-      <v-list-tile @click="actionMenu('save-keys')">
-        <v-list-tile-title>Save/Print Keys</v-list-tile-title>
-      </v-list-tile>
-      <v-list-tile @click="actionMenu('trust-asset')">
-        <v-list-tile-title>Trust Asset</v-list-tile-title>
-      </v-list-tile>
-      <v-list-tile @click="actionMenu('allow-trust')">
-        <v-list-tile-title>Allow Trust</v-list-tile-title>
-      </v-list-tile>
-      <v-list-tile @click="actionMenu('history')">
-        <v-list-tile-title>Show History</v-list-tile-title>
-      </v-list-tile>
-    </v-list>
-  </v-menu>
+  <div>
+    <v-menu offset-y @click.native.stop>
+      <template v-slot:activator="{ on }">
+        <v-btn icon :small="small" :class="{ 'small-button': small}" v-on="on">
+          <v-icon>&#xE5D4;</v-icon>
+        </v-btn>
+      </template>
 
-  <history-dialog
-    :ping='historyDialogPing'
-    :publicKey='publicKey'
-  />
-  <show-offers-dialog
-    :ping='showOffersDialogPing'
-    :model="showOffersDialogModel"
-  />
-  <save-print-secret-dialog
-    :ping='saveSecretDialogPing'
-    :publicKey='publicKey'
-  />
-  <trust-token-dialog
-    :ping='trustDialogPing'
-    :model="trustDialogModel"
-  />
-  <send-assets-dialog
-    :ping='sendAssetsDialogPing'
-    :model="sendAssetsDialogModel"
-  />
-  <manage-offer-dialog
-    :ping='manageOfferDialogPing'
-    :model="manageOfferDialogModel"
-  />
-  <allow-trust-dialog
-    :ping='allowTrustDialogPing'
-    :model='allowTrustDialogModel'
-  />
-</div>
+      <v-list dense>
+        <v-list-item @click="actionMenu('show-offers')">
+          <v-list-item-title>Show Offers</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="actionMenu('post-offer')">
+          <v-list-item-title>Post Offer</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="actionMenu('send-asset')">
+          <v-list-item-title>Send Asset</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="actionMenu('save-keys')">
+          <v-list-item-title>Save/Print Keys</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="actionMenu('trust-asset')">
+          <v-list-item-title>Trust Asset</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="actionMenu('allow-trust')">
+          <v-list-item-title>Allow Trust</v-list-item-title>
+        </v-list-item>
+        <v-list-item @click="actionMenu('history')">
+          <v-list-item-title>Show History</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+
+    <history-dialog :ping="historyDialogPing" :publicKey="publicKey" />
+    <show-offers-dialog :ping="showOffersDialogPing" :model="showOffersDialogModel" />
+    <save-print-secret-dialog :ping="saveSecretDialogPing" :publicKey="publicKey" />
+    <trust-token-dialog :ping="trustDialogPing" :model="trustDialogModel" />
+    <send-assets-dialog :ping="sendAssetsDialogPing" :model="sendAssetsDialogModel" />
+    <manage-offer-dialog :ping="manageOfferDialogPing" :model="manageOfferDialogModel" />
+    <allow-trust-dialog :ping="allowTrustDialogPing" :model="allowTrustDialogModel" />
+  </div>
 </template>
 
 <script>
@@ -110,26 +84,36 @@ export default {
     actionMenu(id) {
       switch (id) {
         case 'show-offers':
-          this.showOffersDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.publicKey)
+          this.showOffersDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(
+            this.publicKey
+          )
           this.showOffersDialogPing = !this.showOffersDialogPing
           break
         case 'save-keys':
           this.saveSecretDialogPing = !this.saveSecretDialogPing
           break
         case 'trust-asset':
-          this.trustDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.publicKey)
+          this.trustDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(
+            this.publicKey
+          )
           this.trustDialogPing = !this.trustDialogPing
           break
         case 'send-asset':
-          this.sendAssetsDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.publicKey)
+          this.sendAssetsDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(
+            this.publicKey
+          )
           this.sendAssetsDialogPing = !this.sendAssetsDialogPing
           break
         case 'post-offer':
-          this.manageOfferDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.publicKey)
+          this.manageOfferDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(
+            this.publicKey
+          )
           this.manageOfferDialogPing = !this.manageOfferDialogPing
           break
         case 'allow-trust':
-          this.allowTrustDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(this.publicKey)
+          this.allowTrustDialogModel.sourceAccount = StellarAccounts.accountWithPublicKey(
+            this.publicKey
+          )
           this.allowTrustDialogPing = !this.allowTrustDialogPing
           break
         case 'history':
@@ -145,12 +129,12 @@ export default {
 
 <style lang='scss' scoped>
 .small-button {
-    margin: 0;
-    padding: 0;
-    color: rgba(0, 0, 0, .6);
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.6);
 
-    i {
-        font-size: 18px;
-    }
+  i {
+    font-size: 18px;
+  }
 }
 </style>

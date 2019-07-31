@@ -7,14 +7,14 @@
     </div>
     <v-divider></v-divider>
     <v-list>
-      <v-list-tile v-for="item in items" :key="item.title" @click="clickItem(item)">
+      <v-list-item v-for="item in items" :key="item.title" @click="clickItem(item)">
         <div class="list-item-icon">
           <v-icon>{{item.icon}}</v-icon>
         </div>
-        <v-list-tile-content>
+        <v-list-item-content>
           <div class="list-item-text">{{item.title}}</div>
-        </v-list-tile-content>
-      </v-list-tile>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
     <donate-dialog :ping="showDonatePing" :donationPublicKey="donationPublicKey"/>
     <help-dialog :ping="showHelpPing" title="Help"/>

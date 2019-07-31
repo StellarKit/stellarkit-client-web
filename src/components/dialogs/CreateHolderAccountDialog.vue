@@ -1,86 +1,72 @@
 <template>
-<v-dialog
-  lazy
-  v-model='visible'
-  scrollable
-  @keydown.esc="visible = false"
-  max-width="600"
->
-  <div class='main-container'>
-    <dialog-titlebar
-      :title=title
-      v-on:close='visible = false'
-    />
+  <v-dialog v-model="visible" scrollable @keydown.esc="visible = false" max-width="600">
+    <div class="main-container">
+      <dialog-titlebar :title="title" v-on:close="visible = false" />
 
-    <div class='help-contents'>
-      <div class='help-text'>
-        <div>Create a wallet for a user.</div>
-      </div>
-      <div class='help-email'>
-        <div class='balance-fields'>
-          <v-text-field
-            hide-details
-            label='Asset starting balance'
-            v-model.trim="tokenBalance"
-            @keyup.enter="createAccount()"
-            ref='input'
-          ></v-text-field>
-          <v-text-field
-            hide-details
-            label='XLM starting balance'
-            v-model.number="xlmBalance"
-            type='number'
-            @keyup.enter="createAccount()"
-          ></v-text-field>
+      <div class="help-contents">
+        <div class="help-text">
+          <div>Create a wallet for a user.</div>
         </div>
-        <dialog-accounts
-          ref='dialogAccounts'
-          v-on:enter-key-down='createAccount'
-          :model="model"
-          v-on:toast='displayToast'
-          :showAsset=true
-          :showSource=true
-          :showFunding=true
-          :showAccountName=true
-          :showTimeLock=true
+        <div class="help-email">
+          <div class="balance-fields">
+            <v-text-field
+              hide-details
+              label="Asset starting balance"
+              v-model.trim="tokenBalance"
+              @keyup.enter="createAccount()"
+              ref="input"
+            ></v-text-field>
+            <v-text-field
+              hide-details
+              label="XLM starting balance"
+              v-model.number="xlmBalance"
+              type="number"
+              @keyup.enter="createAccount()"
+            ></v-text-field>
+          </div>
+          <dialog-accounts
+            ref="dialogAccounts"
+            v-on:enter-key-down="createAccount"
+            :model="model"
+            v-on:toast="displayToast"
+            :showAsset="true"
+            :showSource="true"
+            :showFunding="true"
+            :showAccountName="true"
+            :showTimeLock="true"
+          />
+        </div>
+        <div class="button-holder">
+          <v-tooltip open-delay="200" bottom>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn
+                round
+                small
+                color="primary"
+                v-on="on"
+                @click="createAccount()"
+                :loading="loading"
+              >Create Account</v-btn>
+            </template>
+            <span>Create Token</span>
+          </v-tooltip>
+        </div>
+
+        <toast-component
+          :absolute="true"
+          location="create-account-dialog"
+          :bottom="false"
+          :top="true"
         />
       </div>
-      <div class='button-holder'>
-        <v-tooltip
-          open-delay='200'
-          bottom
-        >
-          <v-btn
-            round
-            small
-            color='primary'
-            slot="activator"
-            @click="createAccount()"
-            :loading="loading"
-          >Create Account</v-btn>
-          <span>Create Token</span>
-        </v-tooltip>
-      </div>
-
-      <toast-component
-        :absolute=true
-        location='create-account-dialog'
-        :bottom=false
-        :top=true
-      />
     </div>
-  </div>
-</v-dialog>
+  </v-dialog>
 </template>
 
 <script>
 import Helper from '../../js/helper.js'
-import {
-  DialogTitleBar
-} from 'stellarkit-js-ui'
-import {
-  StellarWallet
-} from 'stellarkit-js-utils'
+import { DialogTitleBar } from 'stellarkit-js-ui'
+import { StellarWallet } from 'stellarkit-js-utils'
 import StellarUtils from '../../js/StellarUtils.js'
 import StellarAccounts from '../../js/StellarAccounts.js'
 import ToastComponent from '../ToastComponent.vue'
@@ -136,8 +122,17 @@ export default {
 
         this.loading = true
 
-        StellarUtils.newAccountWithTokens(fundingWallet, sourceWallet, String(this.xlmBalance), asset, String(this.tokenBalance), accountName, asset.getCode(), issuerWallet)
-          .then((result) => {
+        StellarUtils.newAccountWithTokens(
+          fundingWallet,
+          sourceWallet,
+          String(this.xlmBalance),
+          asset,
+          String(this.tokenBalance),
+          accountName,
+          asset.getCode(),
+          issuerWallet
+        )
+          .then(result => {
             // result is {account: newAccount, keypair: keypair}
             Helper.debugLog(result.account)
 
@@ -145,10 +140,17 @@ export default {
               Helper.debugLog('adding funding account as signer...')
               const newWallet = StellarWallet.secret(result.keypair.secret())
 
-              return StellarUtils.makeMultiSig(newWallet, sourceWallet, fundingWallet)
-                .then(() => {
-                  return this.createUnlockTransaction(newWallet, sourceWallet, timeLockDate)
-                })
+              return StellarUtils.makeMultiSig(
+                newWallet,
+                sourceWallet,
+                fundingWallet
+              ).then(() => {
+                return this.createUnlockTransaction(
+                  newWallet,
+                  sourceWallet,
+                  timeLockDate
+                )
+              })
             }
 
             return null
@@ -159,7 +161,7 @@ export default {
 
             return null
           })
-          .catch((error) => {
+          .catch(error => {
             Helper.debugLog(error, 'Error')
             this.displayToast('Error!', true)
           })
@@ -169,7 +171,7 @@ export default {
       }
     },
     timeFromNow(secondsAhead = 0) {
-      return secondsAhead + Math.round((new Date()).getTime() / 1000)
+      return secondsAhead + Math.round(new Date().getTime() / 1000)
     },
     createUnlockTransaction(newAccountWallet, sourceWallet, timeLockDate) {
       const minTime = timeLockDate.getSeconds()
@@ -182,16 +184,23 @@ export default {
       }
 
       // using source account instead of distributor, sequence numbers would be different in the future
-      return StellarUtils.removeMultiSigTransaction(newAccountWallet, sourceWallet, transactionOpts)
-        .then((transaction) => {
+      return StellarUtils.removeMultiSigTransaction(
+        newAccountWallet,
+        sourceWallet,
+        transactionOpts
+      )
+        .then(transaction => {
           this.unlockTransaction = transaction.toEnvelope().toXDR('base64')
-          Helper.debugLog(this.unlockTransaction, 'Save this transaction to submit later')
+          Helper.debugLog(
+            this.unlockTransaction,
+            'Save this transaction to submit later'
+          )
 
           Helper.toast('Transaction output to console.  Save this!')
 
           return transaction
         })
-        .catch((error) => {
+        .catch(error => {
           Helper.debugLog(error, 'Error')
         })
     },
@@ -206,35 +215,35 @@ export default {
 @import '../../scss/styles.scss';
 
 .main-container {
-    @include standard-dialog-contents();
+  @include standard-dialog-contents();
 
-    .help-contents {
-        @include inner-dialog-contents();
+  .help-contents {
+    @include inner-dialog-contents();
 
-        .help-text {
-            div {
-                margin-bottom: 10px;
-            }
-            margin-bottom: 20px;
+    .help-text {
+      div {
+        margin-bottom: 10px;
+      }
+      margin-bottom: 20px;
 
-            .sub-header {
-                font-size: 0.8em;
-            }
-        }
-
-        .help-email {
-            margin: 0 30px;
-
-            .balance-fields {
-                display: flex;
-                align-items: center;
-                margin-bottom: 12px;
-                div.input-group {
-                    flex: 1 0 200px;
-                    margin-right: 16px;
-                }
-            }
-        }
+      .sub-header {
+        font-size: 0.8em;
+      }
     }
+
+    .help-email {
+      margin: 0 30px;
+
+      .balance-fields {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        div.input-group {
+          flex: 1 0 200px;
+          margin-right: 16px;
+        }
+      }
+    }
+  }
 }
 </style>

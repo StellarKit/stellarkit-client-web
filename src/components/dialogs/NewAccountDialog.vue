@@ -1,5 +1,5 @@
 <template>
-  <v-dialog lazy v-model="visible" scrollable @keydown.esc="visible = false" max-width="600">
+  <v-dialog v-model="visible" scrollable @keydown.esc="visible = false" max-width="600">
     <div class="main-container">
       <dialog-titlebar
         :title="title"
@@ -11,36 +11,46 @@
       <div class="help-contents">
         <div v-if="mode === 'start'" class="start-box">
           <v-tooltip v-if="isTestnet()" open-delay="200" bottom>
-            <v-btn
-              color="primary"
-              slot="activator"
-              @click="buttonClick('testnet-account')"
-            >Free Testnet Account</v-btn>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn
+                color="primary"
+                v-on="on"
+                @click="buttonClick('testnet-account')"
+              >Free Testnet Account</v-btn>
+            </template>
             <span>Add a free testnet account</span>
           </v-tooltip>
           <v-tooltip open-delay="200" bottom>
-            <v-btn
-              color="primary"
-              slot="activator"
-              @click="buttonClick('add-account')"
-            >Add Existing Account</v-btn>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn
+                color="primary"
+                v-on="on"
+                @click="buttonClick('add-account')"
+              >Add Existing Account</v-btn>
+            </template>
             <span>Add existing account with a secret key</span>
           </v-tooltip>
           <v-tooltip open-delay="200" bottom>
-            <v-btn
-              color="primary"
-              slot="activator"
-              @click="buttonClick('create-account')"
-            >Create New Account</v-btn>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn
+                color="primary"
+                v-on="on"
+                @click="buttonClick('create-account')"
+              >Create New Account</v-btn>
+            </template>
             <span>Create a new account with a source account's secret key</span>
           </v-tooltip>
 
           <v-tooltip open-delay="200" bottom>
-            <v-btn outline slot="activator" @click="buttonClick('import')">Import Accounts...</v-btn>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn outlined v-on="on" @click="buttonClick('import')">Import Accounts...</v-btn>
+            </template>
             <span>Import a .json file of account keys</span>
           </v-tooltip>
           <v-tooltip open-delay="200" bottom>
-            <v-btn outline slot="activator" @click="buttonClick('export')">Export Accounts...</v-btn>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn outlined v-on="on" @click="buttonClick('export')">Export Accounts...</v-btn>
+            </template>
             <span>Create a new account with a source account's secret key</span>
           </v-tooltip>
         </div>
@@ -59,13 +69,15 @@
 
             <div class="button-holder">
               <v-tooltip open-delay="200" bottom>
-                <v-btn
-                  round
-                  color="primary"
-                  slot="activator"
-                  @click="addExistingAccount"
-                  :loading="loading"
-                >Add Account</v-btn>
+                <template fred="duh" v-slot:activator="{ on }">
+                  <v-btn
+                    round
+                    color="primary"
+                    v-on="on"
+                    @click="addExistingAccount"
+                    :loading="loading"
+                  >Add Account</v-btn>
+                </template>
                 <span>Add account with key</span>
               </v-tooltip>
             </div>
@@ -84,13 +96,15 @@
             />
             <div class="button-holder">
               <v-tooltip open-delay="200" bottom>
-                <v-btn
-                  round
-                  color="primary"
-                  slot="activator"
-                  @click="createAccount"
-                  :loading="loading"
-                >Create Account</v-btn>
+                <template fred="duh" v-slot:activator="{ on }">
+                  <v-btn
+                    round
+                    color="primary"
+                    v-on="on"
+                    @click="createAccount"
+                    :loading="loading"
+                  >Create Account</v-btn>
+                </template>
                 <span>Add account with secret key</span>
               </v-tooltip>
             </div>
@@ -106,20 +120,22 @@
             />
             <div class="button-holder">
               <v-tooltip open-delay="200" bottom>
-                <v-btn
-                  round
-                  color="primary"
-                  slot="activator"
-                  @click="createTestnetAccount"
-                  :loading="loading"
-                >Create Account</v-btn>
+                <template fred="duh" v-slot:activator="{ on }">
+                  <v-btn
+                    round
+                    color="primary"
+                    v-on="on"
+                    @click="createTestnetAccount"
+                    :loading="loading"
+                  >Create Account</v-btn>
+                </template>
                 <span>Add account with secret key</span>
               </v-tooltip>
             </div>
           </div>
         </div>
 
-        <save-secret-dialog :ping="saveSecretDialogPing" :publicKey="newAccountPublicKey"/>
+        <save-secret-dialog :ping="saveSecretDialogPing" :publicKey="newAccountPublicKey" />
         <toast-component
           :absolute="true"
           location="create-account-dialog"

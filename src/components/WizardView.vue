@@ -7,20 +7,20 @@
           icon
           dark
           small
-          slot="activator"
+          v-on="on"
         >
           <v-icon>&#xE5C5;</v-icon>
         </v-btn>
         <v-list>
-          <v-list-tile
+          <v-list-item
             v-for="(item, index) in pageTitles"
             :key="item"
             @click="menuSelected(index)"
           >
-            <v-list-tile-content>
-              <v-list-tile-title>{{ item }}</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
+            <v-list-item-content>
+              <v-list-item-title>{{ item }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
       </v-menu>
     </div>

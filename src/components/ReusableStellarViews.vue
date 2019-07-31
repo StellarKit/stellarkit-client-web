@@ -99,15 +99,15 @@
     </div>
 
     <div v-if="showAsset" class="account-choice-box">
-      <asset-popup title="Asset" :model="model.assetModel"/>
+      <asset-popup title="Asset" :model="model.assetModel" />
     </div>
 
     <div v-if="showBuyingAsset" class="account-choice-box">
-      <asset-popup title="Buying asset" :model="model.buyingAssetModel"/>
+      <asset-popup title="Buying asset" :model="model.buyingAssetModel" />
     </div>
 
     <div v-if="showSellingAsset" class="account-choice-box">
-      <asset-popup title="Selling asset" :model="model.sellingAssetModel"/>
+      <asset-popup title="Selling asset" :model="model.sellingAssetModel" />
     </div>
 
     <div v-if="showSecret" class="account-choice-box">
@@ -273,7 +273,6 @@
         <v-dialog
           v-model="timeLockModal"
           persistent
-          lazy
           full-width
           width="290px"
           :return-value.sync="timeLockDate"
@@ -281,7 +280,7 @@
         >
           <v-text-field
             hide-details
-            slot="activator"
+            v-on="on"
             label="Time Lock Expiration Date"
             v-model="timeLockDate"
             prepend-icon="event"
@@ -289,8 +288,8 @@
           ></v-text-field>
           <v-date-picker v-model="timeLockDate" scrollable actions>
             <v-spacer></v-spacer>
-            <v-btn flat color="primary" @click="timeLockModal = false">Cancel</v-btn>
-            <v-btn flat color="primary" @click="$refs.dialog.save(timeLockDate)">OK</v-btn>
+            <v-btn text color="primary" @click="timeLockModal = false">Cancel</v-btn>
+            <v-btn text color="primary" @click="$refs.dialog.save(timeLockDate)">OK</v-btn>
           </v-date-picker>
         </v-dialog>
       </div>

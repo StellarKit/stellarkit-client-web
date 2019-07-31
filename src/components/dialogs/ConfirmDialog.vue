@@ -1,64 +1,40 @@
 <template>
-<v-dialog
-  lazy
-  persistent
-  v-model='visible'
-  scrollable
-  @keydown.esc="visible = false"
-  max-width="400"
->
-  <div class='main-container'>
-    <dialog-titlebar
-      :title=title
-      v-on:close='visible = false'
-    />
+  <v-dialog persistent v-model="visible" scrollable @keydown.esc="visible = false" max-width="400">
+    <div class="main-container">
+      <dialog-titlebar :title="title" v-on:close="visible = false" />
 
-    <div class='confirm-dialog-contents'>
-      <div class='main-message'>
-        {{message}}
-      </div>
-      <v-checkbox
-        label="I understand"
-        v-model="confirmed"
-      ></v-checkbox>
+      <div class="confirm-dialog-contents">
+        <div class="main-message">{{message}}</div>
+        <v-checkbox label="I understand" v-model="confirmed"></v-checkbox>
 
-      <div class='button-holder'>
-        <v-tooltip
-          open-delay='200'
-          bottom
-        >
-          <v-btn
-            round
-            small
-            slot="activator"
-            @click="visible = false"
-          >Cancel</v-btn>
-          <span>Cancel</span>
-        </v-tooltip>
-        <v-tooltip
-          open-delay='200'
-          bottom
-        >
-          <v-btn
-            round
-            small
-            color='error'
-            slot="activator"
-            @click="buttonClick('ok')"
-            :disabled="!confirmed"
-          >{{okTitle}}</v-btn>
-          <span>Confirm</span>
-        </v-tooltip>
+        <div class="button-holder">
+          <v-tooltip open-delay="200" bottom>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn round small v-on="on" @click="visible = false">Cancel</v-btn>
+            </template>
+            <span>Cancel</span>
+          </v-tooltip>
+          <v-tooltip open-delay="200" bottom>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn
+                round
+                small
+                color="error"
+                v-on="on"
+                @click="buttonClick('ok')"
+                :disabled="!confirmed"
+              >{{okTitle}}</v-btn>
+            </template>
+            <span>Confirm</span>
+          </v-tooltip>
+        </div>
       </div>
     </div>
-  </div>
-</v-dialog>
+  </v-dialog>
 </template>
 
 <script>
-import {
-  DialogTitleBar
-} from 'stellarkit-js-ui'
+import { DialogTitleBar } from 'stellarkit-js-ui'
 
 export default {
   props: ['ping', 'title', 'message', 'okTitle'],
@@ -99,15 +75,15 @@ export default {
 @import '../../scss/styles.scss';
 
 .main-container {
-    @include standard-dialog-contents();
+  @include standard-dialog-contents();
 
-    .confirm-dialog-contents {
-        @include inner-dialog-contents();
+  .confirm-dialog-contents {
+    @include inner-dialog-contents();
 
-        .main-message {
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
+    .main-message {
+      font-size: 0.9em;
+      margin-bottom: 10px;
     }
+  }
 }
 </style>

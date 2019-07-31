@@ -1,44 +1,22 @@
 <template>
-<v-dialog
-  lazy
-  v-model='visible'
-  scrollable
-  @keydown.esc="visible = false"
-  max-width="600"
->
-  <div class='main-container'>
-    <dialog-titlebar
-      :title=title
-      v-on:close='visible = false'
-    />
+  <v-dialog v-model="visible" scrollable @keydown.esc="visible = false" max-width="600">
+    <div class="main-container">
+      <dialog-titlebar :title="title" v-on:close="visible = false" />
 
-    <div class='expansion-contents'>
-      <v-expansion-panel class='custom-expansion-panel'>
-        <v-expansion-panel-content
-          v-for="(item,i) in items"
-          v-bind:value="i === 0"
-          :key="i"
-        >
-          <div
-            slot="header"
-            class='expansion-title'
-            v-html='item.title'
-          ></div>
-          <div
-            class='expansion-message'
-            v-html='item.content'
-          ></div>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
+      <div class="expansion-contents">
+        <v-expansion-panel class="custom-expansion-panel">
+          <v-expansion-panel-content v-for="(item,i) in items" v-bind:value="i === 0" :key="i">
+            <div slot="header" class="expansion-title" v-html="item.title"></div>
+            <div class="expansion-message" v-html="item.content"></div>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </div>
     </div>
-  </div>
-</v-dialog>
+  </v-dialog>
 </template>
 
 <script>
-import {
-  DialogTitleBar
-} from 'stellarkit-js-ui'
+import { DialogTitleBar } from 'stellarkit-js-ui'
 
 export default {
   props: ['ping', 'title'],
@@ -58,7 +36,8 @@ export default {
     }
   },
   created() {
-    this.items = [{
+    this.items = [
+      {
         title: 'How do I create a Token?',
         content: 'Click the Create Token tab and follow the instructions'
       },
@@ -77,29 +56,29 @@ export default {
 <style lang="scss" scoped>
 @import '../../scss/styles.scss';
 .main-container {
-    @include standard-dialog-contents();
+  @include standard-dialog-contents();
 
-    .expansion-contents {
-        padding: 10px 20px;
+  .expansion-contents {
+    padding: 10px 20px;
+    text-align: left;
+
+    flex: 1 1 auto;
+    overflow-y: auto;
+    font-size: 1.3em;
+
+    .custom-expansion-panel {
+      box-shadow: none;
+
+      .expansion-title {
         text-align: left;
-
-        flex: 1 1 auto;
-        overflow-y: auto;
-        font-size: 1.3em;
-
-        .custom-expansion-panel {
-            box-shadow: none;
-
-            .expansion-title {
-                text-align: left;
-                font-weight: $bold;
-                width: 100%;
-            }
-            .expansion-message {
-                font-size: 0.9em;
-                padding: 0 26px 10px;
-            }
-        }
+        font-weight: $bold;
+        width: 100%;
+      }
+      .expansion-message {
+        font-size: 0.9em;
+        padding: 0 26px 10px;
+      }
     }
+  }
 }
 </style>

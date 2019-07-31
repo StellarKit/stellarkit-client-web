@@ -17,29 +17,33 @@
       ></v-autocomplete>
       <div class="address-box">
         <v-menu offset-y :transition="false">
-          <v-btn small :ripple="false" slot="activator">
-            {{buttonTitle}}
-            <v-icon>&#xE5C5;</v-icon>
-          </v-btn>
+          <template v-slot:activator="{ on }">
+            <v-btn small :ripple="false" v-on="on">
+              {{buttonTitle}}
+              <v-icon>&#xE5C5;</v-icon>
+            </v-btn>
+          </template>
           <v-list dense>
-            <v-list-tile v-for="item in items" :key="item.title" @click="menuClick(item.menuID)">
-              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-            </v-list-tile>
+            <v-list-item v-for="item in items" :key="item.title" @click="menuClick(item.menuID)">
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
           </v-list>
         </v-menu>
         <v-menu offset-y :transition="false">
-          <v-btn small :ripple="false" slot="activator">
-            {{orderButtonTitle}}
-            <v-icon>&#xE5C5;</v-icon>
-          </v-btn>
+          <template v-slot:activator="{ on }">
+            <v-btn small :ripple="false" v-on="on">
+              {{orderButtonTitle}}
+              <v-icon>&#xE5C5;</v-icon>
+            </v-btn>
+          </template>
           <v-list dense>
-            <v-list-tile
+            <v-list-item
               v-for="item in orderItems"
               :key="item.title"
               @click="orderMenuClick(item.menuID)"
             >
-              <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-            </v-list-tile>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
           </v-list>
         </v-menu>
         <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
@@ -51,13 +55,17 @@
       <div class="button-row">
         <v-btn icon small color="secondary" @click="previous()">
           <v-tooltip open-delay="800" bottom>
-            <v-icon slot="activator">&#xE5CB;</v-icon>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-icon v-on="on">&#xE5CB;</v-icon>
+            </template>
             <span>Previous</span>
           </v-tooltip>
         </v-btn>
         <v-btn icon small color="secondary" @click="next()">
           <v-tooltip open-delay="800" bottom>
-            <v-icon slot="activator">&#xE5CC;</v-icon>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-icon v-on="on">&#xE5CC;</v-icon>
+            </template>
             <span>Next</span>
           </v-tooltip>
         </v-btn>

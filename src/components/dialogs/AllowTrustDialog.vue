@@ -1,81 +1,69 @@
 <template>
-<v-dialog
-  lazy
-  v-model='visible'
-  scrollable
-  @keydown.esc="visible = false"
-  max-width="600"
->
-  <div class='main-container'>
-    <dialog-titlebar
-      :title=title
-      v-on:close='visible = false'
-    />
+  <v-dialog v-model="visible" scrollable @keydown.esc="visible = false" max-width="600">
+    <div class="main-container">
+      <dialog-titlebar :title="title" v-on:close="visible = false" />
 
-    <div class='help-contents'>
-      <div class='help-text'>
-        <div>Enable the destination to hold an asset if auth required is set on the issuer's account.</div>
-        <div class='sub-header'>
-          Source account is the asset issuer. Destination is the account you would like to enable authorization to hold the issuer's asset.</div>
-      </div>
+      <div class="help-contents">
+        <div class="help-text">
+          <div>Enable the destination to hold an asset if auth required is set on the issuer's account.</div>
+          <div
+            class="sub-header"
+          >Source account is the asset issuer. Destination is the account you would like to enable authorization to hold the issuer's asset.</div>
+        </div>
 
-      <div class='help-email'>
-        <dialog-accounts
-          ref='dialogAccounts'
-          v-on:enter-key-down='allowTrust'
-          :model="model"
-          v-on:toast='displayToast'
-          :showSource=true
-          :showDest=true
-          :showAsset=true
-          :showFunding=true
+        <div class="help-email">
+          <dialog-accounts
+            ref="dialogAccounts"
+            v-on:enter-key-down="allowTrust"
+            :model="model"
+            v-on:toast="displayToast"
+            :showSource="true"
+            :showDest="true"
+            :showAsset="true"
+            :showFunding="true"
+          />
+        </div>
+        <div class="button-holder">
+          <v-tooltip open-delay="200" bottom>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn
+                round
+                color="secondary"
+                v-on="on"
+                @click="allowTrust(false)"
+                :loading="loadingRevoke"
+              >Revoke Trust</v-btn>
+            </template>
+            <span>Allow destination to hold the asset</span>
+          </v-tooltip>
+          <v-tooltip open-delay="200" bottom>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn
+                round
+                color="primary"
+                v-on="on"
+                @click="allowTrust(true)"
+                :loading="loadingTrust"
+              >Allow Trust</v-btn>
+            </template>
+            <span>Allow destination to hold the asset</span>
+          </v-tooltip>
+        </div>
+
+        <toast-component
+          :absolute="true"
+          location="trust-token-dialog"
+          :bottom="false"
+          :top="true"
         />
       </div>
-      <div class='button-holder'>
-        <v-tooltip
-          open-delay='200'
-          bottom
-        >
-          <v-btn
-            round
-            color='secondary'
-            slot="activator"
-            @click="allowTrust(false)"
-            :loading="loadingRevoke"
-          >Revoke Trust</v-btn>
-          <span>Allow destination to hold the asset</span>
-        </v-tooltip>
-        <v-tooltip
-          open-delay='200'
-          bottom
-        >
-          <v-btn
-            round
-            color='primary'
-            slot="activator"
-            @click="allowTrust(true)"
-            :loading="loadingTrust"
-          >Allow Trust</v-btn>
-          <span>Allow destination to hold the asset</span>
-        </v-tooltip>
-      </div>
-
-      <toast-component
-        :absolute=true
-        location='trust-token-dialog'
-        :bottom=false
-        :top=true
-      />
     </div>
-  </div>
-</v-dialog>
+  </v-dialog>
 </template>
 
 <script>
 import Helper from '../../js/helper.js'
-import {
-  DialogTitleBar
-} from 'stellarkit-js-ui'
+import { DialogTitleBar } from 'stellarkit-js-ui'
 import StellarUtils from '../../js/StellarUtils.js'
 import ToastComponent from '../ToastComponent.vue'
 import ReusableStellarViews from '../ReusableStellarViews.vue'
@@ -119,14 +107,20 @@ export default {
           this.loadingRevoke = true
         }
 
-        StellarUtils.allowTrust(sourceWallet, destWallet, asset, authorize, fundingWallet)
-          .then((response) => {
+        StellarUtils.allowTrust(
+          sourceWallet,
+          destWallet,
+          asset,
+          authorize,
+          fundingWallet
+        )
+          .then(response => {
             Helper.debugLog(response)
 
             this.displayToast('Success!')
             return null
           })
-          .catch((error) => {
+          .catch(error => {
             Helper.debugLog(error, 'Error')
             this.displayToast('Error!', true)
           })
@@ -147,25 +141,25 @@ export default {
 @import '../../scss/styles.scss';
 
 .main-container {
-    @include standard-dialog-contents();
+  @include standard-dialog-contents();
 
-    .help-contents {
-        @include inner-dialog-contents();
+  .help-contents {
+    @include inner-dialog-contents();
 
-        .help-text {
-            div {
-                margin-bottom: 10px;
-            }
-            margin-bottom: 20px;
+    .help-text {
+      div {
+        margin-bottom: 10px;
+      }
+      margin-bottom: 20px;
 
-            .sub-header {
-                font-size: 0.8em;
-            }
-        }
-
-        .help-email {
-            margin: 0 30px 16px;
-        }
+      .sub-header {
+        font-size: 0.8em;
+      }
     }
+
+    .help-email {
+      margin: 0 30px 16px;
+    }
+  }
 }
 </style>

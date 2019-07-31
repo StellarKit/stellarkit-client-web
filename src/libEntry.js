@@ -10,12 +10,11 @@ import HistoryViewer from './pages/HistoryViewer.vue'
 import Trades from './pages/Trades.vue'
 import $ from 'jquery'
 import HelperImplementation from './js/HelperImplementation.js'
-import {
-  LedgerAPITransport
-} from 'stellarkit-js-utils'
+import { LedgerAPITransport } from 'stellarkit-js-utils'
 
-import Vuetify from 'vuetify'
-Vue.use(Vuetify)
+import vuetify from './plugins/vuetify'
+
+Vue.config.productionTip = false
 
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
@@ -25,55 +24,62 @@ const router = new VueRouter({
   scrollBehavior: () => ({
     y: 0
   }),
-  routes: [{
-    path: '/',
-    component: Home,
-    name: 'Home'
-  }, {
-    path: '/buytoken',
-    component: BuyToken,
-    name: 'Buy Token'
-  }, {
-    path: '/trades',
-    component: Trades,
-    name: 'Live Stream'
-  }, {
-    path: '/ico',
-    component: ICOManager,
-    name: 'ICO Manager'
-  }, {
-    path: '/trust',
-    component: AllowTrust,
-    name: 'Allow Trust'
-  }, {
-    path: '/locked',
-    component: LockedTokens,
-    name: 'Locked Tokens'
-  }, {
-    path: '/history',
-    component: HistoryViewer,
-    name: 'History Viewer'
-  }, {
-    path: '/experiments',
-    component: Experiments,
-    name: 'Experiments'
-  }, {
-    path: '*',
-    redirect: '/'
-  }]
+  routes: [
+    {
+      path: '/',
+      component: Home,
+      name: 'Home'
+    },
+    {
+      path: '/buytoken',
+      component: BuyToken,
+      name: 'Buy Token'
+    },
+    {
+      path: '/trades',
+      component: Trades,
+      name: 'Live Stream'
+    },
+    {
+      path: '/ico',
+      component: ICOManager,
+      name: 'ICO Manager'
+    },
+    {
+      path: '/trust',
+      component: AllowTrust,
+      name: 'Allow Trust'
+    },
+    {
+      path: '/locked',
+      component: LockedTokens,
+      name: 'Locked Tokens'
+    },
+    {
+      path: '/history',
+      component: HistoryViewer,
+      name: 'History Viewer'
+    },
+    {
+      path: '/experiments',
+      component: Experiments,
+      name: 'Experiments'
+    },
+    {
+      path: '*',
+      redirect: '/'
+    }
+  ]
 })
 
 const start = () => {
   if ($('#app').length > 0) {
-    new Vue(Vue.util.extend({
-      el: '#app',
-      router
-    }, App))
+    new Vue({
+      vuetify,
+      router,
+      render: h => h(App)
+    }).$mount('#app')
   }
 }
 
-export {
-  start,
-  HelperImplementation,
-  LedgerAPITransport
-}
+export { start, HelperImplementation, LedgerAPITransport }

@@ -1,47 +1,36 @@
 <template>
-<v-dialog
-  lazy
-  v-model='visible'
-  scrollable
-  @keydown.esc="visible = false"
-  max-width="600"
->
-  <div class='main-container'>
-    <dialog-titlebar
-      :title=title
-      v-on:close='visible = false'
-    />
+  <v-dialog v-model="visible" scrollable @keydown.esc="visible = false" max-width="600">
+    <div class="main-container">
+      <dialog-titlebar :title="title" v-on:close="visible = false" />
 
-    <div class='help-contents'>
-      <textarea v-model="editableTransaction"></textarea>
-      <div>{{statusMessage}}</div>
+      <div class="help-contents">
+        <textarea v-model="editableTransaction"></textarea>
+        <div>{{statusMessage}}</div>
 
-      <div class='button-holder'>
-        <v-btn
-          round
-          small
-          color='primary'
-          slot="activator"
-          @click="submitTransaction()"
-          :loading="loadingTransaction"
-        >Submit</v-btn>
+        <div class="button-holder">
+          <v-btn
+            round
+            small
+            color="primary"
+            v-on="on"
+            @click="submitTransaction()"
+            :loading="loadingTransaction"
+          >Submit</v-btn>
+        </div>
+        <toast-component
+          :absolute="true"
+          location="transaction-dialog"
+          :bottom="false"
+          :top="true"
+        />
       </div>
-      <toast-component
-        :absolute=true
-        location='transaction-dialog'
-        :bottom=false
-        :top=true
-      />
     </div>
-  </div>
-</v-dialog>
+  </v-dialog>
 </template>
 
 <script>
 import Helper from '../../js/helper.js'
-import {
-  DialogTitleBar
-} from 'stellarkit-js-ui'
+import { DialogTitleBar } from 'stellarkit-js-ui'
 import StellarCommonMixin from '../StellarCommonMixin.js'
 import StellarUtils from '../../js/StellarUtils.js'
 const StellarSdk = require('stellar-sdk')
@@ -75,14 +64,17 @@ export default {
   methods: {
     submitTransaction() {
       if (Helper.strlen(this.editableTransaction) > 0) {
-        const envelope = StellarSdk.xdr.TransactionEnvelope.fromXDR(this.editableTransaction, 'base64')
+        const envelope = StellarSdk.xdr.TransactionEnvelope.fromXDR(
+          this.editableTransaction,
+          'base64'
+        )
         const transaction = new StellarSdk.Transaction(envelope)
 
         this.loadingTransaction = true
         this.statusMessage = '' // clear any previous warning
 
         StellarUtils.submitTransaction(transaction)
-          .then((response) => {
+          .then(response => {
             Helper.debugLog(response)
 
             Helper.toast('Success', false, 'transaction-dialog')
@@ -91,11 +83,16 @@ export default {
 
             return null
           })
-          .catch((error) => {
+          .catch(error => {
             Helper.debugLog(error)
 
-            if (error.data && error.data.extras && error.data.extras.result_codes) {
-              this.statusMessage = 'Error: ' + error.data.extras.result_codes.transaction
+            if (
+              error.data &&
+              error.data.extras &&
+              error.data.extras.result_codes
+            ) {
+              this.statusMessage =
+                'Error: ' + error.data.extras.result_codes.transaction
             } else {
               this.statusMessage = 'Error: unknown'
             }
@@ -116,23 +113,23 @@ export default {
 @import '../../scss/styles.scss';
 
 .main-container {
-    @include standard-dialog-contents();
+  @include standard-dialog-contents();
 
-    .help-contents {
-        @include inner-dialog-contents();
+  .help-contents {
+    @include inner-dialog-contents();
 
-        textarea {
-            width: 100%;
-            height: 200px;
-            resize: none;
-            outline: none;
-            font-size: 0.8em;
-            font-family: monospace;
-            background: rgb(0,20,0);
-            overflow: auto;
-            color: rgb(0,256,150);
-            padding: 10px;
-        }
+    textarea {
+      width: 100%;
+      height: 200px;
+      resize: none;
+      outline: none;
+      font-size: 0.8em;
+      font-family: monospace;
+      background: rgb(0, 20, 0);
+      overflow: auto;
+      color: rgb(0, 256, 150);
+      padding: 10px;
     }
+  }
 }
 </style>

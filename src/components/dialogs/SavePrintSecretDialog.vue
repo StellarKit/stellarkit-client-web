@@ -1,7 +1,7 @@
 <template>
-  <v-dialog lazy v-model="visible" scrollable @keydown.esc="visible = false" max-width="480">
+  <v-dialog v-model="visible" scrollable @keydown.esc="visible = false" max-width="480">
     <div class="main-container">
-      <dialog-titlebar :title="title" v-on:close="visible = false"/>
+      <dialog-titlebar :title="title" v-on:close="visible = false" />
 
       <div class="dialog-contents">
         <div
@@ -24,26 +24,25 @@
 
         <div class="buttons-area">
           <v-tooltip open-delay="200" bottom>
-            <v-btn
-              color="primary"
-              round
-              slot="activator"
-              @click="buttonClick('save-keys')"
-            >Save Keys...</v-btn>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn color="primary" round v-on="on" @click="buttonClick('save-keys')">Save Keys...</v-btn>
+            </template>
             <span>Save the keys to a file on a USB or disk</span>
           </v-tooltip>
           <v-tooltip open-delay="200" bottom>
-            <v-btn
-              color="primary"
-              round
-              slot="activator"
-              @click="buttonClick('print-keys')"
-            >Print Keys...</v-btn>
+            <template fred="duh" v-slot:activator="{ on }">
+              <v-btn
+                color="primary"
+                round
+                v-on="on"
+                @click="buttonClick('print-keys')"
+              >Print Keys...</v-btn>
+            </template>
             <span>Print the keys for safety</span>
           </v-tooltip>
         </div>
       </div>
-      <toast-component :absolute="true" location="save-keys-dialog" :bottom="false" :top="true"/>
+      <toast-component :absolute="true" location="save-keys-dialog" :bottom="false" :top="true" />
     </div>
   </v-dialog>
 </template>
