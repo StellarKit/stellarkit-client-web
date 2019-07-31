@@ -5,7 +5,7 @@
         <template v-slot:activator="{ on }">
           <v-btn icon dark v-on="on">
             <v-tooltip open-delay="800" bottom>
-              <template fred="duh" v-slot:activator="{ on }">
+              <template v-slot:activator="{ on }">
                 <v-icon v-on="on">&#xE147;</v-icon>
               </template>
               <span>Create new account</span>
@@ -25,7 +25,7 @@
 
       <v-btn v-else icon dark @click="accountMenu('other')">
         <v-tooltip open-delay="800" bottom>
-          <template fred="duh" v-slot:activator="{ on }">
+          <template v-slot:activator="{ on }">
             <v-icon v-on="on">&#xE147;</v-icon>
           </template>
           <span>Create new account</span>
@@ -35,7 +35,7 @@
 
     <v-btn class="refresh-button" icon dark @click="refresh()">
       <v-tooltip open-delay="800" bottom>
-        <template fred="duh" v-slot:activator="{ on }">
+        <template v-slot:activator="{ on }">
           <v-icon v-on="on">&#xE5D5;</v-icon>
         </template>
         <span>Refresh account balances</span>
@@ -52,7 +52,7 @@
         :key="item.publicKey"
       >
         <v-tooltip open-delay="200" bottom>
-          <template fred="duh" v-slot:activator="{ on }">
+          <template v-slot:activator="{ on }">
             <div v-on="on">
               <div class="account-name">{{item.name}}</div>
               <div
@@ -68,7 +68,7 @@
         </div>
         <v-btn class="delete-button" icon small @click.stop="deleteItem(item)">
           <v-tooltip open-delay="200" bottom>
-            <template fred="duh" v-slot:activator="{ on }">
+            <template v-slot:activator="{ on }">
               <v-icon v-on="on">&#xE15C;</v-icon>
             </template>
             <span>Remove account</span>

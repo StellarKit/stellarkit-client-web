@@ -55,7 +55,7 @@
       <div class="button-row">
         <v-btn icon small color="secondary" @click="previous()">
           <v-tooltip open-delay="800" bottom>
-            <template fred="duh" v-slot:activator="{ on }">
+            <template v-slot:activator="{ on }">
               <v-icon v-on="on">&#xE5CB;</v-icon>
             </template>
             <span>Previous</span>
@@ -63,7 +63,7 @@
         </v-btn>
         <v-btn icon small color="secondary" @click="next()">
           <v-tooltip open-delay="800" bottom>
-            <template fred="duh" v-slot:activator="{ on }">
+            <template v-slot:activator="{ on }">
               <v-icon v-on="on">&#xE5CC;</v-icon>
             </template>
             <span>Next</span>

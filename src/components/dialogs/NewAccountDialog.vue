@@ -11,7 +11,7 @@
       <div class="help-contents">
         <div v-if="mode === 'start'" class="start-box">
           <v-tooltip v-if="isTestnet()" open-delay="200" bottom>
-            <template fred="duh" v-slot:activator="{ on }">
+            <template v-slot:activator="{ on }">
               <v-btn
                 color="primary"
                 v-on="on"
@@ -21,7 +21,7 @@
             <span>Add a free testnet account</span>
           </v-tooltip>
           <v-tooltip open-delay="200" bottom>
-            <template fred="duh" v-slot:activator="{ on }">
+            <template v-slot:activator="{ on }">
               <v-btn
                 color="primary"
                 v-on="on"
@@ -31,7 +31,7 @@
             <span>Add existing account with a secret key</span>
           </v-tooltip>
           <v-tooltip open-delay="200" bottom>
-            <template fred="duh" v-slot:activator="{ on }">
+            <template v-slot:activator="{ on }">
               <v-btn
                 color="primary"
                 v-on="on"
@@ -42,13 +42,13 @@
           </v-tooltip>
 
           <v-tooltip open-delay="200" bottom>
-            <template fred="duh" v-slot:activator="{ on }">
+            <template v-slot:activator="{ on }">
               <v-btn outlined v-on="on" @click="buttonClick('import')">Import Accounts...</v-btn>
             </template>
             <span>Import a .json file of account keys</span>
           </v-tooltip>
           <v-tooltip open-delay="200" bottom>
-            <template fred="duh" v-slot:activator="{ on }">
+            <template v-slot:activator="{ on }">
               <v-btn outlined v-on="on" @click="buttonClick('export')">Export Accounts...</v-btn>
             </template>
             <span>Create a new account with a source account's secret key</span>
@@ -69,7 +69,7 @@
 
             <div class="button-holder">
               <v-tooltip open-delay="200" bottom>
-                <template fred="duh" v-slot:activator="{ on }">
+                <template v-slot:activator="{ on }">
                   <v-btn
                     round
                     color="primary"
@@ -96,7 +96,7 @@
             />
             <div class="button-holder">
               <v-tooltip open-delay="200" bottom>
-                <template fred="duh" v-slot:activator="{ on }">
+                <template v-slot:activator="{ on }">
                   <v-btn
                     round
                     color="primary"
@@ -120,7 +120,7 @@
             />
             <div class="button-holder">
               <v-tooltip open-delay="200" bottom>
-                <template fred="duh" v-slot:activator="{ on }">
+                <template v-slot:activator="{ on }">
                   <v-btn
                     round
                     color="primary"

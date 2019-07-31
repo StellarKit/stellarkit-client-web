@@ -3,7 +3,7 @@
     <div class="console-bar">
       <v-btn icon dark @click.stop="fullscreenConsole()">
         <v-tooltip open-delay="800" bottom>
-          <template fred="duh" v-slot:activator="{ on }">
+          <template v-slot:activator="{ on }">
             <v-icon v-if="fullscreenMode" v-on="on">&#xE5D1;</v-icon>
             <v-icon v-else v-on="on">&#xE5D0;</v-icon>
           </template>
@@ -12,7 +12,7 @@
       </v-btn>
       <v-btn icon dark @click.stop="clearLog()">
         <v-tooltip open-delay="800" bottom>
-          <template fred="duh" v-slot:activator="{ on }">
+          <template v-slot:activator="{ on }">
             <v-icon v-on="on">&#xE15C;</v-icon>
           </template>
           <span>Clear console</span>
@@ -23,7 +23,7 @@
           <template v-slot:activator="{ on }">
             <v-btn v-on="on" icon dark>
               <v-tooltip open-delay="800" bottom>
-                <template fred="duh" v-slot:activator="{ on }">
+                <template v-slot:activator="{ on }">
                   <v-icon v-on="on">&#xE8B8;</v-icon>
                 </template>
                 <span>Console settings</span>
@@ -59,7 +59,7 @@
       </div>
       <v-btn icon dark @click.stop="saveConsoleToFile()">
         <v-tooltip open-delay="800" bottom>
-          <template fred="duh" v-slot:activator="{ on }">
+          <template v-slot:activator="{ on }">
             <v-icon v-on="on">&#xE161;</v-icon>
           </template>
           <span>Save console output to file</span>

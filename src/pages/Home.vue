@@ -14,7 +14,7 @@
         >Add/Remove Signer</v-btn>
 
         <v-tooltip open-delay="800" bottom>
-          <template fred="duh" v-slot:activator="{ on }">
+          <template v-slot:activator="{ on }">
             <v-btn
               outlined
               small
@@ -26,7 +26,7 @@
         </v-tooltip>
 
         <v-tooltip open-delay="800" bottom>
-          <template fred="duh" v-slot:activator="{ on }">
+          <template v-slot:activator="{ on }">
             <v-btn outlined small v-on="on" @click="trustDialogPing = !trustDialogPing">Trust Token</v-btn>
           </template>
           <span>Account must trust token before it can receive</span>

@@ -9,13 +9,13 @@
 
         <div class="button-holder">
           <v-tooltip open-delay="200" bottom>
-            <template fred="duh" v-slot:activator="{ on }">
+            <template v-slot:activator="{ on }">
               <v-btn round small v-on="on" @click="visible = false">Cancel</v-btn>
             </template>
             <span>Cancel</span>
           </v-tooltip>
           <v-tooltip open-delay="200" bottom>
-            <template fred="duh" v-slot:activator="{ on }">
+            <template v-slot:activator="{ on }">
               <v-btn
                 round
                 small

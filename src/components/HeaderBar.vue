@@ -10,13 +10,13 @@
     <div class="right-header-bar">
       <div v-if="networkIndicator" class="network-indicator">
         <v-tooltip v-if="isTestnet" left>
-          <template fred="duh" v-slot:activator="{ on }">
+          <template v-slot:activator="{ on }">
             <div class="testnet" v-on="on" />
           </template>
           <span>Test Network</span>
         </v-tooltip>
         <v-tooltip v-else left>
-          <template fred="duh" v-slot:activator="{ on }">
+          <template v-slot:activator="{ on }">
             <div class="publicnet" v-on="on" />
           </template>
           <span>Public Network</span>
@@ -41,7 +41,7 @@
           active-class="header-active-tab"
         >
           <v-tooltip open-delay="800" bottom>
-            <template fred="duh" v-slot:activator="{ on }">
+            <template v-slot:activator="{ on }">
               <v-icon slot="activator" v-html="tab.icon"></v-icon>
             </template>
             <span>{{tab.tooltip}}</span>

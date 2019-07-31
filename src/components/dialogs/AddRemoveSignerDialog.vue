@@ -23,13 +23,13 @@
         </div>
         <div class="button-holder">
           <v-tooltip open-delay="200" bottom>
-            <template fred="duh" v-slot:activator="{ on }">
+            <template v-slot:activator="{ on }">
               <v-btn round v-on="on" @click="addSigner(true)" :loading="removing">Remove Signer</v-btn>
             </template>
             <span>Remove a signer from account</span>
           </v-tooltip>
           <v-tooltip open-delay="200" bottom>
-            <template fred="duh" v-slot:activator="{ on }">
+            <template v-slot:activator="{ on }">
               <v-btn
                 round
                 color="primary"
