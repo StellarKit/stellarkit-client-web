@@ -12,17 +12,17 @@
 
     <div>1. First setup a Token on the Create Token Tutorial tab</div>
     <div>2. Set Source account to Issuer, then set or clear flags to test AuthRequiredFlag</div>
-    <v-btn round small @click="setAuthRequiredFlag()">Set AuthRequiredFlag</v-btn>
-    <v-btn round small @click="setAuthRevocableFlag()">Set AuthRevocableFlag</v-btn>
-    <v-btn round small @click="clearFlags()">Clear Flags</v-btn>
+    <v-btn rounded small @click="setAuthRequiredFlag()">Set AuthRequiredFlag</v-btn>
+    <v-btn rounded small @click="setAuthRevocableFlag()">Set AuthRevocableFlag</v-btn>
+    <v-btn rounded small @click="clearFlags()">Clear Flags</v-btn>
 
     <div>Set Source account to a new account, Click Set Trust, and try to buy Token. It will fail if AuthRequiredFlag set unless you allow trust.</div>
-    <v-btn round small @click="allowTrust(true)">Enable Trust For Account</v-btn>
-    <v-btn round small @click="allowTrust(false)">Disable Trust For Account</v-btn>
+    <v-btn rounded small @click="allowTrust(true)">Enable Trust For Account</v-btn>
+    <v-btn rounded small @click="allowTrust(false)">Disable Trust For Account</v-btn>
 
     <div>Set Source account, trust asset, try to buy.</div>
-    <v-btn round small @click="changeTrust()">Trust Asset</v-btn>
-    <v-btn round small @click="buyToken()">Buy Token</v-btn>
+    <v-btn rounded small @click="changeTrust()">Trust Asset</v-btn>
+    <v-btn rounded small @click="buyToken()">Buy Token</v-btn>
   </div>
 
 </div>

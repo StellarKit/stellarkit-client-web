@@ -40,7 +40,7 @@
           <v-tooltip open-delay="200" bottom>
             <template v-slot:activator="{ on }">
               <v-btn
-                round
+                rounded
                 small
                 color="primary"
                 v-on="on"
@@ -171,7 +171,7 @@ export default {
       }
     },
     timeFromNow(secondsAhead = 0) {
-      return secondsAhead + Math.round(new Date().getTime() / 1000)
+      return secondsAhead + Math.rounded(new Date().getTime() / 1000)
     },
     createUnlockTransaction(newAccountWallet, sourceWallet, timeLockDate) {
       const minTime = timeLockDate.getSeconds()

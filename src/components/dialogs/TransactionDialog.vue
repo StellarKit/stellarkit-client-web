@@ -9,7 +9,7 @@
 
         <div class="button-holder">
           <v-btn
-            round
+            rounded
             small
             color="primary"
             v-on="on"

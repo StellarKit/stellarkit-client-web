@@ -25,7 +25,7 @@
         <div class="buttons-area">
           <v-tooltip open-delay="200" bottom>
             <template v-slot:activator="{ on }">
-              <v-btn color="primary" round v-on="on" @click="buttonClick('save-keys')">Save Keys...</v-btn>
+              <v-btn color="primary" rounded v-on="on" @click="buttonClick('save-keys')">Save Keys...</v-btn>
             </template>
             <span>Save the keys to a file on a USB or disk</span>
           </v-tooltip>
@@ -33,7 +33,7 @@
             <template v-slot:activator="{ on }">
               <v-btn
                 color="primary"
-                round
+                rounded
                 v-on="on"
                 @click="buttonClick('print-keys')"
               >Print Keys...</v-btn>

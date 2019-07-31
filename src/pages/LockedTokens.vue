@@ -24,15 +24,15 @@
 
   <div class='top-controls'>
     <div>First setup a Token on the Create Token Tutorial tab</div>
-    <v-btn round small @click="createAccountWithLockedTokens()">Create Account with Locked Tokens</v-btn>
+    <v-btn rounded small @click="createAccountWithLockedTokens()">Create Account with Locked Tokens</v-btn>
 
     <div class='address-box'>
       <v-select hide-details :items="accountsUI" item-text='name' v-model="selectedSource" clearable label="Source account" autocomplete return-object max-height="600"></v-select>
     </div>
     <div class='button-group'>
-      <v-btn round small @click="createUnlockTransaction()">Create Unlock Transaction</v-btn>
-      <v-btn round small @click="viewTransaction()">View Transaction</v-btn>
-      <v-btn round small @click="submitTransaction()">Submit Transaction</v-btn>
+      <v-btn rounded small @click="createUnlockTransaction()">Create Unlock Transaction</v-btn>
+      <v-btn rounded small @click="viewTransaction()">View Transaction</v-btn>
+      <v-btn rounded small @click="submitTransaction()">Submit Transaction</v-btn>
     </div>
   </div>
 
@@ -110,7 +110,7 @@ export default {
       }
     },
     timeFromNow(secondsAhead = 0) {
-      return secondsAhead + Math.round((new Date()).getTime() / 1000)
+      return secondsAhead + Math.rounded((new Date()).getTime() / 1000)
     },
     printTimeStamp() {
       function convertUNIXTimestampToTime(timestamp) {

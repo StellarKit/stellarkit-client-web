@@ -21,9 +21,9 @@
       </div>
 
       <div style="margin-top: 20px;" class="button-group">
-        <v-btn round small color="primary" @click="showDialog">Buy Token</v-btn>
+        <v-btn rounded small color="primary" @click="showDialog">Buy Token</v-btn>
         <v-btn
-          round
+          rounded
           small
           color="primary"
           @click="transactionDialogPing = !transactionDialogPing"

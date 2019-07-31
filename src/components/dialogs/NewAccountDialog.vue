@@ -71,7 +71,7 @@
               <v-tooltip open-delay="200" bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn
-                    round
+                    rounded
                     color="primary"
                     v-on="on"
                     @click="addExistingAccount"
@@ -98,7 +98,7 @@
               <v-tooltip open-delay="200" bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn
-                    round
+                    rounded
                     color="primary"
                     v-on="on"
                     @click="createAccount"
@@ -122,7 +122,7 @@
               <v-tooltip open-delay="200" bottom>
                 <template v-slot:activator="{ on }">
                   <v-btn
-                    round
+                    rounded
                     color="primary"
                     v-on="on"
                     @click="createTestnetAccount"

@@ -18,11 +18,11 @@
         :menu-props="{maxHeight:'600'}"
       ></v-select>
     </div>
-    <!-- <v-btn round small @click="assets()">Assets</v-btn> -->
+    <!-- <v-btn rounded small @click="assets()">Assets</v-btn> -->
     <div class="button-group">
-      <v-btn round small @click="streamPayments()">{{paymentsButtonName}}</v-btn>
-      <v-btn round small @click="streamOperations()">{{operationsButtonName}}</v-btn>
-      <v-btn round small @click="streamTrades()">{{tradesButtonName}}</v-btn>
+      <v-btn rounded small @click="streamPayments()">{{paymentsButtonName}}</v-btn>
+      <v-btn rounded small @click="streamOperations()">{{operationsButtonName}}</v-btn>
+      <v-btn rounded small @click="streamTrades()">{{tradesButtonName}}</v-btn>
     </div>
     <div class="operations-content">
       <div class="operations-title">Live Stream</div>

@@ -50,11 +50,11 @@
           </div>
         </div>
         <div class="button-group">
-          <v-btn round small @click="createUserAccount()">Create Account</v-btn>
-          <v-btn round small @click="sendTokens()">Send Tokens</v-btn>
-          <v-btn round small @click="manageOffer()">Manage Offer</v-btn>
-          <v-btn round small @click="showOffers()">Show Offers</v-btn>
-          <v-btn round small @click="lockIssuer()">Lock Issuer</v-btn>
+          <v-btn rounded small @click="createUserAccount()">Create Account</v-btn>
+          <v-btn rounded small @click="sendTokens()">Send Tokens</v-btn>
+          <v-btn rounded small @click="manageOffer()">Manage Offer</v-btn>
+          <v-btn rounded small @click="showOffers()">Show Offers</v-btn>
+          <v-btn rounded small @click="lockIssuer()">Lock Issuer</v-btn>
         </div>
       </div>
     </div>

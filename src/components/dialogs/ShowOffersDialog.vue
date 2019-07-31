@@ -17,7 +17,7 @@
           <v-tooltip open-delay="200" bottom>
             <template v-slot:activator="{ on }">
               <v-btn
-                round
+                rounded
                 small
                 color="secondary"
                 v-on="on"
@@ -30,7 +30,7 @@
           <v-tooltip open-delay="200" bottom>
             <template v-slot:activator="{ on }">
               <v-btn
-                round
+                rounded
                 small
                 color="primary"
                 v-on="on"

@@ -35,7 +35,7 @@
 
   <div class='wizard-bottom-box'>
     <v-btn
-      round
+      rounded
       small
       color='secondary'
       @click='buttonClick("previous")'
@@ -44,7 +44,7 @@
       Previous
     </v-btn>
     <v-btn
-      round
+      rounded
       small
       color='primary'
       @click='buttonClick("next")'

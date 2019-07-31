@@ -22,7 +22,7 @@
         </div>
 
         <div class="button-holder">
-          <v-btn round color="primary" @click="visible = false">Close</v-btn>
+          <v-btn rounded color="primary" @click="visible = false">Close</v-btn>
         </div>
       </div>
     </div>

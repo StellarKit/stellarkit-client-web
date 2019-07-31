@@ -24,7 +24,13 @@
         <div class="button-holder">
           <v-tooltip open-delay="200" bottom>
             <template v-slot:activator="{ on }">
-              <v-btn round color="primary" v-on="on" @click="addData()" :loading="loading">Add Data</v-btn>
+              <v-btn
+                rounded
+                color="primary"
+                v-on="on"
+                @click="addData()"
+                :loading="loading"
+              >Add Data</v-btn>
             </template>
             <span>Add data to an account</span>
           </v-tooltip>

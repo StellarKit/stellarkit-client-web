@@ -27,7 +27,7 @@
           <v-tooltip open-delay="200" bottom>
             <template v-slot:activator="{ on }">
               <v-btn
-                round
+                rounded
                 color="secondary"
                 v-on="on"
                 @click="allowTrust(false)"
@@ -39,7 +39,7 @@
           <v-tooltip open-delay="200" bottom>
             <template v-slot:activator="{ on }">
               <v-btn
-                round
+                rounded
                 color="primary"
                 v-on="on"
                 @click="allowTrust(true)"

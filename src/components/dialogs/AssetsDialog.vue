@@ -26,8 +26,8 @@
         </div>
 
         <div class="button-holder">
-          <v-btn round color="secondary" v-on="on" @click="deleteAsset()">Delete Asset</v-btn>
-          <v-btn round color="primary" v-on="on" @click="addAsset()">Add Asset</v-btn>
+          <v-btn rounded color="secondary" @click="deleteAsset()">Delete Asset</v-btn>
+          <v-btn rounded color="primary" @click="addAsset()">Add Asset</v-btn>
         </div>
 
         <toast-component :absolute="true" location="data-dialog" :bottom="false" :top="true" />

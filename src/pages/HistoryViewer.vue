@@ -46,10 +46,10 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <v-btn round small @click="transactionsForSelectedSource()">Transactions</v-btn>
-        <v-btn round small @click="paymentsForSelectedSource()">Payments</v-btn>
-        <v-btn round small @click="operationsForSelectedSource()">Operations</v-btn>
-        <v-btn round small @click="effectsForSelectedSource()">Effects</v-btn>
+        <v-btn rounded small @click="transactionsForSelectedSource()">Transactions</v-btn>
+        <v-btn rounded small @click="paymentsForSelectedSource()">Payments</v-btn>
+        <v-btn rounded small @click="operationsForSelectedSource()">Operations</v-btn>
+        <v-btn rounded small @click="effectsForSelectedSource()">Effects</v-btn>
       </div>
 
       <div class="button-row">
