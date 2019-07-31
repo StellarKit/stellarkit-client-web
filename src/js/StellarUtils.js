@@ -2,17 +2,14 @@ const StellarSdk = require('stellar-sdk')
 import StellarAccounts from './StellarAccounts.js'
 import StellarServer from './StellarServer.js'
 import Helper from '../js/helper.js'
-import {
-  StellarWallet,
-  LedgerAPI
-} from 'stellarkit-js-utils'
+import { StellarWallet, LedgerAPI } from 'stellarkit-js-utils'
 import axios from 'axios'
 
 class StellarUtils {
   constructor() {
     this.s = new StellarServer()
 
-    Helper.vue().$on('settings-updated', (key) => {
+    Helper.vue().$on('settings-updated', key => {
       if (key === 'server') {
         this.updateBalances()
       }
@@ -59,23 +56,58 @@ class StellarUtils {
   }
 
   paths(sourcePublic, destinationPublic, destinationAsset, destinationAmount) {
-    return this.api().paths(sourcePublic, destinationPublic, destinationAsset, destinationAmount).call()
+    return this.api()
+      .paths(
+        sourcePublic,
+        destinationPublic,
+        destinationAsset,
+        destinationAmount
+      )
+      .call()
   }
 
   balances(sourceWallet) {
     return this.api().balances(sourceWallet)
   }
 
-  manageData(sourceWallet, fundingWallet, name, value, additionalSigners = null) {
-    return this.api().manageData(sourceWallet, fundingWallet, name, value, additionalSigners)
+  manageData(
+    sourceWallet,
+    fundingWallet,
+    name,
+    value,
+    additionalSigners = null
+  ) {
+    return this.api().manageData(
+      sourceWallet,
+      fundingWallet,
+      name,
+      value,
+      additionalSigners
+    )
   }
 
   mergeAccount(sourceWallet, destWallet) {
     return this.api().mergeAccount(sourceWallet, destWallet)
   }
 
-  manageOffer(sourceWallet, fundingWallet, buying, selling, amount, price, offerID = 0) {
-    return this.api().manageOffer(sourceWallet, fundingWallet, buying, selling, amount, price, offerID)
+  manageOffer(
+    sourceWallet,
+    fundingWallet,
+    buying,
+    selling,
+    amount,
+    price,
+    offerID = 0
+  ) {
+    return this.api().manageOffer(
+      sourceWallet,
+      fundingWallet,
+      buying,
+      selling,
+      amount,
+      price,
+      offerID
+    )
   }
 
   changeTrust(sourceWallet, fundingWallet, asset, amount) {
@@ -83,25 +115,54 @@ class StellarUtils {
   }
 
   allowTrust(sourceWallet, destWallet, asset, authorize, fundingWallet = null) {
-    return this.api().allowTrust(sourceWallet, destWallet, asset, authorize, fundingWallet)
+    return this.api().allowTrust(
+      sourceWallet,
+      destWallet,
+      asset,
+      authorize,
+      fundingWallet
+    )
   }
 
-  setDomain(sourceWallet, domain, fundingWallet = null, additionalSigners = null) {
-    return this.api().setDomain(sourceWallet, domain, fundingWallet, additionalSigners)
+  setDomain(
+    sourceWallet,
+    domain,
+    fundingWallet = null,
+    additionalSigners = null
+  ) {
+    return this.api().setDomain(
+      sourceWallet,
+      domain,
+      fundingWallet,
+      additionalSigners
+    )
   }
 
   // pass 1 for threshold if either account can sign for med/high operations
   makeMultiSig(sourceWallet, secondWallet, fundingWallet, threshold) {
-    return this.api().makeMultiSig(sourceWallet, secondWallet, fundingWallet, threshold)
+    return this.api().makeMultiSig(
+      sourceWallet,
+      secondWallet,
+      fundingWallet,
+      threshold
+    )
   }
 
   removeMultiSig(sourceWallet, secondWallet, transactionOpts) {
-    return this.api().removeMultiSig(sourceWallet, secondWallet, transactionOpts)
+    return this.api().removeMultiSig(
+      sourceWallet,
+      secondWallet,
+      transactionOpts
+    )
   }
 
   // get the transaction for later submission
   removeMultiSigTransaction(sourceWallet, secondWallet, transactionOpts) {
-    return this.api().removeMultiSigTransaction(sourceWallet, secondWallet, transactionOpts)
+    return this.api().removeMultiSigTransaction(
+      sourceWallet,
+      secondWallet,
+      transactionOpts
+    )
   }
 
   submitTransaction(transaction) {
@@ -109,45 +170,149 @@ class StellarUtils {
   }
 
   // additionalSigners is an array of StellarWallet (ledger or secret key)
-  sendAsset(sourceWallet, fundingWallet, destWallet, amount, asset = null, memo = null, additionalSigners = null) {
-    return this.api().sendAsset(sourceWallet, fundingWallet, destWallet, amount, asset, memo, additionalSigners)
+  sendAsset(
+    sourceWallet,
+    fundingWallet,
+    destWallet,
+    amount,
+    asset = null,
+    memo = null,
+    additionalSigners = null
+  ) {
+    return this.api().sendAsset(
+      sourceWallet,
+      fundingWallet,
+      destWallet,
+      amount,
+      asset,
+      memo,
+      additionalSigners
+    )
   }
 
-  sendAssetBatch(sourceWallet, fundingWallet, destWallets, amount, asset = null, memo = null, additionalSigners = null) {
-    return this.api().sendAssetBatch(sourceWallet, fundingWallet, destWallets, amount, asset, memo, additionalSigners)
+  sendAssetBatch(
+    sourceWallet,
+    fundingWallet,
+    destWallets,
+    amount,
+    asset = null,
+    memo = null,
+    additionalSigners = null
+  ) {
+    return this.api().sendAssetBatch(
+      sourceWallet,
+      fundingWallet,
+      destWallets,
+      amount,
+      asset,
+      memo,
+      additionalSigners
+    )
   }
 
-  buyTokens(sourceWallet, sendAsset, destAsset, sendMax, destAmount, fundingWallet = null, additionalSigners = null) {
-    return this.api().buyTokens(sourceWallet, sendAsset, destAsset, sendMax, destAmount, fundingWallet, additionalSigners)
+  buyTokens(
+    sourceWallet,
+    sendAsset,
+    destAsset,
+    sendMax,
+    destAmount,
+    fundingWallet = null,
+    additionalSigners = null
+  ) {
+    return this.api().buyTokens(
+      sourceWallet,
+      sendAsset,
+      destAsset,
+      sendMax,
+      destAmount,
+      fundingWallet,
+      additionalSigners
+    )
   }
 
   // preset is 'lock' or 'low' - low allows allowTrust, lock locks everything
-  lockAccount(sourceWallet, preset, fundingWallet = null, additionalSigners = null) {
-    return this.api().lockAccount(sourceWallet, preset, fundingWallet, additionalSigners)
+  lockAccount(
+    sourceWallet,
+    preset,
+    fundingWallet = null,
+    additionalSigners = null
+  ) {
+    return this.api().lockAccount(
+      sourceWallet,
+      preset,
+      fundingWallet,
+      additionalSigners
+    )
   }
 
   createAccount(sourceWallet, newWallet, startingBalance) {
     return this.api().createAccount(sourceWallet, newWallet, startingBalance)
   }
 
-  setOptions(sourceWallet, options, fundingWallet = null, additionalSigners = null) {
-    return this.api().setOptions(sourceWallet, options, fundingWallet, additionalSigners)
+  setOptions(
+    sourceWallet,
+    options,
+    fundingWallet = null,
+    additionalSigners = null
+  ) {
+    return this.api().setOptions(
+      sourceWallet,
+      options,
+      fundingWallet,
+      additionalSigners
+    )
   }
 
-  setFlags(sourceWallet, flags, fundingWallet = null, additionalSigners = null) {
-    return this.api().setFlags(sourceWallet, flags, fundingWallet, additionalSigners)
+  setFlags(
+    sourceWallet,
+    flags,
+    fundingWallet = null,
+    additionalSigners = null
+  ) {
+    return this.api().setFlags(
+      sourceWallet,
+      flags,
+      fundingWallet,
+      additionalSigners
+    )
   }
 
-  clearFlags(sourceWallet, flags, fundingWallet = null, additionalSigners = null) {
-    return this.api().clearFlags(sourceWallet, flags, fundingWallet, additionalSigners)
+  clearFlags(
+    sourceWallet,
+    flags,
+    fundingWallet = null,
+    additionalSigners = null
+  ) {
+    return this.api().clearFlags(
+      sourceWallet,
+      flags,
+      fundingWallet,
+      additionalSigners
+    )
   }
 
-  setInflationDestination(sourceWallet, inflationDest, fundingWallet = null, additionalSigners = null) {
-    return this.api().setInflationDestination(sourceWallet, inflationDest, fundingWallet, additionalSigners)
+  setInflationDestination(
+    sourceWallet,
+    inflationDest,
+    fundingWallet = null,
+    additionalSigners = null
+  ) {
+    return this.api().setInflationDestination(
+      sourceWallet,
+      inflationDest,
+      fundingWallet,
+      additionalSigners
+    )
   }
 
   // returns {account: newAccount, keypair: keypair}
-  newAccount(sourceWallet, startingBalance, name = null, tag = null, secretKey = null) {
+  newAccount(
+    sourceWallet,
+    startingBalance,
+    name = null,
+    tag = null,
+    secretKey = null
+  ) {
     let keypair
 
     if (Helper.strOK(secretKey)) {
@@ -162,15 +327,19 @@ class StellarUtils {
 
     const accountRec = StellarAccounts.addAccount(keypair, name, tag)
 
-    return this.createAccount(sourceWallet, StellarWallet.secret(keypair.secret()), startingBalance)
-      .then((account) => {
+    return this.createAccount(
+      sourceWallet,
+      StellarWallet.secret(keypair.secret()),
+      startingBalance
+    )
+      .then(account => {
         return {
           account: account,
           keypair: keypair,
           accountRec: accountRec
         }
       })
-      .catch((error) => {
+      .catch(error => {
         StellarAccounts.deleteAccount(keypair.publicKey())
 
         throw error
@@ -181,38 +350,55 @@ class StellarUtils {
     if (sourceWallet) {
       Helper.debugLog('Deleting Offers...')
 
-      return sourceWallet.publicKey()
-        .then((pubicKey) => {
-          this.server().offers('accounts', pubicKey)
-            .call()
-            .then((response) => {
-              let nextPromise = Promise.resolve()
+      return sourceWallet.publicKey().then(pubicKey => {
+        this.server()
+          .offers('accounts', pubicKey)
+          .call()
+          .then(response => {
+            let nextPromise = Promise.resolve()
 
-              for (const offer of response.records) {
-                nextPromise = nextPromise.then(() => {
-                  const buying = this.assetFromObject(offer.buying)
-                  const selling = this.assetFromObject(offer.selling)
+            for (const offer of response.records) {
+              nextPromise = nextPromise.then(() => {
+                const buying = this.assetFromObject(offer.buying)
+                const selling = this.assetFromObject(offer.selling)
 
-                  return this.manageOffer(sourceWallet, null, buying, selling, '0', offer.price_r, offer.id)
-                })
-              }
+                return this.manageOffer(
+                  sourceWallet,
+                  null,
+                  buying,
+                  selling,
+                  '0',
+                  offer.price_r,
+                  offer.id
+                )
+              })
+            }
 
-              return nextPromise
-            })
-            .then((result) => {
-              Helper.debugLog('Deleted all offers', 'Success')
-              this.updateBalances()
+            return nextPromise
+          })
+          .then(result => {
+            Helper.debugLog('Deleted all offers', 'Success')
+            this.updateBalances()
 
-              return null
-            })
-        })
+            return null
+          })
+      })
     } else {
       return Promise.reject()
     }
   }
 
   // returns {account: newAccount, keypair: keypair}
-  newAccountWithTokens(fundingWallet, sourceWallet, startingBalance, asset, amount, accountName = null, accountTag = null, issuerWallet = null) {
+  newAccountWithTokens(
+    fundingWallet,
+    sourceWallet,
+    startingBalance,
+    asset,
+    amount,
+    accountName = null,
+    accountTag = null,
+    issuerWallet = null
+  ) {
     let info = null
     let newWallet = null
 
@@ -221,8 +407,13 @@ class StellarUtils {
       newAccountSourceWallet = fundingWallet
     }
 
-    return this.newAccount(newAccountSourceWallet, startingBalance, accountName, accountTag)
-      .then((result) => {
+    return this.newAccount(
+      newAccountSourceWallet,
+      startingBalance,
+      accountName,
+      accountTag
+    )
+      .then(result => {
         info = result
 
         newWallet = StellarWallet.secret(info.keypair.secret())
@@ -230,29 +421,45 @@ class StellarUtils {
         const trustLimit = 100000000000
 
         Helper.debugLog('setting trust...')
-        return this.changeTrust(newWallet, fundingWallet, asset, String(trustLimit))
-          .then(() => {
-            if (issuerWallet) {
-              Helper.debugLog('Allow trust...')
-              return this.allowTrust(issuerWallet, newWallet, asset, true, fundingWallet)
-                .then(() => {
-                  return null
-                })
-                .catch(() => {
-                  Helper.debugLog('Allow trust was not necessary, continuing...')
+        return this.changeTrust(
+          newWallet,
+          fundingWallet,
+          asset,
+          String(trustLimit)
+        ).then(() => {
+          if (issuerWallet) {
+            Helper.debugLog('Allow trust...')
+            return this.allowTrust(
+              issuerWallet,
+              newWallet,
+              asset,
+              true,
+              fundingWallet
+            )
+              .then(() => {
+                return null
+              })
+              .catch(() => {
+                Helper.debugLog('Allow trust was not necessary, continuing...')
 
-                  return null
-                })
-            }
+                return null
+              })
+          }
 
-            return null
-          })
+          return null
+        })
       })
       .then(() => {
         Helper.debugLog('sending tokens...')
-        return this.sendAsset(sourceWallet, fundingWallet, newWallet, amount, asset)
+        return this.sendAsset(
+          sourceWallet,
+          fundingWallet,
+          newWallet,
+          amount,
+          asset
+        )
       })
-      .then((result) => {
+      .then(result => {
         this.updateBalances()
 
         return info
@@ -261,14 +468,17 @@ class StellarUtils {
 
   displayLedgerInfo() {
     const fundingWallet = StellarWallet.ledger(new LedgerAPI())
-    fundingWallet.publicKey()
-      .then((publicKey) => {
+    fundingWallet
+      .publicKey()
+      .then(publicKey => {
+        Helper.debugLog(`Looking for account with public key: ${publicKey}`)
+
         return this.api().accountInfo(publicKey)
       })
-      .then((info) => {
+      .then(info => {
         Helper.debugLog(info)
       })
-      .catch((error) => {
+      .catch(error => {
         Helper.debugLog(error, 'Error')
         Helper.toast('Error', true)
       })
@@ -283,39 +493,47 @@ class StellarUtils {
 
     let ledgerPublicKey
 
-    fundingWallet.publicKey()
-      .then((publicKey) => {
+    fundingWallet
+      .publicKey()
+      .then(publicKey => {
         ledgerPublicKey = publicKey
 
         return this.accountInfo(publicKey)
       })
-      .then((account) => {
+      .then(account => {
         // account exists, so friendbot will just fail, do the merge
         const keyPair = StellarSdk.Keypair.random()
 
-        const url = 'https://friendbot.stellar.org' + '?addr=' + encodeURIComponent(keyPair.publicKey())
-        return axios.get(url)
-          .then((data) => {
+        const url =
+          'https://friendbot.stellar.org' +
+          '?addr=' +
+          encodeURIComponent(keyPair.publicKey())
+        return axios
+          .get(url)
+          .then(data => {
             Helper.debugLog(data, 'Success')
 
-            return this.mergeAccount(StellarWallet.secret(keyPair.secret()), fundingWallet)
+            return this.mergeAccount(
+              StellarWallet.secret(keyPair.secret()),
+              fundingWallet
+            )
           })
           .then(() => {
             Helper.toast('Testnet XLM added to your Ledger!')
           })
-          .catch((err) => {
+          .catch(err => {
             Helper.debugLog(err, 'Error')
             Helper.toast('Error!', true)
           })
       })
       .catch(() => {
-        Helper.debugLog('Account doesn\'t exist, asking friendbot for help.')
+        Helper.debugLog("Account doesn't exist, asking friendbot for help.")
 
         // account doesn't exist, so ask friendbot to create it
         const url = 'https://friendbot.stellar.org' + '?addr=' + ledgerPublicKey
         return axios.get(url)
       })
-      .then((info) => {
+      .then(info => {
         Helper.debugLog(info)
         Helper.toast('Testnet XLM added to your Ledger!')
       })
@@ -344,15 +562,16 @@ class StellarUtils {
     // const friendbotURL = 'http://localhost:8000/friendbot'
 
     const url = friendbotURL + '?addr=' + keyPair.publicKey()
-    return axios.get(url)
-      .then((info) => {
+    return axios
+      .get(url)
+      .then(info => {
         Helper.debugLog(info, 'Success')
 
         this.updateBalances()
 
         return accountRec
       })
-      .catch((error) => {
+      .catch(error => {
         Helper.debugLog(error, 'Error')
 
         Helper.toast('Friendbot must be down again!', true)
@@ -369,7 +588,7 @@ class StellarUtils {
       const publicKey = acct.publicKey
 
       this.balances(StellarWallet.public(publicKey))
-        .then((balanceArray) => {
+        .then(balanceArray => {
           let removeAll = true
 
           for (const balance of balanceArray) {
@@ -383,7 +602,7 @@ class StellarUtils {
 
           return null
         })
-        .catch((error) => {
+        .catch(error => {
           StellarAccounts.updateBalance(publicKey, null, true)
 
           Helper.debugLog(error, 'Error')
@@ -392,68 +611,76 @@ class StellarUtils {
   }
 
   operationsForWallet(wallet, order = 'desc') {
-    wallet.publicKey()
-      .then((publicKey) => {
-        this.server().operations()
+    wallet
+      .publicKey()
+      .then(publicKey => {
+        this.server()
+          .operations()
           .forAccount(publicKey)
           .order(order)
           .call()
-          .then((response) => {
+          .then(response => {
             Helper.debugLog(response)
           })
       })
-      .catch((error) => {
+      .catch(error => {
         Helper.debugLog(error, 'Error')
         Helper.toast('Error', true)
       })
   }
 
   paymentsForWallet(wallet, order = 'desc') {
-    wallet.publicKey()
-      .then((publicKey) => {
-        this.server().payments()
+    wallet
+      .publicKey()
+      .then(publicKey => {
+        this.server()
+          .payments()
           .forAccount(publicKey)
           .order(order)
           .call()
-          .then((response) => {
+          .then(response => {
             Helper.debugLog(response)
           })
       })
-      .catch((error) => {
+      .catch(error => {
         Helper.debugLog(error, 'Error')
         Helper.toast('Error', true)
       })
   }
 
   transactionsForWallet(wallet, order = 'desc') {
-    wallet.publicKey()
-      .then((publicKey) => {
-        this.server().transactions()
+    wallet
+      .publicKey()
+      .then(publicKey => {
+        this.server()
+          .transactions()
           .forAccount(publicKey)
           .order(order)
           .call()
-          .then((response) => {
+          .then(response => {
             Helper.debugLog(response)
           })
       })
-      .catch((error) => {
+      .catch(error => {
         Helper.debugLog(error, 'Error')
         Helper.toast('Error', true)
       })
   }
 
   effectsForWallet(wallet, order = 'desc') {
-    wallet.publicKey()
-      .then((publicKey) => {
-        this.server().effects()
+    wallet
+      .publicKey()
+      .then(publicKey => {
+        this.server()
+          .effects()
           .forAccount(publicKey)
           .order(order)
           .call()
-          .then((response) => {
+          .then(response => {
             Helper.debugLog(response)
           })
       })
-      .catch((error) => {
+      .catch(error => {
         Helper.debugLog(error, 'Error')
         Helper.toast('Error', true)
       })
